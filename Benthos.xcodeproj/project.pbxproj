@@ -13,6 +13,8 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD14FF0DC6FC520079059D /* OpenGLES.framework */; };
 		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
+		7B056F04150AC5DF00621766 /* NSFileManager+Tar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */; };
+		7B056F06150AC85A00621766 /* chamber3.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7B056F05150AC85A00621766 /* chamber3.tar */; };
 		7BE606491398E0480072A1C5 /* pass.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7BE606281398DEA80072A1C5 /* pass.frag */; };
 		7BE6064A1398E0480072A1C5 /* pass.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7BE606291398DEA80072A1C5 /* pass.vert */; };
 		7BF64D5E139770AD002FEB23 /* Camera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D57139770AD002FEB23 /* Camera.mm */; };
@@ -42,8 +44,6 @@
 		7BF6544D13977C74002FEB23 /* BMFont.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF6544C13977C74002FEB23 /* BMFont.mm */; };
 		7BF654A113977F8A002FEB23 /* CollideableMesh.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF654A013977F8A002FEB23 /* CollideableMesh.mm */; };
 		7BF65BC41397952F002FEB23 /* MyOpenGLES20Renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF65BC31397952F002FEB23 /* MyOpenGLES20Renderer.mm */; };
-		7BF662071397A492002FEB23 /* chamber3 in Resources */ = {isa = PBXBuildFile; fileRef = 7BF65CA41397A492002FEB23 /* chamber3 */; };
-		7BF662091397A4A0002FEB23 /* chamber3.octree in Resources */ = {isa = PBXBuildFile; fileRef = 7BF662081397A4A0002FEB23 /* chamber3.octree */; };
 		7BF662161397B015002FEB23 /* renderVT.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7BF64D7A139770C8002FEB23 /* renderVT.frag */; };
 		7BF662171397B015002FEB23 /* renderVT.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7BF64D7B139770C8002FEB23 /* renderVT.vert */; };
 		7BF662181397B015002FEB23 /* readback.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7BF64D76139770C8002FEB23 /* readback.frag */; };
@@ -128,8 +128,10 @@
 		28FD15070DC6FC5B0079059D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7B02E8CD139B5E80005FBC67 /* pavall.octree */ = {isa = PBXFileReference; lastKnownFileType = file; path = pavall.octree; sourceTree = "<group>"; };
+		7B056F02150AC5DF00621766 /* NSFileManager+Tar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+Tar.h"; sourceTree = SOURCE_ROOT; };
+		7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+Tar.m"; sourceTree = SOURCE_ROOT; };
+		7B056F05150AC85A00621766 /* chamber3.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = chamber3.tar; sourceTree = "<group>"; };
 		7B61FB0213991399006E50B3 /* renderVT.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = renderVT.frag; path = LibVT/renderVT.frag; sourceTree = "<group>"; };
-		7BA0CD9A13A8E5ED00510931 /* pavall */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pavall; sourceTree = "<group>"; };
 		7BE606281398DEA80072A1C5 /* pass.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = pass.frag; path = LibVT/pass.frag; sourceTree = "<group>"; };
 		7BE606291398DEA80072A1C5 /* pass.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = pass.vert; path = LibVT/pass.vert; sourceTree = "<group>"; };
 		7BF64D56139770AD002FEB23 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
@@ -183,8 +185,6 @@
 		7BF654A013977F8A002FEB23 /* CollideableMesh.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CollideableMesh.mm; sourceTree = "<group>"; };
 		7BF65BC21397952F002FEB23 /* MyOpenGLES20Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyOpenGLES20Renderer.h; sourceTree = "<group>"; };
 		7BF65BC31397952F002FEB23 /* MyOpenGLES20Renderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MyOpenGLES20Renderer.mm; sourceTree = "<group>"; };
-		7BF65CA41397A492002FEB23 /* chamber3 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = chamber3; sourceTree = "<group>"; };
-		7BF662081397A4A0002FEB23 /* chamber3.octree */ = {isa = PBXFileReference; lastKnownFileType = file; path = chamber3.octree; sourceTree = "<group>"; };
 		7BF664271397D8F3002FEB23 /* Simulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simulation.h; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = English; path = English.lproj/Info.plist; sourceTree = "<group>"; };
 		BC146A990EC9173000CE5E72 /* SLSMoleculeCustomDownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSMoleculeCustomDownloadViewController.h; sourceTree = "<group>"; };
@@ -349,6 +349,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7B056F05150AC85A00621766 /* chamber3.tar */,
 				BC6A9FCB11CAA8CB00E62D55 /* BenthosIcon@2x.png */,
 				BC286E2511C47956005D720C /* RotationIconSelected@2x.png */,
 				BC286E0F11C4751E005D720C /* RotationIcon@2x.png */,
@@ -356,9 +357,7 @@
 				BC281A6911727A89005B7946 /* Document-molecules-64.png */,
 				BC281A6A11727A89005B7946 /* Document-molecules-320.png */,
 				BCDFF5AD1154819A005C984C /* 57-download.png */,
-				7BF65CA41397A492002FEB23 /* chamber3 */,
 				BCF496CB1040FB9D00BE82D5 /* RotationIconSelected.png */,
-				7BF662081397A4A0002FEB23 /* chamber3.octree */,
 				BCF495211040945400BE82D5 /* RotationIcon.png */,
 				BCDC9F9C0EB37B3400ADCFA5 /* Localized.strings */,
 				BC4E97F90E69F8E1006CD291 /* molecules.sql */,
@@ -376,7 +375,6 @@
 				BCDC9F860EB375FB00ADCFA5 /* Info.plist */,
 				BCDFF55F115469BF005C984C /* RotationIconiPad.png */,
 				7BF64D63139770C8002FEB23 /* combined.frag */,
-				7BA0CD9A13A8E5ED00510931 /* pavall */,
 				7BF64D64139770C8002FEB23 /* combined.vert */,
 				BCDFF57211546FB2005C984C /* RotationIconiPadCancel.png */,
 				7BF64D65139770C8002FEB23 /* combined_frag.cg */,
@@ -461,6 +459,8 @@
 				7BF64DB713977227002FEB23 /* StateUtilities.mm */,
 				7BF64DB813977227002FEB23 /* Utilities.h */,
 				7BF64DB913977227002FEB23 /* Utilities.mm */,
+				7B056F02150AC5DF00621766 /* NSFileManager+Tar.h */,
+				7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -702,8 +702,7 @@
 				7BF64D91139770C8002FEB23 /* readback_vert.cg in Resources */,
 				7BF64D94139770C8002FEB23 /* renderVT_frag.cg in Resources */,
 				7BF64D95139770C8002FEB23 /* renderVT_vert.cg in Resources */,
-				7BF662071397A492002FEB23 /* chamber3 in Resources */,
-				7BF662091397A4A0002FEB23 /* chamber3.octree in Resources */,
+				7B056F06150AC85A00621766 /* chamber3.tar in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -760,6 +759,7 @@
 				7BF6544D13977C74002FEB23 /* BMFont.mm in Sources */,
 				7BF654A113977F8A002FEB23 /* CollideableMesh.mm in Sources */,
 				7BF65BC41397952F002FEB23 /* MyOpenGLES20Renderer.mm in Sources */,
+				7B056F04150AC5DF00621766 /* NSFileManager+Tar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

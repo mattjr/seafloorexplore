@@ -59,12 +59,12 @@ float positions[60 * 60][6];
 
 		mesh = [[CollideableMesh alloc] initWithOctreeNamed:name];
 
-
 		char ext [5] = "    ";
         uint8_t border, length;
         uint32_t dim;
-        bool success = vtScan([name UTF8String], ext, &border, &length, &dim);
-        NSString *dataName = [[name copy] autorelease];
+        NSString *dataName = [[name copy] stringByAppendingString:@".vtex"] ;
+
+        bool success = vtScan([dataName UTF8String], ext, &border, &length, &dim);
         
         if (success)
         {
@@ -79,13 +79,13 @@ float positions[60 * 60][6];
 			}
 			else
 			{
-				printf("Error: %s not same MIPMAPCHAINLENGTH mode as binary.", [name UTF8String]);
+				printf("Error: %s not same MIPMAPCHAINLENGTH mode as binary.", [dataName UTF8String]);
 				exit(1);
 			}
         }
 		else
 		{
-			printf("Error: %s not a valid tile store", [name UTF8String]);
+			printf("Error: %s not a valid tile store", [dataName UTF8String]);
 			exit(1);
 		}
 

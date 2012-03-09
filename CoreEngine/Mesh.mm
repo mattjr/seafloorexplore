@@ -160,16 +160,16 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexVBOName);
 		glBufferData(GL_ARRAY_BUFFER, octree->vertexCount * ((octree->magicWord == 0x6D616C62) ? 6 : 8) * sizeof(float), OFFSET_VERTICES, GL_STATIC_DRAW);
-        printf("Loaded %d\n",octree->vertexCount);
+       // printf("Loaded %d\n",octree->vertexCount);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBOName);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, octree->rootnode.faceCount * 3 * (octree->vertexCount > 0xFFFF ? sizeof(uint32_t) : sizeof(uint16_t)), OFFSET_FACES, GL_STATIC_DRAW);
-        printf("Angry birds\n",octree->rootnode.faceCount * 3);
+       // printf("Angry birds\n",octree->rootnode.faceCount * 3);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		if (octree->magicWord != 0x6D616C62)
-			texName = LoadTextureNamed(name, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_TRUE, 4.0);
+		//if (octree->magicWord != 0x6D616C62)
+		//	texName = LoadTextureNamed(name, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_TRUE, 4.0);
 
 		visibleNodeStack = (uint16_t *) calloc(1, octree->nodeCount * sizeof(uint16_t));
 

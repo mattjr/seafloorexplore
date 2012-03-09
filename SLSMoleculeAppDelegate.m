@@ -15,6 +15,7 @@
 #import "SLSMoleculeTableViewController.h"
 #import "SLSMolecule.h"
 #import "NSData+Gzip.h"
+#import "NSFileManager+Tar.h"
 
 #import "VCTitleCase.h"
 
@@ -236,7 +237,7 @@
 		[self connectToDatabase];
 		// Before anything else, move included PDB files to /Documents if the program hasn't been run before
 		// User might have intentionally deleted files, so don't recopy the files in that case
-		NSError *error = nil;
+	//	NSError *error = nil;
 		// Grab the /Documents directory path
 		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 		NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -248,16 +249,19 @@
 		NSString *pname;
 		while ((pname = [direnum nextObject]))
 		{
-			if ([[pname pathExtension] isEqualToString:@"octree"])
+			if ([[pname pathExtension] isEqualToString:@"tar"])
 			{
 				NSString *preloadedPDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:pname];
-				NSString *installedPDBPath = [documentsDirectory stringByAppendingPathComponent:pname];
+				//NSString *installedPDBPath = [documentsDirectory stringByAppendingPathComponent:pname];
 				
-				NSString *preloadedTexPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:[pname stringByDeletingPathExtension]];
+			//	NSString *preloadedTexPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:[pname stringByDeletingPathExtension]];
 				NSString *installedTexPath = [documentsDirectory stringByAppendingPathComponent:[pname stringByDeletingPathExtension]];
-				if (![fileManager fileExistsAtPath:installedPDBPath])
+				if (![fileManager fileExistsAtPath:installedTexPath])
 				{
-					// Move included PDB files to /Documents
+                  //  NSLog(@"Processing '%@' to '%@'\n",preloadedPDBPath,installedTexPath);
+                    /*
+					
+                    // Move included PDB files to /Documents
 					[[NSFileManager defaultManager]	copyItemAtPath:preloadedPDBPath toPath:installedPDBPath error:&error];
 					if (error != nil)
 					{
@@ -267,13 +271,17 @@
 					NSLog(@"Failed to copy over PDB files with error: '%@' ' %@'.", preloadedTexPath,installedTexPath);
 					if ([fileManager fileExistsAtPath:preloadedTexPath] && ![fileManager fileExistsAtPath:installedTexPath]){
 
-						[[NSFileManager defaultManager]	copyItemAtPath:preloadedTexPath toPath:installedTexPath error:&error];
+						[[NSFileManager defaultManager]	copyItemAtPath:preloadedTexPath toPath:installedTexPath error:&error];*/
+                    NSData* tarData = [NSData dataWithContentsOfFile:preloadedPDBPath];
+                    NSError *error=nil;
+                    [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:documentsDirectory withTarData:tarData error:&error];
+                    
 						if (error != nil)
 						{
-											NSLog(@"Failed to copy over PDB files with error: '%@'.", [error localizedDescription]);
+											NSLog(@"Failed to untar preinstalled files  with error: '%@'.", [error localizedDescription]);
 							// TODO: Report the file copying problem to the user or do something about it
 						}
-					}
+					//}
 				}
 				
 			}
