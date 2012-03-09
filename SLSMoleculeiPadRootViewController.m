@@ -70,7 +70,7 @@
 	spacerItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 
 	unselectedRotationImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"RotationIconiPad" ofType:@"png"]];	
-	rotationBarButton = [[UIBarButtonItem alloc] initWithImage:unselectedRotationImage style:UIBarButtonItemStylePlain target:glViewController action:@selector(startOrStopAutorotation:)];
+	rotationBarButton = [[UIBarButtonItem alloc] initWithImage:unselectedRotationImage style:UIBarButtonItemStylePlain target:glViewController action:@selector(switchVisType:)];
 	rotationBarButton.width = 44.0f;
 	
 /*	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleConnectionOfMonitor:) name:UIScreenDidConnectNotification object:nil];
@@ -87,8 +87,11 @@
 	}
 	else
 	{*/
-		[mainToolbar setItems:[NSArray arrayWithObjects:spacerItem, downloadBarButton, visualizationBarButton, rotationBarButton, nil] animated:NO];
+	/*	[mainToolbar setItems:[NSArray arrayWithObjects:spacerItem, downloadBarButton, visualizationBarButton, rotationBarButton, nil] animated:NO];
     [mainToolbar setItems:[NSArray arrayWithObjects:spacerItem, visualizationBarButton, rotationBarButton, nil] animated:NO];
+     */
+    [mainToolbar setItems:[NSArray arrayWithObjects:spacerItem, downloadBarButton, rotationBarButton, nil] animated:NO];
+    [mainToolbar setItems:[NSArray arrayWithObjects:spacerItem, rotationBarButton, nil] animated:NO];
 //	}
 		
 	[downloadBarButton release];

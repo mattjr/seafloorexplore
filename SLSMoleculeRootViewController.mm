@@ -85,7 +85,7 @@
 	[rotationButton setImage:selectedRotationImage forState:UIControlStateSelected];
 	
 	rotationButton.showsTouchWhenHighlighted = YES;
-	[rotationButton addTarget:glViewController action:@selector(startOrStopAutorotation:) forControlEvents:UIControlEventTouchUpInside];
+	[rotationButton addTarget:glViewController action:@selector(switchVisType:) forControlEvents:UIControlEventTouchUpInside];
 	rotationButton.frame = CGRectMake(0.0f, 460.0f - 70.0f, 70.0f, 70.0f);
 	rotationButton.clipsToBounds = NO;
 	[glViewController.view addSubview:rotationButton];

@@ -190,6 +190,32 @@
 	[renderingProgressIndicator release];
 	renderingProgressIndicator = nil;
 }
+- (void)switchVisType:(id)sender;
+{
+
+GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]getRenderMode];
+    GLVisualizationType newVisualizationType;
+    if (currentVisualizationType == TEXTURED){
+    newVisualizationType=SHADED;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:NO]];
+
+    }
+    else{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:YES]];
+
+        newVisualizationType=TEXTURED;
+    }
+    
+    [(Simulation *)[scene simulator]setRenderMode: newVisualizationType];
+    
+    
+    //   moleculeToDisplay.currentVisualizationType = newVisualizationType;
+    [[NSUserDefaults standardUserDefaults] setInteger:newVisualizationType forKey:@"currentVisualizationMode"];
+    
+    [openGLESRenderer freeVertexBuffers];
+    [moleculeToDisplay performSelectorInBackground:@selector(renderMolecule:) withObject:openGLESRenderer];
+}
+
 
 #pragma mark -
 #pragma mark Autorotation of molecule

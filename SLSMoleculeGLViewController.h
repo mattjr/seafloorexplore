@@ -54,6 +54,7 @@
 - (void)showRenderingIndicator:(NSNotification *)note;
 - (void)updateRenderingIndicator:(NSNotification *)note;
 - (void)hideRenderingIndicator:(NSNotification *)note;
+- (void)switchVisType:(id)sender;
 
 // Autorotation of molecule
 - (void)startOrStopAutorotation:(id)sender;

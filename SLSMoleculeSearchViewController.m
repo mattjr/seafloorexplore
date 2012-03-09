@@ -47,7 +47,7 @@
 //        }
 		[keywordSearchBar becomeFirstResponder];
 				
-		self.navigationItem.title = NSLocalizedStringFromTable(@"Search For Molecules", @"Localized", nil);
+		self.navigationItem.title = NSLocalizedStringFromTable(@"Search For Models", @"Localized", nil);
 		self.navigationItem.rightBarButtonItem = nil;
 
 		self.tableView.tableHeaderView = keywordSearchBar;

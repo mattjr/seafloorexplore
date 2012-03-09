@@ -25,7 +25,7 @@
 {
 	if ((self = [super initWithStyle:style])) 
 	{        
-        self.title = NSLocalizedStringFromTable(@"Molecules", @"Localized", nil);
+        self.title = NSLocalizedStringFromTable(@"Models", @"Localized", nil);
 		selectedIndex = initialSelectedMoleculeIndex;
         
         self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -230,16 +230,16 @@
 
 		}		
 		
-		cell.textLabel.text = NSLocalizedStringFromTable(@"Download new molecules", @"Localized", nil);
+		cell.textLabel.text = NSLocalizedStringFromTable(@"Download new Models", @"Localized", nil);
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		cell.textLabel.textColor = [UIColor blackColor];
 	}
 	else
 	{
-		cell = [tableView dequeueReusableCellWithIdentifier:@"Molecules"];
+		cell = [tableView dequeueReusableCellWithIdentifier:@"Models"];
 		if (cell == nil) 
 		{
-			cell = [[[SLSMoleculeLibraryTableCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Molecules"] autorelease];
+			cell = [[[SLSMoleculeLibraryTableCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Models"] autorelease];
 
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
             {
