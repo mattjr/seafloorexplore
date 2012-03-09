@@ -30,12 +30,12 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
-	<string>MoleculesIcon.png</string>
+	<string>BenthosIcon.png</string>
 	<key>CFBundleIconFiles</key>
 	<array>
-		<string>MoleculesIcon@2x.png</string>
-		<string>MoleculesIcon.png</string>
-		<string>MoleculesIcon72.png</string>
+		<string>BenthosIcon@2x.png</string>
+		<string>BenthosIcon.png</string>
+		<string>BenthosIcon72.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.sunsetlakesoftware.Molecules</string>

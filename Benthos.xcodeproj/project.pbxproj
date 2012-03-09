@@ -68,20 +68,20 @@
 		BC4FB6670E4E875900B316CD /* VCTitleCase.m in Sources */ = {isa = PBXBuildFile; fileRef = BC4FB6660E4E875900B316CD /* VCTitleCase.m */; };
 		BC4FB75D0E4F6BB000B316CD /* greenButton.png in Resources */ = {isa = PBXBuildFile; fileRef = BC4FB75C0E4F6BAF00B316CD /* greenButton.png */; };
 		BC4FB7BA0E4F80DB00B316CD /* redButton.png in Resources */ = {isa = PBXBuildFile; fileRef = BC4FB7B90E4F80DB00B316CD /* redButton.png */; };
-		BC540D101145E04600045DE1 /* MoleculesIcon72.png in Resources */ = {isa = PBXBuildFile; fileRef = BC540D0F1145E04500045DE1 /* MoleculesIcon72.png */; };
+		BC540D101145E04600045DE1 /* BenthosIcon72.png in Resources */ = {isa = PBXBuildFile; fileRef = BC540D0F1145E04500045DE1 /* BenthosIcon72.png */; };
 		BC57EBFB1358DE9000FA1060 /* GLProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = BC57EBFA1358DE9000FA1060 /* GLProgram.m */; };
 		BC5BB79C0E200C3B0001DFD0 /* 1BNA.pdb.gz in Resources */ = {isa = PBXBuildFile; fileRef = BC5BB79B0E200C3B0001DFD0 /* 1BNA.pdb.gz */; };
 		BC5BB7DF0E2020B10001DFD0 /* 1EVE.pdb.gz in Resources */ = {isa = PBXBuildFile; fileRef = BC5BB7DD0E2020B10001DFD0 /* 1EVE.pdb.gz */; };
 		BC5BB8BD0E204DC20001DFD0 /* SLSMoleculeDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5BB8BC0E204DC20001DFD0 /* SLSMoleculeDetailViewController.m */; };
 		BC5BBBFA0E216A170001DFD0 /* 1TRZ.pdb.gz in Resources */ = {isa = PBXBuildFile; fileRef = BC5BBBF90E216A170001DFD0 /* 1TRZ.pdb.gz */; };
-		BC5BBCD40E219AB90001DFD0 /* MoleculesIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = BC5BBCD30E219AB90001DFD0 /* MoleculesIcon.png */; };
+		BC5BBCD40E219AB90001DFD0 /* BenthosIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */; };
 		BC61CAFC0E2317EE0074BE04 /* 4TRA.pdb.gz in Resources */ = {isa = PBXBuildFile; fileRef = BC61CAFB0E2317EE0074BE04 /* 4TRA.pdb.gz */; };
 		BC61CC310E2463180074BE04 /* SLSCellTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC61CC2E0E2463180074BE04 /* SLSCellTextView.m */; };
 		BC61CC320E2463180074BE04 /* SLSTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC61CC300E2463180074BE04 /* SLSTextViewController.m */; };
 		BC67B8BC137B5DF10075A361 /* SphereAOLookup.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BC67B8BA137B5DF10075A361 /* SphereAOLookup.fsh */; };
 		BC67B8BD137B5DF10075A361 /* SphereAOLookup.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BC67B8BB137B5DF10075A361 /* SphereAOLookup.vsh */; };
 		BC67B8BF137C4B7A0075A361 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC67B8BE137C4B7A0075A361 /* Default@2x.png */; };
-		BC6A9FCC11CAA8CB00E62D55 /* MoleculesIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC6A9FCB11CAA8CB00E62D55 /* MoleculesIcon@2x.png */; };
+		BC6A9FCC11CAA8CB00E62D55 /* BenthosIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC6A9FCB11CAA8CB00E62D55 /* BenthosIcon@2x.png */; };
 		BC835184117545C600B478D5 /* 69-display.png in Resources */ = {isa = PBXBuildFile; fileRef = BC835183117545C600B478D5 /* 69-display.png */; };
 		BCA2E7E2135A1B9B00D7206C /* CylinderDepth.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E7DA135A1B9B00D7206C /* CylinderDepth.fsh */; };
 		BCA2E7E3135A1B9B00D7206C /* CylinderDepth.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E7DB135A1B9B00D7206C /* CylinderDepth.vsh */; };
@@ -215,7 +215,7 @@
 		BC4FB6660E4E875900B316CD /* VCTitleCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VCTitleCase.m; sourceTree = "<group>"; };
 		BC4FB75C0E4F6BAF00B316CD /* greenButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greenButton.png; sourceTree = "<group>"; };
 		BC4FB7B90E4F80DB00B316CD /* redButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redButton.png; sourceTree = "<group>"; };
-		BC540D0F1145E04500045DE1 /* MoleculesIcon72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MoleculesIcon72.png; sourceTree = "<group>"; };
+		BC540D0F1145E04500045DE1 /* BenthosIcon72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BenthosIcon72.png; sourceTree = "<group>"; };
 		BC57EBF91358DE9000FA1060 /* GLProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLProgram.h; sourceTree = "<group>"; };
 		BC57EBFA1358DE9000FA1060 /* GLProgram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLProgram.m; sourceTree = "<group>"; };
 		BC5BB79B0E200C3B0001DFD0 /* 1BNA.pdb.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = 1BNA.pdb.gz; sourceTree = "<group>"; };
@@ -223,7 +223,7 @@
 		BC5BB8BB0E204DC20001DFD0 /* SLSMoleculeDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSMoleculeDetailViewController.h; sourceTree = "<group>"; };
 		BC5BB8BC0E204DC20001DFD0 /* SLSMoleculeDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLSMoleculeDetailViewController.m; sourceTree = "<group>"; };
 		BC5BBBF90E216A170001DFD0 /* 1TRZ.pdb.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = 1TRZ.pdb.gz; sourceTree = "<group>"; };
-		BC5BBCD30E219AB90001DFD0 /* MoleculesIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MoleculesIcon.png; sourceTree = "<group>"; };
+		BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BenthosIcon.png; sourceTree = "<group>"; };
 		BC61CAFB0E2317EE0074BE04 /* 4TRA.pdb.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = 4TRA.pdb.gz; sourceTree = "<group>"; };
 		BC61CC2D0E2463180074BE04 /* SLSCellTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSCellTextView.h; sourceTree = "<group>"; };
 		BC61CC2E0E2463180074BE04 /* SLSCellTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLSCellTextView.m; sourceTree = "<group>"; };
@@ -232,7 +232,7 @@
 		BC67B8BA137B5DF10075A361 /* SphereAOLookup.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereAOLookup.fsh; path = Shaders/SphereAOLookup.fsh; sourceTree = "<group>"; };
 		BC67B8BB137B5DF10075A361 /* SphereAOLookup.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereAOLookup.vsh; path = Shaders/SphereAOLookup.vsh; sourceTree = "<group>"; };
 		BC67B8BE137C4B7A0075A361 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		BC6A9FCB11CAA8CB00E62D55 /* MoleculesIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MoleculesIcon@2x.png"; sourceTree = "<group>"; };
+		BC6A9FCB11CAA8CB00E62D55 /* BenthosIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BenthosIcon@2x.png"; sourceTree = "<group>"; };
 		BC835183117545C600B478D5 /* 69-display.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "69-display.png"; sourceTree = "<group>"; };
 		BCA2E7DA135A1B9B00D7206C /* CylinderDepth.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = CylinderDepth.fsh; path = Shaders/CylinderDepth.fsh; sourceTree = "<group>"; };
 		BCA2E7DB135A1B9B00D7206C /* CylinderDepth.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = CylinderDepth.vsh; path = Shaders/CylinderDepth.vsh; sourceTree = "<group>"; };
@@ -349,7 +349,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				BC6A9FCB11CAA8CB00E62D55 /* MoleculesIcon@2x.png */,
+				BC6A9FCB11CAA8CB00E62D55 /* BenthosIcon@2x.png */,
 				BC286E2511C47956005D720C /* RotationIconSelected@2x.png */,
 				BC286E0F11C4751E005D720C /* RotationIcon@2x.png */,
 				BC835183117545C600B478D5 /* 69-display.png */,
@@ -365,8 +365,8 @@
 				BC4FB7B90E4F80DB00B316CD /* redButton.png */,
 				BC4FB75C0E4F6BAF00B316CD /* greenButton.png */,
 				BC61CAFB0E2317EE0074BE04 /* 4TRA.pdb.gz */,
-				BC5BBCD30E219AB90001DFD0 /* MoleculesIcon.png */,
-				BC540D0F1145E04500045DE1 /* MoleculesIcon72.png */,
+				BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */,
+				BC540D0F1145E04500045DE1 /* BenthosIcon72.png */,
 				7B02E8CD139B5E80005FBC67 /* pavall.octree */,
 				BC5BBBF90E216A170001DFD0 /* 1TRZ.pdb.gz */,
 				BC5BB7DD0E2020B10001DFD0 /* 1EVE.pdb.gz */,
@@ -655,7 +655,7 @@
 				BC5BB79C0E200C3B0001DFD0 /* 1BNA.pdb.gz in Resources */,
 				BC5BB7DF0E2020B10001DFD0 /* 1EVE.pdb.gz in Resources */,
 				BC5BBBFA0E216A170001DFD0 /* 1TRZ.pdb.gz in Resources */,
-				BC5BBCD40E219AB90001DFD0 /* MoleculesIcon.png in Resources */,
+				BC5BBCD40E219AB90001DFD0 /* BenthosIcon.png in Resources */,
 				BC61CAFC0E2317EE0074BE04 /* 4TRA.pdb.gz in Resources */,
 				BC4FB75D0E4F6BB000B316CD /* greenButton.png in Resources */,
 				BC4FB7BA0E4F80DB00B316CD /* redButton.png in Resources */,
@@ -663,7 +663,7 @@
 				BCDC9F9D0EB37B3400ADCFA5 /* Localized.strings in Resources */,
 				BCF495221040945400BE82D5 /* RotationIcon.png in Resources */,
 				BCF496CC1040FB9D00BE82D5 /* RotationIconSelected.png in Resources */,
-				BC540D101145E04600045DE1 /* MoleculesIcon72.png in Resources */,
+				BC540D101145E04600045DE1 /* BenthosIcon72.png in Resources */,
 				BCDFF560115469C1005C984C /* RotationIconiPad.png in Resources */,
 				BCDFF57311546FB2005C984C /* RotationIconiPadCancel.png in Resources */,
 				BCDFF580115473AD005C984C /* VisualizationIcon.png in Resources */,
@@ -676,7 +676,7 @@
 				BC835184117545C600B478D5 /* 69-display.png in Resources */,
 				BC286E1011C4751E005D720C /* RotationIcon@2x.png in Resources */,
 				BC286E2611C47956005D720C /* RotationIconSelected@2x.png in Resources */,
-				BC6A9FCC11CAA8CB00E62D55 /* MoleculesIcon@2x.png in Resources */,
+				BC6A9FCC11CAA8CB00E62D55 /* BenthosIcon@2x.png in Resources */,
 				BCA2E7E2135A1B9B00D7206C /* CylinderDepth.fsh in Resources */,
 				BCA2E7E3135A1B9B00D7206C /* CylinderDepth.vsh in Resources */,
 				BCA2E7E4135A1B9B00D7206C /* CylinderRaytracing.fsh in Resources */,
