@@ -71,6 +71,60 @@ NSLog(@"Warning: shader log: %s\n", infoLog);										\
 	return program_object;
 }
 #endif
+GLuint LoadShadersNoLink(NSString *shadername, NSString *preprocessorDefines)
+{
+    
+    
+	char * infoLog = 0;
+	NSString *vertexString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:shadername ofType:@"vert"] encoding:NSUTF8StringEncoding error:NULL];
+	NSString *fragmentString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:shadername ofType:@"frag"] encoding:NSUTF8StringEncoding error:NULL];
+	GLuint vertex_shader = 0, fragment_shader = 0, program_object;
+	const GLchar *vertex_string, *fragment_string;
+	GLint vertex_compiled = 1, fragment_compiled = 1, linked;
+	NSString *openglESSupport = @"#ifdef GL_ES\nprecision highp float;\n#endif\n";
+	if (!vertexString && !fragmentString) fatal("Error: can't load empty shaders");
+    
+	if (preprocessorDefines == nil) preprocessorDefines = openglESSupport;
+	else preprocessorDefines = [openglESSupport stringByAppendingString:preprocessorDefines];
+	LOAD_SHADER(vertexString, vertex_string, vertex_shader, vertex_compiled, GL_VERTEX_SHADER)
+	LOAD_SHADER(fragmentString, fragment_string, fragment_shader, fragment_compiled, GL_FRAGMENT_SHADER)
+    
+	if (!vertex_compiled || !fragment_compiled)
+		fatal("Error: couldn't compile shaders: \n%s\nVERTEX SHADER:\n%s\n\nFRAGMENT SHADER:\n%s\n", infoLog, [vertexString UTF8String], [fragmentString UTF8String]); // should do cleanup if we don't wanna panic here
+    
+    
+	program_object = glCreateProgram();
+	if (vertex_shader != 0)
+	{
+		glAttachShader(program_object, vertex_shader);
+		glDeleteShader(vertex_shader);
+	}
+	if (fragment_shader != 0)
+	{
+		glAttachShader(program_object, fragment_shader);
+		glDeleteShader(fragment_shader);
+	}
+    return program_object;
+}
+GLuint LinkShader(GLuint program_object){
+    GLint linked;
+    
+    glLinkProgram(program_object);
+	glGetProgramiv(program_object, GL_LINK_STATUS, &linked);
+    
+	if (!linked)
+	{
+		GLint infoLogLength;
+		glGetProgramiv(program_object, GL_INFO_LOG_LENGTH, &infoLogLength);
+		char * infoLog = (char *) malloc((infoLogLength + 1) * sizeof(char));
+		glGetProgramInfoLog (program_object, infoLogLength, NULL, infoLog);
+        
+		fatal("Error: couldn't link shaders:\n%s\n", infoLog);	
+        
+    }
+    return program_object;
+    
+}
 
 
 // Based on Apple sample code:

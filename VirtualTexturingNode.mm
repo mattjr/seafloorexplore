@@ -73,15 +73,15 @@ extern vtConfig c;
 		vtInit([path UTF8String], [format UTF8String], border, miplength, tilesize);
 
 		char *prelude = vtGetShaderPrelude();
-		readbackShader = LoadShaders(@"readback", [NSString stringWithUTF8String:prelude]);
+		readbackShader = LoadShadersNoLink(@"readback", [NSString stringWithUTF8String:prelude]);
 
 
 //#ifdef DEBUG
 	//	renderVTShader = LoadShaders(@"renderVT", [[NSString stringWithUTF8String:prelude] stringByAppendingString:@"\n#define DEBUG=1\n\n"]);
 //#else
-		renderVTShader = LoadShaders(@"renderVT", [NSString stringWithUTF8String:prelude]);
+		renderVTShader = LoadShadersNoLink(@"renderVT", [NSString stringWithUTF8String:prelude]);
 //#endif
-		passShader = LoadShaders(@"pass", [NSString stringWithUTF8String:prelude]);
+		passShader = LoadShadersNoLink(@"pass", [NSString stringWithUTF8String:prelude]);
 
 
 		minMS = 10000;
@@ -101,6 +101,10 @@ extern vtConfig c;
 		glBindAttribLocation(passShader, NORMAL_ARRAY, "normal");
 
 #endif
+        LinkShader(renderVTShader);
+        LinkShader(readbackShader);
+        LinkShader(passShader);
+
 		glUseProgram(0);
 
 

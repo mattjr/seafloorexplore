@@ -1,6 +1,8 @@
 #import "Core3D.h"
 
 GLuint LoadShaders(NSString *shadername, NSString *preprocessorDefines);
+GLuint LoadShadersNoLink(NSString *shadername, NSString *preprocessorDefines);
+GLuint LinkShader(GLuint program_object);
 GLuint LoadTexture(NSString *imagePath, GLint minFilter, GLint magFilter, GLint mipmap, GLfloat anisontropy);
 GLuint LoadTextureNamed(NSString *name, GLint minFilter, GLint magFilter, GLint mipmap, GLfloat anisontropy);
 void DrawFullscreenQuad(short screenWidth, short screenHeight, short textureWidth, short textureHeight);

@@ -160,10 +160,10 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexVBOName);
 		glBufferData(GL_ARRAY_BUFFER, octree->vertexCount * ((octree->magicWord == 0x6D616C62) ? 6 : 8) * sizeof(float), OFFSET_VERTICES, GL_STATIC_DRAW);
-
+        printf("Loaded %d\n",octree->vertexCount);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBOName);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, octree->rootnode.faceCount * 3 * (octree->vertexCount > 0xFFFF ? sizeof(uint32_t) : sizeof(uint16_t)), OFFSET_FACES, GL_STATIC_DRAW);
-
+        printf("Angry birds\n",octree->rootnode.faceCount * 3);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -400,7 +400,7 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 	glNormalPointer(GL_FLOAT, (octree->magicWord == 0x6D616C62) ? sizeof(float) * 6 : sizeof(float) * 8, (const GLfloat *) (sizeof(float) * 3));
 	glVertexPointer(3, GL_FLOAT, (octree->magicWord == 0x6D616C62) ? sizeof(float) * 6 : sizeof(float) * 8, (const GLfloat *) 0);
 #endif
-
+    
 
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVBOName);
@@ -447,7 +447,7 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 				if (nn->firstFace != n->firstFace + n->faceCount)	// TODO: allow for some draw call reduction at the expense of drawing invisible stuff
 					break;
 
-				//printf("%f %f %f %f %f %f\n",n->aabbOriginX,n->aabbOriginY,n->aabbOriginZ,n->aabbExtentX, n->aabbExtentY, n->aabbExtentZ);
+                    //printf("%f %f %f %f %f %f\n",n->aabbOriginX,n->aabbOriginY,n->aabbOriginZ,n->aabbExtentX, n->aabbExtentY, n->aabbExtentZ);
 				fc += nn->faceCount;
 				n = nn;
 				v++;
