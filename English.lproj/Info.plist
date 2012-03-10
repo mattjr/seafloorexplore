@@ -38,7 +38,7 @@
 		<string>BenthosIcon72.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
-	<string>com.sunsetlakesoftware.Molecules</string>
+	<string>com.acfr.Benthos</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

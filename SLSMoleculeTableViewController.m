@@ -171,8 +171,9 @@
         }
 
 	SLSMolecule *newMolecule =nil;
+    NSString *pname=[filename  stringByDeletingPathExtension ]   ;
     if(!extractError)
-        newMolecule=[[SLSMolecule alloc] initWithFilename:[filename stringByDeletingPathExtension] database:database title:[[note userInfo] objectForKey:@"title"]];
+        newMolecule=[[SLSMolecule alloc] initWithFilename:pname  database:database title:[[note userInfo] objectForKey:@"title"]];
 	if (newMolecule == nil)
 	{
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Error in downloaded file", @"Localized", nil) message:NSLocalizedStringFromTable(@"The molecule file is either corrupted or not of a supported format", @"Localized", nil)
@@ -200,13 +201,19 @@
 		[molecules addObject:newMolecule];
 		[newMolecule release];
 		
-       // if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-       // {
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+        {
             selectedIndex = ([molecules count] - 1);
 
             [self.delegate selectedMoleculeDidChange:selectedIndex];            
-       // }
-
+        }else{
+        
+            if ([molecules count] == 1)
+            {
+                [self.delegate selectedMoleculeDidChange:0];
+            }
+        }
+        
         [self.tableView reloadData];
 //		[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:([molecules count] - 1) inSection:0]] withRowAnimation:UITableViewRowAnimationBottom];		
 	}			
@@ -257,9 +264,9 @@
 	UITableViewCell *cell;
 	NSInteger index = [indexPath row];
 	
-	if ([SLSMoleculeAppDelegate isRunningOniPad])
+        if ([SLSMoleculeAppDelegate isRunningOniPad])
 		index++;
-	
+	printf("index %d %d \n",index,selectedIndex);
 	if (index == 0)
 	{
 		cell = [tableView dequeueReusableCellWithIdentifier:@"Download"];
@@ -338,7 +345,7 @@
 
                     [(SLSMoleculeLibraryTableCell *)cell setIsSelected:NO];
                 }
-            }
+            }   
         }
         else
         {
@@ -351,12 +358,16 @@
                 cell.textLabel.textColor = [UIColor blackColor];
             }
         }
-
-		cell.textLabel.text = [[molecules objectAtIndex:(index-1)] compound];
-
+        if(molecules == nil || index-1 >= [molecules count] || [molecules objectAtIndex:(index-1)] == nil){
+            NSLog(@"Error trying to acess null molecule %d\n",[molecules count]);
+            return nil;
+        }
+        int l=[[molecules objectAtIndex:(index-1)] numberOfAtoms];
+        printf("Fail Val 0x%x %d\n",(int)[molecules objectAtIndex:(index-1)], l);
 		NSString *fileNameWithoutExtension = [[molecules objectAtIndex:(index-1)] filenameWithoutExtension];
+        cell.textLabel.text = fileNameWithoutExtension;
+
 		cell.detailTextLabel.text = fileNameWithoutExtension;
-/***FAIL Memory freed *****/		
 		
 		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	}

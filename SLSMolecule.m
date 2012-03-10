@@ -74,6 +74,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	
 	isPopulatedFromDatabase = NO;
 	databaseKey = 0;
+    numberOfAtoms = 187;
 	isDoneRendering = NO;
     hasRendered=NO;
 	stillCountingAtomsInFirstStructure = YES;
@@ -84,7 +85,6 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 {
 	if (![self init])
 		return nil;
-    NSLog(@"AA %@\n",newFilename);
 	database = newDatabase;
 	filename = [newFilename copy];
     title = [newTitle copy];
@@ -92,13 +92,14 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	NSRange rangeUntilFirstPeriod = [filename rangeOfString:@"."];
 	if (rangeUntilFirstPeriod.location == NSNotFound)
     {
-		filenameWithoutExtension = [[filename copy] retain];
+		filenameWithoutExtension = [filename copy];
     }
 	else
     {
 		filenameWithoutExtension = [[filename substringToIndex:rangeUntilFirstPeriod.location] retain];	
     }
-	
+    NSLog(@"AA %@ 0x%x 0x%x\n",newFilename,(int)newFilename,(int)filenameWithoutExtension);
+
 	if (insertMoleculeSQLStatement == nil) 
 	{
         static char *sql = "INSERT INTO molecules (filename) VALUES(?)";
@@ -120,8 +121,8 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
         databaseKey = sqlite3_last_insert_rowid(database);
     }
 	
-	NSError *error = nil;
-    
+	//NSError *error = nil;
+    numberOfAtoms = -999;
     /*if ([[[filename pathExtension] lowercaseString] isEqualToString:@"sdf"])
     {
         if (![self readFromSDFFileToDatabase:&error])
@@ -156,7 +157,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	
 	NSRange rangeUntilFirstPeriod = [filename rangeOfString:@"."];
 	if (rangeUntilFirstPeriod.location == NSNotFound)
-		filenameWithoutExtension = filename;
+		filenameWithoutExtension = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
 	else
 		filenameWithoutExtension = [[filename substringToIndex:rangeUntilFirstPeriod.location] retain];
 	
@@ -216,9 +217,12 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 
 - (void)dealloc;
 {
+    numberOfAtoms = 777;
 	[title release];
 	[filename release];
+    filename = nil;
 	[filenameWithoutExtension release];
+    filenameWithoutExtension = nil;
 	[keywords release];
 	[journalAuthor release];
 	[journalTitle release];

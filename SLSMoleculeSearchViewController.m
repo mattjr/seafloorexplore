@@ -250,8 +250,10 @@
              [theScanner scanString:@";" intoString:NULL]
             )
         {
-            NSString *fullPath = [[NSString alloc] initWithFormat:@"%@/%@", urlbasepath,fileName];
-            [searchResultTitles addObject:descName];
+            NSString *fullPath = [[[NSString alloc] initWithFormat:@"%@/%@", urlbasepath,fileName] autorelease];
+            NSString *descNameStr = [[[NSString alloc] initWithFormat:@"%@", descName] autorelease];
+
+            [searchResultTitles addObject:descNameStr];
             [searchResultIDs addObject:fullPath];
 
             NSLog(@"Adding %@ file name: %@", descName, fullPath);

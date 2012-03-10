@@ -380,7 +380,7 @@
 		{
 
 			// Parse the PDB file into the database
-			SLSMolecule *newMolecule = [[SLSMolecule alloc] initWithFilename:filename database:database title:nil];
+			SLSMolecule *newMolecule = [[SLSMolecule alloc] initWithFilename:filename database:database title:filename];
 			if (newMolecule != nil)
 			{
 				[molecules addObject:newMolecule];
@@ -595,7 +595,7 @@
 			return;
 		}
 		
-		SLSMolecule *newMolecule = [[SLSMolecule alloc] initWithFilename:filename database:database title:nil];
+		SLSMolecule *newMolecule = [[SLSMolecule alloc] initWithFilename:filename database:database title:filename];
 		if (newMolecule == nil)
 		{
 			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Error in downloaded file", @"Localized", nil) message:NSLocalizedStringFromTable(@"The molecule file is either corrupted or not of a supported format", @"Localized", nil)

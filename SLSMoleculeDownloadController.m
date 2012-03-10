@@ -48,7 +48,7 @@
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *documentsDirectory = [paths objectAtIndex:0];
 
-    NSString *fileExtension = @"";
+    //NSString *fileExtension = @"";
   /*  if (searchType == PROTEINDATABANKSEARCH)
     {
         fileExtension = @"pdb.gz";
@@ -62,7 +62,7 @@
 
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:filename]])
 	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"File already exists", @"Localized", nil) message:NSLocalizedStringFromTable(@"This molecule has already been downloaded", @"Localized", nil)
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"File already exists", @"Localized", nil) message:NSLocalizedStringFromTable(@"This model has already been downloaded", @"Localized", nil)
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
 		[alert show];
 		[alert release];
@@ -233,7 +233,7 @@
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *documentsDirectory = [paths objectAtIndex:0];
     
-    NSString *fileExtension = @"";
+    //NSString *fileExtension = @"";
   /*  if (searchType == PROTEINDATABANKSEARCH)
     {
         fileExtension = @"pdb.gz";

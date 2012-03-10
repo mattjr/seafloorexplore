@@ -23,14 +23,14 @@
 #pragma mark Initialiation and breakdown
 
 - (id)init; 
-{
+{	scene =nil;
+
     if ((self = [super init])) 
 	{
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleView:) name:@"ToggleView" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleRotationButton:) name:@"ToggleRotationSelected" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(customURLSelectedForMoleculeDownload:) name:@"CustomURLForMoleculeSelected" object:nil];
     }
-	scene =nil;
    
     return self;
 }
