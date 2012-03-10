@@ -200,12 +200,12 @@
 		[molecules addObject:newMolecule];
 		[newMolecule release];
 		
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        {
+       // if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+       // {
             selectedIndex = ([molecules count] - 1);
 
             [self.delegate selectedMoleculeDidChange:selectedIndex];            
-        }
+       // }
 
         [self.tableView reloadData];
 //		[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:([molecules count] - 1) inSection:0]] withRowAnimation:UITableViewRowAnimationBottom];		

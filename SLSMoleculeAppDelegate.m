@@ -258,7 +258,7 @@
 				NSString *installedTexPath = [documentsDirectory stringByAppendingPathComponent:[pname stringByDeletingPathExtension]];
 				if (![fileManager fileExistsAtPath:installedTexPath])
 				{
-                  //  NSLog(@"Processing '%@' to '%@'\n",preloadedPDBPath,installedTexPath);
+                    NSLog(@"Processing '%@' to '%@'\n",preloadedPDBPath,installedTexPath);
                     /*
 					
                     // Move included PDB files to /Documents
@@ -374,9 +374,10 @@
 			pname = lastPathComponent;
 		}
 	*/	
-		if ( ([moleculeFilenameLookupTable valueForKey:pname] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"octree"] || [[[pname pathExtension] lowercaseString] isEqualToString:@"bz2"]) )
+        NSString *filename = [[pname lastPathComponent] stringByDeletingPathExtension];	
+
+		if ( ([moleculeFilenameLookupTable valueForKey:filename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"octree"] || [[[pname pathExtension] lowercaseString] isEqualToString:@"bz2"]) )
 		{
-            NSString *filename = [[pname lastPathComponent] stringByDeletingPathExtension];	
 
 			// Parse the PDB file into the database
 			SLSMolecule *newMolecule = [[SLSMolecule alloc] initWithFilename:filename database:database title:nil];

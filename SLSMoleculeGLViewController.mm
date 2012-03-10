@@ -634,7 +634,7 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 
 - (IBAction)switchToTableView;
 {
-	if (moleculeToDisplay.isDoneRendering == NO)
+	if (moleculeToDisplay != nil && moleculeToDisplay.isDoneRendering == NO)
 	{
 		return;
 	}
