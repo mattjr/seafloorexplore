@@ -30,8 +30,9 @@
 		
 		self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
+        urlbasepath = [[NSString alloc] initWithString:@"http://www-personal.acfr.usyd.edu.au/mattjr/benthos/"];
 
-		keywordSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 44.0f)];
+		/*keywordSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 44.0f)];
 		keywordSearchBar.placeholder = NSLocalizedStringFromTable(@"Search PubChem", @"Localized", nil);
 		keywordSearchBar.delegate = self;
 		keywordSearchBar.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -46,11 +47,11 @@
 //            keywordSearchBar.barStyle = UIBarStyleBlack;
 //        }
 		[keywordSearchBar becomeFirstResponder];
-				
-		self.navigationItem.title = NSLocalizedStringFromTable(@"Search For Models", @"Localized", nil);
+				*/
+		self.navigationItem.title = NSLocalizedStringFromTable(@"Download new Models", @"Localized", nil);
 		self.navigationItem.rightBarButtonItem = nil;
 
-		self.tableView.tableHeaderView = keywordSearchBar;
+		//self.tableView.tableHeaderView = keywordSearchBar;
 		
 		downloadedFileContents = nil;
 		searchResultTitles = nil;
@@ -64,6 +65,8 @@
 		{
 			self.contentSizeForViewInPopover = CGSizeMake(320.0, 700.0);
 		}
+        
+        [self getCurrentModelList];
 		
 	}
 	return self;
@@ -105,6 +108,42 @@
 	[searchResultIDs release];
 	[downloadedFileContents release];
 	[super dealloc];
+}
+- (BOOL)getCurrentModelList;
+{
+	// Clear the old search results table
+	[searchResultTitles release];
+	searchResultTitles = nil;
+	
+	[searchResultIDs release];
+	searchResultIDs = nil;
+    
+    [searchResultIUPACNames release];
+    searchResultIUPACNames = nil;
+    
+	NSString *searchURL = nil;
+    searchURL = [[NSString alloc] initWithString:[urlbasepath stringByAppendingString:@"list2.txt" ]] ;
+    
+	
+	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+	
+	NSURLRequest *fileRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:searchURL]
+													cachePolicy:NSURLRequestUseProtocolCachePolicy
+												timeoutInterval:60.0];
+	[searchURL release];
+	searchResultRetrievalConnection = [[NSURLConnection alloc] initWithRequest:fileRequest delegate:self];
+	
+	downloadedFileContents = [[NSMutableData data] retain];
+   
+	if (searchResultRetrievalConnection) 
+	{
+		[self.tableView reloadData];
+	} 
+	else 
+	{
+		return NO;
+	}
+	return YES;
 }
 
 #pragma mark -
@@ -175,16 +214,51 @@
 		nextResultsRetrievalConnection = nil;
 	}	
     
-    if (currentSearchType == PROTEINDATABANKSEARCH)
+  /*  if (currentSearchType == PROTEINDATABANKSEARCH)
     {
         [self processPDBSearchResults];
     }
     else
     {
         [self processPubChemKeywordSearch];
-    }
+    }*/
+    [self processHTMLResults];
 
 	[self.tableView reloadData];
+}
+- (void)processHTMLResults;
+{
+    NSString *titlesAndPDBCodeString = [[NSString alloc] initWithData:downloadedFileContents encoding:NSASCIIStringEncoding];
+	[downloadedFileContents release];
+	downloadedFileContents = nil;
+	NSCharacterSet *semicolonSet;
+    NSScanner *theScanner;
+    NSString *descName;
+    NSString *fileName;
+   // NSLog(@"A of %@", titlesAndPDBCodeString);
+
+    semicolonSet = [NSCharacterSet characterSetWithCharactersInString:@";"];
+    theScanner = [NSScanner scannerWithString:titlesAndPDBCodeString];
+    
+    while ([theScanner isAtEnd] == NO)
+    {
+        if ([theScanner scanUpToCharactersFromSet:semicolonSet
+                                       intoString:&descName] &&
+            [theScanner scanString:@";" intoString:NULL] &&
+            [theScanner scanUpToCharactersFromSet:semicolonSet
+                                       intoString:&fileName]&&
+             [theScanner scanString:@";" intoString:NULL]
+            )
+        {
+            NSString *fullPath = [[NSString alloc] initWithFormat:@"%@/%@", urlbasepath,fileName];
+            [searchResultTitles addObject:descName];
+            [searchResultIDs addObject:fullPath];
+
+            NSLog(@"Adding %@ file name: %@", descName, fullPath);
+        }
+    }
+   	currentPageOfResults = 1;
+	[titlesAndPDBCodeString release];
 }
 
 - (void)processPDBSearchResults;
@@ -792,12 +866,13 @@
 {
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 
-    if (isRetrievingCompoundNames)
+   /* if (isRetrievingCompoundNames)
     {
         [self processPubChemCompoundTitles];
     }
     else
-    {
+    {*/
+    
         if (connection == searchResultRetrievalConnection)
         {
             [self processSearchResultsAppendingNewData:NO];
@@ -806,7 +881,7 @@
         {
             [self processSearchResultsAppendingNewData:YES];
         }
-    }
+   // }
 }
 
 #pragma mark -

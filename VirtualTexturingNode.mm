@@ -13,6 +13,7 @@
 #import "LibVT_Internal.h"
 #import "LibVT.h"
 #import "LibVT_Config.h"
+#import "Utilities.h"
 //#import "Mesh.h"
 
 extern vtData vt;

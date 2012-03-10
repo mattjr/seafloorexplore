@@ -780,7 +780,8 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
         [(MyOpenGLES20Renderer*)openGLESRenderer shutdownVT];
     else
         printf("Can't stop scene\n");
-    
+    [openGLESRenderer clearScreen];
+
 }
 
 - (void)startRender:(NSString*)name;

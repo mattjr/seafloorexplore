@@ -84,7 +84,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 {
 	if (![self init])
 		return nil;
-
+    NSLog(@"AA %@\n",newFilename);
 	database = newDatabase;
 	filename = [newFilename copy];
     title = [newTitle copy];
@@ -92,7 +92,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	NSRange rangeUntilFirstPeriod = [filename rangeOfString:@"."];
 	if (rangeUntilFirstPeriod.location == NSNotFound)
     {
-		filenameWithoutExtension = filename;
+		filenameWithoutExtension = [[filename copy] retain];
     }
 	else
     {
@@ -122,7 +122,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	
 	NSError *error = nil;
     
-    if ([[[filename pathExtension] lowercaseString] isEqualToString:@"sdf"])
+    /*if ([[[filename pathExtension] lowercaseString] isEqualToString:@"sdf"])
     {
         if (![self readFromSDFFileToDatabase:&error])
         {
@@ -135,7 +135,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
         {
             return nil;
         }
-    }
+    }*/
 	
 	return self;
 }

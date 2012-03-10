@@ -15,6 +15,7 @@
 #import "SLSMolecule.h"
 #import "SLSMoleculeAppDelegate.h"
 #import "SLSMoleculeLibraryTableCell.h"
+#import "NSFileManager+Tar.h"
 
 @implementation SLSMoleculeTableViewController
 
@@ -121,8 +122,57 @@
 	NSString *filename = [note object];
 	
 	// Add the new protein to the list by gunzipping the data and pulling out the title
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
     
-	SLSMolecule *newMolecule = [[SLSMolecule alloc] initWithFilename:filename database:database title:[[note userInfo] objectForKey:@"title"]];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    // Iterate through all files sitting in the application's Resources directory
+    // TODO: Can you fast enumerate this?
+    BOOL extractError=NO;
+    if ([[filename pathExtension] isEqualToString:@"tar"])
+        {
+            NSString *archivePath = [documentsDirectory stringByAppendingPathComponent:filename ];
+
+            NSString *installedTexPath = [documentsDirectory stringByAppendingPathComponent:[filename stringByDeletingPathExtension]];
+            if (![fileManager fileExistsAtPath:installedTexPath])
+            {
+                NSData* tarData = [NSData dataWithContentsOfFile:archivePath];
+                NSError *error=nil;
+                [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:documentsDirectory withTarData:tarData error:&error];
+                
+                if (error != nil)
+                {
+                    NSLog(@"Failed to untar preinstalled files  with error: '%@'.", [error localizedDescription]);
+                    // TODO: Report the file copying problem to the user or do something about it
+                    extractError=YES;
+                }else{
+                    //Sucess delete tar
+                    NSLog(@"Deleting %@\n",archivePath);
+                    NSError *error2=nil;
+
+                    if (![[NSFileManager defaultManager] removeItemAtPath:archivePath error:&error2])
+                    {
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not delete file", @"Localized", nil) message:[error2 localizedDescription]
+                                                                       delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
+                        [alert show];
+                        [alert release];					
+                        return;
+                    }
+                }
+                //}
+            }else{
+                NSLog(@"Folder already exists ERROR\n");
+            }
+            
+        }else{
+            NSLog(@"Error Not tar file\n");
+            extractError=YES;
+
+        }
+
+	SLSMolecule *newMolecule =nil;
+    if(!extractError)
+        newMolecule=[[SLSMolecule alloc] initWithFilename:[filename stringByDeletingPathExtension] database:database title:[[note userInfo] objectForKey:@"title"]];
 	if (newMolecule == nil)
 	{
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Error in downloaded file", @"Localized", nil) message:NSLocalizedStringFromTable(@"The molecule file is either corrupted or not of a supported format", @"Localized", nil)

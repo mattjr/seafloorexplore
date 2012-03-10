@@ -48,17 +48,19 @@
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *documentsDirectory = [paths objectAtIndex:0];
 
-    NSString *fileExtension = nil;
-    if (searchType == PROTEINDATABANKSEARCH)
+    NSString *fileExtension = @"";
+  /*  if (searchType == PROTEINDATABANKSEARCH)
     {
         fileExtension = @"pdb.gz";
     }
     else
     {
         fileExtension = @"sdf";        
-    }
+    }*/
     
-	if ([[NSFileManager defaultManager] fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", codeForCurrentlyDownloadingMolecule, fileExtension]]])
+    NSString *filename = [[codeForCurrentlyDownloadingMolecule lastPathComponent] stringByDeletingPathExtension];	
+
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:filename]])
 	{
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"File already exists", @"Localized", nil) message:NSLocalizedStringFromTable(@"This molecule has already been downloaded", @"Localized", nil)
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
@@ -72,14 +74,16 @@
 	{
         NSString *errorMessage = nil;
         
-        if (searchType == PROTEINDATABANKSEARCH)
+       /* if (searchType == PROTEINDATABANKSEARCH)
         {
             errorMessage = NSLocalizedStringFromTable(@"Could not connect to the Protein Data Bank", @"Localized", nil);
         }
         else
         {
             errorMessage = NSLocalizedStringFromTable(@"Could not connect to PubChem", @"Localized", nil);
-        }
+        }*/
+        errorMessage = NSLocalizedStringFromTable(@"Could not connect to server", @"Localized", nil);
+
         
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Connection failed", @"Localized", nil) message:errorMessage
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
@@ -97,15 +101,16 @@
 //	downloadStatusText.text = NSLocalizedStringFromTable(@"Connecting...", @"Localized", nil);
 		
 //	NSString *locationOfRemotePDBFile = [NSString stringWithFormat:@"http://www.sunsetlakesoftware.com/sites/default/files/%@.pdb.gz", pdbCode];
-	NSString *locationOfRemoteFile  = nil;
-    if (searchType == PROTEINDATABANKSEARCH)
+	NSString *locationOfRemoteFile  = codeForCurrentlyDownloadingMolecule;
+    NSLog(@"%@ getting\n",locationOfRemoteFile);
+   /* if (searchType == PROTEINDATABANKSEARCH)
     {
         locationOfRemoteFile = [NSString stringWithFormat:@"http://www.rcsb.org/pdb/files/%@.pdb.gz", codeForCurrentlyDownloadingMolecule];
     }
     else
     {
         locationOfRemoteFile = [NSString stringWithFormat:@"http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=%@&disopt=3DSaveSDF", codeForCurrentlyDownloadingMolecule];
-    }
+    }*/
 
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 	NSURLRequest *theRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:locationOfRemoteFile]
@@ -150,14 +155,14 @@
 {
     NSString *errorMessage = nil;
     
-    if (searchType == PROTEINDATABANKSEARCH)
+    /*if (searchType == PROTEINDATABANKSEARCH)
     {
         errorMessage = NSLocalizedStringFromTable(@"Could not connect to the Protein Data Bank", @"Localized", nil);
     }
     else
-    {
-        errorMessage = NSLocalizedStringFromTable(@"Could not connect to PubChem", @"Localized", nil);
-    }
+    {*/
+        errorMessage = NSLocalizedStringFromTable(@"Could not connect to server", @"Localized", nil);
+//    }
 
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Connection failed", @"Localized", nil) message:errorMessage
 												   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
@@ -193,14 +198,14 @@
 	{
         NSString *errorMessage = nil;
         
-        if (searchType == PROTEINDATABANKSEARCH)
+       /* if (searchType == PROTEINDATABANKSEARCH)
         {
             errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTable(@"No protein with the code %@ exists in the data bank", @"Localized", nil), codeForCurrentlyDownloadingMolecule];
         }
         else
-        {
-            errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTable(@"No structure file for the compound with the code %@ exists at PubChem", @"Localized", nil), codeForCurrentlyDownloadingMolecule];
-        }
+        {*/
+            errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTable(@"No file for the compound with the code %@ exists", @"Localized", nil), codeForCurrentlyDownloadingMolecule];
+        //}
 
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not find file", @"Localized", nil) message:errorMessage
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
@@ -228,8 +233,8 @@
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *documentsDirectory = [paths objectAtIndex:0];
     
-    NSString *fileExtension = nil;
-    if (searchType == PROTEINDATABANKSEARCH)
+    NSString *fileExtension = @"";
+  /*  if (searchType == PROTEINDATABANKSEARCH)
     {
         fileExtension = @"pdb.gz";
     }
@@ -237,25 +242,32 @@
     {
         fileExtension = @"sdf";        
     }
-
-	NSString *filename = [NSString stringWithFormat:@"%@.%@", codeForCurrentlyDownloadingMolecule, fileExtension];
-	
+*/
+	NSString *filename = [codeForCurrentlyDownloadingMolecule lastPathComponent];	
 	NSError *error = nil;
 	if (![downloadedFileContents writeToFile:[documentsDirectory stringByAppendingPathComponent:filename] options:NSAtomicWrite error:&error])
 	{
+        
+        
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Write failed", @"Localized", nil) message:@"Could not write file to disk out of space?"
+													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
+        [alert show];
+		[alert release];
+
 		// TODO: Do some error handling here
 		return;
 	}
 	
 	// Notify about the addition of the new molecule
-    if (searchType == PROTEINDATABANKSEARCH)
+    /*if (searchType == PROTEINDATABANKSEARCH)
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:filename];
     }
     else
-    {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:filename userInfo:[NSDictionary dictionaryWithObject:titleForCurrentlyDownloadingMolecule forKey:@"title"]];        
-    }
+    {*/
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:filename userInfo:[NSDictionary dictionaryWithObject:titleForCurrentlyDownloadingMolecule forKey:@"title"]];  
+    
+    //}
 	
 //	if ([SLSMoleculeAppDelegate isRunningOniPad])
 //	{

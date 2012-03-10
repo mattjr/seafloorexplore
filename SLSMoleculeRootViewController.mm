@@ -171,6 +171,10 @@
 	if ([molecules count] == 0)
 	{
 		bufferedMolecule = nil;
+        NSLog(@"No Render Situation\n");
+        [glViewController stopRender];
+
+
 	}
 	else
 	{

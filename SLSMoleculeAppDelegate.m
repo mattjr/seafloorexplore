@@ -376,8 +376,10 @@
 	*/	
 		if ( ([moleculeFilenameLookupTable valueForKey:pname] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"octree"] || [[[pname pathExtension] lowercaseString] isEqualToString:@"bz2"]) )
 		{
+            NSString *filename = [[pname lastPathComponent] stringByDeletingPathExtension];	
+
 			// Parse the PDB file into the database
-			SLSMolecule *newMolecule = [[SLSMolecule alloc] initWithFilename:pname database:database title:nil];
+			SLSMolecule *newMolecule = [[SLSMolecule alloc] initWithFilename:filename database:database title:nil];
 			if (newMolecule != nil)
 			{
 				[molecules addObject:newMolecule];

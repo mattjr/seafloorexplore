@@ -56,13 +56,15 @@ float positions[60 * 60][6];
 		[[scene camera] setFarPlane:20000];
 		[[scene camera] setNearPlane:0.5];
 		renderMode=TEXTURED;
+        NSString *filename = [[name lastPathComponent] stringByDeletingPathExtension];	
 
-		mesh = [[CollideableMesh alloc] initWithOctreeNamed:name];
-
+        NSString *dataName = [NSString stringWithFormat:@"%@/%@.vtex",name,filename] ;
+        //NSLog(@"%@\n",dataName);
+		mesh = [[CollideableMesh alloc] initWithOctreeNamed:[NSString stringWithFormat:@"%@/%@", name,filename]];
 		char ext [5] = "    ";
         uint8_t border, length;
         uint32_t dim;
-        NSString *dataName = [[name copy] stringByAppendingString:@".vtex"] ;
+     
 
         bool success = vtScan([dataName UTF8String], ext, &border, &length, &dim);
         

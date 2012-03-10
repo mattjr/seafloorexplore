@@ -54,7 +54,7 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 	if ([p hasPrefix:@"/"]) p = [p substringFromIndex:1];
 #endif
 	f = fopen([p UTF8String], "rb");
-   // printf("Shade %s\n",[p UTF8String]);
+    //printf("Shade %s\n",[p UTF8String]);
 	assert(f);
 
 	if (![[[file path] pathExtension] isEqualToString:@"bz2"])
@@ -147,7 +147,7 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 
 		[self setColor:vector4f(0.8, 0.8, 0.8, 1.0)];
 		[self setSpecularColor:vector4f(0.3, 0.3, 0.3, 1.0)];
-
+       // NSLog(@"2 %@\n",file);
 		octree = [Mesh _loadOctreeFromFile:file];
 
 #ifdef TARGET_OS_IPHONE

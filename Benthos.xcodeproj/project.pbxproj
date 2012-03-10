@@ -49,7 +49,6 @@
 		7BF662181397B015002FEB23 /* readback.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7BF64D76139770C8002FEB23 /* readback.frag */; };
 		7BF662191397B015002FEB23 /* readback.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7BF64D77139770C8002FEB23 /* readback.vert */; };
 		BC146A9B0EC9173000CE5E72 /* SLSMoleculeCustomDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC146A9A0EC9173000CE5E72 /* SLSMoleculeCustomDownloadViewController.m */; };
-		BC157287136CBE9200EEFBEC /* 3QE5.pdb.gz in Resources */ = {isa = PBXBuildFile; fileRef = BC157286136CBE9200EEFBEC /* 3QE5.pdb.gz */; };
 		BC15728A136CC58A00EEFBEC /* SLSMoleculeLibraryTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BC157289136CC58A00EEFBEC /* SLSMoleculeLibraryTableCell.m */; };
 		BC15728D136CD96800EEFBEC /* SLSMoleculeWebDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC15728C136CD96800EEFBEC /* SLSMoleculeWebDetailViewController.m */; };
 		BC1EF3830E36BD6100B09043 /* SLSMoleculeSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1EF3820E36BD6100B09043 /* SLSMoleculeSearchViewController.m */; };
@@ -70,12 +69,8 @@
 		BC4FB7BA0E4F80DB00B316CD /* redButton.png in Resources */ = {isa = PBXBuildFile; fileRef = BC4FB7B90E4F80DB00B316CD /* redButton.png */; };
 		BC540D101145E04600045DE1 /* BenthosIcon72.png in Resources */ = {isa = PBXBuildFile; fileRef = BC540D0F1145E04500045DE1 /* BenthosIcon72.png */; };
 		BC57EBFB1358DE9000FA1060 /* GLProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = BC57EBFA1358DE9000FA1060 /* GLProgram.m */; };
-		BC5BB79C0E200C3B0001DFD0 /* 1BNA.pdb.gz in Resources */ = {isa = PBXBuildFile; fileRef = BC5BB79B0E200C3B0001DFD0 /* 1BNA.pdb.gz */; };
-		BC5BB7DF0E2020B10001DFD0 /* 1EVE.pdb.gz in Resources */ = {isa = PBXBuildFile; fileRef = BC5BB7DD0E2020B10001DFD0 /* 1EVE.pdb.gz */; };
 		BC5BB8BD0E204DC20001DFD0 /* SLSMoleculeDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5BB8BC0E204DC20001DFD0 /* SLSMoleculeDetailViewController.m */; };
-		BC5BBBFA0E216A170001DFD0 /* 1TRZ.pdb.gz in Resources */ = {isa = PBXBuildFile; fileRef = BC5BBBF90E216A170001DFD0 /* 1TRZ.pdb.gz */; };
 		BC5BBCD40E219AB90001DFD0 /* BenthosIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */; };
-		BC61CAFC0E2317EE0074BE04 /* 4TRA.pdb.gz in Resources */ = {isa = PBXBuildFile; fileRef = BC61CAFB0E2317EE0074BE04 /* 4TRA.pdb.gz */; };
 		BC61CC310E2463180074BE04 /* SLSCellTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC61CC2E0E2463180074BE04 /* SLSCellTextView.m */; };
 		BC61CC320E2463180074BE04 /* SLSTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC61CC300E2463180074BE04 /* SLSTextViewController.m */; };
 		BC67B8BC137B5DF10075A361 /* SphereAOLookup.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BC67B8BA137B5DF10075A361 /* SphereAOLookup.fsh */; };
@@ -91,7 +86,6 @@
 		BCA2E7E7135A1B9B00D7206C /* SphereDepth.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E7DF135A1B9B00D7206C /* SphereDepth.vsh */; };
 		BCA2E7E8135A1B9B00D7206C /* SphereRaytracing.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E7E0135A1B9B00D7206C /* SphereRaytracing.fsh */; };
 		BCA2E7E9135A1B9B00D7206C /* SphereRaytracing.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E7E1135A1B9B00D7206C /* SphereRaytracing.vsh */; };
-		BCA2E811135BB90F00D7206C /* caffeine.pdb.gz in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E810135BB90F00D7206C /* caffeine.pdb.gz */; };
 		BCA2E814135BBA3000D7206C /* SphereAmbientOcclusion.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E812135BBA3000D7206C /* SphereAmbientOcclusion.fsh */; };
 		BCA2E815135BBA3000D7206C /* SphereAmbientOcclusion.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E813135BBA3000D7206C /* SphereAmbientOcclusion.vsh */; };
 		BCA2E81E135E54C500D7206C /* CylinderAmbientOcclusion.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E81C135E54C400D7206C /* CylinderAmbientOcclusion.fsh */; };
@@ -127,7 +121,6 @@
 		28FD14FF0DC6FC520079059D /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		28FD15070DC6FC5B0079059D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		7B02E8CD139B5E80005FBC67 /* pavall.octree */ = {isa = PBXFileReference; lastKnownFileType = file; path = pavall.octree; sourceTree = "<group>"; };
 		7B056F02150AC5DF00621766 /* NSFileManager+Tar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+Tar.h"; sourceTree = SOURCE_ROOT; };
 		7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+Tar.m"; sourceTree = SOURCE_ROOT; };
 		7B056F05150AC85A00621766 /* chamber3.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = chamber3.tar; sourceTree = "<group>"; };
@@ -189,7 +182,6 @@
 		8D1107310486CEB800E47090 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = English; path = English.lproj/Info.plist; sourceTree = "<group>"; };
 		BC146A990EC9173000CE5E72 /* SLSMoleculeCustomDownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSMoleculeCustomDownloadViewController.h; sourceTree = "<group>"; };
 		BC146A9A0EC9173000CE5E72 /* SLSMoleculeCustomDownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLSMoleculeCustomDownloadViewController.m; sourceTree = "<group>"; };
-		BC157286136CBE9200EEFBEC /* 3QE5.pdb.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = 3QE5.pdb.gz; sourceTree = "<group>"; };
 		BC157288136CC58A00EEFBEC /* SLSMoleculeLibraryTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSMoleculeLibraryTableCell.h; sourceTree = "<group>"; };
 		BC157289136CC58A00EEFBEC /* SLSMoleculeLibraryTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLSMoleculeLibraryTableCell.m; sourceTree = "<group>"; };
 		BC15728B136CD96800EEFBEC /* SLSMoleculeWebDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSMoleculeWebDetailViewController.h; sourceTree = "<group>"; };
@@ -218,13 +210,9 @@
 		BC540D0F1145E04500045DE1 /* BenthosIcon72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BenthosIcon72.png; sourceTree = "<group>"; };
 		BC57EBF91358DE9000FA1060 /* GLProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLProgram.h; sourceTree = "<group>"; };
 		BC57EBFA1358DE9000FA1060 /* GLProgram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLProgram.m; sourceTree = "<group>"; };
-		BC5BB79B0E200C3B0001DFD0 /* 1BNA.pdb.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = 1BNA.pdb.gz; sourceTree = "<group>"; };
-		BC5BB7DD0E2020B10001DFD0 /* 1EVE.pdb.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = 1EVE.pdb.gz; sourceTree = "<group>"; };
 		BC5BB8BB0E204DC20001DFD0 /* SLSMoleculeDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSMoleculeDetailViewController.h; sourceTree = "<group>"; };
 		BC5BB8BC0E204DC20001DFD0 /* SLSMoleculeDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLSMoleculeDetailViewController.m; sourceTree = "<group>"; };
-		BC5BBBF90E216A170001DFD0 /* 1TRZ.pdb.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = 1TRZ.pdb.gz; sourceTree = "<group>"; };
 		BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BenthosIcon.png; sourceTree = "<group>"; };
-		BC61CAFB0E2317EE0074BE04 /* 4TRA.pdb.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = 4TRA.pdb.gz; sourceTree = "<group>"; };
 		BC61CC2D0E2463180074BE04 /* SLSCellTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSCellTextView.h; sourceTree = "<group>"; };
 		BC61CC2E0E2463180074BE04 /* SLSCellTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLSCellTextView.m; sourceTree = "<group>"; };
 		BC61CC2F0E2463180074BE04 /* SLSTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSTextViewController.h; sourceTree = "<group>"; };
@@ -242,7 +230,6 @@
 		BCA2E7DF135A1B9B00D7206C /* SphereDepth.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereDepth.vsh; path = Shaders/SphereDepth.vsh; sourceTree = "<group>"; };
 		BCA2E7E0135A1B9B00D7206C /* SphereRaytracing.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereRaytracing.fsh; path = Shaders/SphereRaytracing.fsh; sourceTree = "<group>"; };
 		BCA2E7E1135A1B9B00D7206C /* SphereRaytracing.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereRaytracing.vsh; path = Shaders/SphereRaytracing.vsh; sourceTree = "<group>"; };
-		BCA2E810135BB90F00D7206C /* caffeine.pdb.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = caffeine.pdb.gz; sourceTree = "<group>"; };
 		BCA2E812135BBA3000D7206C /* SphereAmbientOcclusion.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereAmbientOcclusion.fsh; path = Shaders/SphereAmbientOcclusion.fsh; sourceTree = "<group>"; };
 		BCA2E813135BBA3000D7206C /* SphereAmbientOcclusion.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereAmbientOcclusion.vsh; path = Shaders/SphereAmbientOcclusion.vsh; sourceTree = "<group>"; };
 		BCA2E81C135E54C400D7206C /* CylinderAmbientOcclusion.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = CylinderAmbientOcclusion.fsh; path = Shaders/CylinderAmbientOcclusion.fsh; sourceTree = "<group>"; };
@@ -363,15 +350,8 @@
 				BC4E97F90E69F8E1006CD291 /* molecules.sql */,
 				BC4FB7B90E4F80DB00B316CD /* redButton.png */,
 				BC4FB75C0E4F6BAF00B316CD /* greenButton.png */,
-				BC61CAFB0E2317EE0074BE04 /* 4TRA.pdb.gz */,
 				BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */,
 				BC540D0F1145E04500045DE1 /* BenthosIcon72.png */,
-				7B02E8CD139B5E80005FBC67 /* pavall.octree */,
-				BC5BBBF90E216A170001DFD0 /* 1TRZ.pdb.gz */,
-				BC5BB7DD0E2020B10001DFD0 /* 1EVE.pdb.gz */,
-				BC5BB79B0E200C3B0001DFD0 /* 1BNA.pdb.gz */,
-				BC157286136CBE9200EEFBEC /* 3QE5.pdb.gz */,
-				BCA2E810135BB90F00D7206C /* caffeine.pdb.gz */,
 				BCDC9F860EB375FB00ADCFA5 /* Info.plist */,
 				BCDFF55F115469BF005C984C /* RotationIconiPad.png */,
 				7BF64D63139770C8002FEB23 /* combined.frag */,
@@ -652,11 +632,7 @@
 				7BF662191397B015002FEB23 /* readback.vert in Resources */,
 				7BE606491398E0480072A1C5 /* pass.frag in Resources */,
 				7BE6064A1398E0480072A1C5 /* pass.vert in Resources */,
-				BC5BB79C0E200C3B0001DFD0 /* 1BNA.pdb.gz in Resources */,
-				BC5BB7DF0E2020B10001DFD0 /* 1EVE.pdb.gz in Resources */,
-				BC5BBBFA0E216A170001DFD0 /* 1TRZ.pdb.gz in Resources */,
 				BC5BBCD40E219AB90001DFD0 /* BenthosIcon.png in Resources */,
-				BC61CAFC0E2317EE0074BE04 /* 4TRA.pdb.gz in Resources */,
 				BC4FB75D0E4F6BB000B316CD /* greenButton.png in Resources */,
 				BC4FB7BA0E4F80DB00B316CD /* redButton.png in Resources */,
 				BC4E97FA0E69F8E1006CD291 /* molecules.sql in Resources */,
@@ -691,8 +667,6 @@
 				BCA2E81F135E54C500D7206C /* CylinderAmbientOcclusion.vsh in Resources */,
 				BCCB1EFB1361E6BC006F00A0 /* PlainDisplay.fsh in Resources */,
 				BCCB1EFC1361E6BC006F00A0 /* PlainDisplay.vsh in Resources */,
-				BCA2E811135BB90F00D7206C /* caffeine.pdb.gz in Resources */,
-				BC157287136CBE9200EEFBEC /* 3QE5.pdb.gz in Resources */,
 				BC67B8BC137B5DF10075A361 /* SphereAOLookup.fsh in Resources */,
 				BC67B8BD137B5DF10075A361 /* SphereAOLookup.vsh in Resources */,
 				BC67B8BF137C4B7A0075A361 /* Default@2x.png in Resources */,

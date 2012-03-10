@@ -26,7 +26,7 @@
     SLSMoleculeDownloadController *downloadController;
     NSMutableString *currentXMLElementString;
     NSXMLParser *searchResultsParser;
-    
+    NSString *urlbasepath;
     BOOL insideIUPACName, insideSynonym;
 }
 
@@ -36,6 +36,8 @@
 - (void)processPDBSearchResults;
 - (void)processPubChemKeywordSearch;
 - (void)retrievePubChemCompoundTitles;
+- (void)processHTMLResults;
+
 
 - (BOOL)grabNextSetOfSearchResults;
 
