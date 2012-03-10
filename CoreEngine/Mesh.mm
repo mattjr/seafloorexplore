@@ -55,8 +55,9 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 #endif
 	f = fopen([p UTF8String], "rb");
     //printf("Shade %s\n",[p UTF8String]);
-	assert(f);
-
+	
+    if(!f)
+        return NULL;
 	if (![[[file path] pathExtension] isEqualToString:@"bz2"])
 	{
 		unsigned long fileSize;
@@ -69,10 +70,15 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 
 
 		_octree = (octree_struct *) malloc(fileSize);
-		assert(_octree);
+        if(!_octree){
+            printf("!octree\n");
+            return NULL;
+        }		result = fread (_octree, 1, fileSize, f);
+		if(result != fileSize){
+            printf("Fail 		if(result != fileSize){\n");
 
-		result = fread (_octree, 1, fileSize, f);
-		assert(result == fileSize);
+            return NULL;
+        }
 	}
 	else
 	{
@@ -85,17 +91,27 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 
 
 		b = BZ2_bzReadOpen ( &bzerror, f, 0, 0, NULL, 0 );
-		assert(bzerror == BZ_OK);
+		if(bzerror != BZ_OK){
+            printf("!octree\n");
+            return NULL;
+
+        }
 
 		numRead = BZ2_bzRead ( &bzerror, b, (char *)&test, sizeof(octree_struct));
-		assert ((numRead == sizeof(octree_struct)) && (bzerror == BZ_OK));
+		//assert ((numRead == sizeof(octree_struct)) && (bzerror == BZ_OK));
+        if((numRead != sizeof(octree_struct)) || (bzerror != BZ_OK)){
+            printf("!        if((numRead != sizeof(octree_struct)) || (bzerror != BZ_OK)){\n");
+            return NULL;
+        }
 
 		uint32_t size = (sizeof(struct octree_struct) + (test.nodeCount - 1) * sizeof(struct octree_node)) +
 							test.vertexCount * ((test.magicWord == 0x6D616C62) ? 6 : 8) * sizeof(float) +
 							test.rootnode.faceCount * 3 * (test.vertexCount > 0xFFFF ? sizeof(uint32_t) : sizeof(uint16_t)), read = sizeof(octree_struct);
 		_octree = (octree_struct *) malloc(size);
-		assert(_octree);
-
+        if(!_octree){
+            printf("!octree\n");
+            return NULL;
+        }
 		memcpy(_octree, &test, sizeof(octree_struct)); // TODO: realloc instead
 
 		while (bzerror == BZ_OK)
@@ -106,7 +122,11 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 				read += numRead;
 		}
 
-		assert((bzerror == BZ_STREAM_END) && ((read + numRead) == size));
+		if((bzerror != BZ_STREAM_END) || ((read + numRead) != size)){
+            printf("		if((bzerror != BZ_STREAM_END) || ((read + numRead) != size)){\n"
+                   return NULL;
+
+        }
 
 		BZ2_bzReadClose(&bzerror, b);
 #endif
@@ -114,9 +134,10 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 
 	fclose (f);
 
-	if ((_octree->magicWord != 0x6D616C62) && (_octree->magicWord != 0xDEADBEEF))
-		fatal("Error: the file named %s doesn't seem to be a valid octree", [[file absoluteString] UTF8String]);
-
+                   if ((_octree->magicWord != 0x6D616C62) && (_octree->magicWord != 0xDEADBEEF)){
+		printf("Error: the file named %s doesn't seem to be a valid octree", [[file absoluteString] UTF8String]);
+                       return NULL;
+                   }
 	return _octree;
 }
 
@@ -132,7 +153,7 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 	NSString *bz2URL = [_name stringByAppendingString:@".octree.bz2"];//[[NSBundle mainBundle] pathForResource:_name ofType:@"octree.bz2"];
 
 	if (!octreeURL && !bz2URL)
-	{	fatal("Error: there is no octree named: %s", [_name UTF8String]); }
+	{	printf("Error: there is no octree named: %s", [_name UTF8String]); return NULL;}
 
 	return [self initWithOctree:(octreeURL ? [NSURL fileURLWithPath:octreeURL] : [NSURL fileURLWithPath:bz2URL]) andName:_name];
 }
@@ -149,7 +170,8 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 		[self setSpecularColor:vector4f(0.3, 0.3, 0.3, 1.0)];
        // NSLog(@"2 %@\n",file);
 		octree = [Mesh _loadOctreeFromFile:file];
-
+        if(!octree)
+            return nil;
 #ifdef TARGET_OS_IPHONE
 		if (octree->vertexCount > 0xFFFF)
 			printf("Error: only 0xFFFF vertices per object supported on the iPhone");

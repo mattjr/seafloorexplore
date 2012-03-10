@@ -356,7 +356,7 @@
 
 		NSString *fileNameWithoutExtension = [[molecules objectAtIndex:(index-1)] filenameWithoutExtension];
 		cell.detailTextLabel.text = fileNameWithoutExtension;
-		
+/***FAIL Memory freed *****/		
 		
 		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	}

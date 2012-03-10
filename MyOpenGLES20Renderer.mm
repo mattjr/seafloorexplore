@@ -246,11 +246,12 @@ extern vtConfig c;
         std::swap(             vt.newPages, empty );
         vt.cachedPages.clear();
         vt.cachedPagesAccessTimes.clear();
-        
+        vt.memValid=false;
     });     
 
 
 }
+
 
 -(void)startupVT:(NSString *)name
 {
@@ -263,7 +264,6 @@ extern vtConfig c;
     
     NSString *fullpath=[documentsDirectory stringByAppendingPathComponent:name];
   
-   
     dispatch_sync(openGLESContextQueue, ^{
         
         if(scene == nil)
@@ -272,11 +272,20 @@ extern vtConfig c;
         
         id sim = [[[Simulation alloc] initwithstring:fullpath] autorelease];//[[[NSClassFromString([[NSBundle mainBundle] objectForInfoDictionaryKey:@"SimulationClass"]) alloc] init] autorelease];
 
-        if (sim)
+        if (sim){
             [scene setSimulator:sim];
-        else
-            fatal("Error: there is no valid simulation class");
-        isSceneReady=YES;
+            
+            isSceneReady=YES;
+        }
+        else{
+            NSError *error=nil;
+
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not create simulation files missing", @"Localized", nil) message:[error localizedDescription]
+														   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
+			[alert show];
+			[alert release];	   
+        }
+            
     });
 }
 

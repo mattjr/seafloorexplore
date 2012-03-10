@@ -61,6 +61,8 @@ float positions[60 * 60][6];
         NSString *dataName = [NSString stringWithFormat:@"%@/%@.vtex",name,filename] ;
         //NSLog(@"%@\n",dataName);
 		mesh = [[CollideableMesh alloc] initWithOctreeNamed:[NSString stringWithFormat:@"%@/%@", name,filename]];
+        if(mesh == nil)
+            return nil;
 		char ext [5] = "    ";
         uint8_t border, length;
         uint32_t dim;
@@ -82,13 +84,13 @@ float positions[60 * 60][6];
 			else
 			{
 				printf("Error: %s not same MIPMAPCHAINLENGTH mode as binary.", [dataName UTF8String]);
-				exit(1);
+				return NULL;
 			}
         }
 		else
 		{
 			printf("Error: %s not a valid tile store", [dataName UTF8String]);
-			exit(1);
+            return NULL;
 		}
 
     /*for (int i = 0; i < 1; i++)

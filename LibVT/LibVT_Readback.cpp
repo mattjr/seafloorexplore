@@ -163,7 +163,10 @@ void vtExtractNeededPages(const uint32_t *ext_buffer_BGRA)
 		}
 	}	// unlock
 
-	assert(buffer);
+	if(!buffer){
+        printf("FAIL FAIL no buffer!!!!!!!!!!\n");
+        return;
+    }
 ///*2*/	list<uint32_t> l;				// testcode for determining how many pages are visible each frame
 ///*1*/	map<uint32_t, uint16_t> bla;	// testcode for producing a reference list of pages with pixel coverage information for quality tests. make sure not to use prepass resolutin reuduction. make sure each frame is rendered at a specific walkthrough position because the code can slow down very much. see also corresponding testcode in vtMapNewPages()
 

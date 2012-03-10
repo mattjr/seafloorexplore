@@ -181,6 +181,7 @@ void vtInit(const char *_tileDir, const char *_pageExtension, const uint8_t _pag
 	if (c.pageDXTCompression && (c.pageBorder % 4 != 0)) printf("Warning: PAGE_BORDER should be a multiple of 4 for DXT compression\n");
 	assert(c.physTexDimensionPages <= MAX_PHYS_TEX_DIMENSION_PAGES);
 	assert(!((MIPPED_PHYSTEX == 1) && ((USE_PBO_PHYSTEX == 1) || (c.pageDXTCompression)))); // TODO: support these combinations
+    vt.memValid=true;
 }
 
 bool vtScan(const char *_tileDir, char * _pageExtension, uint8_t *_pageBorder, uint8_t *_mipChainLength, uint32_t *_pageDimension)
@@ -429,7 +430,8 @@ char * vtGetShaderPrelude()
 }
 
 void vtShutdown()
-{	
+{	if(!vt.memValid)
+        return;
 #if ENABLE_MT == 1
 	vt.backgroundThread.interrupt();
 #elif ENABLE_MT == 2
