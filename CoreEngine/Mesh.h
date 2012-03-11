@@ -64,6 +64,7 @@ struct octree_struct // TODO: optimization: add optimized prefetch indices for g
 
 	@public
 	GLuint					texName;
+    vector2f                zbound_cache;
 
 @public
 	GLuint					vertexVBOName, indexVBOName;

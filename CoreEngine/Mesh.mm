@@ -176,7 +176,15 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 		if (octree->vertexCount > 0xFFFF)
 			printf("Error: only 0xFFFF vertices per object supported on the iPhone");
 #endif
-
+        zbound_cache =vector2f(FLT_MAX,-FLT_MAX);
+		for (int i = 0; i < octree->vertexCount; i++)
+		{
+			float *v = (float *) VERTEX_NUM(i);
+				 if(*(v+2) < zbound_cache[0])
+                     zbound_cache[0]=*(v+2);
+                if(*(v+2) > zbound_cache[1])
+                    zbound_cache[1]=*(v+2);			
+		}
 		glGenBuffers(1, &vertexVBOName);
 		glGenBuffers(1, &indexVBOName);
 
@@ -219,11 +227,8 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 
 - (vector2f)zbound
 {
-	struct octree_node *n1 = (struct octree_node *) NODE_NUM(0);
-	vector3f extent = vector3f(n1->aabbExtentX, n1->aabbExtentY, n1->aabbExtentZ);
-	vector3f origin = vector3f(n1->aabbOriginX, n1->aabbOriginY, n1->aabbOriginZ);
-	
-	return vector2f(origin[2] - extent[2],origin[2] + extent[2] );
+		
+	return zbound_cache;
 }
 
 - (void)cleanup
