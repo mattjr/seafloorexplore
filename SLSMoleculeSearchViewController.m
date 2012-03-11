@@ -810,14 +810,14 @@
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error;
 {
     NSString *connectionError = nil;
-    if (currentSearchType == PROTEINDATABANKSEARCH)
+   /* if (currentSearchType == PROTEINDATABANKSEARCH)
     {
         connectionError = NSLocalizedStringFromTable(@"Could not connect to the Protein Data Bank", @"Localized", nil);
     }
     else
-    {
-        connectionError = NSLocalizedStringFromTable(@"Could not connect to PubChem", @"Localized", nil);
-    }
+    {*/
+        connectionError = NSLocalizedStringFromTable(@"Could not connect to server", @"Localized", nil);
+    //}
     
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Connection failed", @"Localized", nil) message:connectionError
 												   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];

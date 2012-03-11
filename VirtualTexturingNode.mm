@@ -143,6 +143,7 @@ extern vtConfig c;
 		glUseProgram(passShader);
 	//	zrange[0]=0.25;
 	//	zrange[1]=1;	
+       // printf("%f %f\n",zrange[0],zrange[1]);
 		glUniform2f(glGetUniformLocation(passShader, "zrange"), zrange[0],zrange[1]);
         // Set the diffuse color.
        // vec3 color = visual->Color * 0.75f;

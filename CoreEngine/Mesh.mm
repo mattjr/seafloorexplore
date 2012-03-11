@@ -180,11 +180,16 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 		for (int i = 0; i < octree->vertexCount; i++)
 		{
 			float *v = (float *) VERTEX_NUM(i);
-				 if(*(v+2) < zbound_cache[0])
-                     zbound_cache[0]=*(v+2);
-                if(*(v+2) > zbound_cache[1])
-                    zbound_cache[1]=*(v+2);			
+            float z=*(v+2) ;
+            if(z == 0.0)
+                continue;
+
+				 if(z< zbound_cache[0])
+                     zbound_cache[0]=z;
+                if(z > zbound_cache[1])
+                    zbound_cache[1]=z;	
 		}
+        //printf("Orig set %f %f\n",zbound_cache[0],zbound_cache[1]);
 		glGenBuffers(1, &vertexVBOName);
 		glGenBuffers(1, &indexVBOName);
 
