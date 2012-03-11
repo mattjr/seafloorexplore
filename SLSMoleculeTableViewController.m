@@ -147,7 +147,7 @@
                     extractError=YES;
                 }else{
                     //Sucess delete tar
-                    NSLog(@"Deleting %@\n",archivePath);
+                 //   NSLog(@"Deleting %@\n",archivePath);
                     NSError *error2=nil;
 
                     if (![[NSFileManager defaultManager] removeItemAtPath:archivePath error:&error2])
