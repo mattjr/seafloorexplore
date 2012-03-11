@@ -189,6 +189,21 @@ float positions[60 * 60][6];
 	return self;
 }
 
+- (void)dealloc
+{
+   // [vtnode release];
+    [[scene objects] removeObject:vtnode];
+	[super dealloc];
+}
+- (void)clearObjs
+{
+    [[scene objects] removeObject:vtnode];
+
+    
+}
+
+
+
 - (void)recordPositionTimer
 {
 	static int times = 0;

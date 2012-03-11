@@ -266,7 +266,7 @@
 	
         if ([SLSMoleculeAppDelegate isRunningOniPad])
 		index++;
-	printf("index %d %d \n",index,selectedIndex);
+	//printf("index %d %d \n",index,selectedIndex);
 	if (index == 0)
 	{
 		cell = [tableView dequeueReusableCellWithIdentifier:@"Download"];
@@ -362,8 +362,8 @@
             NSLog(@"Error trying to acess null molecule %d\n",[molecules count]);
             return nil;
         }
-        int l=[[molecules objectAtIndex:(index-1)] numberOfAtoms];
-        printf("Fail Val 0x%x %d\n",(int)[molecules objectAtIndex:(index-1)], l);
+  //      int l=[[molecules objectAtIndex:(index-1)] numberOfAtoms];
+        //printf("Fail Val 0x%x %d\n",(int)[molecules objectAtIndex:(index-1)], l);
 		NSString *fileNameWithoutExtension = [[molecules objectAtIndex:(index-1)] filenameWithoutExtension];
         cell.textLabel.text = fileNameWithoutExtension;
 

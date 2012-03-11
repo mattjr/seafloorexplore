@@ -80,7 +80,7 @@ GLuint LoadShadersNoLink(NSString *shadername, NSString *preprocessorDefines)
 	NSString *fragmentString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:shadername ofType:@"frag"] encoding:NSUTF8StringEncoding error:NULL];
 	GLuint vertex_shader = 0, fragment_shader = 0, program_object;
 	const GLchar *vertex_string, *fragment_string;
-	GLint vertex_compiled = 1, fragment_compiled = 1, linked;
+	GLint vertex_compiled = 1, fragment_compiled = 1;
 	NSString *openglESSupport = @"#ifdef GL_ES\nprecision highp float;\n#endif\n";
 	if (!vertexString && !fragmentString) fatal("Error: can't load empty shaders");
     

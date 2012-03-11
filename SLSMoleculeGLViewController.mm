@@ -226,7 +226,7 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 	{
         [self.displayLink invalidate];
         self.displayLink = nil;
-		printf("Not autorating now\n");
+		//printf("Not autorating now\n");
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:NO]];
 	}
 	else
@@ -775,22 +775,27 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 }
 - (void)stopRender
 {
-    printf("Stopping scene ready\n");
+   // printf("Stopping scene ready\n");
     if ([openGLESRenderer isKindOfClass:[MyOpenGLES20Renderer class]])
         [(MyOpenGLES20Renderer*)openGLESRenderer shutdownVT];
     else
         printf("Can't stop scene\n");
     [openGLESRenderer clearScreen];
+    [[scene simulator] clearObjs];
+
+   //[[scene simulator] release];
+    // [openGLESRenderer destroyFramebuffers];
+
 
 }
 
 - (void)startRender:(NSString*)name;
 {
-    printf("Stopping scene ready\n");
+   // printf("Starting scene ready\n");
     if ([openGLESRenderer isKindOfClass:[MyOpenGLES20Renderer class]])
         [(MyOpenGLES20Renderer*)openGLESRenderer startupVT:name];
     else
-        printf("Can't stop scene\n");
+        printf("Can't start scene\n");
     
 }
 

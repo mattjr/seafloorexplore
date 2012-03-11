@@ -41,6 +41,7 @@ extern vtConfig c;
 
 - (void)dealloc 
 {    
+    NSLog(@"Here dealloc OPENGLES2\n");
     [self freeVertexBuffers];
     
    	
@@ -244,6 +245,15 @@ extern vtConfig c;
         vt.neededPages.clear();
         std::queue<uint32_t> empty;
         std::swap(             vt.newPages, empty );
+      	map<uint32_t, void *>::iterator cachedIter;
+        
+            
+            for(cachedIter = vt.cachedPages.begin(); cachedIter != vt.cachedPages.end(); ++cachedIter)
+            {
+                free(cachedIter->second);
+            }
+                
+
         vt.cachedPages.clear();
         vt.cachedPagesAccessTimes.clear();
         vt.memValid=false;
@@ -339,7 +349,7 @@ extern vtConfig c;
 #pragma mark Actual OpenGL rendering
 - (void)bindVertexBuffersForMolecule;
 {
-    printf("Finished loading!\n");    
+  //  printf("Finished loading!\n");    
 //    isSceneReady = YES;
 }
 - (void)renderFrameForMolecule:(SLSMolecule *)molecule;
@@ -353,11 +363,11 @@ extern vtConfig c;
     if (![molecule hasRendered])
     {
         [scene reshape:[NSArray arrayWithObjects:[NSNumber numberWithInt:backingWidth], [NSNumber numberWithInt:backingHeight], nil]];
-        printf("%d %d\n",backingWidth,backingHeight);
+        //printf("%d %d\n",backingWidth,backingHeight);
         [EAGLContext setCurrentContext:context];
 
         [molecule setHasRendered:YES];
-        printf("First render\n");
+        //printf("First render\n");
     }
 //    return;
 	

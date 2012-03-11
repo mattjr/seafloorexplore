@@ -65,6 +65,8 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 
 - (void)mouseDragged:(vector2f)delta withFlags:(uint32_t)flags;
 - (void)scrollWheel:(float)delta;
+- (void)dealloc;
+- (void)clearObjs;
 
 - (void)update;
 - (void)render;

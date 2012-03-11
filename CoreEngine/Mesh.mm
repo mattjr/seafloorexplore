@@ -533,6 +533,8 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 
 - (void)dealloc
 {
+   // printf("Free M\n");
+
 	free(octree);
 	free(visibleNodeStack);
 	[name release];
@@ -540,7 +542,7 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 	glDeleteBuffers(1, &vertexVBOName);		// TODO: this surely makes everything go nuts when the object is copied
 	glDeleteBuffers(1, &indexVBOName);
 	glDeleteTextures(1, &texName);
-
+   // printf("HERE Freeing textures\n");
 	[super dealloc];
 }
 @end
