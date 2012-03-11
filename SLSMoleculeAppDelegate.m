@@ -258,7 +258,7 @@
 				NSString *installedTexPath = [documentsDirectory stringByAppendingPathComponent:[pname stringByDeletingPathExtension]];
 				if (![fileManager fileExistsAtPath:installedTexPath])
 				{
-                    NSLog(@"Processing '%@' to '%@'\n",preloadedPDBPath,installedTexPath);
+                   // NSLog(@"Processing '%@' to '%@'\n",preloadedPDBPath,installedTexPath);
                     /*
 					
                     // Move included PDB files to /Documents

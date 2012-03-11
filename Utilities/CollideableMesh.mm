@@ -71,7 +71,7 @@ BOOL intersectOctreeNodeWithOctreeNode(struct octree_struct *octree, int nodeNum
 
 - (void)dealloc
 {
-    printf("Free CM\n");
+    //printf("Free CM\n");
 	if (octree != octree_collision)
 		free(octree_collision);
 

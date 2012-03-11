@@ -122,7 +122,7 @@
     searchResultIUPACNames = nil;
     
 	NSString *searchURL = nil;
-    searchURL = [[NSString alloc] initWithString:[urlbasepath stringByAppendingString:@"list2.txt" ]] ;
+    searchURL = [[NSString alloc] initWithString:[urlbasepath stringByAppendingString:@"list.txt" ]] ;
     
 	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -256,7 +256,7 @@
             [searchResultTitles addObject:descNameStr];
             [searchResultIDs addObject:fullPath];
 
-            NSLog(@"Adding %@ file name: %@", descName, fullPath);
+           // NSLog(@"Adding %@ file name: %@", descName, fullPath);
         }
     }
    	currentPageOfResults = 1;

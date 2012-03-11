@@ -102,7 +102,7 @@
 		
 //	NSString *locationOfRemotePDBFile = [NSString stringWithFormat:@"http://www.sunsetlakesoftware.com/sites/default/files/%@.pdb.gz", pdbCode];
 	NSString *locationOfRemoteFile  = codeForCurrentlyDownloadingMolecule;
-    NSLog(@"%@ getting\n",locationOfRemoteFile);
+    //NSLog(@"%@ getting\n",locationOfRemoteFile);
    /* if (searchType == PROTEINDATABANKSEARCH)
     {
         locationOfRemoteFile = [NSString stringWithFormat:@"http://www.rcsb.org/pdb/files/%@.pdb.gz", codeForCurrentlyDownloadingMolecule];

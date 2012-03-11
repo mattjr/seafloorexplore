@@ -98,7 +98,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
     {
 		filenameWithoutExtension = [[filename substringToIndex:rangeUntilFirstPeriod.location] retain];	
     }
-    NSLog(@"AA %@ 0x%x 0x%x\n",newFilename,(int)newFilename,(int)filenameWithoutExtension);
+   // NSLog(@"AA %@ 0x%x 0x%x\n",newFilename,(int)newFilename,(int)filenameWithoutExtension);
 
 	if (insertMoleculeSQLStatement == nil) 
 	{
