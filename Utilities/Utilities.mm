@@ -299,6 +299,14 @@ void DrawFullscreenQuad(short screenWidth, short screenHeight, short textureWidt
 	globalInfo.drawCalls++;
 }
 #endif
+bool PointInFrustum(const float frustum[6][4], float x, float y, float z )
+{
+    int p;
+    for( p = 0; p < 6; p++ )
+        if( frustum[p][0] * x + frustum[p][1] * y + frustum[p][2] * z + frustum[p][3]    <= 0 )
+            return false;
+    return true;
+}
 
 char AABoxInFrustum(const float frustum[6][4], float x, float y, float z, float ex, float ey, float ez) // adapted code from glm and lighthouse tutorial
 {

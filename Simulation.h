@@ -44,6 +44,7 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
     double _panKeyDist,_cameraPanAcceleration;
     double   _center[3];
 	double  _targetCenter[3];
+    vector3f bbox[2];
    // void SlerpToTargetOrientation(double percent);
   	double _targetHeading;
 	double _heading;
@@ -59,7 +60,9 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
     CGPoint ranges;
     bool _firstPan;
     double _radius;
-
+    double lastValidCenter[3];
+    bool donePanning;
+    vector3f extentsMesh;
 
 }
 
@@ -73,6 +76,7 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 - (void)resetCamera;
 - (bool)isDoneMoving;
 - (void)apply3DTransformD:(CATransform3D *)transform3D toPoint:(double *)sourcePoint result:(double *)resultingPoint;
+- (void)apply3DTransform:(CATransform3D *)transform3D toPoint:(vector3f)sourcePoint result:(vector3f)resultingPoint;
 
 
 - (void)SlerpToTargetOrientation:(float) percent;
@@ -84,5 +88,7 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 -(GLVisualizationType) getRenderMode;
 - (id)initwithstring:(NSString*) name;
 -(void) zoomval: (float) percent;
+-(void) checkIfOutOfBounds;
+-(void) startPan;
 
 @end

@@ -12,7 +12,7 @@ This library is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU Lesser General Public License along with this library; if not, see <http://www.gnu.org/licenses/> or write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
-
+#include "Camera.h"
 #define VERTEX_ARRAY	0
 #define TEXCOORD_ARRAY	1
 #define NORMAL_ARRAY	2
@@ -68,6 +68,7 @@ struct octree_struct // TODO: optimization: add optimized prefetch indices for g
 
 @public
 	GLuint					vertexVBOName, indexVBOName;
+
 }
 
 @property (readonly, nonatomic) NSString *name;
@@ -83,9 +84,12 @@ struct octree_struct // TODO: optimization: add optimized prefetch indices for g
 - (id)initWithOctreeNamed:(NSString *)_name;
 - (id)initWithOctree:(NSURL *)file andName:(NSString *)_name;
 - (void)cleanup;
-
 - (vector3f)center;
+- (CC3Plane)centeredPlane;
 - (float)radius;
 - (vector2f)zbound;
+-(vector3f)maxbb;
+-(vector3f)minbb;
 
+extern int numVisCenters;
 @end

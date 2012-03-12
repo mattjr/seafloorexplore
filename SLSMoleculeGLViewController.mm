@@ -487,6 +487,9 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 	else
 	{
 		lastMovementPosition = [[touches anyObject] locationInView:self.view];
+       // if ([[scene simulator] respondsToSelector:@selector(pan:)])
+       //     [(Simulation *)[scene simulator] startPan];
+
 	}
 }
 
@@ -573,10 +576,10 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
         [openGLESRenderer rotateModelFromScreenDisplacementInX:(currentMovementPosition.x - lastMovementPosition.x) inY:(currentMovementPosition.y - lastMovementPosition.y)];
 		CGPoint delta;
 
-        delta.x=(currentMovementPosition.x-lastMovementPosition.x)/self.view.frame.size.width;
-        delta.y=(currentMovementPosition.y-lastMovementPosition.y)/self.view.frame.size.height;		
+        delta.x=(currentMovementPosition.x-lastMovementPosition.x);///self.view.frame.size.width;
+        delta.y=(currentMovementPosition.y-lastMovementPosition.y);///self.view.frame.size.height;		
 		lastMovementPosition = currentMovementPosition;
-		
+		//printf("%f %f %f %f\n",delta.x,delta.y,(float)self.view.frame.size.width,(float)self.view.frame.size.height);
 		if ([[scene simulator] respondsToSelector:@selector(pan:)])
             [(Simulation *)[scene simulator]pan: delta];
         [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
@@ -584,9 +587,11 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 	}
 	
 }
-
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event 
 {	int count=0;
+   // if ([[scene simulator] respondsToSelector:@selector(pan:)])
+     //   [(Simulation *)[scene simulator] checkIfOutOfBounds];
+    
 	if ([[scene simulator] respondsToSelector:@selector(isDoneMoving)] && !isAutorotating){
 		while(![(Simulation *)[scene simulator]isDoneMoving]&& count <10){
 			[openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
@@ -597,8 +602,10 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 	[self handleTouchesEnding:touches withEvent:event];
 
 	// This is placed here to avoid an infinite spawning of alerts under iPhone OS 4.0
-	if (([[touches anyObject] tapCount] >= 2) && (![SLSMoleculeAppDelegate isRunningOniPad]))
+	if (([[touches anyObject] tapCount] >= 2)/* && (![SLSMoleculeAppDelegate isRunningOniPad])*/)
 	{
+        if ([[scene simulator] respondsToSelector:@selector(resetCamera)])
+            [(Simulation *)[scene simulator] resetCamera];
 		/*if (moleculeToDisplay.isDoneRendering == YES)
 		{
 			UIActionSheet *actionSheet = [self actionSheetForVisualizationState];

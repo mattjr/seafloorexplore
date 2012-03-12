@@ -19,6 +19,8 @@ You should have received a copy of the GNU Lesser General Public License along w
 
 	matrix44f_c projectionMatrix;
 	matrix44f_c viewMatrix;
+    matrix44f_c viewMatrixNoRotate;
+
 	vector<matrix44f_c> modelViewMatrices;
 }
 
@@ -27,11 +29,27 @@ You should have received a copy of the GNU Lesser General Public License along w
 @property (assign, nonatomic) float farPlane;
 @property (assign, readonly) matrix44f_c projectionMatrix;
 @property (assign, readonly) matrix44f_c viewMatrix;
+@property (assign, readonly) matrix44f_c viewMatrixNoRotate;
 
 - (void)updateProjection;
-
-
+typedef struct {
+	vector3f startLocation;	/**< The location where the ray starts. */
+	vector3f direction;			/**< The direction in which the ray points. */
+} CC3Ray;
+/** The coefficients of the equation for a plane in 3D space (ax + by + cz + d = 0). */
+typedef struct {
+	GLfloat a;				/**< The a coefficient in the planar equation. */
+	GLfloat b;				/**< The b coefficient in the planar equation. */
+	GLfloat c;				/**< The c coefficient in the planar equation. */
+	GLfloat d;				/**< The d coefficient in the planar equation. */
+} CC3Plane;
+CC3Plane CC3PlaneMake(GLfloat a, GLfloat b, GLfloat c, GLfloat d) ;
+vector4f CC3RayIntersectionWithPlane(CC3Ray ray, CC3Plane plane);
+-(CC3Ray) unprojectPoint: (CGPoint) cc2Point;
 - (matrix44f_c)modelViewMatrix;
+- (matrix44f_c)modelViewMatrixMinusRotate;
+- (void)loadNoRotate:(matrix44f_c)m;
+
 - (void)load:(matrix44f_c)m;
 - (void)push;
 - (void)pop;
@@ -39,5 +57,8 @@ You should have received a copy of the GNU Lesser General Public License along w
 - (void)translate:(vector3f)tra;
 - (void)rotate:(vector3f)rot withConfig:(axisConfigurationEnum)axisRotation;
 - (CGPoint)transformScreenPt:(vector3f)pt;
-
+-(vector4f) unprojectPoint:(CGPoint) cc2Point ontoPlane: (CC3Plane) plane;
+CC3Plane CC3PlaneFromPoints(vector3f p1, vector3f p2, vector3f p3);
+GLfloat CC3DistanceFromNormalizedPlane(CC3Plane p, vector3f v) ;
+CC3Plane CC3PlaneNormalize(CC3Plane p) ;
 @end

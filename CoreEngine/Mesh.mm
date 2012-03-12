@@ -177,20 +177,16 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 			printf("Error: only 0xFFFF vertices per object supported on the iPhone");
 #endif
         zbound_cache =vector2f(FLT_MAX,-FLT_MAX);
-		for (int i = 0; i < octree->vertexCount; i++)
-		{
-			float *v = (float *) VERTEX_NUM(i);
-            float z=*(v+2) ;
-            if(z == 0.0)
-                continue;
-
-				 if(z< zbound_cache[0])
-                     zbound_cache[0]=z;
-                if(z > zbound_cache[1])
-                    zbound_cache[1]=z;	
-		}
-        //printf("Orig set %f %f\n",zbound_cache[0],zbound_cache[1]);
-		glGenBuffers(1, &vertexVBOName);
+        struct octree_node *n1 = (struct octree_node *) NODE_NUM(0);
+        vector3f extent = vector3f(n1->aabbExtentX, n1->aabbExtentY, n1->aabbExtentZ);
+        vector3f origin = vector3f(n1->aabbOriginX, n1->aabbOriginY, n1->aabbOriginZ);
+        
+        vector3f maxb= vector3f(origin + extent);
+        vector3f minb= vector3f(origin );
+        zbound_cache[0]=minb[2];
+        zbound_cache[1]=maxb[2];
+        
+        glGenBuffers(1, &vertexVBOName);
 		glGenBuffers(1, &indexVBOName);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexVBOName);
@@ -222,6 +218,15 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 
 	return vector3f(origin + extent / 2.0);
 }
+- (CC3Plane)centeredPlane{
+    struct octree_node *n1 = (struct octree_node *) NODE_NUM(0);
+	vector3f extent = vector3f(n1->aabbExtentX, n1->aabbExtentY, n1->aabbExtentZ);
+	vector3f origin = vector3f(n1->aabbOriginX, n1->aabbOriginY, n1->aabbOriginZ);
+    vector3f v1=vector3f(origin[0],origin[1],origin[2]+extent[2]/2.0);
+    vector3f v2=vector3f(origin[0]+extent[0],origin[1],origin[2]+extent[2]/2.0);
+    vector3f v3=vector3f(origin[0],origin[1]+extent[1],origin[2]+extent[2]/2.0);
+    return CC3PlaneFromPoints(v1,v2,v3);
+}
 
 - (float)radius
 {
@@ -229,11 +234,32 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 	vector3f extent = vector3f(n1->aabbExtentX, n1->aabbExtentY, n1->aabbExtentZ);
 	return extent.length() / 2.0;
 }
+- (vector3f)maxbb{
+	struct octree_node *n1 = (struct octree_node *) NODE_NUM(0);
+
+    vector3f extent = vector3f(n1->aabbExtentX, n1->aabbExtentY, n1->aabbExtentZ);
+    vector3f origin = vector3f(n1->aabbOriginX, n1->aabbOriginY, n1->aabbOriginZ);
+
+    return vector3f(origin + extent);
+}
+- (vector3f)minbb{
+   	struct octree_node *n1 = (struct octree_node *) NODE_NUM(0);
+
+   vector3f extent = vector3f(n1->aabbExtentX, n1->aabbExtentY, n1->aabbExtentZ);
+   vector3f origin = vector3f(n1->aabbOriginX, n1->aabbOriginY, n1->aabbOriginZ);
+   
+   return vector3f(origin);
+}
 
 - (vector2f)zbound
 {
 		
 	return zbound_cache;
+}
+- (BOOL) check_shift_in_frustum: (vector3f) pt
+{
+    return PointInFrustum(frustum,pt[0],pt[1],pt[2]);              
+                   
 }
 
 - (void)cleanup

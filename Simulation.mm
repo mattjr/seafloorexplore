@@ -14,6 +14,7 @@
 #include "LibVT_Internal.h"
 float positions[60 * 60][6];
 #include <math.h>
+#import "Core3D.h"
 
 #define PLAY_DEMO		0
 //#define FIXED_TILES_PATH   // either load from a specific directory or from where the binary is
@@ -176,15 +177,15 @@ float positions[60 * 60][6];
         cameraRotationSpeed = 0.01;
 		_heading=0.0;
 		_targetHeading=0.0;
-		vector3f tmp= [mesh center];
-		_center[0] = -tmp[0];
-		_center[1] = -tmp[1];
-		_center[2] = -tmp[2];
-		_distance = 3*[mesh radius];
+		
 		[self resetCamera];
         _firstPan=false;
         _radius = [mesh radius];
-       
+        donePanning=true;
+        bbox[0]=[mesh minbb];
+        bbox[1]=[mesh maxbb];
+        extentsMesh=bbox[1]-bbox[0];
+
 	}
 	return self;
 }
@@ -359,7 +360,6 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     memcpy(data.data(),&_invMat.m11,sizeof(float)*16);
    // [self printMatrix:data.data()];
 	[[scene camera] load:data];
- 
    // [self printMatrix:[[scene camera] modelViewMatrix].data()];
 
 }
@@ -397,91 +397,60 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     resultingPoint[2] = sourcePoint[0] * transform3D->m31 + sourcePoint[1] * transform3D->m32 + sourcePoint[2] * transform3D->m33 + transform3D->m34;
 }
 
+- (void)apply3DTransform:(CATransform3D *)transform3D toPoint:(vector3f)sourcePoint result:(vector3f)resultingPoint;
+{
+    
+    resultingPoint[0] = sourcePoint[0] * transform3D->m11 + sourcePoint[1] * transform3D->m12 + sourcePoint[2] * transform3D->m13 + transform3D->m14;
+    resultingPoint[1] = sourcePoint[0] * transform3D->m21 + sourcePoint[1] * transform3D->m22 + sourcePoint[2] * transform3D->m23 + transform3D->m24;
+    resultingPoint[2] = sourcePoint[0] * transform3D->m31 + sourcePoint[1] * transform3D->m32 + sourcePoint[2] * transform3D->m33 + transform3D->m34;
+}
 -(void) pan: (CGPoint) pt
 {
-	
-    /*pt1.x=-1;
-    pt1.y=-1;
-    pt2.x=1;
-    pt2.y=1;*/
-    vector3f ptsrc1; 
-    ptsrc1[0]=0.0;
-    ptsrc1[1]=0.0;
-    ptsrc1[2]=180.0;
-    
+  /* printf("%d %d %d\n",numVisCenters,globalInfo.renderedFacesNoReset,globalInfo.visitedNodes);
+
+    if(	globalInfo.renderedFacesNoReset > 0){
+        for(int i=0;i<3; i++)
+            lastValidCenter[i]=_center[i];
+      //  printf("Sett %d\n",globalInfo.renderedFacesNoReset );
+    }else{
+       // printf("no\n");
+    }*/
+
+    CC3Plane plane=[mesh centeredPlane];
+    CC3Plane normPlane=CC3PlaneNormalize(plane);
+    CGPoint zero;
+    zero.x=0;
+    zero.y=0;
+    vector4f unprojected_orig =[[scene camera] unprojectPoint:zero ontoPlane: normPlane];
+    vector4f unprojected_diff =[[scene camera] unprojectPoint:pt ontoPlane: normPlane];
     CATransform3D invMat= orientation;
+       
     
     CATransform3D mTmp= CATransform3DMakeTranslation(0,0,-_distance);
     invMat= CATransform3DConcat(invMat,mTmp);
     matrix44f_c data;
     memcpy(data.data(),&invMat.m11,sizeof(float)*16);
-    
-    matrix44f_c mvp([[scene camera] projectionMatrix] *data);
-    vector4f v1,v2;
-    v1[0]= -_radius;
-    v1[1]= -_radius;
-    v1[2]= -_radius;
-    v1[3]=1.0;
-    
-    v2[0]= _radius;
-    v2[1]= _radius;
-    v2[2]= _radius;
-    v2[3]= 1.0;
-    
-    v1=v1*mvp;
-    
-    
-    v2=v2*mvp;
-    
-    v1[0]/=v1[3];
-    v1[1]/=v1[3];
-    v1[2]/=v1[3];
-    
-    
-    v2[0]/=v2[3];
-    v2[1]/=v2[3];
-    v2[2]/=v2[3];
-    
-    CGPoint r;
-    r.x=fabs(v1[0]-v2[0]);
-    r.y=fabs(v1[1]-v2[1]);
-    if(!_firstPan){
-        ranges=r;
-        _firstPan=true;
-    }
-  //  printf("Original %f %f Ratio %f %f\n",r.x,r.y,r.x/ranges.x,(3*[mesh radius])/_distance);
-    
-    CGPoint ratio;
-    ratio.x=ranges.x/r.x;
-    ratio.y=ranges.x/r.y;
-    
-    ratio.x*=pt.x*(3*_radius);
-      ratio.y*=pt.y*(3*_radius); 
-   // printf("Range X:%f Y:%f\n",ratio.x,ratio.y);
-  //  float scale = _cameraPanAcceleration*_distance;
-    double zratio=((1.0-((_distance/(3*_radius))))/2.0) + 0.5;	
-    
+    [[scene camera] loadNoRotate: data];
 	CATransform3D headingMat;
 	headingMat=CATransform3DMakeRotation(-_heading * M_PI / 180.0,0,0,1);
 	double pt_trans[3];
-	pt_trans[0]=ratio.x;//pt.x*scale;
-	pt_trans[1]=ratio.y;//pt.y*scale;
+	pt_trans[0]=(unprojected_diff[0]-unprojected_orig[0]);
+	pt_trans[1]=(unprojected_orig[1]-unprojected_diff[1]);
 	pt_trans[2]=0;
 	  
 	double pt_out[3];
 	[self apply3DTransformD:&headingMat toPoint:pt_trans result:pt_out];
-    
+    vector3f extentsMeshRot;
+    [self apply3DTransform:&headingMat toPoint:extentsMesh result:extentsMeshRot];
+
     double tmpCenter[2];
     vector3f tmp= [mesh center];
-    
+ 
     tmpCenter[0]=( _targetCenter[0]+ pt_out[0])+tmp[0];
     tmpCenter[1]= (_targetCenter[1]+ pt_out[1])+tmp[1];
-    double mult=1.0;
-    zratio=std::max(0.5,zratio);
-   // printf("zratio %f dist %f limit %f curr %f %f\n",zratio,_distance, (zratio*mult)*_radius,tmpCenter[0]+tmp[0],tmpCenter[1]+tmp[1]);
-    if(tmpCenter[0] >  -(zratio*mult)*_radius && tmpCenter[0] <  (zratio*mult)*_radius  && tmpCenter[1] >  -(zratio*mult)*_radius&&
-       tmpCenter[1] < (zratio*mult)*_radius )
-    
+
+    if(tmpCenter[0] > -extentsMesh[0] && tmpCenter[0] <  extentsMesh[0]  && tmpCenter[1] >  -extentsMesh[1]&& tmpCenter[1] < extentsMesh[1] )
+
     {
        
         _targetCenter[0]= tmpCenter[0]-tmp[0];
@@ -556,9 +525,14 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 - (void)resetCamera
 {
         
-	[[scene camera] setPosition:vector3f(10, 1, 0)]; 
-    [[scene camera] setRotation:vector3f(-90, 0, 0)];
- 
+	//[[scene camera] setPosition:vector3f(10, 1, 0)]; 
+    //[[scene camera] setRotation:vector3f(-90, 0, 0)];
+    vector3f tmp= [mesh center];
+    _center[0] = -tmp[0];
+    _center[1] = -tmp[1];
+    _center[2] = -tmp[2];
+    _distance = 3*[mesh radius];
+
  
 
     for(int i=0; i <3; i++){
@@ -571,6 +545,8 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 	_heading=0.0;
 	_targetHeading=_heading;
     startTime = [NSDate timeIntervalSinceReferenceDate];
+    for(int i=0;i<3; i++)
+        lastValidCenter[i]=_center[i];
 
 }
 -(void) zoomstart{
