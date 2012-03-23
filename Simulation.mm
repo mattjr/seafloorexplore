@@ -172,11 +172,8 @@ float positions[60 * 60][6];
         _minimumZoomScale = 0.5f;
         _maxZoomScale = 20000.0f;
         _minalt=0.0;
-        _tilt=0.0;
-        _targetTilt= 0.0;
         cameraRotationSpeed = 0.01;
-		_heading=0.0;
-		_targetHeading=0.0;
+		
 		
 		[self resetCamera];
         _firstPan=false;
@@ -404,59 +401,142 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     resultingPoint[1] = sourcePoint[0] * transform3D->m21 + sourcePoint[1] * transform3D->m22 + sourcePoint[2] * transform3D->m23 + transform3D->m24;
     resultingPoint[2] = sourcePoint[0] * transform3D->m31 + sourcePoint[1] * transform3D->m32 + sourcePoint[2] * transform3D->m33 + transform3D->m34;
 }
+
 -(void) pan: (CGPoint) pt
 {
-  /* printf("%d %d %d\n",numVisCenters,globalInfo.renderedFacesNoReset,globalInfo.visitedNodes);
-
-    if(	globalInfo.renderedFacesNoReset > 0){
-        for(int i=0;i<3; i++)
-            lastValidCenter[i]=_center[i];
-      //  printf("Sett %d\n",globalInfo.renderedFacesNoReset );
-    }else{
-       // printf("no\n");
-    }*/
-
-    CC3Plane plane=[mesh centeredPlane];
-    CC3Plane normPlane=CC3PlaneNormalize(plane);
-    CGPoint zero;
-    zero.x=0;
-    zero.y=0;
-    vector4f unprojected_orig =[[scene camera] unprojectPoint:zero ontoPlane: normPlane];
-    vector4f unprojected_diff =[[scene camera] unprojectPoint:pt ontoPlane: normPlane];
-    CATransform3D invMat= orientation;
-       
     
-    CATransform3D mTmp= CATransform3DMakeTranslation(0,0,-_distance);
-    invMat= CATransform3DConcat(invMat,mTmp);
-    matrix44f_c data;
-    memcpy(data.data(),&invMat.m11,sizeof(float)*16);
-    [[scene camera] loadNoRotate: data];
-	CATransform3D headingMat;
-	headingMat=CATransform3DMakeRotation(-_heading * M_PI / 180.0,0,0,1);
-	double pt_trans[3];
-	pt_trans[0]=(unprojected_diff[0]-unprojected_orig[0]);
-	pt_trans[1]=(unprojected_orig[1]-unprojected_diff[1]);
-	pt_trans[2]=0;
-	  
-	double pt_out[3];
-	[self apply3DTransformD:&headingMat toPoint:pt_trans result:pt_out];
-    vector3f extentsMeshRot;
-    [self apply3DTransform:&headingMat toPoint:extentsMesh result:extentsMeshRot];
-
-    double tmpCenter[2];
-    vector3f tmp= [mesh center];
+   // pt.x=(globalInfo.width/2)+0;
+   // pt.y=(globalInfo.height/2)+0;
+   // printf("Dist %f %f\n",_center[2],_distance);
  
-    tmpCenter[0]=( _targetCenter[0]+ pt_out[0])+tmp[0];
-    tmpCenter[1]= (_targetCenter[1]+ pt_out[1])+tmp[1];
+    vector3f v1=vector3f(_unprojected_orig[0],_unprojected_orig[1],_unprojected_orig[2]);
+    vector3f v2=vector3f(_unprojected_orig[0]+1,_unprojected_orig[1],_unprojected_orig[2]);
+    vector3f v3=vector3f(_unprojected_orig[0],_unprojected_orig[1]+1,_unprojected_orig[2]);
+    
+    CC3Plane plane= CC3PlaneFromPoints(v1,v2,v3);
+    //CC3Plane plane=[mesh centeredPlane];
+    CC3Plane normPlane=CC3PlaneNormalize(plane);
+    vector4f unprojected_diff =[[scene camera] pick:pt intoMesh: [mesh octree] ];
+    if(!isfinite(unprojected_diff[0]))
+        unprojected_diff= [[scene camera] unprojectPoint:pt ontoPlane: normPlane];
 
-    if(tmpCenter[0] > -extentsMesh[0] && tmpCenter[0] <  extentsMesh[0]  && tmpCenter[1] >  -extentsMesh[1]&& tmpCenter[1] < extentsMesh[1] )
+    vector4f plane_endclick_world= [[scene camera] unprojectPoint:pt ontoPlane: normPlane];
 
-    {
-       
-        _targetCenter[0]= tmpCenter[0]-tmp[0];
-        _targetCenter[1]= tmpCenter[1]-tmp[1];
+    // Compute world coords of second click
+    matrix44f_c ident;
+    float winx,winy,winz;
+    // Now unproject (just to get z value need later)
+
+    gluProject(plane_endclick_world[0],plane_endclick_world[1],plane_endclick_world[2],
+               [[scene camera] modelViewMatrix].data(),[[scene camera] projectionMatrix].data(),[[scene camera] viewport].data(),&winx,&winy,&winz);
+  
+    
+    // Create x
+    float x,y,z;
+    if( gluUnProject(pt.x,globalInfo.height-pt.y, winz, ident.identity().data()/*&orientation.m11*/, [[scene camera] projectionMatrix].data(), [[scene camera] viewport].data(), &x, &y, &z) == GL_TRUE) { 
+        
+    }else{
+        printf("Ballz\n");
     }
-	
+   // printf("Camera Frame %f %f %f\n",x,y,z);
+    float tmpP[4];
+    tmpP[0]=x;
+    tmpP[1]=y;
+    tmpP[2]=z;
+    tmpP[3]=1;
+
+    vector3f termX(x,y,z);
+  
+    // Create rotation-only version of current modelview
+    float firstClickWorld[4];
+    firstClickWorld[0]=_unprojected_orig[0];
+    firstClickWorld[1]=_unprojected_orig[1];
+    firstClickWorld[2]=_unprojected_orig[2];
+    firstClickWorld[3]=1;
+    CATransform3D roationOnlyModelView;
+    roationOnlyModelView=_invMat;
+    roationOnlyModelView.m41=0;
+    roationOnlyModelView.m42=0;
+    roationOnlyModelView.m43=0;
+    
+    float pt_out[4];
+    
+    // Compute term Y
+    __gluMultMatrixVecf(&roationOnlyModelView.m11, firstClickWorld,pt_out);
+    vector3f termY(pt_out[0],pt_out[1],pt_out[2]);
+
+    // Create new modelview matrix
+    vector3f newT=termX-termY;
+    CATransform3D newModel=roationOnlyModelView;
+    
+    newModel.m41=newT[0];
+    newModel.m42=newT[1];
+    newModel.m43=newT[2];
+   
+    CGPoint centerScreenWorld;
+    centerScreenWorld.x=(globalInfo.width/2);
+    centerScreenWorld.y=(globalInfo.height/2);
+    matrix44f_c data;
+    memcpy(data.data(),&newModel.m11,sizeof(float)*16);
+
+    CC3Ray ray=[[scene camera] unprojectPoint: centerScreenWorld withModelView:data];
+    float intersectionPoint[4];
+    intersectionPoint[3]=1;
+    if(intersectOctreeNodeWithRay([mesh octree], 0,ray, intersectionPoint))
+        ;//printf("Hit %f %f %f\n",intersectionPoint[0],intersectionPoint[1],intersectionPoint[2]);
+    else{
+       vector4f ret=CC3RayIntersectionWithPlane(ray, plane);// printf("No hit\n");
+        intersectionPoint[0]=ret[0];
+        intersectionPoint[1]=ret[1];
+        intersectionPoint[2]=ret[2];
+    }
+    __gluMultMatrixVecf(&newModel.m11, intersectionPoint,pt_out);
+   // printf("Z pt out %f \n ", pt_out[2]);
+   // printf("Distance %f \n ", _distance);
+    _distance=-pt_out[2];
+
+   // printf("New model:\n");
+   // [self printMatrix:&newModel.m11];
+
+   // printf("termY  %f %f %f\n",termY[0],termY[1],termY[2]);
+   // printf("termX %f %f %f\n",termX[0],termX[1],termX[2]);
+    
+    // Run test
+    
+   // gluProject(_unprojected_orig[0],_unprojected_orig[1],_unprojected_orig[2],&newModel.m11,g_projMatrix,g_viewport,&winx,&winy,&winz);
+ //   printf("Should be u:%f v:%f -- u:%f v:%f\n",winx,globalInfo.height-winy,pt.x,pt.y);
+
+    // Now recover view center from new model matrix
+    CATransform3D tiltMat, retMat;
+    
+    CATransform3D mTmp= CATransform3DMakeTranslation(0,0,_distance);
+    CATransform3D headingMat= CATransform3DMakeRotation(-_heading * M_PI / 180.0,0,0,1);
+    if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+        tiltMat=CATransform3DMakeRotation(_tilt * M_PI / 180.0,1,0,0);
+    else if(interfaceOrientation == UIInterfaceOrientationPortrait)
+        tiltMat=CATransform3DMakeRotation(_tilt * M_PI / 180.0,0,1,0); 
+    
+    // bring camera to center, reverse rotations
+    retMat= CATransform3DConcat(newModel,mTmp);
+    retMat=CATransform3DConcat(retMat,tiltMat);    
+    retMat= CATransform3DConcat(retMat,headingMat);
+    
+    retMat= CATransform3DConcat(retMat,CATransform3DInvert(orientation));
+    
+    // extract center point
+    vector3f cent(retMat.m41,retMat.m42,retMat.m43);
+    
+ //  printf("Cen %f %f %f\n",retMat.m41,retMat.m42,retMat.m43);
+      
+    
+    _targetCenter[0]=cent[0];
+    _targetCenter[1]=cent[1];
+    _targetCenter[2]=cent[2];
+    _targetDistance=_distance;
+    _center[0]=_targetCenter[0];
+    _center[1]=_targetCenter[1];
+    _center[2]=_targetCenter[2];
+ 	
 }
 -(void) orient: (CGPoint) pt
 {
@@ -522,6 +602,36 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
             
     
 }
+-(void) panstart: (CGPoint) pt{
+    CC3Plane plane=[mesh centeredPlane];
+    CC3Plane normPlane=CC3PlaneNormalize(plane);
+    
+    vector4f tmp =[[scene camera] pick:pt intoMesh: [mesh octree] ];
+    
+    //[[scene camera] unprojectPoint:_lastPt ontoPlane: normPlane];
+    if(isfinite(tmp[0]))
+       _unprojected_orig=tmp;
+    else 
+        _unprojected_orig=[[scene camera] unprojectPoint:pt ontoPlane: normPlane];
+
+}
+-(void) pancont: (CGPoint) pt
+{
+    [self panstart: pt];
+    //_lastPt=pt;    
+    
+}
+- (void)printMatrix:(GLfloat *)matrix;
+{
+	NSLog(@"___________________________");
+	NSLog(@"|%f,%f,%f,%f|", matrix[0], matrix[1], matrix[2], matrix[3]);
+	NSLog(@"|%f,%f,%f,%f|", matrix[4], matrix[5], matrix[6], matrix[7]);
+	NSLog(@"|%f,%f,%f,%f|", matrix[8], matrix[9], matrix[10], matrix[11]);
+	NSLog(@"|%f,%f,%f,%f|", matrix[12], matrix[13], matrix[14], matrix[15]);
+	NSLog(@"___________________________");			
+}
+
+
 - (void)resetCamera
 {
         
@@ -541,7 +651,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     _targetDistance=_distance;
 	
     _tilt=0.0;
-    _targetTilt= 0.0;
+    _targetTilt= _tilt;
 	_heading=0.0;
 	_targetHeading=_heading;
     startTime = [NSDate timeIntervalSinceReferenceDate];

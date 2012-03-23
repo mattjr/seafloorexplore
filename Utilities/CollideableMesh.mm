@@ -14,7 +14,7 @@
  */
 #import "Core3D.h"
 #import "CollideableMesh.h"
-
+#include "Camera.h"
 
 
 int tri_tri_overlap_test_3d(float p1[3], float q1[3], float r1[3], float p2[3], float q2[3], float r2[3]);
@@ -251,6 +251,55 @@ BOOL intersectOctreeNodeWithOctreeNode(struct octree_struct *thisOctree, int nod
 
 	return NO;
 }
+bool intersectsWithRay( const CC3Ray& ray ,const vector3f center, const vector3f extent) 
+{
+    double rhs;
+    double fWdU[3];
+    double fAWdU[3];
+    double fDdU[3];
+    double fADdU[3];
+    double fAWxDdU[3];
+    
+    vector3f UNIT_X(1.0, 0.0, 0.0);
+    vector3f UNIT_Y(0.0, 1.0, 0.0);
+    vector3f UNIT_Z(0.0, 0.0, 1.0);
+    
+    vector3f diff = ray.startLocation - center;
+    vector3f wCrossD = cross(ray.direction , diff);
+    
+    fWdU[0] = dot(ray.direction , UNIT_X);
+    fAWdU[0] = abs(fWdU[0]);
+    fDdU[0] = dot(diff , UNIT_X);
+    fADdU[0] = abs(fDdU[0]);
+    if (fADdU[0] > extent[0] && fDdU[0] * fWdU[0] >= 0.0)             return false;
+    
+    fWdU[1] = dot(ray.direction , UNIT_Y);
+    fAWdU[1] = abs(fWdU[1]);
+    fDdU[1] = dot(diff , UNIT_Y);
+    fADdU[1] = abs(fDdU[1]);
+    if (fADdU[1] > extent[1] && fDdU[1] * fWdU[1] >= 0.0)             return false;
+    
+    fWdU[2] = dot(ray.direction , UNIT_Z);
+    fAWdU[2] = abs(fWdU[2]);
+    fDdU[2] = dot(diff ,UNIT_Z);
+    fADdU[2] = abs(fDdU[2]);
+    if (fADdU[2] > extent[2] && fDdU[2] * fWdU[2] >= 0.0)             return false;
+    
+    fAWxDdU[0] = abs(dot(wCrossD , UNIT_X));
+    rhs = extent[1] * fAWdU[2] + extent[2] * fAWdU[1];
+    if (fAWxDdU[0] > rhs)           return false;
+    
+    fAWxDdU[1] = abs(dot(wCrossD ,UNIT_Y));
+    rhs = extent[0] * fAWdU[2] + extent[2] * fAWdU[0];
+    if (fAWxDdU[1] > rhs)           return false;
+    
+    fAWxDdU[2] = abs(dot(wCrossD , UNIT_Z));
+    rhs = extent[0] * fAWdU[1] + extent[1] * fAWdU[0];
+    if (fAWxDdU[2] > rhs)           return false;
+    
+    return true;
+}
+
 
 BOOL intersectOctreeNodeWithLine(struct octree_struct *thisOctree, int nodeNum, const vector3f startPoint, const vector3f endPoint, float intersectionPoint[3]) // TODO: this is broken for octrees with len(vertices) > 0xFFFF
 {
@@ -301,6 +350,58 @@ BOOL intersectOctreeNodeWithLine(struct octree_struct *thisOctree, int nodeNum, 
 
 	return NO;
 }
+BOOL intersectOctreeNodeWithRay(struct octree_struct *thisOctree, int nodeNum, CC3Ray ray, float intersectionPoint[3]) // TODO: this is broken for octrees with len(vertices) > 0xFFFF
+{
+	struct octree_node *n = (struct octree_node *) _NODE_NUM(thisOctree, nodeNum);
+    
+	if (n->faceCount)
+	{
+		float aabbOrigin[3] = {n->aabbOriginX + (n->aabbExtentX/2), n->aabbOriginY + (n->aabbExtentY/2), n->aabbOriginZ + (n->aabbExtentZ/2)};
+		float aabbExtent[3] = {(n->aabbExtentX/2), (n->aabbExtentY/2), (n->aabbExtentZ/2)};
+		BOOL intersects = intersectsWithRay(ray, aabbOrigin, aabbExtent);
+    //    printf("%f %f %f %f %f %f %f %f %f\n",aabbOrigin[0],aabbOrigin[1],aabbOrigin[2],ray.startLocation[0],ray.startLocation[1],ray.startLocation[2],
+         //      ray.direction[0],ray.direction[1],ray.direction[2]);
+		if (intersects)
+		{
+			uint32_t i;
+            
+			if (n->childIndex1 == 0xFFFF) // we are a leaf
+			{
+             //   printf("Hit leaf %d %d\n",n->firstFace , n->faceCount);
+				for (i = n->firstFace; i < n->firstFace + n->faceCount; i++)
+				{
+					uint16_t *f = (uint16_t *) _FACE_NUM(thisOctree, i);
+					float *v1 = (float *) _VERTEX_NUM(thisOctree, *f);
+					float *v2 = (float *) _VERTEX_NUM(thisOctree, *(f+1));		// nana this could be prettified
+					float *v3 = (float *) _VERTEX_NUM(thisOctree, *(f+2));
+                    
+					float t, u, v;
+                   // printf("%f %f %f %d %d %d\n",*v1,*v2,*v3,*f ,*(f+1),*(f+2));
+					if(IntersectionLineTriangle(ray,v1, v2, v3, &t, &u, &v) )//intersect_triangle((float *)&startPoint, (float *)&endPoint, v1, v2, v3, &t, &u, &v) && (v <= 1.0f))
+					{
+						vector3f ip = (1-u-v) * vector3f(v1[0],v1[1],v1[2]) + u * vector3f(v2[0],v2[1],v2[2]) + v * vector3f(v3[0],v3[1],v3[2]);
+						intersectionPoint[0] = ip[0];
+						intersectionPoint[1] = ip[1];
+						intersectionPoint[2] = ip[2];
+                        
+						return YES;
+					}
+				}
+			}
+			else
+			{
+				int indices[8] = {n->childIndex1, n->childIndex2, n->childIndex3, n->childIndex4, n->childIndex5, n->childIndex6, n->childIndex7, n->childIndex8};
+                
+				for(i = 0; i < 8; i++)
+					if (intersectOctreeNodeWithRay(thisOctree, indices[i], ray, intersectionPoint))
+						return YES;
+			}
+		}
+	}
+    
+	return NO;
+}
+
 
 
 #pragma mark -
@@ -1023,7 +1124,62 @@ int tri_tri_overlap_test_2d(float p1[2], float q1[2], float r1[2],
 };
 
 #define EPSILON 0.000001
-
+bool IntersectionLineTriangle(CC3Ray r,
+                               vector3f vert0, vector3f vert1, vector3f vert2,
+                               float *t, float *u, float *v){
+#define EPSIL 0.000001
+    
+   vector3f edge1, edge2, tvec, pvec, qvec;
+    float det,inv_det;
+    
+    /* find vectors for two edges sharing vert0 */
+    edge1 = vert1 - vert0;
+    edge2 = vert2 - vert0;
+    
+    /* begin calculating determinant - also used to calculate U parameter */
+    pvec =  cross(r.direction , edge2);
+    
+    /* if determinant is near zero, line lies in plane of triangle */
+    det =  dot(edge1 ,  pvec);
+    
+    /* calculate distance from vert0 to line origin */
+    tvec = r.startLocation - vert0;
+    inv_det = 1.0 / det;
+    
+    qvec = cross(tvec , edge1);
+    
+    if (det > EPSIL)
+    {
+        *u =  dot(tvec , pvec) ;
+        if ( *u < 0.0 ||  *u > det)
+            return 0;
+        
+        /* calculate V parameter and test bounds */
+        *v =  dot(r.direction , qvec);
+        if ( *v < 0.0 ||  *u +  *v > det)
+            return 0;
+        
+    }
+    else if(det < -EPSIL)
+    {
+        /* calculate U parameter and test bounds */
+        *u =  dot(tvec , pvec) ;
+        if ( *u > 0.0 ||  *u < det)
+            return 0;
+        
+        /* calculate V parameter and test bounds */
+        *v =  dot(r.direction, qvec)  ;
+        if ( *v > 0.0 ||  *u +  *v < det)
+            return 0;
+    }
+    else return 0;  /* line is parallell to the plane of the triangle */
+    
+    *t = dot(edge2 ,  qvec) *  inv_det;
+    ( *u) *= inv_det;
+    ( *v) *= inv_det;
+    
+    return 1;
+}
 int
 intersect_triangle(float orig[3], float dir[3],
                    float vert0[3], float vert1[3], float vert2[3],

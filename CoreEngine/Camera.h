@@ -20,8 +20,10 @@ You should have received a copy of the GNU Lesser General Public License along w
 	matrix44f_c projectionMatrix;
 	matrix44f_c viewMatrix;
     matrix44f_c viewMatrixNoRotate;
-
+    cml::vector4i viewport;
 	vector<matrix44f_c> modelViewMatrices;
+    cml::matrix44f_c viewportMatrix; 
+
 }
 
 @property (assign, nonatomic) float fov;
@@ -30,6 +32,10 @@ You should have received a copy of the GNU Lesser General Public License along w
 @property (assign, readonly) matrix44f_c projectionMatrix;
 @property (assign, readonly) matrix44f_c viewMatrix;
 @property (assign, readonly) matrix44f_c viewMatrixNoRotate;
+@property (assign, readonly) cml::vector4i viewport;
+@property (assign, readonly) matrix44f_c viewportMatrix; 
+
+
 
 - (void)updateProjection;
 typedef struct {
@@ -58,7 +64,51 @@ vector4f CC3RayIntersectionWithPlane(CC3Ray ray, CC3Plane plane);
 - (void)rotate:(vector3f)rot withConfig:(axisConfigurationEnum)axisRotation;
 - (CGPoint)transformScreenPt:(vector3f)pt;
 -(vector4f) unprojectPoint:(CGPoint) cc2Point ontoPlane: (CC3Plane) plane;
+-(vector4f) pick:(CGPoint) cc2Point intoMesh: (struct octree_struct *) thisOctree;
+-(vector4f) getZfromWorldXY:(CGPoint) cc2Point intoMesh: (struct octree_struct *) thisOctree;
 CC3Plane CC3PlaneFromPoints(vector3f p1, vector3f p2, vector3f p3);
+
+-(CC3Ray) unprojectPoint: (CGPoint) cc2Point withModelView: (matrix44f_c) thismodelview ;
 GLfloat CC3DistanceFromNormalizedPlane(CC3Plane p, vector3f v) ;
 CC3Plane CC3PlaneNormalize(CC3Plane p) ;
+#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES1/glext.h>
+
+void
+gluPerspective(GLfloat fovy, GLfloat aspect, GLfloat zNear, GLfloat zFar);
+
+void
+gluLookAt(GLfloat eyex, GLfloat eyey, GLfloat eyez, GLfloat centerx,
+          GLfloat centery, GLfloat centerz, GLfloat upx, GLfloat upy,
+          GLfloat upz);
+
+GLint
+gluProject(GLfloat objx, GLfloat objy, GLfloat objz, 
+           const GLfloat modelMatrix[16], 
+           const GLfloat projMatrix[16],
+           const GLint viewport[4],
+           GLfloat *winx, GLfloat *winy, GLfloat *winz);
+
+GLint
+gluUnProject(GLfloat winx, GLfloat winy, GLfloat winz,
+             const GLfloat modelMatrix[16], 
+             const GLfloat projMatrix[16],
+             const GLint viewport[4],
+             GLfloat *objx, GLfloat *objy, GLfloat *objz);
+
+
+GLint
+gluUnProject4(GLfloat winx, GLfloat winy, GLfloat winz, GLfloat clipw,
+              const GLfloat modelMatrix[16], 
+              const GLfloat projMatrix[16],
+              const GLint viewport[4],
+              GLclampf nearVal, GLclampf farVal,      
+              GLfloat *objx, GLfloat *objy, GLfloat *objz,
+              GLfloat *objw);
+
+void
+gluPickMatrix(GLfloat x, GLfloat y, GLfloat deltax, GLfloat deltay,
+              GLint viewport[4]);
+void __gluMultMatrixVecf(const GLfloat matrix[16], const GLfloat in[4],
+                         GLfloat out[4]);
 @end

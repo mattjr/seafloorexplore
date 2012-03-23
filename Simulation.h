@@ -37,6 +37,7 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
     double _targetDistance;
     double _zoomStartDist;
     double       _distance;
+    vector4f _unprojected_orig;
 	UIInterfaceOrientation interfaceOrientation;
 
     //void Pan(float x,float y);
@@ -63,7 +64,7 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
     double lastValidCenter[3];
     bool donePanning;
     vector3f extentsMesh;
-
+    CGPoint _lastPt;
 }
 
 - (void)mouseDragged:(vector2f)delta withFlags:(uint32_t)flags;
@@ -77,8 +78,9 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 - (bool)isDoneMoving;
 - (void)apply3DTransformD:(CATransform3D *)transform3D toPoint:(double *)sourcePoint result:(double *)resultingPoint;
 - (void)apply3DTransform:(CATransform3D *)transform3D toPoint:(vector3f)sourcePoint result:(vector3f)resultingPoint;
+-(CATransform3D) constructMatrixOpposite:(vector3f) cen;
 
-
+-(CATransform3D) constructMatrix:(vector3f) cen;
 - (void)SlerpToTargetOrientation:(float) percent;
 -(void) pan: (CGPoint)pt;
 -(void) zoomcont: (float) percent;
@@ -88,7 +90,9 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 -(GLVisualizationType) getRenderMode;
 - (id)initwithstring:(NSString*) name;
 -(void) zoomval: (float) percent;
--(void) checkIfOutOfBounds;
--(void) startPan;
+-(void) panstart: (CGPoint) pt;
+-(void) pancont: (CGPoint)pt;
+-(void) projectPt: (CGPoint) pt;
+- (void)printMatrix:(GLfloat *)matrix;
 
 @end

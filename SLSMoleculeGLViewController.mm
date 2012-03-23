@@ -489,6 +489,8 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 		lastMovementPosition = [[touches anyObject] locationInView:self.view];
        // if ([[scene simulator] respondsToSelector:@selector(pan:)])
        //     [(Simulation *)[scene simulator] startPan];
+        if ([[scene simulator] respondsToSelector:@selector(pancont:)])
+            [(Simulation *)[scene simulator] pancont:lastMovementPosition];
 
 	}
 }
@@ -581,7 +583,7 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 		lastMovementPosition = currentMovementPosition;
 		//printf("%f %f %f %f\n",delta.x,delta.y,(float)self.view.frame.size.width,(float)self.view.frame.size.height);
 		if ([[scene simulator] respondsToSelector:@selector(pan:)])
-            [(Simulation *)[scene simulator]pan: delta];
+            [(Simulation *)[scene simulator]pan: lastMovementPosition];
         [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
 				
 	}

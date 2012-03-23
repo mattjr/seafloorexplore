@@ -264,9 +264,9 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 
 - (void)cleanup
 {
-#ifndef DEBUG
+/*#ifndef DEBUG
 	octree = (octree_struct *) realloc(octree, (sizeof(struct octree_struct) + (octree->nodeCount - 1) * sizeof(struct octree_node)));
-#endif
+#endif*/
 }
 
 - (id)copyWithZone:(NSZone *)zone

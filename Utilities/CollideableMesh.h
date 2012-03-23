@@ -19,8 +19,11 @@
 	struct octree_struct	*octree_collision;
 }
 
-
+bool IntersectionLineTriangle(CC3Ray r,
+                              vector3f vert0, vector3f vert1, vector3f vert2,
+                              float *t, float *u, float *v);
 - (vector3f)intersectWithLineStart:(vector3f)startPoint end:(vector3f)endPoint;
+bool intersectsWithRay( const CC3Ray& ray ,const vector3f center, const vector3f extent) ;
 - (TriangleIntersectionInfo)intersectWithMesh:(CollideableMesh *)otherMesh;
-
+BOOL intersectOctreeNodeWithLine(struct octree_struct *thisOctree, int nodeNum, const vector3f startPoint, const vector3f endPoint, float intersectionPoint[3]); BOOL intersectOctreeNodeWithRay(struct octree_struct *thisOctree, int nodeNum, CC3Ray ray, float intersectionPoint[3]) ;
 @end
