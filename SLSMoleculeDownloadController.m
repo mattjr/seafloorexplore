@@ -12,7 +12,7 @@
 #import "SLSMoleculeAppDelegate.h"
 
 @implementation SLSMoleculeDownloadController
-
+@synthesize progressView,downloadStatusText,cancelDownloadButton;
 - (id)initWithID:(NSString *)pdbCode title:(NSString *)title searchType:(SLSSearchType)newSearchType;
 {
 	if ((self = [super init])) 
@@ -25,6 +25,20 @@
 		
 		codeForCurrentlyDownloadingMolecule = [pdbCode copy];
 		titleForCurrentlyDownloadingMolecule = [title copy];		
+        progressView = [[[UIProgressView alloc] initWithFrame:CGRectZero] retain];
+        downloadStatusText = [[[UILabel alloc] initWithFrame:CGRectZero] retain ];
+        downloadStatusText.textColor = [UIColor blackColor];
+        downloadStatusText.font = [UIFont boldSystemFontOfSize:16.0];
+        downloadStatusText.textAlignment = UITextAlignmentLeft;
+        
+        cancelDownloadButton =  [[[UIButton alloc] initWithFrame:CGRectZero] retain];//[UIButton buttonWithType:UIButtonTypeRoundedRect];
+       // [cancelDownloadButton setTitle:@"Cancel" forState:UIControlStateNormal];
+        //[cancelDownloadButton setBackgroundImage:[[UIImage imageNamed:@"redButton.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];   
+        cancelDownloadButton.contentMode = UIViewContentModeScaleToFill;
+
+        [cancelDownloadButton setImage:[UIImage imageNamed:@"redx.png"] forState:UIControlStateNormal];
+        [cancelDownloadButton addTarget:self action:@selector(cancelDownload) forControlEvents:UIControlEventTouchUpInside];
+
 	}
 	return self;
 }
@@ -35,9 +49,64 @@
 	[self cancelDownload];
 	[codeForCurrentlyDownloadingMolecule release];
 	[titleForCurrentlyDownloadingMolecule release];
+    [progressView release];
+    [downloadStatusText release];
+    [cancelDownloadButton release];
+    self.downloadStatusText = nil;
+
 	[super dealloc];
 }
+enum {
+    kUnitStringBinaryUnits     = 1 << 0,
+    kUnitStringOSNativeUnits   = 1 << 1,
+    kUnitStringLocalizedFormat = 1 << 2
+};
 
+NSString* formatBytesNoUnit(double bytes, uint8_t flags,int exponent,int width){
+    int multiplier = ((flags & kUnitStringOSNativeUnits && /*!leopardOrGreater()*/0) || flags & kUnitStringBinaryUnits) ? 1024 : 1000;
+
+    for(int i=0;i <exponent; i++)
+        bytes /= multiplier;
+
+
+    NSNumberFormatter* formatter = [[[NSNumberFormatter alloc] init] autorelease];
+    [formatter setMaximumFractionDigits:2];
+    [formatter setMinimumFractionDigits:2];
+    [formatter setMinimumIntegerDigits:1];
+
+    [formatter setFormatWidth:width];
+    [formatter setPaddingCharacter:@" "];
+    if (flags & kUnitStringLocalizedFormat) {
+        [formatter setNumberStyle: NSNumberFormatterDecimalStyle];
+    }
+    // Beware of reusing this format string. -[NSString stringWithFormat] ignores \0, *printf does not.
+
+    return [NSString stringWithFormat:@"%@", [formatter stringFromNumber: [NSNumber numberWithDouble: bytes]]];
+}
+NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *width){
+    
+    static const char units[] = { '\0', 'k', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y' };
+    static int maxUnits = sizeof units - 1;
+    
+    int multiplier = ((flags & kUnitStringOSNativeUnits && /*!leopardOrGreater()*/0) || flags & kUnitStringBinaryUnits) ? 1024 : 1000;
+    *exponent = 0;
+    
+    while (bytes >= multiplier && *exponent < maxUnits) {
+        bytes /= multiplier;
+        (*exponent)++;
+    }
+    NSNumberFormatter* formatter = [[[NSNumberFormatter alloc] init] autorelease];
+    [formatter setMinimumFractionDigits:2];
+
+    [formatter setMaximumFractionDigits:2];
+    if (flags & kUnitStringLocalizedFormat) {
+        [formatter setNumberStyle: NSNumberFormatterDecimalStyle];
+    }
+    NSString *str=[formatter stringFromNumber: [NSNumber numberWithDouble: bytes]];
+    *width=[str length];
+    // Beware of reusing this format string. -[NSString stringWithFormat] ignores \0, *printf does not.
+    return [NSString stringWithFormat:@"%@ %cB", str, units[*exponent]];
+}
 #pragma mark -
 #pragma mark Protein downloading
 
@@ -57,7 +126,8 @@
     {
         fileExtension = @"sdf";        
     }*/
-    
+    cancelDownloadButton.hidden = NO;
+
     NSString *filename = [[codeForCurrentlyDownloadingMolecule lastPathComponent] stringByDeletingPathExtension];	
 
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:filename]])
@@ -97,9 +167,9 @@
 - (BOOL)downloadMolecule;
 {
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-//	downloadStatusText.hidden = NO;
-//	downloadStatusText.text = NSLocalizedStringFromTable(@"Connecting...", @"Localized", nil);
-		
+	downloadStatusText.hidden = NO;
+	downloadStatusText.text = NSLocalizedStringFromTable(@"Connecting...", @"Localized", nil);
+    progressView.progress = 0.0f;
 //	NSString *locationOfRemotePDBFile = [NSString stringWithFormat:@"http://www.sunsetlakesoftware.com/sites/default/files/%@.pdb.gz", pdbCode];
 	NSString *locationOfRemoteFile  = codeForCurrentlyDownloadingMolecule;
     //NSLog(@"%@ getting\n",locationOfRemoteFile);
@@ -136,11 +206,13 @@
 {
 	[downloadConnection release];
 	downloadConnection = nil;
-	
-
+    progressView.hidden = YES;
+    cancelDownloadButton.hidden=YES;
+    
 	[downloadedFileContents release];
 	downloadedFileContents = nil;
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    
 }
 
 - (void)cancelDownload;
@@ -182,11 +254,18 @@
 		[connection cancel];
 		[self downloadCompleted];
 		downloadCancelled = NO;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
 		return;
 	}
 	[downloadedFileContents appendData:data];
-//	downloadStatusBar.progress = (float)[downloadedFileContents length] / (float)downloadFileSize;
-//	downloadStatusText.text = NSLocalizedStringFromTable(@"Downloading", @"Localized", nil);
+	progressView.progress = (float)[downloadedFileContents length] / (float)  downloadFileSize  ;
+    int exponent=0;
+    int width=0;
+
+    NSString *totalStr= unitStringFromBytes((double)downloadFileSize,0,&exponent,&width);
+    NSString *progStr=formatBytesNoUnit((double)[downloadedFileContents length],0,exponent,width);
+	downloadStatusText.text = [NSString stringWithFormat:@"%@: %@/%@",NSLocalizedStringFromTable(@"Downloading", @"Localized", nil),progStr,totalStr];
+    //NSLog(@"|%@| %d\n",downloadStatusText.text,[downloadStatusText.text length]);
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response;
@@ -218,9 +297,11 @@
 	
 	if (downloadFileSize > 0)
 	{
+        progressView.hidden = NO;
+
 		[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 	}
-//	downloadStatusText.text = NSLocalizedStringFromTable(@"Connected", @"Localized", nil);
+	downloadStatusText.text = NSLocalizedStringFromTable(@"Connected", @"Localized", nil);
 
 	// TODO: Deal with a 404 error by checking filetype header
 }

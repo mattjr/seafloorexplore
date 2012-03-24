@@ -38,6 +38,7 @@
 - (void)retrievePubChemCompoundTitles;
 - (void)processHTMLResults;
 
+- (void)moleculeFailedDownloading:(NSNotification *)note;
 
 - (BOOL)grabNextSetOfSearchResults;
 

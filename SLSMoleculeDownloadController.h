@@ -21,11 +21,19 @@ typedef enum { PUBCHEMSEARCH, PROTEINDATABANKSEARCH } SLSSearchType;
 	BOOL downloadCancelled;
 	NSURLConnection *downloadConnection;
     SLSSearchType searchType;
+    UIProgressView *progressView;
+    UILabel *downloadStatusText;
+    UIButton *cancelDownloadButton;
 }
+@property(nonatomic, retain)UIProgressView * progressView;
+@property(nonatomic, retain)UILabel *downloadStatusText;
+@property(nonatomic, retain)UIButton *cancelDownloadButton;
+
 
 // Initialization and teardown
 - (id)initWithID:(NSString *)pdbCode title:(NSString *)title searchType:(SLSSearchType)newSearchType;
-
+NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *width);
+NSString* formatBytesNoUnit(double bytes, uint8_t flags,int exponent,int width);
 - (void)downloadNewMolecule;
 - (BOOL)downloadMolecule;
 - (void)downloadCompleted;

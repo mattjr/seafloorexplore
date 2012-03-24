@@ -32,6 +32,9 @@
 		self.view.autoresizesSubviews = YES;
         urlbasepath = [[NSString alloc] initWithString:@"http://www-personal.acfr.usyd.edu.au/mattjr/benthos/"];
 
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moleculeFailedDownloading:) name:@"MoleculeFailedDownloading" object:nil];
+        
+
 		/*keywordSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 44.0f)];
 		keywordSearchBar.placeholder = NSLocalizedStringFromTable(@"Search PubChem", @"Localized", nil);
 		keywordSearchBar.delegate = self;
@@ -567,31 +570,21 @@
            // cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"DownloadInProgress"] autorelease];
             cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadInProgress"] autorelease];
 
-//            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-//            {
-//                cell.backgroundColor = [UIColor blackColor];
-//                cell.textLabel.textColor = [UIColor colorWithWhite:0.8 alpha:1.0];
-//            }
-//            else
-//            {
-                cell.textLabel.textColor = [UIColor blackColor];
-//            }
-            
-            cell.textLabel.font = [UIFont boldSystemFontOfSize:12.0];
-            
-            //		CGRect frame = CGRectMake(CGRectGetMaxX(cell.contentView.bounds) - 250.0, 5.0, 240.0, 32.0);
-            //			CGRect frame = CGRectMake(CGRectGetMaxX(cell.contentView.bounds) - 70.0, 14.0, 32.0, 32.0);
-            CGRect frame = CGRectMake(CGRectGetMaxX(cell.contentView.bounds) - 70.0f, 20.0f, 20.0f, 20.0f);
-            UIActivityIndicatorView *spinningIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-            [spinningIndicator startAnimating];
-            spinningIndicator.frame = frame;
-            [cell.contentView addSubview:spinningIndicator];
-            [spinningIndicator release];
+            CGRect progframe = CGRectMake(CGRectGetMinX(cell.contentView.bounds) + 20.0f, 45.0f, CGRectGetWidth(cell.contentView.bounds)-80.0f, 20.0f);
+               CGRect textframe = CGRectMake(CGRectGetMinX(cell.contentView.bounds) + 25.0f, 0.0f, CGRectGetWidth(cell.contentView.bounds)-40.0f, 40.0f);
+            float buttonwidth=20.0f;
+              CGRect buttonframe = CGRectMake(CGRectGetWidth(cell.contentView.bounds) -buttonwidth-10.0, 8.0f, buttonwidth, buttonwidth);
+            [downloadController cancelDownloadButton].frame=buttonframe;
+
+            [downloadController progressView].frame=progframe;
+            [downloadController downloadStatusText].frame=textframe;
+            [cell.contentView addSubview:[downloadController progressView]];
+            [cell.contentView addSubview:[downloadController downloadStatusText]];
+            [cell.contentView addSubview:[downloadController cancelDownloadButton]];
+
             cell.accessoryType = UITableViewCellAccessoryNone;
-            cell.textLabel.font = [UIFont systemFontOfSize:16.0];
-            cell.textLabel.textAlignment = UITextAlignmentCenter;
         }
-        cell.textLabel.text = NSLocalizedStringFromTable(@"Downloading...", @"Localized", nil);        
+        
     }
 	else
 	{
@@ -654,6 +647,9 @@
 //                cell.contentView.backgroundColor = [UIColor colorWithWhite:0.6 alpha:1.0];
                 cell.textLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1.0];
                 cell.detailTextLabel.textColor = [UIColor colorWithWhite:0.2 alpha:1.0];
+            }else {
+                cell.textLabel.textColor = [UIColor blackColor];
+
             }
             
 			cell.textLabel.text = [searchResultTitles objectAtIndex:[indexPath row]];
@@ -981,6 +977,15 @@
 
 #pragma mark -
 #pragma mark Accessors
+- (void)moleculeFailedDownloading:(NSNotification *)note;{
+    indexOfDownloadingMolecule = -1;
+    isDownloading = NO;
+    self.tableView.backgroundColor = [UIColor whiteColor];
+    self.tableView.separatorColor = [UIColor colorWithWhite:0.88 alpha:1.0];
+    [self.tableView reloadData];
+    
+
+}
 
 
 @end
