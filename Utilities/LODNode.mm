@@ -22,8 +22,10 @@
 {
 	if ((self = [super init]))
 	{
-		for (NSString *name in _names)
-			[children addObject:[[Mesh alloc] initWithOctreeNamed:name]];
+		for (NSString *name in _names){
+            Mesh *mesh=[[[Mesh alloc] initWithOctreeNamed:name] autorelease];
+			[children addObject:mesh];
+        }
 
 		assert([_names count] == 2);
 

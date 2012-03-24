@@ -78,9 +78,8 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 - (bool)isDoneMoving;
 - (void)apply3DTransformD:(CATransform3D *)transform3D toPoint:(double *)sourcePoint result:(double *)resultingPoint;
 - (void)apply3DTransform:(CATransform3D *)transform3D toPoint:(vector3f)sourcePoint result:(vector3f)resultingPoint;
--(CATransform3D) constructMatrixOpposite:(vector3f) cen;
+- (id)initWithString:(NSString *)name;
 
--(CATransform3D) constructMatrix:(vector3f) cen;
 - (void)SlerpToTargetOrientation:(float) percent;
 -(void) pan: (CGPoint)pt;
 -(void) zoomcont: (float) percent;
@@ -88,11 +87,9 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 -(void) orient: (CGPoint) pt;
 -(void) setRenderMode: (GLVisualizationType) rt;
 -(GLVisualizationType) getRenderMode;
-- (id)initwithstring:(NSString*) name;
 -(void) zoomval: (float) percent;
 -(void) panstart: (CGPoint) pt;
 -(void) pancont: (CGPoint)pt;
--(void) projectPt: (CGPoint) pt;
 - (void)printMatrix:(GLfloat *)matrix;
 
 @end

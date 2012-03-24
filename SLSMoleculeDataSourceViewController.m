@@ -63,8 +63,10 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSLocalizedStringFromTable(@"Download", @"Localized", nil)];
 	if (cell == nil) 
 	{
-		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:NSLocalizedStringFromTable(@"Download", @"Localized", nil)] autorelease];
-		cell.textLabel.textColor = [UIColor blackColor];
+	//	cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:NSLocalizedStringFromTable(@"Download", @"Localized", nil)] autorelease];
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NSLocalizedStringFromTable(@"Download", @"Localized", nil)] autorelease];
+
+        cell.textLabel.textColor = [UIColor blackColor];
 	}		
 	
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

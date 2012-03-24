@@ -259,7 +259,6 @@ extern vtConfig c;
         vt.memValid=false;
     });     
 
-
 }
 
 
@@ -273,21 +272,22 @@ extern vtConfig c;
     //  printf("NIL %s\n",[documentsDirectory UTF8String]);
     
     NSString *fullpath=[documentsDirectory stringByAppendingPathComponent:name];
-  
     dispatch_sync(openGLESContextQueue, ^{
-        
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+
         if(scene == nil)
             scene = [Scene sharedScene];
         [EAGLContext setCurrentContext:context];
-        
-        id sim = [[[Simulation alloc] initwithstring:fullpath] autorelease];//[[[NSClassFromString([[NSBundle mainBundle] objectForInfoDictionaryKey:@"SimulationClass"]) alloc] init] autorelease];
+
+
+        Simulation *sim = [[Simulation alloc] initWithString:fullpath] ;
 
         if (sim){
-            [scene setSimulator:sim];
-            
+        [scene setSimulator:sim];
+
             isSceneReady=YES;
-        }
-        else{
+        }else{
             NSError *error=nil;
 
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not create simulation files missing", @"Localized", nil) message:[error localizedDescription]
@@ -295,7 +295,9 @@ extern vtConfig c;
 			[alert show];
 			[alert release];	   
         }
-            
+        [sim release];
+
+        [pool drain];
     });
 }
 

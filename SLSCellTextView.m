@@ -32,7 +32,7 @@ NSString* kSLSCellTextView_ID = @"SLSCellTextViewID";
 - (void)setView:(UITextView *)inView
 {
 	view = inView;
-	[self.view retain];
+	//[self.view retain];
 	[self.contentView addSubview:inView];
 	[self layoutSubviews];
 }

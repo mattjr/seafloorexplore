@@ -146,10 +146,11 @@ GLuint LoadTexture(NSString *imagePath, GLint minFilter, GLint magFilter, GLint 
 	size_t height = CGImageGetHeight(imageRef);
 	CGRect rect = {{0, 0}, {width, height}};
 	void *data = calloc(width * 4, height);
+    CGColorSpaceRef colorSpa = CGColorSpaceCreateDeviceRGB();
 #ifndef TARGET_OS_IPHONE // does CGColorSpaceCreateDeviceRGB() really leak?
-	CGContextRef bitmapContext = CGBitmapContextCreate (data, width, height, 8, width * 4, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Host ); //
+	CGContextRef bitmapContext = CGBitmapContextCreate (data, width, height, 8, width * 4, colorSpa, kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Host ); //
 #else
-	CGContextRef bitmapContext = CGBitmapContextCreate (data, width, height, 8, width * 4, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
+	CGContextRef bitmapContext = CGBitmapContextCreate (data, width, height, 8, width * 4, colorSpa, kCGImageAlphaPremultipliedLast);
 #endif
 
 	CGContextTranslateCTM (bitmapContext, 0, height);
@@ -157,6 +158,7 @@ GLuint LoadTexture(NSString *imagePath, GLint minFilter, GLint magFilter, GLint 
 
 	CGContextDrawImage(bitmapContext, rect, imageRef);
 	CGContextRelease(bitmapContext);
+    CFRelease(colorSpa);
 
 #ifndef TARGET_OS_IPHONE
 	glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);

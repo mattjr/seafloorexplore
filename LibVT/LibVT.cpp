@@ -133,8 +133,12 @@ void vtInit(const char *_tileDir, const char *_pageExtension, const uint8_t _pag
 		vt.pageTableMipOffsets[i] = offsetCounter;
 		offsetCounter += (c.virtTexDimensionPages >> i) * (c.virtTexDimensionPages >> i);
 	}
-
-	vt.pageTables = (uint32_t **) malloc(sizeof(uint32_t *) * c.mipChainLength);
+    if(c.mipChainLength >0)
+        vt.pageTables = (uint32_t **) malloc(sizeof(uint32_t *) * c.mipChainLength);
+    else
+        vt.pageTables = NULL;
+    //Clang warning fix
+    
 	assert(vt.pageTables);
 
 	uint32_t *pageTableBuffer = (uint32_t *) calloc(1, 4 * offsetCounter);

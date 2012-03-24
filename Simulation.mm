@@ -35,11 +35,13 @@ float positions[60 * 60][6];
 
 
 @implementation Simulation
-
-- (id)initwithstring:(NSString*) name
+- (id)initWithString:(NSString *)name
 {
-	if ((self = [super init]))
-	{
+    self = [super init];
+    if (self)
+    {
+
+
 		//GLuint bla = LoadTexture(@"/Users/julian/Documents/Development/VirtualTexturing/_texdata_sources/texture_8k.png", GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_TRUE, 2.0);
 
 		//globalSettings.disableTextureCompression = YES;
@@ -183,8 +185,8 @@ float positions[60 * 60][6];
         bbox[1]=[mesh maxbb];
         extentsMesh=bbox[1]-bbox[0];
 
-	}
-	return self;
+    }
+    return self;
 }
 
 - (void)dealloc
@@ -493,7 +495,8 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     __gluMultMatrixVecf(&newModel.m11, intersectionPoint,pt_out);
    // printf("Z pt out %f \n ", pt_out[2]);
    // printf("Distance %f \n ", _distance);
-    _distance=-pt_out[2];
+   
+    _targetDistance=-pt_out[2];
 
    // printf("New model:\n");
    // [self printMatrix:&newModel.m11];
@@ -509,7 +512,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     // Now recover view center from new model matrix
     CATransform3D tiltMat, retMat;
     
-    CATransform3D mTmp= CATransform3DMakeTranslation(0,0,_distance);
+    CATransform3D mTmp= CATransform3DMakeTranslation(0,0,_targetDistance);
     CATransform3D headingMat= CATransform3DMakeRotation(-_heading * M_PI / 180.0,0,0,1);
     if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
         tiltMat=CATransform3DMakeRotation(_tilt * M_PI / 180.0,1,0,0);
@@ -532,11 +535,11 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     _targetCenter[0]=cent[0];
     _targetCenter[1]=cent[1];
     _targetCenter[2]=cent[2];
-    _targetDistance=_distance;
+ /*   _targetDistance=_distance;
     _center[0]=_targetCenter[0];
     _center[1]=_targetCenter[1];
     _center[2]=_targetCenter[2];
- 	
+ 	*/
 }
 -(void) orient: (CGPoint) pt
 {

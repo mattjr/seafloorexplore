@@ -29,8 +29,9 @@ void * vtuDecompressImageFile(const char *imagePath, uint32_t *pic_size)
 	size_t height = CGImageGetHeight(imageRef);
 	CGRect rect = {{0, 0}, {width, height}};
 	void *data = calloc(width * 4, height);
+    CGColorSpaceRef colorSpa = CGColorSpaceCreateDeviceRGB();
 
-	CGContextRef bitmapContext = CGBitmapContextCreate (data, width, height, 8, width * 4, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
+	CGContextRef bitmapContext = CGBitmapContextCreate (data, width, height, 8, width * 4, colorSpa, kCGImageAlphaPremultipliedLast);
 
 	CGContextTranslateCTM (bitmapContext, 0, height);
 	CGContextScaleCTM (bitmapContext, 1.0, -1.0);
@@ -38,6 +39,7 @@ void * vtuDecompressImageFile(const char *imagePath, uint32_t *pic_size)
 	CGContextDrawImage(bitmapContext, rect, imageRef);
 
 	CGContextRelease(bitmapContext);
+    CFRelease(colorSpa);
 
 	if (*pic_size == 0)
 		*pic_size = width;
