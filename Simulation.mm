@@ -175,7 +175,7 @@ float positions[60 * 60][6];
         _maxZoomScale =  6*[mesh radius];
         _minalt=0.0;
         cameraRotationSpeed = 0.01;
-        _maxDist = 6*[mesh radius];
+        _maxDist = 3.5*[mesh radius];
 
 		
 		[self resetCamera];
