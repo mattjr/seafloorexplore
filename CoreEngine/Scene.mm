@@ -147,7 +147,10 @@ Scene *scene = nil;
 
 //	NSLog(@"frame update %i", GetNanoseconds() / 1000 - micro);
 }
-
+void MyNSLog(const char *message)
+{
+    NSLog(@"%s", message);
+}
 - (void)render
 {
 //	uint64_t micro = GetNanoseconds() / 1000

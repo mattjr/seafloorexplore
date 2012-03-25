@@ -327,9 +327,9 @@ extern vtConfig c;
 		[self renderHUD:1000.0/globalInfo.fps prepassTime:0 readbackTime:0 extractTime:0 uploadTime:0];
 #endif
 #endif
-   /* uint32_t size = (uint32_t)vt.cachedPages.size();
-    printf("Megs %f\n"
-           ,((float)size*c.pageMemsize / (1024.0 * 1024.0)));*/
+    //uint32_t size = (uint32_t)vt.cachedPages.size();
+   // printf("Megs %f\n"
+     //      ,((float)size*c.pageMemsize / (1024.0 * 1024.0)));
 }
 -(void) setRenderMode: (int) rt{
 	renderMode =rt;

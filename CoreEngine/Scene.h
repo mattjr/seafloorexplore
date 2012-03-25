@@ -30,5 +30,6 @@ You should have received a copy of the GNU Lesser General Public License along w
 - (void)update;
 - (void)render;
 - (void)reshape:(NSArray *)size;
+void MyNSLog(const char *message);
 
 @end

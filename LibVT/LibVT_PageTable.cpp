@@ -110,7 +110,9 @@ void vtMapNewPages()
 			const uint8_t mip = EXTRACT_MIP(pageInfo);
 
 			image_data = vtcRetrieveCachedPageLOCK(pageInfo);
-
+            if(image_data == NULL){
+                continue;
+            }
 			// find slot
 			bool foundFree = false;
 			uint8_t x, y, storedX = 0, storedY = 0;
@@ -216,7 +218,7 @@ void vtMapNewPages()
 #endif
 #endif
 			}
-			/*else
+			else
 			{	// lock
 				LOCK(vt.newPagesMutex)
 
@@ -228,7 +230,7 @@ void vtMapNewPages()
 				{
 					vt.newPages.push(newPages.front());newPages.pop();
 				}
-			}	// unlock*/
+			}	// unlock
 		}
 
 #if USE_PBO_PHYSTEX

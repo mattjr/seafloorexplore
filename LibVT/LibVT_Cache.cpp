@@ -20,6 +20,7 @@
 
 extern vtData vt;
 extern vtConfig c;
+void MyNSLog(const char *message);
 
 void vtcRemoveCachedPageLOCK(uint32_t pageInfo)
 {
@@ -68,8 +69,12 @@ void * vtcRetrieveCachedPageLOCK(uint32_t pageInfo)
 {
 	LOCK(vt.cachedPagesMutex)
 
-	assert(vt.cachedPages.count(pageInfo));
-
+	//assert(vt.cachedPages.count(pageInfo));
+    if(vt.cachedPages.count(pageInfo) == 0){
+        MyNSLog("Cached page count equals 0 vtcRetrieveCachedPageLOCK\n");
+        return NULL;
+    }
+        
 	return vt.cachedPages.find(pageInfo)->second;
 }
 
