@@ -43,7 +43,8 @@
 	if ([SLSMoleculeAppDelegate isRunningOniPad])
 	{
 		UISplitViewController *newSplitViewController = [[UISplitViewController alloc] init];
-        newSplitViewController.presentsWithGesture = NO; // SplitView won't recognize right swipe
+        if ([newSplitViewController respondsToSelector:@selector(setPresentsWithGesture:)])
+            [newSplitViewController setPresentsWithGesture:NO]; // SplitView won't recognize right swipe
 		rootViewController = [[SLSMoleculeiPadRootViewController alloc] init];
 		[rootViewController loadView];
 		newSplitViewController.viewControllers = [NSArray arrayWithObjects:rootViewController.tableNavigationController, rootViewController, nil];
