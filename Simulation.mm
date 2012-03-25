@@ -604,7 +604,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     //  if(percent > 0)
     //RecomputeTerrainIntersection();
     float tmp=_targetDistance * 1.0/percent;
-    printf("Zoom   %f\n",tmp);
+   // printf("Zoom   %f\n",tmp);
 
     //    tmp *= 1+percent*2.0;
    // printf("Zoom dist %f %f\n",tmp,percent);
