@@ -563,8 +563,8 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
                     [(Simulation *)[scene simulator] zoomcont:zoomVal];
 				
 				// Scale using pinch gesture
-                [openGLESRenderer scaleModelByFactor:(newTouchDistance / startingTouchDistance) / previousScale];
-                [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
+               // [openGLESRenderer scaleModelByFactor:(newTouchDistance / startingTouchDistance) / previousScale];
+              //  [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
 
 //				[self _drawViewByRotatingAroundX:0.0 rotatingAroundY:0.0 scaling:(newTouchDistance / startingTouchDistance) / previousScale translationInX:directionOfPanning.x translationInY:directionOfPanning.y];
 				previousScale = (newTouchDistance / startingTouchDistance);
@@ -638,6 +638,10 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 		previousDirectionOfPanning = CGPointZero;
 		
 		lastMovementPosition = [[remainingTouches anyObject] locationInView:self.view];
+        if ([[scene simulator] respondsToSelector:@selector(pancont:)])
+            [(Simulation *)[scene simulator] pancont:lastMovementPosition];
+    
+
 	}	
 }
 
