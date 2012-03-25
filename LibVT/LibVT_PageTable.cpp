@@ -216,7 +216,7 @@ void vtMapNewPages()
 #endif
 #endif
 			}
-			else
+			/*else
 			{	// lock
 				LOCK(vt.newPagesMutex)
 
@@ -228,7 +228,7 @@ void vtMapNewPages()
 				{
 					vt.newPages.push(newPages.front());newPages.pop();
 				}
-			}	// unlock
+			}	// unlock*/
 		}
 
 #if USE_PBO_PHYSTEX

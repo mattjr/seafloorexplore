@@ -68,9 +68,9 @@
  * @brief	This is is the width/height of the physical texture measured in pixels <br>
  * Note:	Affects VRAM usage / performance, setting this too high may cause silent failures => everything black <br>
  * Values:	2048, 4096, 8192 <br>
- * Info:	Testing suggests minimum ratios of phystex to viewport pixels of 2.1, 2.9, 3.9 for pagesizes of 64, 128, 256 for terrain, other scenes are worse.
+ * Info:	Testing suggests minimum ratios of phystex to viewport pixels of 2.1, 2.9, 3.9 for pagesizes of 64, 128, 256 for terrain, other scenes are worse. Now set dynamically -MATT
  */
-#define PHYS_TEX_DIMENSION			2048//8192
+//#define PHYS_TEX_DIMENSION			4096//8192
 
 /*!
  * @def		MAX_RAMCACHE_MB

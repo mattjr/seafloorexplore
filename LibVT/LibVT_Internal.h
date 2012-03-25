@@ -220,7 +220,7 @@ struct vtConfig // TODO: constify?
     uint8_t			pageBorder, mipChainLength;
 
     // derived values:
-    uint32_t		pageMemsize, maxCachedPages, physTexDimensionPages, virtTexDimensionPages, residentPages;
+    uint32_t		pageMemsize, maxCachedPages, physTexDimensionPages, virtTexDimensionPages, residentPages,phys_tex_size;
     GLenum			pageDataFormat, pageDataType, pageDXTCompression;
 };
 

@@ -22,7 +22,7 @@ vtData vt;
 vtConfig c;
 
 
-void vtInit(const char *_tileDir, const char *_pageExtension, const uint8_t _pageBorder, const uint8_t _mipChainLength, const uint16_t _pageDimension)
+void vtInit(const char *_tileDir, const char *_pageExtension, const uint8_t _pageBorder, const uint8_t _mipChainLength, const uint16_t _pageDimension,const unsigned int phys_tex_size)
 {
 	if (c.tileDir != "") vt_fatal("Error: calling vtInit() twice ain't good!\n");
 
@@ -55,7 +55,8 @@ void vtInit(const char *_tileDir, const char *_pageExtension, const uint8_t _pag
 	// initialize and calculate configuration
 	c.tileDir = string(_tileDir);
 	c.pageCodec = string(_pageExtension);
-
+    //run time vary
+    c.phys_tex_size=phys_tex_size;
 	if (c.pageCodec == "dxt1" || REALTIME_DXT_COMPRESSION)
 	{
 		if (REALTIME_DXT_COMPRESSION) assert((IMAGE_DECOMPRESSION_LIBRARY == DecompressionLibJPEGTurbo) || (IMAGE_DECOMPRESSION_LIBRARY == DecompressionMac));
@@ -103,7 +104,7 @@ void vtInit(const char *_tileDir, const char *_pageExtension, const uint8_t _pag
 			c.pageMemsize = (_pageDimension * _pageDimension * 3);
 		}
 	}
-	c.physTexDimensionPages = PHYS_TEX_DIMENSION / _pageDimension;
+	c.physTexDimensionPages = c.phys_tex_size / _pageDimension;
 	c.maxCachedPages = (int)((float)MAX_RAMCACHE_MB / ((float)c.pageMemsize / (1024.0 * 1024.0)));
 	for (uint8_t i = 0; i < float(HIGHEST_MIP_LEVELS_TO_KEEP); i++)
 		c.residentPages += (uint32_t) powf(4, i);
@@ -269,7 +270,7 @@ void vtPrepare(const GLuint readbackShader, const GLuint renderVTShader)
 
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS_ARB, &max_texture_units);
-	assert((PHYS_TEX_DIMENSION >= 2048) && (PHYS_TEX_DIMENSION <= max_texture_size) && (c.physTexDimensionPages * c.pageDimension == PHYS_TEX_DIMENSION));
+	assert((c.phys_tex_size >= 2048) && (c.phys_tex_size <= max_texture_size) && (c.physTexDimensionPages * c.pageDimension == c.phys_tex_size));
 	assert((TEXUNIT_FOR_PAGETABLE >= 0) && (TEXUNIT_FOR_PAGETABLE < max_texture_units));
 	assert((TEXUNIT_FOR_PHYSTEX >= 0) && (TEXUNIT_FOR_PHYSTEX < max_texture_units));
 
@@ -303,9 +304,9 @@ void vtPrepare(const GLuint readbackShader, const GLuint renderVTShader)
 
 
 	if (c.pageDXTCompression)
-		glCompressedTexImage2D(GL_TEXTURE_2D, 0, c.pageDXTCompression, PHYS_TEX_DIMENSION, PHYS_TEX_DIMENSION, 0, c.pageMemsize * c.physTexDimensionPages * c.physTexDimensionPages, NULL);
+		glCompressedTexImage2D(GL_TEXTURE_2D, 0, c.pageDXTCompression, c.phys_tex_size, c.phys_tex_size, 0, c.pageMemsize * c.physTexDimensionPages * c.physTexDimensionPages, NULL);
 	else
-		glTexImage2D(GL_TEXTURE_2D, 0, c.pageDataFormat == GL_RGB ? GL_RGB : GL_RGBA, PHYS_TEX_DIMENSION, PHYS_TEX_DIMENSION, 0, c.pageDataFormat, c.pageDataType, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, c.pageDataFormat == GL_RGB ? GL_RGB : GL_RGBA, c.phys_tex_size, c.phys_tex_size, 0, c.pageDataFormat, c.pageDataType, NULL);
 
 
 
@@ -314,7 +315,7 @@ void vtPrepare(const GLuint readbackShader, const GLuint renderVTShader)
 #if !GL_ES_VERSION_2_0
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
 #endif
-		glTexImage2D(GL_TEXTURE_2D, 1, c.pageDataFormat == GL_RGB ? GL_RGB : GL_RGBA, PHYS_TEX_DIMENSION / 2, PHYS_TEX_DIMENSION / 2, 0, c.pageDataFormat, c.pageDataType, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 1, c.pageDataFormat == GL_RGB ? GL_RGB : GL_RGBA, c.phys_tex_size / 2, c.phys_tex_size / 2, 0, c.pageDataFormat, c.pageDataType, NULL);
 	}
 
 
