@@ -184,6 +184,7 @@ float positions[60 * 60][6];
         bbox[0]=[mesh minbb];
         bbox[1]=[mesh maxbb];
         extentsMesh=bbox[1]-bbox[0];
+        _meshcent =[mesh center];
 
     }
     return self;
@@ -503,7 +504,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
    // printf("Z pt out %f \n ", pt_out[2]);
    // printf("Distance %f \n ", _distance);
    
-    _targetDistance=-pt_out[2];
+    float tmp_targetDistance=-pt_out[2];
 
    // printf("New model:\n");
    // [self printMatrix:&newModel.m11];
@@ -519,7 +520,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     // Now recover view center from new model matrix
     CATransform3D tiltMat, retMat;
     
-    CATransform3D mTmp= CATransform3DMakeTranslation(0,0,_targetDistance);
+    CATransform3D mTmp= CATransform3DMakeTranslation(0,0,tmp_targetDistance);
     CATransform3D headingMat= CATransform3DMakeRotation(-_heading * M_PI / 180.0,0,0,1);
     if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
         tiltMat=CATransform3DMakeRotation(_tilt * M_PI / 180.0,1,0,0);
@@ -535,18 +536,18 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     
     // extract center point
     vector3f cent(retMat.m41,retMat.m42,retMat.m43);
-    
- //  printf("Cen %f %f %f\n",retMat.m41,retMat.m42,retMat.m43);
-      
-    
-    _targetCenter[0]=cent[0];
-    _targetCenter[1]=cent[1];
-    _targetCenter[2]=cent[2];
- /*   _targetDistance=_distance;
-    _center[0]=_targetCenter[0];
-    _center[1]=_targetCenter[1];
-    _center[2]=_targetCenter[2];
- 	*/
+    vector3f tmpCenter;
+    tmpCenter=cent+_meshcent;    
+   //  printf("Cen %f %f %f\n",retMat.m41,retMat.m42,retMat.m43);
+
+    if(tmpCenter[0] > -extentsMesh[0] && tmpCenter[0] <  extentsMesh[0]  && tmpCenter[1] >  -extentsMesh[1]&& tmpCenter[1] < extentsMesh[1] )
+    {
+        
+        _targetCenter[0]=cent[0];
+        _targetCenter[1]=cent[1];
+        _targetCenter[2]=cent[2];
+        _targetDistance=tmp_targetDistance;
+    }
 }
 -(void) orient: (CGPoint) pt
 {
@@ -611,6 +612,16 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
         _targetDistance = std::min((double)tmp,  _radius *4.0);
             
     
+}
+-(void) centeratPt: (CGPoint) pt{
+    vector4f tmp =[[scene camera] pick:pt intoMesh: [mesh octree] ];
+    if(isfinite(tmp[0])){
+        _targetCenter[0]=-tmp[0];
+        _targetCenter[1]=-tmp[1];
+        _targetCenter[2]=-tmp[2];
+        _targetDistance =_minalt+3.0;
+    }
+
 }
 -(void) panstart: (CGPoint) pt{
     CC3Plane plane=[mesh centeredPlane];

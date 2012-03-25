@@ -62,11 +62,13 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
     bool _firstPan;
     double _radius;
     double lastValidCenter[3];
+    vector3f _meshcent;
     bool donePanning;
     vector3f extentsMesh;
     CGPoint _lastPt;
+    
 }
-
+-(void) centeratPt: (CGPoint) pt;
 - (void)mouseDragged:(vector2f)delta withFlags:(uint32_t)flags;
 - (void)scrollWheel:(float)delta;
 - (void)dealloc;

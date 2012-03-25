@@ -606,8 +606,11 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 	// This is placed here to avoid an infinite spawning of alerts under iPhone OS 4.0
 	if (([[touches anyObject] tapCount] >= 2)/* && (![SLSMoleculeAppDelegate isRunningOniPad])*/)
 	{
-        if ([[scene simulator] respondsToSelector:@selector(resetCamera)])
-            [(Simulation *)[scene simulator] resetCamera];
+        CGPoint endPos = [[touches anyObject] locationInView:self.view];
+
+       // if ([[scene simulator] respondsToSelector:@selector(resetCamera)])
+         //   [(Simulation *)[scene simulator] resetCamera];
+        [(Simulation *)[scene simulator] centeratPt:endPos];
 		/*if (moleculeToDisplay.isDoneRendering == YES)
 		{
 			UIActionSheet *actionSheet = [self actionSheetForVisualizationState];

@@ -312,7 +312,7 @@ vector4f CC3RayIntersectionWithPlane(CC3Ray ray, CC3Plane plane) {
     if(intersectOctreeNodeWithRay(thisOctree, 0,ray, intersectionPoint))
         ;//printf("Hit %f %f %f\n",intersectionPoint[0],intersectionPoint[1],intersectionPoint[2]);
     else{
-        printf("No hit\n");
+        //printf("No hit\n");
         return vector4f(INFINITY,INFINITY,INFINITY,INFINITY);
     }
     
