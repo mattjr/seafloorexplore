@@ -164,7 +164,8 @@ Scene *scene = nil;
 
 	[simulator render];
 
-	glError()
+
+	//glError()
 //	NSLog(@"frame render %i", GetNanoseconds() / 1000 - micro);
 }
 @end

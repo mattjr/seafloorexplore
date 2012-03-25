@@ -78,7 +78,7 @@
  * Note:	Affects RAM usage / performance <br>
  * Values:	50 - FREE_RAM_IN_SYSTEM
  */
-#define MAX_RAMCACHE_MB				300//2000
+#define MAX_RAMCACHE_MB				50//2000
 
 /*!
  * @def		PREPASS_RESOLUTION_REDUCTION_SHIFT

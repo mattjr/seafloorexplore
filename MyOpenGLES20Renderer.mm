@@ -401,6 +401,7 @@ extern vtConfig c;
 		[scene update];
 		
 		[scene render];
+        
        // printf("%d BOOL\n",isSceneReady);
   		[self presentRenderBuffer];
 		// Discarding is only supported starting with 4.0, so I need to do a check here for 3.2 devices
