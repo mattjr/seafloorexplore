@@ -65,7 +65,6 @@ vector4f CC3RayIntersectionWithPlane(CC3Ray ray, CC3Plane plane);
 - (CGPoint)transformScreenPt:(vector3f)pt;
 -(vector4f) unprojectPoint:(CGPoint) cc2Point ontoPlane: (CC3Plane) plane;
 -(vector4f) pick:(CGPoint) cc2Point intoMesh: (struct octree_struct *) thisOctree;
--(vector4f) getZfromWorldXY:(CGPoint) cc2Point intoMesh: (struct octree_struct *) thisOctree;
 CC3Plane CC3PlaneFromPoints(vector3f p1, vector3f p2, vector3f p3);
 
 -(CC3Ray) unprojectPoint: (CGPoint) cc2Point withModelView: (matrix44f_c) thismodelview ;

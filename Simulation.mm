@@ -410,7 +410,6 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
    // pt.x=(globalInfo.width/2)+0;
    // pt.y=(globalInfo.height/2)+0;
    // printf("Dist %f %f\n",_center[2],_distance);
- 
     vector3f v1=vector3f(_unprojected_orig[0],_unprojected_orig[1],_unprojected_orig[2]);
     vector3f v2=vector3f(_unprojected_orig[0]+1,_unprojected_orig[1],_unprojected_orig[2]);
     vector3f v3=vector3f(_unprojected_orig[0],_unprojected_orig[1]+1,_unprojected_orig[2]);
@@ -418,6 +417,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     CC3Plane plane= CC3PlaneFromPoints(v1,v2,v3);
     //CC3Plane plane=[mesh centeredPlane];
     CC3Plane normPlane=CC3PlaneNormalize(plane);
+    
     vector4f unprojected_diff =[[scene camera] pick:pt intoMesh: [mesh octree] ];
     if(!isfinite(unprojected_diff[0]))
         unprojected_diff= [[scene camera] unprojectPoint:pt ontoPlane: normPlane];
@@ -432,15 +432,21 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     gluProject(plane_endclick_world[0],plane_endclick_world[1],plane_endclick_world[2],
                [[scene camera] modelViewMatrix].data(),[[scene camera] projectionMatrix].data(),[[scene camera] viewport].data(),&winx,&winy,&winz);
   
-    
+    //printf("Win %f %f %f\n",winx,winy,winz);
     // Create x
     float x,y,z;
-    if( gluUnProject(pt.x,globalInfo.height-pt.y, winz, ident.identity().data()/*&orientation.m11*/, [[scene camera] projectionMatrix].data(), [[scene camera] viewport].data(), &x, &y, &z) == GL_TRUE) { 
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    CGPoint glPoint=pt;
+    glPoint.x*=scale;
+    glPoint.y*=scale;
+    glPoint.y=globalInfo.height- glPoint.y;
+
+    if( gluUnProject(glPoint.x,glPoint.y, winz, ident.identity().data(), [[scene camera] projectionMatrix].data(), [[scene camera] viewport].data(), &x, &y, &z) == GL_TRUE) { 
         
     }else{
         printf("Ballz\n");
     }
-   // printf("Camera Frame %f %f %f\n",x,y,z);
+    //printf("Camera Frame %f %f %f\n",x,y,z);
     float tmpP[4];
     tmpP[0]=x;
     tmpP[1]=y;
@@ -476,8 +482,9 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     newModel.m43=newT[2];
    
     CGPoint centerScreenWorld;
-    centerScreenWorld.x=(globalInfo.width/2);
-    centerScreenWorld.y=(globalInfo.height/2);
+    centerScreenWorld.x=(globalInfo.width/2)/scale;
+    centerScreenWorld.y=(globalInfo.height/2)/scale;
+   // printf("%f %f %f %f\n",pt.x,pt.y,centerScreenWorld.x,centerScreenWorld.y);
     matrix44f_c data;
     memcpy(data.data(),&newModel.m11,sizeof(float)*16);
 

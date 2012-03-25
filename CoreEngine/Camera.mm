@@ -266,13 +266,19 @@ vector4f CC3RayIntersectionWithPlane(CC3Ray ray, CC3Plane plane) {
 -(CC3Ray) unprojectPoint: (CGPoint) cc2Point {
     
 	// CC_CONTENT_SCALE_FACTOR = 2.0 if Retina display active, or 1.0 otherwise.
+    //printf("%f %f\n",cc2Point.x,cc2Point.y);
 	CGPoint glPoint = cc2Point;//ccpMult(cc2Point, CC_CONTENT_SCALE_FACTOR());
-	glPoint.y=globalInfo.height-glPoint.y;
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    glPoint.x*=scale;
+    glPoint.y*=scale;
+    glPoint.y=globalInfo.height-glPoint.y;
+
+    //printf("%f %f\n",glPoint.x,glPoint.y);
 	// Express the glPoint X & Y as proportion of the layer dimensions, based
 	// on an origin in the center of the layer (the center of the camera's view).
     CC3Ray ray;
     make_pick_ray(glPoint.x,glPoint.y,[self modelViewMatrix],[self projectionMatrix],viewportMatrix,ray.startLocation,ray.direction,true);
-   // printf("%f %f %f -- %f %f %f\n",ray.startLocation[0],ray.startLocation[1],ray.startLocation[2],ray.direction[0],ray.direction[1],ray.direction[2]);
+   // printf("%f %f %f -- %f %f %f\n",ray.startLocation[0],ray.startLocation[1],ray.startLocation[2],ray.direction[0],ray.direction[1],ray.//direction[2]);
 	return ray;
 }
 
@@ -280,10 +286,14 @@ vector4f CC3RayIntersectionWithPlane(CC3Ray ray, CC3Plane plane) {
     
 	// CC_CONTENT_SCALE_FACTOR = 2.0 if Retina display active, or 1.0 otherwise.
 	CGPoint glPoint = cc2Point;//ccpMult(cc2Point, CC_CONTENT_SCALE_FACTOR());
-	glPoint.y=globalInfo.height-glPoint.y;
 	// Express the glPoint X & Y as proportion of the layer dimensions, based
 	// on an origin in the center of the layer (the center of the camera's view).
-  
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    
+    glPoint.x*=scale;
+    glPoint.y*=scale;
+	glPoint.y=globalInfo.height-glPoint.y;
+
     CC3Ray ray;
     make_pick_ray(glPoint.x,glPoint.y,thismodelview,[self projectionMatrix],viewportMatrix,ray.startLocation,ray.direction,true);
     // printf("%f %f %f -- %f %f %f\n",ray.startLocation[0],ray.startLocation[1],ray.startLocation[2],ray.direction[0],ray.direction[1],ray.direction[2]);
@@ -295,57 +305,6 @@ vector4f CC3RayIntersectionWithPlane(CC3Ray ray, CC3Plane plane) {
 }
 #define POW2(x) ((x)*(x))
 
--(vector4f) getZfromWorldXY:(CGPoint) cc2Point intoMesh: (struct octree_struct *) thisOctree {
-	CC3Ray ray;
-    ray.startLocation[0]=cc2Point.x;
-    ray.startLocation[1]=cc2Point.y;
-    ray.startLocation[2]=-1000.0;
-    
-    ray.direction[0]=0;
-    ray.direction[1]=0;
-    ray.direction[2]=1;
-    
-    float intersectionPoint[3];
-    if(intersectOctreeNodeWithRay(thisOctree, 0,ray, intersectionPoint))
-        ;//printf("Hit %f %f %f\n",intersectionPoint[0],intersectionPoint[1],intersectionPoint[2]);
-    else{
-        printf("No hit\n");
-        return vector4f(INFINITY,INFINITY,INFINITY,INFINITY);
-    }
-    CGPoint pt2;
-    pt2.x=cc2Point.x;
-    pt2.y= viewport[3] - cc2Point.y;
-    
-    vector3f nearPoint;
-	vector3f farPoint;
-	vector3f rayVector;
-    
-    //Retreiving position projected on near plan
-	gluUnProject( pt2.x, pt2.y , 0, [self modelViewMatrix].data(), projectionMatrix.data(), viewport.data(), &nearPoint[0], &nearPoint[1], &nearPoint[2]);
-    
-	//Retreiving position projected on far plan
-	gluUnProject( pt2.x, pt2.y,  1, [self modelViewMatrix].data(), projectionMatrix.data(), viewport.data(), &farPoint[0], &farPoint[1], &farPoint[2]);
-	
-    
-	//Processing ray vector
-	rayVector[0] = farPoint[0] - nearPoint[0];
-	rayVector[1] = farPoint[1] - nearPoint[1];
-	rayVector[2] = farPoint[2] - nearPoint[2];
-	
-	float rayLength = sqrtf(POW2(rayVector[0]) + POW2(rayVector[1]) + POW2(rayVector[2]));
-	
-	//normalizing ray vector
-	rayVector[0] /= rayLength;
-	rayVector[1] /= rayLength;
-	rayVector[2] /= rayLength;
-    // printf("%f %f %f -- ",nearPoint[0],nearPoint[1],nearPoint[2]);
-    
-    // printf("%f %f %f\n",rayVector[0],rayVector[1],rayVector[2]);
-    vector4f ret(intersectionPoint[0],intersectionPoint[1],intersectionPoint[2],1);
-    return ret;
-    
-}
-
 -(vector4f) pick:(CGPoint) cc2Point intoMesh: (struct octree_struct *) thisOctree {
 	CC3Ray ray=[self unprojectPoint: cc2Point];
     
@@ -356,36 +315,7 @@ vector4f CC3RayIntersectionWithPlane(CC3Ray ray, CC3Plane plane) {
         printf("No hit\n");
         return vector4f(INFINITY,INFINITY,INFINITY,INFINITY);
     }
-    CGPoint pt2;
-    pt2.x=cc2Point.x;
-    pt2.y= viewport[3] - cc2Point.y;
     
-    vector3f nearPoint;
-	vector3f farPoint;
-	vector3f rayVector;
-
-    //Retreiving position projected on near plan
-	gluUnProject( pt2.x, pt2.y , 0, [self modelViewMatrix].data(), projectionMatrix.data(), viewport.data(), &nearPoint[0], &nearPoint[1], &nearPoint[2]);
-    
-	//Retreiving position projected on far plan
-	gluUnProject( pt2.x, pt2.y,  1, [self modelViewMatrix].data(), projectionMatrix.data(), viewport.data(), &farPoint[0], &farPoint[1], &farPoint[2]);
-	
-
-
-	//Processing ray vector
-	rayVector[0] = farPoint[0] - nearPoint[0];
-	rayVector[1] = farPoint[1] - nearPoint[1];
-	rayVector[2] = farPoint[2] - nearPoint[2];
-	
-	float rayLength = sqrtf(POW2(rayVector[0]) + POW2(rayVector[1]) + POW2(rayVector[2]));
-	
-	//normalizing ray vector
-	rayVector[0] /= rayLength;
-	rayVector[1] /= rayLength;
-	rayVector[2] /= rayLength;
-   // printf("%f %f %f -- ",nearPoint[0],nearPoint[1],nearPoint[2]);
-    
-   // printf("%f %f %f\n",rayVector[0],rayVector[1],rayVector[2]);
     vector4f ret(intersectionPoint[0],intersectionPoint[1],intersectionPoint[2],1);
     return ret;
     
