@@ -162,6 +162,7 @@
                 //}
             }else{
                 NSLog(@"Folder already exists ERROR\n");
+                extractError=YES;
             }
             
         }else{
@@ -194,6 +195,20 @@
 			[alert release];					
 			return;
 		}
+        NSLog(@"Removing corrupt file %@\n",filename );
+        error = nil;
+        NSString *folder=[filename stringByDeletingPathExtension];
+		if (![[NSFileManager defaultManager] removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:folder] error:&error])
+		{
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not delete file", @"Localized", nil) message:[error localizedDescription]
+														   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
+			[alert show];
+			[alert release];					
+			return;
+		}
+        NSLog(@"Removing corrupt folder %@\n",folder );
+
+
 		
 	}
 	else

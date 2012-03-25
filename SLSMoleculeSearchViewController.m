@@ -494,7 +494,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-{	
+{	          
 	UITableViewCell *cell;
 	// Running a search, so display a status cell
 	if ((searchResultRetrievalConnection != nil) || ((nextResultsRetrievalConnection != nil) && (indexPath.row >= [searchResultTitles count])))
@@ -570,20 +570,25 @@
            // cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"DownloadInProgress"] autorelease];
             cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadInProgress"] autorelease];
 
-            CGRect progframe = CGRectMake(CGRectGetMinX(cell.contentView.bounds) + 20.0f, 45.0f, CGRectGetWidth(cell.contentView.bounds)-80.0f, 20.0f);
-               CGRect textframe = CGRectMake(CGRectGetMinX(cell.contentView.bounds) + 25.0f, 0.0f, CGRectGetWidth(cell.contentView.bounds)-40.0f, 40.0f);
-            float buttonwidth=20.0f;
-              CGRect buttonframe = CGRectMake(CGRectGetWidth(cell.contentView.bounds) -buttonwidth-10.0, 8.0f, buttonwidth, buttonwidth);
-            [downloadController cancelDownloadButton].frame=buttonframe;
-
-            [downloadController progressView].frame=progframe;
-            [downloadController downloadStatusText].frame=textframe;
-            [cell.contentView addSubview:[downloadController progressView]];
-            [cell.contentView addSubview:[downloadController downloadStatusText]];
-            [cell.contentView addSubview:[downloadController cancelDownloadButton]];
-
-            cell.accessoryType = UITableViewCellAccessoryNone;
         }
+        CGRect progframe = CGRectMake(CGRectGetMinX(cell.contentView.bounds) + 20.0f, 45.0f, CGRectGetWidth(cell.contentView.bounds)-80.0f, 20.0f);
+        CGRect textframe = CGRectMake(CGRectGetMinX(cell.contentView.bounds) + 25.0f, 0.0f, CGRectGetWidth(cell.contentView.bounds)-40.0f, 40.0f);
+        float buttonwidth=20.0f;
+        CGRect buttonframe = CGRectMake(CGRectGetWidth(cell.contentView.bounds) -buttonwidth-10.0, 8.0f, buttonwidth, buttonwidth);
+        [downloadController cancelDownloadButton].frame=buttonframe;
+        
+        [downloadController progressView].frame=progframe;
+        [downloadController downloadStatusText].frame=textframe;
+        [downloadController spinningIndicator].frame=buttonframe;
+        [downloadController spinningIndicator].hidden=YES;
+
+        [cell.contentView addSubview:[downloadController progressView]];
+        [cell.contentView addSubview:[downloadController downloadStatusText]];
+        [cell.contentView addSubview:[downloadController cancelDownloadButton]];
+        [cell.contentView addSubview:[downloadController spinningIndicator]];
+
+        cell.accessoryType = UITableViewCellAccessoryNone;
+
         
     }
 	else
@@ -641,7 +646,6 @@
 //                cell.textLabel.font = [UIFont boldSystemFontOfSize:12.0];
 //				cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:12.0];
             }
-
             if ((isDownloading) && ([indexPath row] != indexOfDownloadingMolecule))
             {
 //                cell.contentView.backgroundColor = [UIColor colorWithWhite:0.6 alpha:1.0];
@@ -753,6 +757,7 @@
 
 - (void)didReceiveMemoryWarning 
 {
+    NSLog(@"My Memory warning\n");
 }
 
 #pragma mark -

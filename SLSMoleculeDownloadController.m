@@ -12,7 +12,7 @@
 #import "SLSMoleculeAppDelegate.h"
 
 @implementation SLSMoleculeDownloadController
-@synthesize progressView,downloadStatusText,cancelDownloadButton;
+@synthesize progressView,downloadStatusText,cancelDownloadButton,spinningIndicator;
 - (id)initWithID:(NSString *)pdbCode title:(NSString *)title searchType:(SLSSearchType)newSearchType;
 {
 	if ((self = [super init])) 
@@ -38,6 +38,9 @@
 
         [cancelDownloadButton setImage:[UIImage imageNamed:@"redx.png"] forState:UIControlStateNormal];
         [cancelDownloadButton addTarget:self action:@selector(cancelDownload) forControlEvents:UIControlEventTouchUpInside];
+        
+        spinningIndicator = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray] retain];
+
 
 	}
 	return self;
@@ -50,6 +53,7 @@
 	[codeForCurrentlyDownloadingMolecule release];
 	[titleForCurrentlyDownloadingMolecule release];
     [progressView release];
+    [spinningIndicator release];
     [downloadStatusText release];
     [cancelDownloadButton release];
     self.downloadStatusText = nil;
@@ -129,8 +133,8 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     cancelDownloadButton.hidden = NO;
 
     NSString *filename = [[codeForCurrentlyDownloadingMolecule lastPathComponent] stringByDeletingPathExtension];	
-
-	if ([[NSFileManager defaultManager] fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:filename]])
+    NSString *octreepath=[NSString stringWithFormat: @"%@/%@.octree",filename,filename];
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:octreepath]])
 	{
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"File already exists", @"Localized", nil) message:NSLocalizedStringFromTable(@"This model has already been downloaded", @"Localized", nil)
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
@@ -208,7 +212,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 	downloadConnection = nil;
     progressView.hidden = YES;
     cancelDownloadButton.hidden=YES;
-    
+
 	[downloadedFileContents release];
 	downloadedFileContents = nil;
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -346,8 +350,17 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     }
     else
     {*/
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:filename userInfo:[NSDictionary dictionaryWithObject:titleForCurrentlyDownloadingMolecule forKey:@"title"]];  
-    
+    progressView.hidden = YES;
+    cancelDownloadButton.hidden=YES;
+    spinningIndicator.hidden=NO;
+    [self.spinningIndicator performSelectorOnMainThread:@selector(startAnimating) withObject:nil waitUntilDone:NO];
+
+    [spinningIndicator startAnimating];
+	downloadStatusText.text = NSLocalizedStringFromTable(@"Decompressing...", @"Localized", nil);
+
+ 
+    [self performSelector:@selector(sendDownloadFinishedMsg:) withObject:filename afterDelay:0.3];
+
     //}
 	
 //	if ([SLSMoleculeAppDelegate isRunningOniPad])
@@ -357,7 +370,9 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 	
 	[self downloadCompleted];	
 }
-
+-(void) sendDownloadFinishedMsg:(NSString*)filename {
+       [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:filename userInfo:[NSDictionary dictionaryWithObject:titleForCurrentlyDownloadingMolecule forKey:@"title"]];  
+}
 #pragma mark -
 #pragma mark Accessors
 
