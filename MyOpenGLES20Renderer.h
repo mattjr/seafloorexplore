@@ -27,6 +27,8 @@
 - (void)switchToDisplayFramebuffer;
 - (void)shutdownVT;
 -(void)startupVT:(NSString *)name;
+- (void)showStatusIndicator;
+- (void)hideStatusIndicator;
 
 
 @end

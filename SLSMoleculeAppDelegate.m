@@ -229,11 +229,11 @@
 
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	rootViewController.molecules = nil;
+    [self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
 
 	if ([self createEditableCopyOfDatabaseIfNeeded])
 	{
 		// The database needed to be recreated, so scan and copy over the default files
-		[self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
 		
 		[self connectToDatabase];
 		// Before anything else, move included PDB files to /Documents if the program hasn't been run before
@@ -273,9 +273,9 @@
 					if ([fileManager fileExistsAtPath:preloadedTexPath] && ![fileManager fileExistsAtPath:installedTexPath]){
 
 						[[NSFileManager defaultManager]	copyItemAtPath:preloadedTexPath toPath:installedTexPath error:&error];*/
-                    NSData* tarData = [NSData dataWithContentsOfFile:preloadedPDBPath];
+                   // NSData* tarData = [NSData dataWithContentsOfFile:preloadedPDBPath];
                     NSError *error=nil;
-                    [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:documentsDirectory withTarData:tarData error:&error];
+                    [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:documentsDirectory withTarPath:preloadedPDBPath error:&error];
                     
 						if (error != nil)
 						{
@@ -291,7 +291,6 @@
 		[self loadMissingMoleculesIntoDatabase];
 		
 		[[NSUserDefaults standardUserDefaults] synchronize];		
-		[self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:YES];
 	}
 	else
 	{
@@ -313,6 +312,8 @@
 	
 	if (!isHandlingCustomURLMoleculeDownload)
 		[rootViewController loadInitialMolecule];
+    [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:YES];
+
 	[pool release];
 }
 
@@ -374,7 +375,13 @@
 			[[NSFileManager defaultManager] removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:[pname stringByDeletingLastPathComponent]] error:&error];
 			pname = lastPathComponent;
 		}
-	*/	
+     */	     
+        NSDictionary *pathAttrs = [direnum fileAttributes];
+        NSUInteger level = [direnum level];
+
+        BOOL isDir = [[pathAttrs objectForKey:NSFileType] isEqual:NSFileTypeDirectory];
+        if(isDir && level == 2)
+            [direnum skipDescendents];
         NSString *filename = [[pname lastPathComponent] stringByDeletingPathExtension];	
 
 		if ( ([moleculeFilenameLookupTable valueForKey:filename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"octree"] || [[[pname pathExtension] lowercaseString] isEqualToString:@"bz2"]) )

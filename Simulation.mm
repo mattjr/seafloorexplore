@@ -172,10 +172,11 @@ float positions[60 * 60][6];
         _cameraPanAcceleration = 30.0;
         _panKeyDist=0.005;
         _minimumZoomScale = 0.5f;
-        _maxZoomScale = 20000.0f;
+        _maxZoomScale =  6*[mesh radius];
         _minalt=0.0;
         cameraRotationSpeed = 0.01;
-		
+        _maxDist = 6*[mesh radius];
+
 		
 		[self resetCamera];
         _firstPan=false;
@@ -599,18 +600,21 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 
 -(void) zoomcont: (float) percent
 {
-  
+//     printf("Zoom   %f\n",1.0/percent);
     //  if(percent > 0)
     //RecomputeTerrainIntersection();
-    float tmp=_zoomStartDist;
-        tmp *= 1+percent*2.0;
+    float tmp=_targetDistance * 1.0/percent;
+    printf("Zoom   %f\n",tmp);
+
+    //    tmp *= 1+percent*2.0;
    // printf("Zoom dist %f %f\n",tmp,percent);
 
     if(tmp < _minimumZoomScale + _minalt|| tmp > _maxZoomScale)
         return;
     else
-        _targetDistance = std::min((double)tmp,  _radius *4.0);
-            
+        _targetDistance *= 1.0/percent;// std::min((double)tmp,  _radius *4.0);
+    
+
     
 }
 -(void) centeratPt: (CGPoint) pt{

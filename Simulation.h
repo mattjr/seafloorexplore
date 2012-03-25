@@ -66,6 +66,7 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
     bool donePanning;
     vector3f extentsMesh;
     CGPoint _lastPt;
+    float _maxDist;
     
 }
 -(void) centeratPt: (CGPoint) pt;
@@ -85,11 +86,10 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 - (void)SlerpToTargetOrientation:(float) percent;
 -(void) pan: (CGPoint)pt;
 -(void) zoomcont: (float) percent;
--(void) zoomstart;
+-(void) zoomstart ;
 -(void) orient: (CGPoint) pt;
 -(void) setRenderMode: (GLVisualizationType) rt;
 -(GLVisualizationType) getRenderMode;
--(void) zoomval: (float) percent;
 -(void) panstart: (CGPoint) pt;
 -(void) pancont: (CGPoint)pt;
 - (void)printMatrix:(GLfloat *)matrix;

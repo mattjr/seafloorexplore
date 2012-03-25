@@ -558,7 +558,7 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
                 
 				npos = vector3f(npos[0], npos[1] *speedModifier *(newTouchDistance / startingTouchDistance), npos[2]);
 
-				zoomVal=  1.0-(newTouchDistance / startingTouchDistance);
+				zoomVal=  (newTouchDistance / startingTouchDistance) / previousScale;
                 if ([[scene simulator] respondsToSelector:@selector(zoomcont:)])
                     [(Simulation *)[scene simulator] zoomcont:zoomVal];
 				

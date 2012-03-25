@@ -260,8 +260,15 @@ extern vtConfig c;
     });     
 
 }
+- (void)showStatusIndicator;
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:kSLSMoleculeRenderingStartedNotification object:nil ];
+}
 
-
+- (void)hideStatusIndicator;
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:kSLSMoleculeRenderingEndedNotification object:nil ];
+}
 -(void)startupVT:(NSString *)name
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -270,7 +277,8 @@ extern vtConfig c;
     
     //if(documentsDirectory != nil)
     //  printf("NIL %s\n",[documentsDirectory UTF8String]);
-    
+   // [self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
+
     NSString *fullpath=[documentsDirectory stringByAppendingPathComponent:name];
     dispatch_sync(openGLESContextQueue, ^{
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -299,6 +307,7 @@ extern vtConfig c;
 
         [pool drain];
     });
+
 }
 
 - (void)destroyFramebuffers;
@@ -370,6 +379,8 @@ extern vtConfig c;
 
         [molecule setHasRendered:YES];
         //printf("First render\n");
+    //    [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:NO];
+
     }
 //    return;
 	
@@ -401,7 +412,7 @@ extern vtConfig c;
         }
         dispatch_semaphore_signal(frameRenderingSemaphore);
     });
-	
+
 	
 	
 }
