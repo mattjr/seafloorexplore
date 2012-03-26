@@ -267,8 +267,8 @@ float positions[60 * 60][6];
 #endif
 }
 - (bool)isDoneMoving{
-	double eps = 0.0001;
-	return (fabs(_center[0]-_targetCenter[0])<eps &&fabs(_center[1]-_targetCenter[1])<eps &&fabs(_center[2]-_targetCenter[2])<eps &&fabs(_targetTilt-_tilt) < eps && fabs(_targetHeading- _heading));	
+	double eps = 0.1;
+	return (fabs(_center[0]-_targetCenter[0])<eps &&fabs(_center[1]-_targetCenter[1])<eps &&fabs(_center[2]-_targetCenter[2])<eps &&fabs(_targetTilt-_tilt) < eps && fabs(_targetHeading- _heading)<eps);	
 }
 
 - (void)render
@@ -362,9 +362,64 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
    // [self printMatrix:data.data()];
 	[[scene camera] load:data];
    // [self printMatrix:[[scene camera] modelViewMatrix].data()];
+   // printf("%d %d\n",[self isDoneMoving] , goneOutOfFrame);
+    if(goneOutOfFrame && ![mesh anyTrianlgesInFrustum:frustum]){
+        _targetCenter[0]=_lastValidCenter[0];
+       _targetCenter[1]=_lastValidCenter[1];
+       _targetCenter[2]=_lastValidCenter[2];
+       _targetDistance=_lastValidDist;
+       _targetTilt =_lastValidTilt;
+       _targetHeading=_lastValidHeading;
+    }
 
+   
 }
+-(void)setValidPos{
+    _lastValidCenter[0]=_center[0];
+    _lastValidCenter[1]=_center[1];
+    _lastValidCenter[2]=_center[2];
+    _lastValidDist=_distance;
+    _lastValidTilt=_tilt;
+    _lastValidHeading=_heading;
+    goneOutOfFrame=NO;
+}
+-(void) checkInFrame{
+    CATransform3D mTmp;
+    CATransform3D tiltMat;
+    CATransform3D headingMat;
+	CATransform3D viewtest;
+	
+    headingMat= CATransform3DMakeRotation(_targetHeading * M_PI / 180.0,0,0,1);
+    if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+        tiltMat=CATransform3DMakeRotation(-_targetTilt * M_PI / 180.0,1,0,0);
+    else if(interfaceOrientation == UIInterfaceOrientationPortrait)
+        tiltMat=CATransform3DMakeRotation(-_targetTilt * M_PI / 180.0,0,1,0); 
+    viewtest=CATransform3DMakeTranslation(_targetCenter[0],_targetCenter[1],_targetCenter[2]);
+    
+    viewtest= CATransform3DConcat(viewtest,orientation);
+    viewtest= CATransform3DConcat(viewtest,headingMat);
+    
+    viewtest=CATransform3DConcat(viewtest,tiltMat);
+    
+    mTmp= CATransform3DMakeTranslation(0,0,-_targetDistance);
+    viewtest= CATransform3DConcat(viewtest,mTmp);
+    
+    GLfloat test_frustum[6][4];
+    
+    matrix44f_c data;
+    memcpy(data.data(),&(viewtest.m11),sizeof(float)*16);
 
+    extract_frustum_planes(data,[[scene camera] projectionMatrix], test_frustum, cml::z_clip_neg_one, false);
+    
+
+    if(![mesh anyTrianlgesInFrustum:test_frustum]){
+        goneOutOfFrame=YES;
+     //   printf("Not in frame\n");
+
+    }else {
+       // printf("Still in\n");
+    }
+}
 - (void)mouseDragged:(vector2f)delta withFlags:(uint32_t)flags
 {
 	/*vector3f rot = [[scene camera] rotation];
@@ -408,8 +463,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 
 -(void) pan: (CGPoint) pt
 {
-    
-   // pt.x=(globalInfo.width/2)+0;
+       // pt.x=(globalInfo.width/2)+0;
    // pt.y=(globalInfo.height/2)+0;
    // printf("Dist %f %f\n",_center[2],_distance);
     vector3f v1=vector3f(_unprojected_orig[0],_unprojected_orig[1],_unprojected_orig[2]);
@@ -667,14 +721,15 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     _center[1] = -tmp[1];
     _center[2] = -tmp[2];
     _distance = 3*[mesh radius];
-
- 
-
+    _lastValidCenter[0]=_center[0];
+     _lastValidCenter[1]=_center[1];
+    _lastValidCenter[2]=_center[2];
     for(int i=0; i <3; i++){
 	_targetCenter[i]=_center[i];
 	}
     _targetDistance=_distance;
-	
+    _lastValidDist=_distance;
+
     _tilt=0.0;
     _targetTilt= _tilt;
 	_heading=0.0;

@@ -473,7 +473,10 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 
     NSMutableSet *currentTouches = [[[event touchesForView:self.view] mutableCopy] autorelease];
     [currentTouches minusSet:touches];
-	
+
+    if ([[scene simulator] respondsToSelector:@selector(setValidPos)])
+        [(Simulation *)[scene simulator] setValidPos];
+
 	// New touches are not yet included in the current touches for the view
 	NSSet *totalTouches = [touches setByAddingObjectsFromSet:[event touchesForView:self.view]];
 	if ([totalTouches count] > 1)
@@ -590,17 +593,17 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 	
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event 
-{	int count=0;
+{	//int count=0;
    // if ([[scene simulator] respondsToSelector:@selector(pan:)])
      //   [(Simulation *)[scene simulator] checkIfOutOfBounds];
     
-	if ([[scene simulator] respondsToSelector:@selector(isDoneMoving)] && !isAutorotating){
+	/*if ([[scene simulator] respondsToSelector:@selector(isDoneMoving)] && !isAutorotating){
 		while(![(Simulation *)[scene simulator]isDoneMoving]&& count <10){
 			[openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
 			[openGLESRenderer waitForLastFrameToFinishRendering];
 			count++;	
 		}
-	}
+	}*/
 	[self handleTouchesEnding:touches withEvent:event];
 
 	// This is placed here to avoid an infinite spawning of alerts under iPhone OS 4.0
@@ -636,7 +639,8 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 		twoFingersAreMoving = NO;
 		pinchGestureUnderway = NO;
 		previousDirectionOfPanning = CGPointZero;
-		
+        if ([[scene simulator] respondsToSelector:@selector(checkInFrame)])
+            [(Simulation *)[scene simulator] checkInFrame];
 		lastMovementPosition = [[remainingTouches anyObject] locationInView:self.view];
         if ([[scene simulator] respondsToSelector:@selector(pancont:)])
             [(Simulation *)[scene simulator] pancont:lastMovementPosition];

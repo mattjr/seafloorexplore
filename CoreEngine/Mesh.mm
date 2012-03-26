@@ -565,7 +565,43 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 
 
 }
+-(BOOL)anyTrianlgesInFrustum:(const GLfloat [6][4])test_frustum{
+    uint16_t i;
 
+    for (i = 0; i < visibleNodeStackTop;)
+    {
+        struct octree_node *n = (struct octree_node *) NODE_NUM(visibleNodeStack[i]);
+        uint32_t fc = n->faceCount;
+        uint32_t ff = n->firstFace;
+        uint16_t v = i+1;
+        while (v < visibleNodeStackTop)
+        {
+            struct octree_node *nn = (struct octree_node *) NODE_NUM(visibleNodeStack[v]);
+            
+            if (nn->firstFace != n->firstFace + n->faceCount)	// TODO: allow for some draw call reduction at the expense of drawing invisible stuff
+                break;
+            
+            //printf("%f %f %f %f %f %f\n",n->aabbOriginX,n->aabbOriginY,n->aabbOriginZ,n->aabbExtentX, n->aabbExtentY, n->aabbExtentZ);
+            fc += nn->faceCount;
+            n = nn;
+            v++;
+        }
+        
+        i = v;
+        for(int k=ff; k<ff+fc; k++){
+            uint16_t *f = (uint16_t *) FACE_NUM(k);
+            float *v1 = (float *) VERTEX_NUM( *f);
+            float *v2 = (float *) VERTEX_NUM( *(f+1));		// nana this could be prettified
+            float *v3 = (float *) VERTEX_NUM( *(f+2));
+            if(PointInFrustum(test_frustum,*(v1+0),*(v1+1),*(v1+2)) &&
+               PointInFrustum(test_frustum,*(v2+0),*(v2+1),*(v2+2)) &&
+               PointInFrustum(test_frustum,*(v3+0),*(v3+1),*(v3+2)))
+                return TRUE;
+        }
+     
+    }  
+    return FALSE;
+}
 
 - (void)dealloc
 {
