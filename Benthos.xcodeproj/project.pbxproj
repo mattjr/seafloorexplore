@@ -16,6 +16,8 @@
 		7B056F04150AC5DF00621766 /* NSFileManager+Tar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */; };
 		7B056F06150AC85A00621766 /* chamber3.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7B056F05150AC85A00621766 /* chamber3.tar */; };
 		7B4772D9151D8E5200727C6C /* redx.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B4772D8151D8E5200727C6C /* redx.png */; };
+		7BCBD12C1520B537009DC170 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCBD12B1520B537009DC170 /* MapKit.framework */; };
+		7BCBD12E1520B550009DC170 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCBD12D1520B550009DC170 /* CoreLocation.framework */; };
 		7BE606491398E0480072A1C5 /* pass.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7BE606281398DEA80072A1C5 /* pass.frag */; };
 		7BE6064A1398E0480072A1C5 /* pass.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7BE606291398DEA80072A1C5 /* pass.vert */; };
 		7BF64D5E139770AD002FEB23 /* Camera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D57139770AD002FEB23 /* Camera.mm */; };
@@ -127,6 +129,8 @@
 		7B056F05150AC85A00621766 /* chamber3.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = chamber3.tar; sourceTree = "<group>"; };
 		7B4772D8151D8E5200727C6C /* redx.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redx.png; sourceTree = "<group>"; };
 		7B61FB0213991399006E50B3 /* renderVT.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = renderVT.frag; path = LibVT/renderVT.frag; sourceTree = "<group>"; };
+		7BCBD12B1520B537009DC170 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		7BCBD12D1520B550009DC170 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		7BE606281398DEA80072A1C5 /* pass.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = pass.frag; path = LibVT/pass.frag; sourceTree = "<group>"; };
 		7BE606291398DEA80072A1C5 /* pass.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = pass.vert; path = LibVT/pass.vert; sourceTree = "<group>"; };
 		7BF64D56139770AD002FEB23 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
@@ -281,6 +285,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7BCBD12E1520B550009DC170 /* CoreLocation.framework in Frameworks */,
+				7BCBD12C1520B537009DC170 /* MapKit.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				1D3623EC0D0F72F000981E51 /* CoreGraphics.framework in Frameworks */,
@@ -304,6 +310,8 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				7BCBD12D1520B550009DC170 /* CoreLocation.framework */,
+				7BCBD12B1520B537009DC170 /* MapKit.framework */,
 				BC67B8BE137C4B7A0075A361 /* Default@2x.png */,
 				BC2795BC11625065006DE4C8 /* Default.png */,
 				BC2795B81162500A006DE4C8 /* Default-Landscape.png */,

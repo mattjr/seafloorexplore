@@ -98,7 +98,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
     {
 		filenameWithoutExtension = [[filename substringToIndex:rangeUntilFirstPeriod.location] retain];	
     }
-   // NSLog(@"AA %@ 0x%x 0x%x\n",newFilename,(int)newFilename,(int)filenameWithoutExtension);
+    NSLog(@"AA %@ %@\n",title,filename);
 
 	if (insertMoleculeSQLStatement == nil) 
 	{
@@ -168,7 +168,11 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	stringResult = (char *)sqlite3_column_text(moleculeRetrievalStatement, 3);
 	sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
 	compound = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
-	
+//    NSLog(@"SQL %@ %@\n",title,filename);
+    
+    desc=@"Folded into a sub cockpit as cramped as any Apollo capsule, the National Geographic explorer and filmmaker is now investigating a seascape more alien to humans than the moon. Cameron is only the third person to reach this Pacific Ocean valley southwest of Guam (map)—and the only one to do so solo. Hovering in what he's called a vertical torpedo, Cameron is likely collecting data, specimens, and imagery unthinkable in 1960, when the only other explorers to reach Challenger Deep returned after seeing little more than the silt stirred up by their bathyscaphe.";
+    title=filenameWithoutExtension;
+    
 	// Ignore the format for now
 	//	stringResult = (char *)sqlite3_column_text(moleculeRetrievalStatement, 4);
 	//	format = (stringResult) ? [[NSString alloc] initWithUTF8String:stringResult]  : [[NSString alloc] initWithString:@""];
@@ -1048,7 +1052,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 #pragma mark Accessors
 
 @synthesize centerOfMassInX, centerOfMassInY, centerOfMassInZ;
-@synthesize filename, filenameWithoutExtension, title, keywords, journalAuthor, journalTitle, journalReference, sequence, compound, source, author;
+@synthesize filename, filenameWithoutExtension, title, keywords, journalAuthor, journalTitle, journalReference, sequence, compound, source, author,desc;
 @synthesize isBeingDisplayed, isDoneRendering, isRenderingCancelled;
 @synthesize hasRendered;
 @synthesize numberOfAtoms, numberOfStructures;

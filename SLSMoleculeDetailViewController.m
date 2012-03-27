@@ -12,15 +12,17 @@
 #import "SLSMolecule.h"
 #import "SLSTextViewController.h"
 #import "SLSMoleculeAppDelegate.h"
+#import <QuartzCore/QuartzCore.h>
 
 #define DESCRIPTION_SECTION 0
-#define AUTHOR_SECTION 1
+#define MAPS_SECTION 1
 #define STATISTICS_SECTION 2
 #define JOURNAL_SECTION 3
 #define SOURCE_SECTION 4
 #define SEQUENCE_SECTION 5
 
 @implementation SLSMoleculeDetailViewController
+@synthesize placemark = _placemark;
 
 
 - (id)initWithStyle:(UITableViewStyle)style andMolecule:(SLSMolecule *)newMolecule;
@@ -33,20 +35,10 @@
 		[newMolecule readMetadataFromDatabaseIfNecessary];
 		self.title = molecule.compound;
 
-//		UILabel *label= [[UILabel alloc] initWithFrame:CGRectMake(25.0f, 60.0f, 320.0f, 66.0f)];
-		UILabel *label= [[UILabel alloc] initWithFrame:CGRectMake(45.0f, 60.0f, 320.0f, 66.0f)];
-		label.textColor = [UIColor blackColor];
-		label.font = [UIFont fontWithName:@"Helvetica" size:18.0];
-		label.backgroundColor = [UIColor groupTableViewBackgroundColor];	
-		label.text = molecule.compound;
-		label.numberOfLines = 3;
-		label.lineBreakMode = UILineBreakModeWordWrap;
-		label.textAlignment = UITextAlignmentCenter;
-		//	label.text = @"Text";
-		
-		self.tableView.tableHeaderView = label;
-		[label release];
-		
+        
+        _placemark = [[[CLPlacemark alloc]init] retain];
+
+	
 		if ([SLSMoleculeAppDelegate isRunningOniPad])
 		{
 			self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
@@ -57,6 +49,12 @@
 
 - (void)dealloc 
 {
+    [_placemark release];
+    _placemark = nil;
+
+    [_mapCell release];
+    _mapCell = nil;
+
 	[super dealloc];
 }
 
@@ -93,7 +91,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
 {
-    return 6;
+    return 2;
 }
 
 
@@ -103,16 +101,18 @@
 	{
         case DESCRIPTION_SECTION:
             return NSLocalizedStringFromTable(@"Description", @"Localized", nil);
-        case STATISTICS_SECTION:
-            return NSLocalizedStringFromTable(@"Statistics", @"Localized", nil);
+    //    case MAPS_SECTION:
+      //      return NSLocalizedStringFromTable(@"Map", @"Localized", nil);
+            /*
         case JOURNAL_SECTION:
             return NSLocalizedStringFromTable(@"Journal", @"Localized", nil);
         case SOURCE_SECTION:
             return NSLocalizedStringFromTable(@"Source", @"Localized", nil);
-        case AUTHOR_SECTION:
-            return NSLocalizedStringFromTable(@"Author(s)", @"Localized", nil);
+        case MAPS_SECTION:
+            return NSLocalizedStringFromTable(@"Map", @"Localized", nil);
         case SEQUENCE_SECTION:
             return NSLocalizedStringFromTable(@"Sequence", @"Localized", nil);
+         */
 		default:
 			break;
     }
@@ -126,63 +126,20 @@
 	switch (section) 
 	{
 		case DESCRIPTION_SECTION:
-		case AUTHOR_SECTION:
+		case MAPS_SECTION:
 		case SOURCE_SECTION:
 		case SEQUENCE_SECTION:
 			rows = 1;
 			break;
-		case STATISTICS_SECTION:
-			rows = 4;
-			break;
-        case JOURNAL_SECTION:
-            rows = 3;
-            break;
-		default:
+        default:
 			break;
 	}
 	return rows;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	
-	if (indexPath.section == STATISTICS_SECTION) 
-	{
-		static NSString *StatisticsCellIdentifier = @"StatisticsCell";
-		
-		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:StatisticsCellIdentifier];
-		if (cell == nil) 
-		{
-			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:StatisticsCellIdentifier] autorelease];
-			
-			cell.detailTextLabel.textColor = [UIColor colorWithRed:50.0f/255.0f green:79.0f/255.0f blue:133.0f/255.0f alpha:1.0f];
-            cell.detailTextLabel.highlightedTextColor = [UIColor whiteColor];			
-		}
-		
-		switch (indexPath.row)
-		{
-			case 0:
-			{
-				cell.textLabel.text = NSLocalizedStringFromTable(@"File name", @"Localized", nil);
-				cell.detailTextLabel.text = molecule.filename;
-			}; break;
-			case 1:
-			{
-				cell.textLabel.text = NSLocalizedStringFromTable(@"Number of atoms", @"Localized", nil);
-				cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", molecule.numberOfAtoms];
-			}; break;
-			case 2:
-			{
-				cell.textLabel.text =NSLocalizedStringFromTable(@"Number of structures", @"Localized", nil);
-				cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", molecule.numberOfStructures];
-			}; break;
-			case 3:
-			{
-				cell.textLabel.text = NSLocalizedStringFromTable(@"Current structure", @"Localized", nil);
-				cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", molecule.numberOfStructureBeingDisplayed];
-			}; break;
-		}
-		return cell;
-	}
+	if (indexPath.section == MAPS_SECTION) 
+        return [self cellForMapView];
 
 	static NSString *MyIdentifier = @"MyIdentifier";
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier];
@@ -190,19 +147,16 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:MyIdentifier] autorelease];
         //cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:MyIdentifier] autorelease];
     }
-	cell.textLabel.text = [self textForIndexPath:indexPath];
-	
-	
-//	static NSString *DetailedTextCell = @"DetailedTextCell";
-//
-//	CellTextView *cell = (CellTextView *)[tableView dequeueReusableCellWithIdentifier:DetailedTextCell];
-//
-//	if (cell == nil)
-//	{
-//		cell = [[[CellTextView alloc] initWithFrame:CGRectZero reuseIdentifier:DetailedTextCell] autorelease];
-//	}
-//
-//	cell.view = [self createLabelForIndexPath:indexPath];
+    if (indexPath.section == DESCRIPTION_SECTION)
+        cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:12.0];
+    
+    cell.textLabel.text = [self textForIndexPath:indexPath];
+    cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+    cell.textLabel.textAlignment = UITextAlignmentLeft;
+    cell.textLabel.numberOfLines=0;
+    [cell.textLabel sizeToFit];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
 	return cell;
 }
 
@@ -214,10 +168,7 @@
 		case DESCRIPTION_SECTION: // type -- should be selectable -> checkbox
 			text = molecule.title;
 			break;
-		case AUTHOR_SECTION: // instructions
-			text = molecule.author;
-			break;
-        case JOURNAL_SECTION:
+       /* case JOURNAL_SECTION:
 		{
 			switch (indexPath.row)
 			{
@@ -231,7 +182,7 @@
 			break;
 		case SEQUENCE_SECTION:
 			text = molecule.sequence;
-			break;
+			break;*/
 		default:
 			break;
 	}
@@ -292,12 +243,10 @@
 	switch (indexPath.section) 
 	{
 		case DESCRIPTION_SECTION:
-			text = molecule.title;
+			text = molecule.desc;;
 			break;
-		case AUTHOR_SECTION:
-			text = molecule.author;
-			break;
-        case JOURNAL_SECTION:
+                
+        /*case JOURNAL_SECTION:
 		{
 			switch (indexPath.row)
 			{
@@ -312,7 +261,7 @@
 			break;
 		case SEQUENCE_SECTION:
 			text = molecule.sequence;
-			break;
+			break;*/
 		default:
 			text = @"";
 			break;
@@ -332,12 +281,12 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	if (indexPath.section != STATISTICS_SECTION)
+	/*if (indexPath.section != STATISTICS_SECTION)
 	{
 		SLSTextViewController *nextViewController = [[SLSTextViewController alloc] initWithTitle:[self tableView:tableView titleForHeaderInSection:indexPath.section] andContent:[self textForIndexPath:indexPath]];
 		[self.navigationController pushViewController:nextViewController animated:YES];
 		[nextViewController release];
-	}
+	}*/
 	
 }
 
@@ -345,9 +294,77 @@
     // Overriden to allow any orientation.
     return YES;
 }
+- (UITableViewCell *)cellForMapView
+{
+    if (_mapCell)
+        return _mapCell;
+    
+    // if not cached, setup the map view...
+    CGFloat cellWidth = self.view.bounds.size.width - 20;
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        cellWidth = self.view.bounds.size.width - 90;
+    }
+    
+    CGRect frame = CGRectMake(0, 0, cellWidth, 240);
+    MKMapView *map = [[MKMapView alloc] initWithFrame:frame];
+    //MKCoordinateRegion region =  MKCoordinateRegionMakeWithDistance(self.placemark.location.coordinate, 200, 200);
+    CLLocationCoordinate2D AusLoc = {-19.048230,133.685730};
+    MKCoordinateSpan AusSpan = MKCoordinateSpanMake(45, 45);
+    MKCoordinateRegion AusRegion = MKCoordinateRegionMake(AusLoc, AusSpan);
+    [map setRegion:AusRegion];
+    
+    map.layer.masksToBounds = YES;
+    map.layer.cornerRadius = 10.0;
+    map.mapType = MKMapTypeStandard;
+    [map setScrollEnabled:NO];
+    [map setZoomEnabled:NO];
+
+    // add a pin using self as the object implementing the MKAnnotation protocol
+    [map addAnnotation:self];
+    
+    NSString * cellID = @"Cell";
+    UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID] autorelease];    
+    
+    [cell.contentView addSubview:map];
+    [map release];
+    
+    _mapCell = [cell retain];
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == MAPS_SECTION)
+    { 
+        return 240.0f; // map height
+    }
+
+    if (indexPath.section == DESCRIPTION_SECTION)
+    { 
+        CGSize bodySize = [[self textForIndexPath:indexPath] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0] 
+                           constrainedToSize:CGSizeMake(self.view.frame.size.width,CGFLOAT_MAX)];
+        return bodySize.height+20.0f;
+    
+    }
+    return [self.tableView rowHeight];
+}
 
 #pragma mark -
 #pragma mark Accessors
+#pragma mark - MKAnnotation Protocol (for map pin)
+
+- (CLLocationCoordinate2D)coordinate
+{
+    CLLocationCoordinate2D AusLoc = {-19.048230,133.685730};
+    return AusLoc;
+}
+
+- (NSString *)title
+{
+    return [molecule title];
+}
 
 @synthesize molecule;
 

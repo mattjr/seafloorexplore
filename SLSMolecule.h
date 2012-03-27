@@ -39,7 +39,7 @@ typedef struct {
 {
 	// Metadata from the Protein Data Bank
 	unsigned int numberOfAtoms, numberOfBonds, numberOfStructures;
-	NSString *filename, *filenameWithoutExtension, *title, *keywords, *journalAuthor, *journalTitle, *journalReference, *sequence, *compound, *source, *author;
+	NSString *filename, *filenameWithoutExtension, *title, *keywords, *journalAuthor, *journalTitle, *journalReference, *sequence, *compound, *source, *author,*desc;
 
 	// Status of the molecule
     BOOL hasRendered;
@@ -67,7 +67,7 @@ typedef struct {
 }
 
 @property (readonly) float centerOfMassInX, centerOfMassInY, centerOfMassInZ;
-@property (readonly) NSString *filename, *filenameWithoutExtension, *title, *keywords, *journalAuthor, *journalTitle, *journalReference, *sequence, *compound, *source, *author;
+@property (readonly) NSString *filename, *filenameWithoutExtension, *title, *keywords, *journalAuthor, *journalTitle, *journalReference, *sequence, *compound, *source, *author,*desc;
 @property (readwrite, nonatomic) BOOL isBeingDisplayed, isRenderingCancelled;
 @property (readwrite, nonatomic) BOOL hasRendered;
 
