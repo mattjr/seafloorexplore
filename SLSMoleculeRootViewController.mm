@@ -340,11 +340,13 @@
 			indexOfInitialMolecule = 0;
 		tableViewController = [[SLSMoleculeTableViewController alloc] initWithStyle:UITableViewStylePlain initialSelectedMoleculeIndex:indexOfInitialMolecule];
         
-        mapViewController = [[SLSMoleculeMapViewController alloc] init:indexOfInitialMolecule];
+        mapViewController = [[SLSMoleculeMapViewController alloc] init:indexOfInitialMolecule withMolecules:molecules];
+        mapViewController.database = database;
         mapViewController.title=@"Map View";
         
 		tableViewController.database = database;
 		tableViewController.molecules = molecules;
+   
 		[tableNavigationController pushViewController:tableViewController animated:NO];
 		tableViewController.delegate = self;
 		
@@ -360,8 +362,7 @@
 		toggleViewDisabled = NO;		
         
         
-        mapViewController.database = database;
-		mapViewController.molecules = molecules;
+       
 		mapViewController.delegate = self;
 		
 		

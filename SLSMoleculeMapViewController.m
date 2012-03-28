@@ -22,13 +22,13 @@
 #pragma mark -
 #pragma mark Initialization and breakdown
 
-- (id)init:(NSInteger)initialSelectedMoleculeIndex;
+- (id)init:(NSInteger)indexOfInitialMolecule withMolecules:(NSMutableArray*) mol_list
 {
 	if ((self = [super init])) 
 	{        
         
-		selectedIndex = initialSelectedMoleculeIndex;
-        
+		selectedIndex = indexOfInitialMolecule;
+        molecules=mol_list;
       		
 		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moleculeDidFinishDownloading:) name:@"MoleculeDidFinishDownloading" object:nil];
 
@@ -78,7 +78,13 @@
     MKCoordinateSpan AusSpan = MKCoordinateSpanMake(45, 45);
     MKCoordinateRegion AusRegion = MKCoordinateRegionMake(AusLoc, AusSpan);
     [mapView setRegion:AusRegion];
+    int idx=0;
 
+    for(SLSMolecule * mol in molecules){
+        MapAnnotation *ann =[[[MapAnnotation alloc] initWithCoordinate:mol.coord withName:mol.title withIndex:idx] autorelease];
+        [mapView addAnnotation:ann];
+        idx++;
+    }
     [self.view addSubview:mapView];
 
 	/*if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)

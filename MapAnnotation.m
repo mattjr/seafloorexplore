@@ -10,20 +10,28 @@
 
 @implementation MapAnnotation
 
-@synthesize coordinate,idx;
+@synthesize coordinate, title, subtitle,idx;
 
-- (id)init {
-	[super init];
-    
-	coordinate.latitude = 25;
-	coordinate.longitude = 25;
-	title = [NSString stringWithFormat:@"A Testing annotation"];
-	[title retain];
-	subtitle = [NSString stringWithFormat:@"selecting detection"];
-	[subtitle retain];
-	return self;
+- (id)initWithCoordinate:(CLLocationCoordinate2D) c {
+    coordinate = c;
+    title = @"Title";
+    subtitle = @"Subtitle";
+    return self;
 }
 
+-(id)initWithCoordinate:(CLLocationCoordinate2D)c withName:(NSString*)name withIndex:(NSInteger)index {
+    self = [super init];
+    if (self) {
+        coordinate = c;
+        title = name;
+        idx = index;
+    }
+    return self;
+}
+
+- (CLLocationCoordinate2D) coordinate {
+    return coordinate;
+}
 - (NSString *)title {
 	return title;
 }

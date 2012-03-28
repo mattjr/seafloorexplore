@@ -171,6 +171,9 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 //    NSLog(@"SQL %@ %@\n",title,filename);
     
     desc=@"Folded into a sub cockpit as cramped as any Apollo capsule, the National Geographic explorer and filmmaker is now investigating a seascape more alien to humans than the moon. Cameron is only the third person to reach this Pacific Ocean valley southwest of Guam (map)—and the only one to do so solo. Hovering in what he's called a vertical torpedo, Cameron is likely collecting data, specimens, and imagery unthinkable in 1960, when the only other explorers to reach Challenger Deep returned after seeing little more than the silt stirred up by their bathyscaphe.";
+    coord.longitude=113.94 + (rand()/RAND_MAX);
+    coord.latitude=-28.81372+(rand()/RAND_MAX);
+    
     title=filenameWithoutExtension;
     
 	// Ignore the format for now
@@ -1059,6 +1062,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 @synthesize previousTerminalAtomValue;
 @synthesize currentVisualizationType;
 @synthesize numberOfStructureBeingDisplayed;
+@synthesize coord;
 
 
 - (void)setIsBeingDisplayed:(BOOL)newValue;

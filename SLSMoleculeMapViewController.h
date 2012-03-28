@@ -38,7 +38,7 @@
 @property(readwrite) NSInteger selectedIndex;
 
 // Initialization and teardown
-- (id)init:(NSInteger)initialSelectedMoleculeIndex;
+- (id)init:(NSInteger)indexOfInitialMolecule withMolecules:(NSMutableArray*) mol_list;
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view;
 
 

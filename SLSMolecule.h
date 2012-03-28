@@ -13,6 +13,7 @@
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
 #import <sqlite3.h>
+#import <MapKit/MapKit.h>
 
 extern NSString *const kSLSMoleculeRenderingStartedNotification;
 extern NSString *const kSLSMoleculeRenderingUpdateNotification;
@@ -48,7 +49,7 @@ typedef struct {
 	unsigned int numberOfStructureBeingDisplayed;
 	unsigned int totalNumberOfFeaturesToRender, currentFeatureBeingRendered;
 	BOOL stillCountingAtomsInFirstStructure;
-
+    CLLocationCoordinate2D coord;
 	// A holder for rendering connecting bonds
 	NSValue *previousTerminalAtomValue;
 	BOOL reverseChainDirection;
@@ -68,6 +69,7 @@ typedef struct {
 
 @property (readonly) float centerOfMassInX, centerOfMassInY, centerOfMassInZ;
 @property (readonly) NSString *filename, *filenameWithoutExtension, *title, *keywords, *journalAuthor, *journalTitle, *journalReference, *sequence, *compound, *source, *author,*desc;
+@property (readonly) CLLocationCoordinate2D coord;
 @property (readwrite, nonatomic) BOOL isBeingDisplayed, isRenderingCancelled;
 @property (readwrite, nonatomic) BOOL hasRendered;
 
