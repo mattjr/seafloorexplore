@@ -20,6 +20,8 @@
 		7B48CB9615226A14008FA151 /* NSArray+PerformSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CB9515226A14008FA151 /* NSArray+PerformSelector.m */; };
 		7B48CBA5152271FA008FA151 /* SLSMoleculeMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBA4152271FA008FA151 /* SLSMoleculeMapViewController.m */; };
 		7B48CBA8152279A1008FA151 /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBA7152279A1008FA151 /* MapAnnotation.m */; };
+		7B48CBB51522C188008FA151 /* Model.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBB21522C188008FA151 /* Model.m */; };
+		7B48CBB61522C188008FA151 /* ParseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBB41522C188008FA151 /* ParseOperation.m */; };
 		7BCBD12C1520B537009DC170 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCBD12B1520B537009DC170 /* MapKit.framework */; };
 		7BCBD12E1520B550009DC170 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCBD12D1520B550009DC170 /* CoreLocation.framework */; };
 		7BE606491398E0480072A1C5 /* pass.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7BE606281398DEA80072A1C5 /* pass.frag */; };
@@ -140,6 +142,10 @@
 		7B48CBA4152271FA008FA151 /* SLSMoleculeMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLSMoleculeMapViewController.m; sourceTree = "<group>"; };
 		7B48CBA6152279A0008FA151 /* MapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotation.h; sourceTree = "<group>"; };
 		7B48CBA7152279A1008FA151 /* MapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotation.m; sourceTree = "<group>"; };
+		7B48CBB11522C187008FA151 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
+		7B48CBB21522C188008FA151 /* Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Model.m; sourceTree = "<group>"; };
+		7B48CBB31522C188008FA151 /* ParseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseOperation.h; sourceTree = "<group>"; };
+		7B48CBB41522C188008FA151 /* ParseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseOperation.m; sourceTree = "<group>"; };
 		7B61FB0213991399006E50B3 /* renderVT.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = renderVT.frag; path = LibVT/renderVT.frag; sourceTree = "<group>"; };
 		7BCBD12B1520B537009DC170 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		7BCBD12D1520B550009DC170 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -592,6 +598,10 @@
 			children = (
 				BC1EF3810E36BD6100B09043 /* SLSMoleculeSearchViewController.h */,
 				BC1EF3820E36BD6100B09043 /* SLSMoleculeSearchViewController.m */,
+				7B48CBB11522C187008FA151 /* Model.h */,
+				7B48CBB21522C188008FA151 /* Model.m */,
+				7B48CBB31522C188008FA151 /* ParseOperation.h */,
+				7B48CBB41522C188008FA151 /* ParseOperation.m */,
 				BCC286CC0E1D905400978ECA /* SLSMoleculeDownloadController.h */,
 				BCC286CD0E1D905400978ECA /* SLSMoleculeDownloadController.m */,
 				BCC8FE7E0EC7E4CA00853857 /* SLSMoleculeDataSourceViewController.h */,
@@ -770,6 +780,8 @@
 				7B48CB9615226A14008FA151 /* NSArray+PerformSelector.m in Sources */,
 				7B48CBA5152271FA008FA151 /* SLSMoleculeMapViewController.m in Sources */,
 				7B48CBA8152279A1008FA151 /* MapAnnotation.m in Sources */,
+				7B48CBB51522C188008FA151 /* Model.m in Sources */,
+				7B48CBB61522C188008FA151 /* ParseOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

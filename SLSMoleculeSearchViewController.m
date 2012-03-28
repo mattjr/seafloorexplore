@@ -14,11 +14,11 @@
 #import "VCTitleCase.h"
 #import "SLSMoleculeAppDelegate.h"
 #import "SLSMoleculeWebDetailViewController.h"
-
+#import "ParseOperation.h"
 #define MAX_SEARCH_RESULT_CODES 10
 
 @implementation SLSMoleculeSearchViewController
-
+@synthesize modelData,parseQueue;
 #pragma mark -
 #pragma mark Initialization and teardown
 
@@ -33,7 +33,10 @@
         urlbasepath = [[NSString alloc] initWithString:@"http://www-personal.acfr.usyd.edu.au/mattjr/benthos/"];
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moleculeFailedDownloading:) name:@"MoleculeFailedDownloading" object:nil];
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(addModels:)
+                                                     name:kAddModelsNotif
+                                                   object:nil];
 
 		/*keywordSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 44.0f)];
 		keywordSearchBar.placeholder = NSLocalizedStringFromTable(@"Search PubChem", @"Localized", nil);
@@ -68,7 +71,8 @@
 		{
 			self.contentSizeForViewInPopover = CGSizeMake(320.0, 700.0);
 		}
-        
+        parseQueue = [NSOperationQueue new];
+
         [self getCurrentModelList];
 		
 	}
@@ -101,7 +105,8 @@
 {
     [downloadController release];
     downloadController = nil;
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kAddModelsNotif object:nil];
+
     [currentXMLElementString release];
     currentXMLElementString = nil;
 
@@ -111,6 +116,11 @@
 	[searchResultIDs release];
 	[downloadedFileContents release];
 	[super dealloc];
+}
+- (void)addModels:(NSNotification *)notif {
+    assert([NSThread isMainThread]);
+    
+    [self addModelsToList:[[notif userInfo] valueForKey:kModelResultsKey]];
 }
 - (BOOL)getCurrentModelList;
 {
@@ -125,7 +135,7 @@
     searchResultIUPACNames = nil;
     
 	NSString *searchURL = nil;
-    searchURL = [[NSString alloc] initWithString:[urlbasepath stringByAppendingString:@"list.txt" ]] ;
+    searchURL = [[NSString alloc] initWithString:[urlbasepath stringByAppendingString:@"list.xml" ]] ;
     
 	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -231,6 +241,16 @@
 }
 - (void)processHTMLResults;
 {
+    ParseOperation *parseOperation = [[ParseOperation alloc] initWithData:downloadedFileContents];
+    [self.parseQueue addOperation:parseOperation];
+    [parseOperation release];   // once added to the NSOperationQueue it's retained, we don't need it anymore
+    
+    // earthquakeData will be retained by the NSOperation until it has finished executing,
+    // so we no longer need a reference to it in the main thread.
+    [downloadedFileContents release];
+	downloadedFileContents = nil;
+
+    
     NSString *titlesAndPDBCodeString = [[NSString alloc] initWithData:downloadedFileContents encoding:NSASCIIStringEncoding];
 	[downloadedFileContents release];
 	downloadedFileContents = nil;
@@ -979,7 +999,12 @@
 {
 
 }
-
+- (void)addModelsToList:(NSArray *)models {
+    
+    // insert the earthquakes into our rootViewController's data source (for KVO purposes)
+   // [self.rootViewController insertEarthquakes:earthquakes];
+    NSLog(@"Gonna insert %d\n",[models count]);
+}
 #pragma mark -
 #pragma mark Accessors
 - (void)moleculeFailedDownloading:(NSNotification *)note;{

@@ -28,7 +28,15 @@
     NSXMLParser *searchResultsParser;
     NSString *urlbasepath;
     BOOL insideIUPACName, insideSynonym;
+    NSMutableData *modelData;
+    
+    NSOperationQueue *parseQueue;
+
+    
 }
+@property (nonatomic, retain) NSMutableData *modelData;    // the data returned from the NSURLConnection
+@property (nonatomic, retain) NSOperationQueue *parseQueue;     // the queue that manages our NSOperation for parsing earthquake data
+
 
 // Performing search
 - (BOOL)performSearchWithKeyword:(NSString *)keyword;
@@ -37,9 +45,9 @@
 - (void)processPubChemKeywordSearch;
 - (void)retrievePubChemCompoundTitles;
 - (void)processHTMLResults;
-
+- (void)addModels:(NSNotification *)notif ;
 - (void)moleculeFailedDownloading:(NSNotification *)note;
-
+- (void)addModelsToList:(NSArray *)models ;
 - (BOOL)grabNextSetOfSearchResults;
 
 @end
