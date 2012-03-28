@@ -11,12 +11,14 @@
 #import "SLSMoleculeAppDelegate.h"
 #import "SLSMoleculeRootViewController.h"
 #import "SLSMoleculeTableViewController.h"
+#import "SLSMoleculeMapViewController.h"
 #import "SLSMoleculeGLViewController.h"
 #import "SLSMoleculeGLView.h"
 #import "MyOpenGLES20Renderer.h"
 #import "SLSMolecule.h"
 #include "Simulation.h"
-
+#import "SegmentsController.h"
+#import "NSArray+PerformSelector.h"
 @implementation SLSMoleculeRootViewController
 
 #pragma mark -
@@ -38,6 +40,11 @@
 - (void)dealloc 
 {
 	[rotationButton release];
+    [segmentedControl release];
+    [segmentsController release];
+
+    segmentedControl   = nil;
+    segmentsController = nil;
 
 	[tableViewController release];
 	[glViewController release];
@@ -56,6 +63,7 @@
 	[backgroundView release];
 	toggleViewDisabled = NO;
 
+    
 	SLSMoleculeGLViewController *viewController = [[SLSMoleculeGLViewController alloc] initWithNibName:nil bundle:nil];
 	self.glViewController = viewController;
 	[viewController release];
@@ -286,6 +294,7 @@
 @synthesize glViewController;
 @synthesize database;
 @synthesize molecules;
+@synthesize segmentsController, segmentedControl;
 
 - (void)setDatabase:(sqlite3 *)newValue
 {
@@ -319,6 +328,8 @@
 	{
 		bufferedMolecule = nil;
 		tableNavigationController = [[UINavigationController alloc] init];
+      
+
 		if ([SLSMoleculeAppDelegate isRunningOniPad])
 		{
 			tableNavigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
@@ -328,6 +339,10 @@
 		if (indexOfInitialMolecule >= [molecules count])
 			indexOfInitialMolecule = 0;
 		tableViewController = [[SLSMoleculeTableViewController alloc] initWithStyle:UITableViewStylePlain initialSelectedMoleculeIndex:indexOfInitialMolecule];
+        
+        mapViewController = [[SLSMoleculeMapViewController alloc] init:indexOfInitialMolecule];
+        mapViewController.title=@"Map View";
+        
 		tableViewController.database = database;
 		tableViewController.molecules = molecules;
 		[tableNavigationController pushViewController:tableViewController animated:NO];
@@ -338,12 +353,51 @@
 		CGRect tableFrame = tableView.frame;
 		tableFrame.origin.y -= 20;
 		tableView.frame = tableFrame;
+        // Need to correct the view rectangle of the navigation view to correct for the status bar gap
+		UIView *mapView = mapViewController.view;
+		mapView.frame = tableFrame;
+
 		toggleViewDisabled = NO;		
+        
+        
+        mapViewController.database = database;
+		mapViewController.molecules = molecules;
+		mapViewController.delegate = self;
+		
+		
+        
+        NSArray * viewControllers = [self segmentViewControllers];
+        
+        segmentsController = [[SegmentsController alloc] initWithNavigationController:tableNavigationController viewControllers:viewControllers];
+        
+        segmentedControl = [[UISegmentedControl alloc] initWithItems:[viewControllers arrayByPerformingSelector:@selector(title)]];
+        segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
+        
+        [self.segmentedControl addTarget:self.segmentsController
+                                  action:@selector(indexDidChangeForSegmentedControl:)
+                        forControlEvents:UIControlEventValueChanged];
+        [self firstUserExperience];
+
 	}
 	
 	return tableNavigationController;
 }
 
+
+#pragma mark -
+#pragma mark Segment Content
+
+- (NSArray *)segmentViewControllers {
+    
+    NSArray * viewControllers = [NSArray arrayWithObjects:tableViewController, mapViewController, nil];
+    
+    return viewControllers;
+}
+
+- (void)firstUserExperience {
+    self.segmentedControl.selectedSegmentIndex = 0;
+    [self.segmentsController indexDidChangeForSegmentedControl:self.segmentedControl];
+}
 
 
 @end

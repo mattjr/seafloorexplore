@@ -11,10 +11,11 @@
 #import <UIKit/UIKit.h>
 #import <sqlite3.h>
 #import "SLSMoleculeCustomDownloadViewController.h"
-
+#import "SegmentsController.h"
 @class SLSMoleculeGLViewController;
 @class SLSMolecule;
 @class SLSMoleculeTableViewController;
+@class SLSMoleculeMapViewController;
 @class Scene;
 @interface SLSMoleculeRootViewController : UIViewController
 {
@@ -22,7 +23,10 @@
 	UIButton *rotationButton;
 	UINavigationController *tableNavigationController;
 	SLSMoleculeTableViewController *tableViewController;
+    SLSMoleculeMapViewController *mapViewController;
 
+    SegmentsController     * segmentsController;
+    UISegmentedControl     * segmentedControl;
 	SLSMolecule *bufferedMolecule, *previousMolecule;
 	NSMutableArray *molecules;
 	
@@ -40,6 +44,8 @@
 @property (nonatomic, retain) NSMutableArray *molecules;
 
 
+@property (nonatomic, retain) SegmentsController     * segmentsController;
+@property (nonatomic, retain) UISegmentedControl     * segmentedControl;
 // Manage the switching of views
 - (void)toggleView:(NSNotification *)note;
 
@@ -49,6 +55,8 @@
 - (void)cancelMoleculeLoading;
 - (void)updateTableListOfMolecules;
 - (void)customURLSelectedForMoleculeDownload:(NSNotification *)note;
+- (NSArray *)segmentViewControllers;
+- (void)firstUserExperience;
 
 // Manage the switching of rotation state
 - (void)toggleRotationButton:(NSNotification *)note;
