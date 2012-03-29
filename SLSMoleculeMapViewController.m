@@ -291,6 +291,80 @@
 }*/
 
 
+- (MKAnnotationView *)mapView:(MKMapView *)theMapView viewForAnnotation:(id <MKAnnotation>)annotation
+{
+    // if it's the user location, just return nil.
+    if ([annotation isKindOfClass:[MKUserLocation class]])
+        return nil;
+    
+            // try to dequeue an existing pin view first
+        static NSString* BridgeAnnotationIdentifier = @"bridgeAnnotationIdentifier";
+        MKPinAnnotationView* pinView = (MKPinAnnotationView *)
+        [mapView dequeueReusableAnnotationViewWithIdentifier:BridgeAnnotationIdentifier];
+        if (!pinView)
+        {
+            // if an existing pin view was not available, create one
+            MKPinAnnotationView* customPinView = [[[MKPinAnnotationView alloc]
+                                                   initWithAnnotation:annotation reuseIdentifier:BridgeAnnotationIdentifier] autorelease];
+            customPinView.pinColor = MKPinAnnotationColorGreen;
+            customPinView.animatesDrop = NO;
+            customPinView.canShowCallout = YES;
+            
+            // add a detail disclosure button to the callout which will open a new view controller page
+            //
+            // note: you can assign a specific call out accessory view, or as MKMapViewDelegate you can implement:
+            //  - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control;
+            //
+            UIButton* rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+            [rightButton addTarget:self
+                            action:@selector(showDetails:)
+                  forControlEvents:UIControlEventTouchUpInside];
+            customPinView.rightCalloutAccessoryView = rightButton;
+            
+            return customPinView;
+        }
+        else
+        {
+            pinView.annotation = annotation;
+        }
+        return pinView;
+    
+      
+}
+
+- (void)showDetails:(id)sender
+{
+    
+    if (mapView.selectedAnnotations.count == 0)
+    {
+        //no annotation is currently selected
+        return;
+    }
+    
+    id<MKAnnotation> selectedAnn = [mapView.selectedAnnotations objectAtIndex:0];
+    NSInteger idx=0;
+    if ([selectedAnn isKindOfClass:[MapAnnotation class]])
+    {
+        MapAnnotation *ma = (MapAnnotation *)selectedAnn;
+        idx=ma.idx;
+    }
+    else
+    {        NSLog(@"selected annotation (not a Map Annontation) = %@", selectedAnn);
+
+        return;
+    }
+
+    // Display detail view for the protein
+    SLSMoleculeDetailViewController *detailViewController = [[SLSMoleculeDetailViewController alloc] initWithStyle:UITableViewStyleGrouped andMolecule: [molecules objectAtIndex:idx]];
+    
+    [self.navigationController pushViewController:detailViewController animated:YES];
+    [detailViewController release];
+
+    // the detail view does not want a toolbar so hide it
+///    [self.navigationController setToolbarHidden:YES animated:NO];
+    
+   
+}
 
 - (void)didReceiveMemoryWarning
 {

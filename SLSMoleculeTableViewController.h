@@ -39,7 +39,6 @@
 // Table customization
 + (CAGradientLayer *)glowGradientForSize:(CGSize)gradientSize;
 + (CAGradientLayer *)shadowGradientForSize:(CGSize)gradientSize;
-
 - (IBAction)displayMoleculeDownloadView;
 - (IBAction)switchBackToGLView;
 

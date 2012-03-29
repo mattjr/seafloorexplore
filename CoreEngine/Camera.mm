@@ -38,7 +38,13 @@ extern vtData vt;
 
 	return self;
 }
-
+-(void)dealloc{
+    [self removeObserver:self forKeyPath:@"fov"];
+    [self removeObserver:self forKeyPath:@"nearPlane"];
+    [self removeObserver:self forKeyPath:@"farPlane" ];
+    
+    [super dealloc];
+}
 - (void)reshapeNode:(NSArray *)size
 {
 	globalInfo.width = [[size objectAtIndex:0] intValue];

@@ -53,10 +53,15 @@
     CGFloat magnitude;
     // Name of the location of the ModelMeta.
     NSString *location;
+    NSString *title;
+    NSString *desc;
+    NSString *filename;
+    NSString *folder;
+
     // Date and time at which the ModelMeta occurred.
     NSDate *date;
     // Holds the URL to the USGS web page of the ModelMeta. The application uses this URL to open that page in Safari.
-    NSURL *USGSWebLink;
+    NSURL *weblink;
     // Latitude and longitude of the ModelMeta. These properties are not displayed by the application, but are used to  
     // create a URL for opening the Maps application. They could alternatively be used in conjuction with MapKit 
     // to be shown in a map view.
@@ -68,8 +73,12 @@
 @property (nonatomic, assign) CGFloat magnitude;
 @property (nonatomic, retain) NSString *location;
 @property (nonatomic, retain) NSDate *date;
-@property (nonatomic, retain) NSURL *USGSWebLink;
+@property (nonatomic, retain) NSURL *weblink;
 @property (nonatomic, assign) double latitude;
 @property (nonatomic, assign) double longitude;
+@property (nonatomic, assign) NSString *title;
+@property (nonatomic, assign) NSString *desc;
+@property (nonatomic, assign) NSString *filename;
+@property (nonatomic, assign) NSString *folder;
 
 @end

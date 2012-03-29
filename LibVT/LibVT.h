@@ -32,7 +32,7 @@
  * @param[in] _pageDimension	This is the width/height of a single page in pixels, Values: 64, 128, 256 or 512
 */
 //void		vtInit(const char *_tileDir, const char *_pageExtension, const uint8_t _pageBorder, const uint8_t _mipChainLength, const uint16_t _pageDimension);
-void vtInit(const char *_tileDir, const char *_pageExtension, const uint8_t _pageBorder, const uint8_t _mipChainLength, const uint16_t _pageDimension,const unsigned int phys_tex_size);
+bool vtInit(const char *_tileDir, const char *_pageExtension, const uint8_t _pageBorder, const uint8_t _mipChainLength, const uint16_t _pageDimension,const unsigned int phys_tex_size);
 /*!
  * @fn vtPrepare(const GLuint readbackShader, const GLuint renderVTShader)
  * @brief Prepares the OpenGL resources used by LibVT. It must be called after vtInit() and previous to all other functions.

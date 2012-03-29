@@ -52,14 +52,15 @@
 @synthesize magnitude;
 @synthesize location;
 @synthesize date;
-@synthesize USGSWebLink;
+@synthesize weblink;
 @synthesize latitude;
-@synthesize longitude;
+@synthesize longitude,title,desc,filename,folder;
+
 
 - (void)dealloc {
     [location release];
     [date release];
-    [USGSWebLink release];
+    [weblink release];
     [super dealloc];
 }
 

@@ -35,13 +35,13 @@ float positions[60 * 60][6];
 
 
 @implementation Simulation
-- (id)initWithString:(NSString *)name
+- (id)initWithString:(NSString *)name withScene:(Scene *)newscene;
 {
     self = [super init];
     if (self)
     {
 
-
+        scene=newscene;
 		//GLuint bla = LoadTexture(@"/Users/julian/Documents/Development/VirtualTexturing/_texdata_sources/texture_8k.png", GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_TRUE, 2.0);
 
 		//globalSettings.disableTextureCompression = YES;
@@ -54,7 +54,7 @@ float positions[60 * 60][6];
 //		[light setLightAmbient:vector4f(0.7, 0.7, 0.7, 1.0)];
 //		[[scene lights] addObject:light];
 #endif
-
+        vtnode=nil;
 		[[scene camera] setAxisConfiguration:AXIS_CONFIGURATION(kXAxis, kYAxis, kZAxis)];
 		[[scene camera] setFarPlane:20000];
 		[[scene camera] setNearPlane:0.5];
@@ -64,6 +64,7 @@ float positions[60 * 60][6];
         NSString *dataName = [NSString stringWithFormat:@"%@/%@.vtex",name,filename] ;
         //NSLog(@"%@\n",dataName);
 		mesh = [[CollideableMesh alloc] initWithOctreeNamed:[NSString stringWithFormat:@"%@/%@", name,filename]];
+        mesh.scene =scene;
         if(mesh == nil)
             return nil;
 		char ext [5] = "    ";
@@ -83,6 +84,11 @@ float positions[60 * 60][6];
 			{
 
 				vtnode = [[VirtualTexturingNode alloc] initWithTileStore:dataName format:[NSString stringWithUTF8String:ext] border:border miplength:length tilesize:dim];
+
+                if(vtnode == nil)
+                    return nil;
+                vtnode.scene =scene;
+
 			}
 			else
 			{
@@ -107,9 +113,11 @@ float positions[60 * 60][6];
         [[vtnode children] addObject:b];
         }
         */
+      //  NSLog(@"%x\n",(int)scene);
 		[[vtnode children] addObject:[mesh autorelease]];
 		[vtnode setZRange: [mesh zbound]];
 		[[scene objects] addObject:[vtnode autorelease]];
+       // NSLog(@"blah %x %d\n",(int)[scene objects],[[scene objects] count]);
 
 //		[[scene objects] addObject:mesh];
 //		glActiveTexture(GL_TEXTURE0 + 5);
@@ -193,13 +201,16 @@ float positions[60 * 60][6];
 
 - (void)dealloc
 {
+    printf("Sim dealloc\n");
    // [vtnode release];
+    if(vtnode!= nil)
     [[scene objects] removeObject:vtnode];
 	[super dealloc];
 }
 - (void)clearObjs
 {
-    [[scene objects] removeObject:vtnode];
+    if(vtnode!= nil)
+        [[scene objects] removeObject:vtnode];
 
     
 }

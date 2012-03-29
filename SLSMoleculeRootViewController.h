@@ -31,7 +31,6 @@
 	NSMutableArray *molecules;
 	
 	BOOL toggleViewDisabled;
-	Scene *scene;
 	sqlite3 *database;
 
 

@@ -20,20 +20,32 @@ NSMutableArray *pressedKeys;
 
 Info globalInfo;
 Settings globalSettings;
-Scene *scene = nil;
+//Scene *scene = nil;
 
 @implementation Scene
 
 @synthesize camera, lights, objects, simulator;
 
-+ sharedScene
+/*+ sharedScene
 {
 	if (scene == nil)
 		scene = [[self alloc] init];
 
 	return scene;
 }
+*/
+- (void)dealloc 
+{    
+    //NSLog(@"Here dealloc  scene\n");
+    
+   	[objects release];
+    [lights release];
+    [camera release];
 
+	[super dealloc];
+    
+
+}
 - (id)init
 {
 	if ((self = [super init]))

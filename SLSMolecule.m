@@ -15,11 +15,14 @@
 
 #import "SLSOpenGLESRenderer.h"
 #import "SLSOpenGLES20Renderer.h"
-
+#import "Model.h"
 NSString *const kSLSMoleculeRenderingStartedNotification = @"MoleculeRenderingStarted";
 NSString *const kSLSMoleculeRenderingUpdateNotification = @"MoleculeRenderingUpdate";
 NSString *const kSLSMoleculeRenderingEndedNotification = @"MoleculeRenderingEnded";
 
+NSString *const kSLSMoleculeLoadingStartedNotification = @"FileLoadingStarted" ;
+NSString *const kSLSMoleculeLoadingUpdateNotification = @"FileLoadingUpdate";
+NSString *const kSLSMoleculeLoadingEndedNotification = @"FileLoadingEnded";
 #define BOND_LENGTH_LIMIT 3.0f
 
 static sqlite3_stmt *insertMoleculeSQLStatement = nil;
@@ -79,6 +82,35 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
     hasRendered=NO;
 	stillCountingAtomsInFirstStructure = YES;
 	return self;
+}
+- (id)initWithModel:(Model *)newModel;
+{
+    if (![self init])
+		return nil;
+    
+	
+	
+	filename = [[newModel filename] retain];
+	
+	NSRange rangeUntilFirstPeriod = [filename rangeOfString:@"."];
+	if (rangeUntilFirstPeriod.location == NSNotFound)
+		filenameWithoutExtension = [[newModel filename] retain];
+	else
+		filenameWithoutExtension = [[filename substringToIndex:rangeUntilFirstPeriod.location] retain];
+	
+	//compound = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
+    //    NSLog(@"SQL %@ %@\n",title,filename);
+    
+    desc=[[newModel desc] retain];
+    coord.longitude=newModel.longitude;
+    coord.latitude=newModel.latitude;
+
+    
+    title=[[newModel title] retain];
+  
+    
+	return self;
+
 }
 
 - (id)initWithFilename:(NSString *)newFilename database:(sqlite3 *)newDatabase title:(NSString *)newTitle;
@@ -257,187 +289,6 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	else
 	{
 		return NO;
-	}
-}
-
-#pragma mark -
-#pragma mark Molecule 3-D geometry generation
-+ (void)setBondColor:(GLubyte *)bondColor forResidueType:(SLSResidueType)residueType;
-{
-	// Bonds are grey by default
-	bondColor[0] = 150;
-	bondColor[1] = 150;
-	bondColor[2] = 150;
-	bondColor[3] = 255;
-
-	switch (residueType)
-	{
-		case ADENINE:
-		case DEOXYADENINE:
-		{
-			bondColor[0] = 160;
-			bondColor[1] = 160;
-			bondColor[2] = 255;
-		}; break;
-		case CYTOSINE:
-		case DEOXYCYTOSINE:
-		{
-			bondColor[0] = 255;
-			bondColor[1] = 140;
-			bondColor[2] = 75;
-		}; break;
-		case GUANINE:
-		case DEOXYGUANINE:
-		{
-			bondColor[0] = 255;
-			bondColor[1] = 112;
-			bondColor[2] = 112;
-		}; break;
-		case URACIL:
-		{
-			bondColor[0] = 255;
-			bondColor[1] = 128;
-			bondColor[2] = 128;
-		}; break;
-		case DEOXYTHYMINE:
-		{
-			bondColor[0] = 160;
-			bondColor[1] = 255;
-			bondColor[2] = 160;
-		}; break;
-		case GLYCINE:
-		{
-			bondColor[0] = 235;
-			bondColor[1] = 235;
-			bondColor[2] = 235;
-		}; break;
-		case ALANINE:
-		{
-			bondColor[0] = 200;
-			bondColor[1] = 200;
-			bondColor[2] = 200;
-		}; break;
-		case VALINE:
-		{
-			bondColor[0] = 15;
-			bondColor[1] = 130;
-			bondColor[2] = 15;
-		}; break;
-		case LEUCINE:
-		{
-			bondColor[0] = 15;
-			bondColor[1] = 130;
-			bondColor[2] = 15;
-		}; break;
-		case ISOLEUCINE:
-		{
-			bondColor[0] = 15;
-			bondColor[1] = 130;
-			bondColor[2] = 15;
-		}; break;
-		case SERINE:
-		{
-			bondColor[0] = 250;
-			bondColor[1] = 150;
-			bondColor[2] = 0;
-		}; break;
-		case CYSTEINE:
-		{
-			bondColor[0] = 230;
-			bondColor[1] = 230;
-			bondColor[2] = 0;
-		}; break;
-		case THREONINE:
-		{
-			bondColor[0] = 250;
-			bondColor[1] = 150;
-			bondColor[2] = 0;
-		}; break;
-		case METHIONINE:
-		{
-			bondColor[0] = 230;
-			bondColor[1] = 230;
-			bondColor[2] = 0;
-		}; break;
-		case PROLINE:
-		{
-			bondColor[0] = 220;
-			bondColor[1] = 150;
-			bondColor[2] = 130;
-		}; break;
-		case PHENYLALANINE:
-		{
-			bondColor[0] = 50;
-			bondColor[1] = 50;
-			bondColor[2] = 170;
-		}; break;
-		case TYROSINE:
-		{
-			bondColor[0] = 50;
-			bondColor[1] = 50;
-			bondColor[2] = 170;
-		}; break;
-		case TRYPTOPHAN:
-		{
-			bondColor[0] = 180;
-			bondColor[1] = 90;
-			bondColor[2] = 180;
-		}; break;
-		case HISTIDINE:
-		{
-			bondColor[0] = 130;
-			bondColor[1] = 130;
-			bondColor[2] = 210;
-		}; break;
-		case LYSINE:
-		{
-			bondColor[0] = 20;
-			bondColor[1] = 90;
-			bondColor[2] = 255;
-		}; break;
-		case ARGININE:
-		{
-			bondColor[0] = 20;
-			bondColor[1] = 90;
-			bondColor[2] = 255;
-		}; break;
-		case ASPARTICACID:
-		{
-			bondColor[0] = 230;
-			bondColor[1] = 10;
-			bondColor[2] = 10;
-		}; break;
-		case GLUTAMICACID:
-		{
-			bondColor[0] = 230;
-			bondColor[1] = 10;
-			bondColor[2] = 10;
-		}; break;
-		case ASPARAGINE:
-		{
-			bondColor[0] = 0;
-			bondColor[1] = 220;
-			bondColor[2] = 220;
-		}; break;
-		case GLUTAMINE:
-		{
-			bondColor[0] = 0;
-			bondColor[1] = 220;
-			bondColor[2] = 220;
-		}; break;
-		case WATER:
-		{
-			bondColor[0] = 0;
-			bondColor[1] = 0;
-			bondColor[2] = 255;
-		}; break;
-		case UNKNOWNRESIDUE:
-        default:
-		{
-			bondColor[0] = 255;
-			bondColor[1] = 255;
-			bondColor[2] = 255;
-		}; break;
 	}
 }
 
@@ -982,74 +833,6 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	// Because we want to reuse the statement, we "reset" it instead of "finalizing" it.
     sqlite3_reset(retrieveAtomSQLStatement);
 }
-
-- (void)readAndRenderBonds:(SLSOpenGLESRenderer *)openGLESRenderer;
-{
-	if (isRenderingCancelled)
-    {
-		return;
-    }
-	
-	if (retrieveBondSQLStatement == nil) 
-	{
-		const char *sql = "SELECT * FROM bonds WHERE molecule=? AND structure=?";
-		if (sqlite3_prepare_v2(database, sql, -1, &retrieveBondSQLStatement, NULL) != SQLITE_OK) 
-		{
-            NSAssert1(0, NSLocalizedStringFromTable(@"Error: failed to prepare statement with message '%s'.", @"Localized", nil), sqlite3_errmsg(database));
-        }
-	}
-	
-	// Bind the query variables.
-	sqlite3_bind_int(retrieveBondSQLStatement, 1, databaseKey);
-	sqlite3_bind_int(retrieveBondSQLStatement, 2, numberOfStructureBeingDisplayed);
-    
-	while ((sqlite3_step(retrieveBondSQLStatement) == SQLITE_ROW) && !isRenderingCancelled)
-	{
-		//(id ,molecule ,residue ,structure ,bond_type ,start_x ,start_y ,start_z ,end_x ,end_y ,end_z )
-		
-		// TODO: Determine if rendering a particular structure, if not don't render atom 
-		if ( (currentFeatureBeingRendered % 100) == 0)
-			[self performSelectorOnMainThread:@selector(updateStatusIndicator) withObject:nil waitUntilDone:NO];
-		currentFeatureBeingRendered++;		
-		
-		SLSBondType bondType = sqlite3_column_int(retrieveBondSQLStatement, 4);
-		SLS3DPoint startingCoordinate, endingCoordinate;
-		startingCoordinate.x = sqlite3_column_double(retrieveBondSQLStatement, 5);
-		startingCoordinate.x -= centerOfMassInX;
-		startingCoordinate.x *= scaleAdjustmentForX;
-		startingCoordinate.y = sqlite3_column_double(retrieveBondSQLStatement, 6);
-		startingCoordinate.y -= centerOfMassInY;
-		startingCoordinate.y *= scaleAdjustmentForX;
-		startingCoordinate.z = sqlite3_column_double(retrieveBondSQLStatement, 7);
-		startingCoordinate.z -= centerOfMassInZ;
-		startingCoordinate.z *= scaleAdjustmentForX;
-		endingCoordinate.x = sqlite3_column_double(retrieveBondSQLStatement, 8);
-		endingCoordinate.x -= centerOfMassInX;
-		endingCoordinate.x *= scaleAdjustmentForX;
-		endingCoordinate.y = sqlite3_column_double(retrieveBondSQLStatement, 9);
-		endingCoordinate.y -= centerOfMassInY;
-		endingCoordinate.y *= scaleAdjustmentForX;
-		endingCoordinate.z = sqlite3_column_double(retrieveBondSQLStatement, 10);
-		endingCoordinate.z -= centerOfMassInZ;
-		endingCoordinate.z *= scaleAdjustmentForX;
-		SLSResidueType residueType = sqlite3_column_int(retrieveBondSQLStatement, 2);		
-		GLubyte bondColor[4] = {200,200,200,255};  // Bonds are grey by default
-        
-		if (currentVisualizationType == CYLINDRICAL)
-        {
-			[SLSMolecule setBondColor:bondColor forResidueType:residueType];
-        }
-        
-		if (residueType != WATER)
-        {
-			[openGLESRenderer addBondToVertexBuffersWithStartPoint:startingCoordinate endPoint:endingCoordinate bondColor:bondColor bondType:bondType];
-        }
-	}
-	
-	// Because we want to reuse the statement, we "reset" it instead of "finalizing" it.
-    sqlite3_reset(retrieveBondSQLStatement);
-}
-
 
 #pragma mark -
 #pragma mark Accessors

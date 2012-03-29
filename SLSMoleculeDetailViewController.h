@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
-
+#import "Model.h"
 @class SLSMolecule;
 
 @interface SLSMoleculeDetailViewController : UITableViewController <MKAnnotation> 
@@ -25,6 +25,7 @@
 
 @property (nonatomic, retain) SLSMolecule *molecule;
 - (id)initWithStyle:(UITableViewStyle)style andMolecule:(SLSMolecule *)newMolecule;
+- (id)initWithStyle:(UITableViewStyle)style andModel:(Model *)newModel;
 
 - (UILabel *)createLabelForIndexPath:(NSIndexPath *)indexPath;
 - (NSString *)textForIndexPath:(NSIndexPath *)indexPath;

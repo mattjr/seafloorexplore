@@ -153,9 +153,12 @@ static const const NSUInteger kMaximumNumberOfModelsToParse = 50;
 static NSUInteger const kSizeOfModelBatch = 10;
 
 // Reduce potential parsing errors by using string constants declared in a single place.
-static NSString * const kEntryElementName = @"entry";
+static NSString * const kItemElementName = @"item";
 static NSString * const kLinkElementName = @"link";
+static NSString * const kFilenameElementName = @"filename";
+static NSString * const kFolderElementName = @"folder";
 static NSString * const kTitleElementName = @"title";
+static NSString * const kDescElementName = @"description";
 static NSString * const kUpdatedElementName = @"updated";
 static NSString * const kGeoRSSPointElementName = @"georss:point";
 
@@ -177,19 +180,22 @@ static NSString * const kGeoRSSPointElementName = @"georss:point";
         didAbortParsing = YES;
         [parser abortParsing];
     }
-    if ([elementName isEqualToString:kEntryElementName]) {
+    if ([elementName isEqualToString:kItemElementName]) {
         Model *model = [[Model alloc] init];
         self.currentModelObject = model;
         [model release];
     } else if ([elementName isEqualToString:kLinkElementName]) {
         NSString *relAttribute = [attributeDict valueForKey:@"rel"];
         if ([relAttribute isEqualToString:@"alternate"]) {
-            NSString *USGSWebLink = [attributeDict valueForKey:@"href"];
-            self.currentModelObject.USGSWebLink = [NSURL URLWithString:USGSWebLink];
+            NSString *weblink = [attributeDict valueForKey:@"href"];
+            self.currentModelObject.weblink = [NSURL URLWithString:weblink];
         }
     } else if ([elementName isEqualToString:kTitleElementName] ||
                [elementName isEqualToString:kUpdatedElementName] ||
-               [elementName isEqualToString:kGeoRSSPointElementName]) {
+               [elementName isEqualToString:kGeoRSSPointElementName]||
+               [elementName isEqualToString:kDescElementName]||
+               [elementName isEqualToString:kFolderElementName] ||
+               [elementName isEqualToString:kFilenameElementName]) {
         // For the 'title', 'updated', or 'georss:point' element begin accumulating parsed character data.
         // The contents are collected in parser:foundCharacters:.
         accumulatingParsedCharacterData = YES;
@@ -201,7 +207,7 @@ static NSString * const kGeoRSSPointElementName = @"georss:point";
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
                                       namespaceURI:(NSString *)namespaceURI
                                      qualifiedName:(NSString *)qName {     
-    if ([elementName isEqualToString:kEntryElementName]) {
+    if ([elementName isEqualToString:kItemElementName]) {
         [self.currentParseBatch addObject:self.currentModelObject];
         parsedModelsCounter++;
         if ([self.currentParseBatch count] >= kMaximumNumberOfModelsToParse) {
@@ -216,22 +222,45 @@ static NSString * const kGeoRSSPointElementName = @"georss:point";
         // Extract the magnitude and the location using a scanner:
         NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
         // Scan past the "M " before the magnitude.
-        if ([scanner scanString:@"M " intoString:NULL]) {
-            CGFloat magnitude;
-            if ([scanner scanFloat:&magnitude]) {
-                self.currentModelObject.magnitude = magnitude;
-                // Scan past the ", " before the title.
-                if ([scanner scanString:@", " intoString:NULL]) {
-                    NSString *location = nil;
-                    // Scan the remainer of the string.
-                    if ([scanner scanUpToCharactersFromSet:
-                         [NSCharacterSet illegalCharacterSet] intoString:&location]) {
-                        self.currentModelObject.location = location;
-                    }
-                }
-            }
+        NSString *title = nil;
+        // Scan the remainer of the string.
+        if ([scanner scanUpToCharactersFromSet:[NSCharacterSet illegalCharacterSet] intoString:&title]) {
+            self.currentModelObject.title = [title retain];
         }
-    } else if ([elementName isEqualToString:kUpdatedElementName]) {
+    }  else if ([elementName isEqualToString:kDescElementName]) {
+        // The title element contains the magnitude and location in the following format:
+        // <title>M 3.6, Virgin Islands region<title/>
+        // Extract the magnitude and the location using a scanner:
+        NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
+        // Scan past the "M " before the magnitude.
+        NSString *desc = nil;
+        // Scan the remainer of the string.
+        if ([scanner scanUpToCharactersFromSet:[NSCharacterSet illegalCharacterSet] intoString:&desc]) {
+            self.currentModelObject.desc = [desc retain];
+        }
+    }else if ([elementName isEqualToString:kFolderElementName]) {
+        // The title element contains the magnitude and location in the following format:
+        // <title>M 3.6, Virgin Islands region<title/>
+        // Extract the magnitude and the location using a scanner:
+        NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
+        // Scan past the "M " before the magnitude.
+        NSString *folder = nil;
+        // Scan the remainer of the string.
+        if ([scanner scanUpToCharactersFromSet:[NSCharacterSet illegalCharacterSet] intoString:&folder]) {
+            self.currentModelObject.folder = [folder retain];
+        }
+    }else if ([elementName isEqualToString:kFilenameElementName]) {
+        // The title element contains the magnitude and location in the following format:
+        // <title>M 3.6, Virgin Islands region<title/>
+        // Extract the magnitude and the location using a scanner:
+        NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
+        // Scan past the "M " before the magnitude.
+        NSString *filename = nil;
+        // Scan the remainer of the string.
+        if ([scanner scanUpToCharactersFromSet:[NSCharacterSet illegalCharacterSet] intoString:&filename]) {
+            self.currentModelObject.filename = [filename retain];
+        }
+    }else if ([elementName isEqualToString:kUpdatedElementName]) {
         if (self.currentModelObject != nil) {
             self.currentModelObject.date =
             [dateFormatter dateFromString:self.currentParsedCharacterData];

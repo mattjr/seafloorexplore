@@ -18,7 +18,7 @@ You should have received a copy of the GNU Lesser General Public License along w
 
 @implementation SceneNode
 
-@synthesize position, rotation, relativeModeTarget, relativeModeAxisConfiguration, axisConfiguration, children, enabled;
+@synthesize position, rotation, relativeModeTarget, relativeModeAxisConfiguration, axisConfiguration, children, enabled,scene;
 
 - (id)init
 {

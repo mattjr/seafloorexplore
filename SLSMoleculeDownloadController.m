@@ -13,7 +13,7 @@
 
 @implementation SLSMoleculeDownloadController
 @synthesize progressView,downloadStatusText,cancelDownloadButton,spinningIndicator;
-- (id)initWithID:(NSString *)pdbCode title:(NSString *)title searchType:(SLSSearchType)newSearchType;
+- (id)initWithModel:(Model *)model
 {
 	if ((self = [super init])) 
 	{
@@ -21,10 +21,8 @@
 		downloadedFileContents = nil;
 		downloadCancelled = NO;
         
-        searchType = newSearchType;
 		
-		codeForCurrentlyDownloadingMolecule = [pdbCode copy];
-		titleForCurrentlyDownloadingMolecule = [title copy];		
+		downloadingmodel = [model  copy];
         progressView = [[[UIProgressView alloc] initWithFrame:CGRectZero] retain];
         downloadStatusText = [[[UILabel alloc] initWithFrame:CGRectZero] retain ];
         downloadStatusText.textColor = [UIColor blackColor];
@@ -50,8 +48,7 @@
 - (void)dealloc;
 {
 	[self cancelDownload];
-	[codeForCurrentlyDownloadingMolecule release];
-	[titleForCurrentlyDownloadingMolecule release];
+	[downloadingmodel release];
     [progressView release];
     [spinningIndicator release];
     [downloadStatusText release];
@@ -132,7 +129,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     }*/
     cancelDownloadButton.hidden = NO;
 
-    NSString *filename = [[codeForCurrentlyDownloadingMolecule lastPathComponent] stringByDeletingPathExtension];	
+    NSString *filename = [[[downloadingmodel filename] lastPathComponent] stringByDeletingPathExtension];	
     NSString *octreepath=[NSString stringWithFormat: @"%@/%@.octree",filename,filename];
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:octreepath]])
 	{
@@ -174,20 +171,9 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 	downloadStatusText.hidden = NO;
 	downloadStatusText.text = NSLocalizedStringFromTable(@"Connecting...", @"Localized", nil);
     progressView.progress = 0.0f;
-//	NSString *locationOfRemotePDBFile = [NSString stringWithFormat:@"http://www.sunsetlakesoftware.com/sites/default/files/%@.pdb.gz", pdbCode];
-	NSString *locationOfRemoteFile  = codeForCurrentlyDownloadingMolecule;
-    //NSLog(@"%@ getting\n",locationOfRemoteFile);
-   /* if (searchType == PROTEINDATABANKSEARCH)
-    {
-        locationOfRemoteFile = [NSString stringWithFormat:@"http://www.rcsb.org/pdb/files/%@.pdb.gz", codeForCurrentlyDownloadingMolecule];
-    }
-    else
-    {
-        locationOfRemoteFile = [NSString stringWithFormat:@"http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=%@&disopt=3DSaveSDF", codeForCurrentlyDownloadingMolecule];
-    }*/
 
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-	NSURLRequest *theRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:locationOfRemoteFile]
+	NSURLRequest *theRequest=[NSURLRequest requestWithURL:[downloadingmodel weblink]
 											  cachePolicy:NSURLRequestUseProtocolCachePolicy
 										  timeoutInterval:60.0];
 	downloadConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
@@ -287,7 +273,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
         }
         else
         {*/
-            errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTable(@"No file for the compound with the code %@ exists", @"Localized", nil), codeForCurrentlyDownloadingMolecule];
+            errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTable(@"No file %@ exists", @"Localized", nil), [downloadingmodel filename]];
         //}
 
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not find file", @"Localized", nil) message:errorMessage
@@ -328,7 +314,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
         fileExtension = @"sdf";        
     }
 */
-	NSString *filename = [codeForCurrentlyDownloadingMolecule lastPathComponent];	
+	NSString *filename = [downloadingmodel filename];
 	NSError *error = nil;
 	if (![downloadedFileContents writeToFile:[documentsDirectory stringByAppendingPathComponent:filename] options:NSAtomicWrite error:&error])
 	{
@@ -371,7 +357,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 	[self downloadCompleted];	
 }
 -(void) sendDownloadFinishedMsg:(NSString*)filename {
-       [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:filename userInfo:[NSDictionary dictionaryWithObject:titleForCurrentlyDownloadingMolecule forKey:@"title"]];  
+       [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:filename userInfo:[NSDictionary dictionaryWithObject:[downloadingmodel filename] forKey:@"title"]];  
 }
 #pragma mark -
 #pragma mark Accessors

@@ -41,6 +41,7 @@
 - (id)init:(NSInteger)indexOfInitialMolecule withMolecules:(NSMutableArray*) mol_list;
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view;
 
+- (void)showDetails:(id)sender;
 
 - (IBAction)displayMoleculeDownloadView;
 - (IBAction)switchBackToGLView;

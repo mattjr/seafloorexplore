@@ -22,7 +22,7 @@ vtData vt;
 vtConfig c;
 
 
-void vtInit(const char *_tileDir, const char *_pageExtension, const uint8_t _pageBorder, const uint8_t _mipChainLength, const uint16_t _pageDimension,const unsigned int phys_tex_size)
+bool vtInit(const char *_tileDir, const char *_pageExtension, const uint8_t _pageBorder, const uint8_t _mipChainLength, const uint16_t _pageDimension,const unsigned int phys_tex_size)
 {
 	if (c.tileDir != "") vt_fatal("Error: calling vtInit() twice ain't good!\n");
 
@@ -30,9 +30,11 @@ void vtInit(const char *_tileDir, const char *_pageExtension, const uint8_t _pag
 	assert((VT_MIN_FILTER == GL_NEAREST) || (VT_MIN_FILTER == GL_LINEAR) || (VT_MIN_FILTER == GL_NEAREST_MIPMAP_NEAREST) || (VT_MIN_FILTER == GL_LINEAR_MIPMAP_NEAREST) || (VT_MIN_FILTER == GL_NEAREST_MIPMAP_LINEAR) || (VT_MIN_FILTER == GL_LINEAR_MIPMAP_LINEAR));
 	assert(TEXUNIT_FOR_PHYSTEX !=  TEXUNIT_FOR_PAGETABLE);
 	#if LONG_MIP_CHAIN
-		assert((_mipChainLength >= 10) && (_mipChainLength <= 11));
+		if (!((_mipChainLength >= 10) && (_mipChainLength <= 11)))
+            return false;
 	#else
-		assert((_mipChainLength >= 2) && (_mipChainLength <= 9));
+		if(!((_mipChainLength >= 2) && (_mipChainLength <= 9)))
+            return false;
 	#endif
 	assert((_pageDimension == 64) || (_pageDimension == 128) || (_pageDimension == 256) || (_pageDimension == 512));
 	assert((PREPASS_RESOLUTION_REDUCTION_SHIFT >= 0) && (PREPASS_RESOLUTION_REDUCTION_SHIFT <= 4));
@@ -187,6 +189,7 @@ void vtInit(const char *_tileDir, const char *_pageExtension, const uint8_t _pag
 	assert(c.physTexDimensionPages <= MAX_PHYS_TEX_DIMENSION_PAGES);
 	assert(!((MIPPED_PHYSTEX == 1) && ((USE_PBO_PHYSTEX == 1) || (c.pageDXTCompression)))); // TODO: support these combinations
     vt.memValid=true;
+    return true;
 }
 
 bool vtScan(const char *_tileDir, char * _pageExtension, uint8_t *_pageBorder, uint8_t *_mipChainLength, uint32_t *_pageDimension)

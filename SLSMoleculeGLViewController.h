@@ -15,7 +15,7 @@
 @class SLSMolecule;
 @class SLSOpenGLESRenderer;
 @class Scene;
-
+@class Simulation;
 @interface SLSMoleculeGLViewController : UIViewController <UIActionSheetDelegate>
 {	
 	// User interface elements
@@ -25,7 +25,7 @@
 	UIActionSheet *visualizationActionSheet;
 
     SLSOpenGLESRenderer *openGLESRenderer;
-    
+    Simulation *sim;
 	SLSMolecule *moleculeToDisplay;
 	BOOL isAutorotating;
 	CADisplayLink *displayLink;
@@ -38,7 +38,6 @@
 	float instantObjectScale, instantXRotation, instantYRotation, instantXTranslation, instantYTranslation, instantZTranslation;
 	CGPoint lastMovementPosition, previousDirectionOfPanning;
 	BOOL twoFingersAreMoving, pinchGestureUnderway;
-	Scene *scene;
 	float zoomVal;
 
 }

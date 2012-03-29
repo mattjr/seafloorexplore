@@ -25,7 +25,7 @@
 #pragma mark Initialiation and breakdown
 
 - (id)init; 
-{	scene =nil;
+{	
 
     if ((self = [super init])) 
 	{
@@ -186,7 +186,7 @@
 	}
 	else
 	{
-        if(bufferedMolecule != nil)
+      //  if(bufferedMolecule != nil)
             [glViewController stopRender];
              
         SLSMolecule *tmp=[molecules objectAtIndex:newMoleculeIndex];

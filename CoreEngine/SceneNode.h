@@ -12,7 +12,7 @@ This library is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU Lesser General Public License along with this library; if not, see <http://www.gnu.org/licenses/> or write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
-
+@class Scene;
 @interface SceneNode : NSObject
 {
 	BOOL					enabled;
@@ -20,7 +20,10 @@ You should have received a copy of the GNU Lesser General Public License along w
 	SceneNode				*relativeModeTarget;
 	axisConfigurationEnum	relativeModeAxisConfiguration, axisConfiguration;
 	NSMutableArray			*children;
+    Scene *scene;
+
 }
+@property (assign) Scene *scene;
 
 @property (assign, nonatomic) BOOL enabled;
 @property (assign, nonatomic) axisConfigurationEnum relativeModeAxisConfiguration;

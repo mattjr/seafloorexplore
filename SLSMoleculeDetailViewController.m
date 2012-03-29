@@ -47,6 +47,26 @@
 	return self;
 }
 
+- (id)initWithStyle:(UITableViewStyle)style andModel:(Model *)newModel;
+{
+	if ((self = [super initWithStyle:style])) 
+	{
+		self.view.frame = [[UIScreen mainScreen] applicationFrame];
+		self.view.autoresizesSubviews = YES;
+		self.molecule = [[[SLSMolecule alloc] initWithModel:newModel] autorelease];
+		self.title = molecule.compound;
+        
+        
+        _placemark = [[[CLPlacemark alloc]init] retain];
+        
+        
+		if ([SLSMoleculeAppDelegate isRunningOniPad])
+		{
+			self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
+		}		
+	}
+	return self;
+}
 - (void)dealloc 
 {
     [_placemark release];

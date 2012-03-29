@@ -396,7 +396,6 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 
 - (void)renderNode
 {
-
 #ifndef TARGET_OS_IPHONE
 	if (globalSettings.doWireframe)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -605,7 +604,7 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 
 - (void)dealloc
 {
-   // printf("Free M\n");
+    //printf("Free M\n");
 
 	free(octree);
 	free(visibleNodeStack);

@@ -56,12 +56,12 @@
         EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 //        aContext = nil;
         
-        if (!aContext) 
+       /* if (!aContext) 
         {
             aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
             openGLESRenderer = [[SLSOpenGLES11Renderer alloc] initWithContext:aContext];
         }
-        else
+        else*/
         {
             openGLESRenderer = [[MyOpenGLES20Renderer alloc] initWithContext:aContext];
         }

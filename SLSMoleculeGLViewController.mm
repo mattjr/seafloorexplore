@@ -34,9 +34,9 @@
 		[nc addObserver:self selector:@selector(updateRenderingIndicator:) name:kSLSMoleculeRenderingUpdateNotification object:nil];
 		[nc addObserver:self selector:@selector(hideRenderingIndicator:) name:kSLSMoleculeRenderingEndedNotification object:nil];
 		
-		[nc addObserver:self selector:@selector(showScanningIndicator:) name:@"FileLoadingStarted" object:nil];
-		[nc addObserver:self selector:@selector(updateScanningIndicator:) name:@"FileLoadingUpdate" object:nil];
-		[nc addObserver:self selector:@selector(hideScanningIndicator:) name:@"FileLoadingEnded" object:nil];
+		[nc addObserver:self selector:@selector(showScanningIndicator:) name:kSLSMoleculeLoadingStartedNotification object:nil];
+		[nc addObserver:self selector:@selector(updateScanningIndicator:) name:kSLSMoleculeLoadingUpdateNotification object:nil];
+		[nc addObserver:self selector:@selector(hideScanningIndicator:) name:kSLSMoleculeLoadingEndedNotification object:nil];
 
 		[nc addObserver:self selector:@selector(updateSizeOfGLView:) name:@"GLViewSizeDidChange" object:nil];
 
@@ -68,7 +68,6 @@
 //	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self.displayLink invalidate];
 	self.displayLink = nil;
-	
 	[super dealloc];
 }
 
@@ -80,7 +79,7 @@
 
 	self.view = glView;
     openGLESRenderer = glView.openGLESRenderer;
-	scene = [Scene sharedScene];		
+
 	[glView release];
 }
 
@@ -193,7 +192,7 @@
 - (void)switchVisType:(id)sender;
 {
 
-GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]getRenderMode];
+GLVisualizationType currentVisualizationType = [sim getRenderMode];
     GLVisualizationType newVisualizationType;
     if (currentVisualizationType == TEXTURED){
     newVisualizationType=SHADED;
@@ -206,7 +205,7 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
         newVisualizationType=TEXTURED;
     }
     
-    [(Simulation *)[scene simulator]setRenderMode: newVisualizationType];
+    [sim setRenderMode: newVisualizationType];
     
     
     //   moleculeToDisplay.currentVisualizationType = newVisualizationType;
@@ -343,7 +342,7 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 	NSString *buttonTitle1;
 //	NSString *buttonTitle2;
 	NSString *cancelButtonTitle;
-	GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]getRenderMode];
+	GLVisualizationType currentVisualizationType = [sim getRenderMode];
 
 	switch (currentVisualizationType)
 	{
@@ -474,8 +473,7 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
     NSMutableSet *currentTouches = [[[event touchesForView:self.view] mutableCopy] autorelease];
     [currentTouches minusSet:touches];
 
-    if ([[scene simulator] respondsToSelector:@selector(setValidPos)])
-        [(Simulation *)[scene simulator] setValidPos];
+    [sim setValidPos];
 
 	// New touches are not yet included in the current touches for the view
 	NSSet *totalTouches = [touches setByAddingObjectsFromSet:[event touchesForView:self.view]];
@@ -492,8 +490,7 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 		lastMovementPosition = [[touches anyObject] locationInView:self.view];
        // if ([[scene simulator] respondsToSelector:@selector(pan:)])
        //     [(Simulation *)[scene simulator] startPan];
-        if ([[scene simulator] respondsToSelector:@selector(pancont:)])
-            [(Simulation *)[scene simulator] pancont:lastMovementPosition];
+        [sim pancont:lastMovementPosition];
 
 	}
 }
@@ -531,8 +528,7 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 			if (!pinchGestureUnderway)
 			{
 				twoFingersAreMoving = YES;
-            	if ([[scene simulator] respondsToSelector:@selector(orient:)])
-                    [(Simulation *)[scene simulator]orient: directionOfPanning];
+            	[sim orient: directionOfPanning];
 				//[openGLESRenderer translateModelByScreenDisplacementInX:directionOfPanning.x inY:directionOfPanning.y];
                 [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
 			
@@ -553,17 +549,12 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 			if (!twoFingersAreMoving)
 			{
 				if(!pinchGestureUnderway)
-                    [[scene simulator] zoomstart];
+                    [sim zoomstart];
 				float speedModifier=1.0;
                 vector3f movement = vector3f(1,  speedModifier *(newTouchDistance / startingTouchDistance), 1);
-				
-                vector3f npos = [[scene camera] position];                
-                
-				npos = vector3f(npos[0], npos[1] *speedModifier *(newTouchDistance / startingTouchDistance), npos[2]);
 
 				zoomVal=  (newTouchDistance / startingTouchDistance) / previousScale;
-                if ([[scene simulator] respondsToSelector:@selector(zoomcont:)])
-                    [(Simulation *)[scene simulator] zoomcont:zoomVal];
+                [sim zoomcont:zoomVal];
 				
 				// Scale using pinch gesture
                // [openGLESRenderer scaleModelByFactor:(newTouchDistance / startingTouchDistance) / previousScale];
@@ -585,8 +576,7 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
         delta.y=(currentMovementPosition.y-lastMovementPosition.y);///self.view.frame.size.height;		
 		lastMovementPosition = currentMovementPosition;
 		//printf("%f %f %f %f\n",delta.x,delta.y,(float)self.view.frame.size.width,(float)self.view.frame.size.height);
-		if ([[scene simulator] respondsToSelector:@selector(pan:)])
-            [(Simulation *)[scene simulator]pan: lastMovementPosition];
+		[sim pan: lastMovementPosition];
         [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
 				
 	}
@@ -613,7 +603,7 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 
        // if ([[scene simulator] respondsToSelector:@selector(resetCamera)])
          //   [(Simulation *)[scene simulator] resetCamera];
-        [(Simulation *)[scene simulator] centeratPt:endPos];
+        [sim centeratPt:endPos];
 		/*if (moleculeToDisplay.isDoneRendering == YES)
 		{
 			UIActionSheet *actionSheet = [self actionSheetForVisualizationState];
@@ -639,11 +629,9 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 		twoFingersAreMoving = NO;
 		pinchGestureUnderway = NO;
 		previousDirectionOfPanning = CGPointZero;
-        if ([[scene simulator] respondsToSelector:@selector(checkInFrame)])
-            [(Simulation *)[scene simulator] checkInFrame];
+        [sim checkInFrame];
 		lastMovementPosition = [[remainingTouches anyObject] locationInView:self.view];
-        if ([[scene simulator] respondsToSelector:@selector(pancont:)])
-            [(Simulation *)[scene simulator] pancont:lastMovementPosition];
+        [sim pancont:lastMovementPosition];
     
 
 	}	
@@ -701,7 +689,7 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
 		}; break;
 	}
 	
-	GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]getRenderMode];
+	GLVisualizationType currentVisualizationType = [sim getRenderMode];
 
     if (currentVisualizationType != newVisualizationType)
     {
@@ -710,7 +698,7 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
             [self startOrStopAutorotation:self];
         }*/
 		
-		[(Simulation *)[scene simulator]setRenderMode: newVisualizationType];
+		[sim setRenderMode: newVisualizationType];
 			
 		
      //   moleculeToDisplay.currentVisualizationType = newVisualizationType;
@@ -777,7 +765,7 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
     //    moleculeToDisplay.currentVisualizationType = [[NSUserDefaults standardUserDefaults] integerForKey:@"currentVisualizationMode"];
     }
 	
-	GLVisualizationType renderMode = [(Simulation *)[scene simulator]getRenderMode];
+	GLVisualizationType renderMode = [sim getRenderMode];
 
 	[[NSUserDefaults standardUserDefaults] setInteger:renderMode forKey:@"currentVisualizationMode"];
     
@@ -801,11 +789,10 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
     else
         printf("Can't stop scene\n");
     [openGLESRenderer clearScreen];
-    [[scene simulator] clearObjs];
 
    //[[scene simulator] release];
     // [openGLESRenderer destroyFramebuffers];
-
+    sim= nil;
 
 }
 
@@ -816,7 +803,10 @@ GLVisualizationType currentVisualizationType = [(Simulation *)[scene simulator]g
         [(MyOpenGLES20Renderer*)openGLESRenderer startupVT:name];
     else
         printf("Can't start scene\n");
-    
+ 
+    if ([openGLESRenderer isKindOfClass:[MyOpenGLES20Renderer class]]){
+        sim = [(MyOpenGLES20Renderer*)openGLESRenderer sim];
+    }
 }
 
 @end

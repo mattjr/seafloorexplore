@@ -19,8 +19,11 @@ extern NSString *const kSLSMoleculeRenderingStartedNotification;
 extern NSString *const kSLSMoleculeRenderingUpdateNotification;
 extern NSString *const kSLSMoleculeRenderingEndedNotification;
 
+extern NSString *const kSLSMoleculeLoadingStartedNotification;
+extern NSString *const kSLSMoleculeLoadingUpdateNotification;
+extern NSString *const kSLSMoleculeLoadingEndedNotification;
 @class SLSOpenGLESRenderer;
-
+@class Model;
 // TODO: Convert enum to elemental number
 typedef enum { CARBON, HYDROGEN, OXYGEN, NITROGEN, SULFUR, PHOSPHOROUS, IRON, UNKNOWN, SILICON, FLUORINE, CHLORINE, BROMINE, IODINE, CALCIUM, ZINC, CADMIUM, SODIUM, MAGNESIUM, NUM_ATOMTYPES } SLSAtomType;
 typedef enum { BALLANDSTICK, SPACEFILLING, CYLINDRICAL, } SLSVisualizationType;
@@ -78,13 +81,13 @@ typedef struct {
 @property (readwrite, retain) NSValue *previousTerminalAtomValue;
 @property (readwrite, nonatomic) SLSVisualizationType currentVisualizationType;
 @property (readwrite) unsigned int numberOfStructureBeingDisplayed;
+- (id)initWithModel:(Model *)newModel;
 
 - (id)initWithFilename:(NSString *)newFilename database:(sqlite3 *)newDatabase title:(NSString *)newTitle;
 - (id)initWithSQLStatement:(sqlite3_stmt *)moleculeRetrievalStatement database:(sqlite3 *)newDatabase;
 - (void)deleteMolecule;
 
 + (BOOL)isFiletypeSupportedForFile:(NSString *)filePath;
-+ (void)setBondColor:(GLubyte *)bondColor forResidueType:(SLSResidueType)residueType;
 
 // Database methods
 + (BOOL)beginTransactionWithDatabase:(sqlite3 *)database;
@@ -107,7 +110,6 @@ typedef struct {
 // Rendering
 - (void)switchToDefaultVisualizationMode;
 - (BOOL)renderMolecule:(SLSOpenGLESRenderer *)openGLESRenderer;
-- (void)readAndRenderAtoms:(SLSOpenGLESRenderer *)openGLESRenderer;
-- (void)readAndRenderBonds:(SLSOpenGLESRenderer *)openGLESRenderer;
+
 
 @end

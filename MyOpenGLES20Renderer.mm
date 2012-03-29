@@ -21,7 +21,7 @@ extern vtConfig c;
 #define SPHEREDEPTHTEXTUREWIDTH 32
 
 @implementation MyOpenGLES20Renderer
-
+@synthesize sim;
 #pragma mark -
 #pragma mark Initialization and teardown
 
@@ -35,13 +35,13 @@ extern vtConfig c;
     currentViewportSize = CGSizeZero;
    	[EAGLContext setCurrentContext:context];
 
-	scene = [Scene sharedScene];
+	//scene = [Scene sharedScene];
     return self;
 }
 
 - (void)dealloc 
 {    
-    NSLog(@"Here dealloc OPENGLES2\n");
+    //NSLog(@"Here dealloc OPENGLES2\n");
     [self freeVertexBuffers];
     
    	
@@ -257,17 +257,20 @@ extern vtConfig c;
         vt.cachedPages.clear();
         vt.cachedPagesAccessTimes.clear();
         vt.memValid=false;
+        //printf("Scene %d\n",[scene retainCount]);
+        [scene release];
+        scene =nil;
     });     
 
 }
 - (void)showStatusIndicator;
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:kSLSMoleculeRenderingStartedNotification object:nil ];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kSLSMoleculeLoadingStartedNotification object:nil ];
 }
 
 - (void)hideStatusIndicator;
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:kSLSMoleculeRenderingEndedNotification object:nil ];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kSLSMoleculeLoadingEndedNotification object:nil ];
 }
 -(void)startupVT:(NSString *)name
 {
@@ -283,17 +286,16 @@ extern vtConfig c;
     dispatch_sync(openGLESContextQueue, ^{
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
+      //  mesh.scene =scene;
 
-        if(scene == nil)
-            scene = [Scene sharedScene];
+
         [EAGLContext setCurrentContext:context];
+        if(scene == nil)
+            scene = [[Scene alloc] init];
 
-
-        Simulation *sim = [[Simulation alloc] initWithString:fullpath] ;
-
+        sim = [[Simulation alloc] initWithString:fullpath withScene:scene] ;
         if (sim){
         [scene setSimulator:sim];
-
             isSceneReady=YES;
         }else{
             NSError *error=nil;
@@ -301,10 +303,12 @@ extern vtConfig c;
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not create simulation files missing", @"Localized", nil) message:[error localizedDescription]
 														   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
 			[alert show];
-			[alert release];	   
-        }
-        [sim release];
+			[alert release];	
+            isSceneReady=NO;
 
+        }
+        drawn=0;
+        [sim release];
         [pool drain];
     });
 
@@ -378,8 +382,9 @@ extern vtConfig c;
         [EAGLContext setCurrentContext:context];
 
         [molecule setHasRendered:YES];
-        //printf("First render\n");
+       // printf("Setup render\n");
     //    [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:NO];
+         [self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
 
     }
 //    return;
@@ -403,7 +408,21 @@ extern vtConfig c;
 		[scene render];
         
        // printf("%d BOOL\n",isSceneReady);
-  		[self presentRenderBuffer];
+          if(drawn < 2)
+              glFlush();
+        
+              
+            if(drawn==2){
+                //printf("First render\n");
+
+                [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:NO];
+
+            }
+            if(drawn>2)
+                [self presentRenderBuffer];
+            else
+                drawn++;
+
 		// Discarding is only supported starting with 4.0, so I need to do a check here for 3.2 devices
         const GLenum discards[]  = {GL_COLOR_ATTACHMENT0};
         glDiscardFramebufferEXT(GL_FRAMEBUFFER, 1, discards);

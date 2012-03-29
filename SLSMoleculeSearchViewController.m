@@ -60,8 +60,7 @@
 		//self.tableView.tableHeaderView = keywordSearchBar;
 		
 		downloadedFileContents = nil;
-		searchResultTitles = nil;
-		searchResultIDs = nil;
+		downloadaleModelList = nil;
 		searchResultRetrievalConnection = nil;
 		nextResultsRetrievalConnection = nil;
 		searchCancelled = NO;
@@ -112,8 +111,7 @@
 
 	[keywordSearchBar release];
 	[searchResultRetrievalConnection release];
-	[searchResultTitles release];
-	[searchResultIDs release];
+	[downloadaleModelList release];
 	[downloadedFileContents release];
 	[super dealloc];
 }
@@ -125,17 +123,12 @@
 - (BOOL)getCurrentModelList;
 {
 	// Clear the old search results table
-	[searchResultTitles release];
-	searchResultTitles = nil;
+	[downloadaleModelList release];
+	downloadaleModelList = nil;
 	
-	[searchResultIDs release];
-	searchResultIDs = nil;
-    
-    [searchResultIUPACNames release];
-    searchResultIUPACNames = nil;
-    
+	    
 	NSString *searchURL = nil;
-    searchURL = [[NSString alloc] initWithString:[urlbasepath stringByAppendingString:@"list.xml" ]] ;
+    searchURL = [[NSString alloc] initWithString:[urlbasepath stringByAppendingString:@"models.xml" ]] ;
     
 	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -162,54 +155,6 @@
 #pragma mark -
 #pragma mark Performing search
 
-- (BOOL)performSearchWithKeyword:(NSString *)keyword;
-{
-	// Clear the old search results table
-	[searchResultTitles release];
-	searchResultTitles = nil;
-	
-	[searchResultIDs release];
-	searchResultIDs = nil;
-    
-    [searchResultIUPACNames release];
-    searchResultIUPACNames = nil;
-
-	NSString *searchURL = nil;
-    
-    if (currentSearchType == PROTEINDATABANKSEARCH)
-    {
-        searchURL = [[NSString alloc] initWithFormat:@"http://www.rcsb.org/pdb/search/navbarsearch.do?newSearch=yes&isAuthorSearch=no&radioset=All&inputQuickSearch=%@&outformat=text&resultsperpage=%d", [keyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], MAX_SEARCH_RESULT_CODES];
-    }
-    else
-    {
-        //http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pccompound&retmax=10&term=benzene
-        isRetrievingCompoundNames = NO;
-        
-        NSString *keywordWithFilter = [keyword stringByAppendingString:@" \"has 3d conformer\"[Filter]"];
-        searchURL = [[NSString alloc] initWithFormat:@"http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pccompound&retmax=%d&term=%@", MAX_SEARCH_RESULT_CODES, [keywordWithFilter stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    }
-    
-	
-	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-	
-	NSURLRequest *pdbSearchRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:searchURL]
-													cachePolicy:NSURLRequestUseProtocolCachePolicy
-												timeoutInterval:60.0];
-	[searchURL release];
-	searchResultRetrievalConnection = [[NSURLConnection alloc] initWithRequest:pdbSearchRequest delegate:self];
-	
-	downloadedFileContents = [[NSMutableData data] retain];
-	
-	if (searchResultRetrievalConnection) 
-	{
-		[self.tableView reloadData];
-	} 
-	else 
-	{
-		return NO;
-	}
-	return YES;
-}
 
 - (void)processSearchResultsAppendingNewData:(BOOL)appendData;
 {
@@ -218,8 +163,7 @@
 		[searchResultRetrievalConnection release];
 		searchResultRetrievalConnection = nil;
 
-		searchResultTitles = [[NSMutableArray alloc] init];
-		searchResultIDs = [[NSMutableArray alloc] init];
+		downloadaleModelList = [[NSMutableArray alloc] init];
 	}
 	else
 	{
@@ -227,17 +171,9 @@
 		nextResultsRetrievalConnection = nil;
 	}	
     
-  /*  if (currentSearchType == PROTEINDATABANKSEARCH)
-    {
-        [self processPDBSearchResults];
-    }
-    else
-    {
-        [self processPubChemKeywordSearch];
-    }*/
+
     [self processHTMLResults];
 
-	[self.tableView reloadData];
 }
 - (void)processHTMLResults;
 {
@@ -250,7 +186,7 @@
     [downloadedFileContents release];
 	downloadedFileContents = nil;
 
-    
+    /*
     NSString *titlesAndPDBCodeString = [[NSString alloc] initWithData:downloadedFileContents encoding:NSASCIIStringEncoding];
 	[downloadedFileContents release];
 	downloadedFileContents = nil;
@@ -282,201 +218,13 @@
            // NSLog(@"Adding %@ file name: %@", descName, fullPath);
         }
     }
-   	currentPageOfResults = 1;
-	[titlesAndPDBCodeString release];
+	[titlesAndPDBCodeString release];*/
+    currentPageOfResults = 1;
+
 }
 
-- (void)processPDBSearchResults;
-{
-    NSString *titlesAndPDBCodeString = [[NSString alloc] initWithData:downloadedFileContents encoding:NSASCIIStringEncoding];
-	[downloadedFileContents release];
-	downloadedFileContents = nil;
-	
-	NSRange locationOfHTMLTag = [titlesAndPDBCodeString rangeOfString:@"<html"];
-	if (locationOfHTMLTag.location != NSNotFound)
-	{
-		// Single result, so parse out title from the HTML returned and try to determine the four character code
-		NSRange locationOfPDBCode = [titlesAndPDBCodeString rangeOfString:@"structureId="];
-		if (locationOfPDBCode.location == NSNotFound)
-		{
-			// No results match this query
-			currentPageOfResults = 1;
-			[titlesAndPDBCodeString release];
-			[self.tableView reloadData];		
-			return;
-		}
-		
-		NSString *pdbCode = [titlesAndPDBCodeString substringWithRange:NSMakeRange(locationOfPDBCode.location + locationOfPDBCode.length, 4)];
-        
-		NSString *titleString = nil;
-		NSRange locationOfTitleStart = [titlesAndPDBCodeString rangeOfString:@"<title>"];
-		NSRange locationOfTitleEnd = [titlesAndPDBCodeString rangeOfString:@"</title>"];
-		if ( (locationOfTitleStart.location == NSNotFound) || (locationOfTitleEnd.location == NSNotFound) )
-		{
-			titleString = pdbCode;
-		}
-		else
-		{
-            //			<title>RCSB Protein Data Bank - Structure Summary  for 1BNA - STRUCTURE OF A B-DNA DODECAMER. CONFORMATION AND DYNAMICS</title>
-            
-			titleString = [titlesAndPDBCodeString substringWithRange:NSMakeRange(locationOfTitleStart.location + locationOfTitleStart.length, locationOfTitleEnd.location - (locationOfTitleStart.location + locationOfTitleStart.length))];
-			NSRange beginningOfActualTitle = [titleString rangeOfString:pdbCode];
-			if (beginningOfActualTitle.location != NSNotFound)
-			{
-				titleString = [titleString substringFromIndex:beginningOfActualTitle.location + 7];
-			}
-			
-		}
-        
-		[searchResultTitles addObject:titleString];
-		[searchResultIDs addObject:pdbCode];
-	}
-	else
-	{
-		// Normal search result, so process as expected
-		if ([[[titlesAndPDBCodeString substringToIndex:5] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:@""])
-		{
-			// No results match this query
-			currentPageOfResults = 1;
-			[titlesAndPDBCodeString release];
-			[self.tableView reloadData];		
-			return;
-		}
-		
-		NSUInteger length = [titlesAndPDBCodeString length];
-		NSUInteger lineStart = 0, lineEnd = 0, contentsEnd = 0;
-		NSRange currentRange;
-		
-		while (lineEnd < length) 
-		{
-			//		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-			
-			[titlesAndPDBCodeString getParagraphStart:&lineStart end:&lineEnd contentsEnd:&contentsEnd forRange:NSMakeRange(lineEnd, 0)];
-			currentRange = NSMakeRange(lineStart, contentsEnd - lineStart);
-			NSString *currentLine = [titlesAndPDBCodeString substringWithRange:currentRange];
-			
-			
-			NSArray *lineComponents = [currentLine componentsSeparatedByString:@"\t"];
-			if ([lineComponents count] > 1)
-			{
-				NSString *pdbCode = [lineComponents objectAtIndex:0];
-				NSString *moleculeTitle = [lineComponents objectAtIndex:1];
-				if ((pdbCode != nil) && (moleculeTitle != nil))
-				{
-					[searchResultTitles addObject:moleculeTitle];
-					[searchResultIDs addObject:pdbCode];
-				}
-			}
-			
-			//		[pool release];
-		}		
-	}	
-	
-	currentPageOfResults = 1;
-	[titlesAndPDBCodeString release];
-}
 
-- (void)processPubChemKeywordSearch;
-{    
-    [currentXMLElementString release];
-    currentXMLElementString = nil;
-    
-	searchResultsParser = [[NSXMLParser alloc] initWithData:downloadedFileContents];
-	[downloadedFileContents release];
-	downloadedFileContents = nil;
-
-    searchResultsParser.delegate = self;
-    [searchResultsParser setShouldResolveExternalEntities:YES];
-    [searchResultsParser parse];
-}
-
-- (void)retrievePubChemCompoundTitles;
-{
-    NSMutableString *compoundIDList = [[NSMutableString alloc] init];
-    
-    BOOL isFirstID = YES;
-    for (NSString *currentCompoundID in searchResultIDs)
-    {
-        if (!isFirstID)
-        {
-            [compoundIDList appendFormat:@",%@", currentCompoundID];
-        }
-        else
-        {
-            [compoundIDList appendString:currentCompoundID];
-            isFirstID = NO;
-        }
-    }
-    
-        //http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pccompound&retmax=10&term=benzene
-    isRetrievingCompoundNames = YES;
-    NSString *searchURL = [[NSString alloc] initWithFormat:@"http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pccompound&id=%@", compoundIDList];
-    
-    [compoundIDList release];
-    
-	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-	
-	NSURLRequest *sdfSearchRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:searchURL]
-													cachePolicy:NSURLRequestUseProtocolCachePolicy
-												timeoutInterval:60.0];
-	[searchURL release];
-	searchResultRetrievalConnection = [[NSURLConnection alloc] initWithRequest:sdfSearchRequest delegate:self];
-	
-	downloadedFileContents = [[NSMutableData data] retain];
-	
-	if (!searchResultRetrievalConnection) 
-	{
-        // TODO: Some sort of error handling
-	} 
-}
-
-- (void)processPubChemCompoundTitles;
-{
-    
-    searchResultIUPACNames = [[NSMutableArray alloc] init];
-
-    [searchResultRetrievalConnection release];
-    searchResultRetrievalConnection = nil;
-
-    [currentXMLElementString release];
-    currentXMLElementString = nil;
-    
-	searchResultsParser = [[NSXMLParser alloc] initWithData:downloadedFileContents];
-	[downloadedFileContents release];
-	downloadedFileContents = nil;
-    
-    searchResultsParser.delegate = self;
-    [searchResultsParser setShouldResolveExternalEntities:YES];
-    [searchResultsParser parse];
-}
-
-- (BOOL)grabNextSetOfSearchResults;
-{
-	currentPageOfResults++;
-	NSString *nextResultsURL = [[NSString alloc] initWithFormat:@"http://www.rcsb.org/pdb/results/results.do?outformat=text&gotopage=%d", currentPageOfResults];
-	
-	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-	
-	NSURLRequest *pdbSearchRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:nextResultsURL]
-													cachePolicy:NSURLRequestUseProtocolCachePolicy
-												timeoutInterval:60.0];
-	[nextResultsURL release];
-	nextResultsRetrievalConnection = [[NSURLConnection alloc] initWithRequest:pdbSearchRequest delegate:self];
-	
-	downloadedFileContents = [[NSMutableData data] retain];
-	
-	if (nextResultsRetrievalConnection) 
-	{
-		[self.tableView reloadData];
-	} 
-	else 
-	{
-		return NO;
-	}
-	return YES;
-	
-}
-
+  
 #pragma mark -
 #pragma mark UITableViewController methods
 
@@ -490,21 +238,16 @@
 	// Running a search, so display a status cell
 	if (searchResultRetrievalConnection != nil)
 		return 1;
-	else if (searchResultTitles == nil)
+	else if (downloadaleModelList == nil)
 		return 0;
 	// No results to the last search, so display one cell explaining that
-	else if ([searchResultTitles count] == 0)
+	else if ([downloadaleModelList count] == 0)
 		return 1;
 	else
 	{
-        if (currentSearchType == PROTEINDATABANKSEARCH)
-        {
-            return [searchResultTitles count] + 1;
-        }
-        else
-        {
-            return [searchResultTitles count];
-        }
+       
+            return [downloadaleModelList count];
+        
 	}
 }
 
@@ -517,7 +260,7 @@
 {	          
 	UITableViewCell *cell;
 	// Running a search, so display a status cell
-	if ((searchResultRetrievalConnection != nil) || ((nextResultsRetrievalConnection != nil) && (indexPath.row >= [searchResultTitles count])))
+	if ((searchResultRetrievalConnection != nil) || ((nextResultsRetrievalConnection != nil) && (indexPath.row >= [downloadaleModelList count])))
 	{
 		cell = [tableView dequeueReusableCellWithIdentifier:@"SearchInProgress"];
 		if (cell == nil) 
@@ -551,12 +294,12 @@
 		}
 		cell.textLabel.text = NSLocalizedStringFromTable(@"Searching...", @"Localized", nil);
 	}
-	else if (searchResultTitles == nil)
+	else if (downloadaleModelList == nil)
     {
 		cell = nil;
     }
 	// No results to the last search, so display one cell explaining that
-	else if ([searchResultTitles count] == 0)
+	else if ([downloadaleModelList count] == 0)
 	{
 		cell = [tableView dequeueReusableCellWithIdentifier:@"NoResults"];
 		if (cell == nil) 
@@ -613,7 +356,7 @@
     }
 	else
 	{
-		if ([indexPath row] >= [searchResultTitles count])
+		if ([indexPath row] >= [downloadaleModelList count])
 		{
 			cell = [tableView dequeueReusableCellWithIdentifier:@"LoadMore"];
 			if (cell == nil) 
@@ -676,15 +419,9 @@
 
             }
             
-			cell.textLabel.text = [searchResultTitles objectAtIndex:[indexPath row]];
-            if (currentSearchType == PROTEINDATABANKSEARCH)
-            {
-                cell.detailTextLabel.text = [searchResultIDs objectAtIndex:[indexPath row]];
-            }
-            else
-            {
-                cell.detailTextLabel.text = [searchResultIUPACNames objectAtIndex:[indexPath row]];
-            }
+			cell.textLabel.text = [[downloadaleModelList objectAtIndex:[indexPath row]] title];
+            cell.detailTextLabel.text = [[downloadaleModelList objectAtIndex:[indexPath row]] desc];
+            
 			
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 		}
@@ -712,12 +449,12 @@
     {
 		return;
     }
-	else if (searchResultTitles == nil)
+	else if (downloadaleModelList == nil)
     {
 		return;
     }
 	// No results to the last search, so display one cell explaining that
-	else if ([searchResultTitles count] == 0)
+	else if ([downloadaleModelList count] == 0)
     {        
 		return;
     }
@@ -726,11 +463,11 @@
         return;
     }
 		
-	if (indexPath.row >= [searchResultTitles count])
+	/*if (indexPath.row >= [downloadaleModelList count])
 	{
 		[self grabNextSetOfSearchResults];
 	}
-	else
+	else*/
 	{
         indexOfDownloadingMolecule = indexPath.row;
         isDownloading = YES;
@@ -739,10 +476,9 @@
 
         [self.tableView reloadData];
 
-		NSString *selectedTitle = [searchResultTitles objectAtIndex:[indexPath row]];
-		NSString *selectedID = [searchResultIDs objectAtIndex:[indexPath row]];
+		Model *selectedModel = [downloadaleModelList objectAtIndex:[indexPath row]];
 
-        downloadController = [[SLSMoleculeDownloadController alloc] initWithID:selectedID title:selectedTitle searchType:currentSearchType];
+        downloadController = [[SLSMoleculeDownloadController alloc] initWithModel:selectedModel];
         
         [downloadController downloadNewMolecule];
 //		
@@ -755,24 +491,14 @@
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
 {
-//	NSInteger index = [indexPath row];
+	NSInteger index = [indexPath row];
 
-    NSString *selectedID = [searchResultIDs objectAtIndex:[indexPath row]];
-    NSString *webDetailAddress = nil;
-    
-    if (currentSearchType == PROTEINDATABANKSEARCH)
-    {
-        webDetailAddress = [NSString stringWithFormat:@"http://www.rcsb.org/pdb/explore/explore.do?structureId=%@", selectedID];
-    }
-    else
-    {
-        webDetailAddress = [NSString stringWithFormat:@"http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=%@", selectedID];
-    }
-    
-    SLSMoleculeWebDetailViewController *detailViewController = [[SLSMoleculeWebDetailViewController alloc] initWithURL:[NSURL URLWithString:webDetailAddress]];
-    
-    [self.navigationController pushViewController:detailViewController animated:YES];
-    [detailViewController release];
+		// Display detail view for the protein
+		SLSMoleculeDetailViewController *detailViewController = [[SLSMoleculeDetailViewController alloc] initWithStyle:UITableViewStyleGrouped andModel: [downloadaleModelList objectAtIndex:(index)]];
+		[self.navigationController pushViewController:detailViewController animated:YES];
+		[detailViewController release];
+		
+	
 }
 
 - (void)didReceiveMemoryWarning 
@@ -785,7 +511,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	keywordSearchBar.delegate = self;
 	
 	[super viewWillDisappear:animated];
 }
@@ -795,40 +520,6 @@
     return YES;
 }
 
-#pragma mark -
-#pragma mark UISearchBarDelegate methods
-
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar;
-{
-	// Hide the keyboard once search has been initiated
-	[searchBar resignFirstResponder];
-	[self performSearchWithKeyword:searchBar.text];
-}
-
-- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
-{
-    [searchResultTitles release];
-	searchResultTitles = nil;
-	
-	[searchResultIDs release];
-	searchResultIDs = nil;
-
-    switch (selectedScope)
-    {
-        case PUBCHEMSEARCH: 
-        {
-            keywordSearchBar.placeholder = NSLocalizedStringFromTable(@"Search PubChem", @"Localized", nil);            
-        }; break;
-        case PROTEINDATABANKSEARCH:
-        default:
-        {
-            keywordSearchBar.placeholder = NSLocalizedStringFromTable(@"Search RCSB Protein Data Bank", @"Localized", nil);
-        }; break;
-    }
-    
-    currentSearchType = selectedScope;
-    [self.tableView reloadData];
-}
 
 #pragma mark -
 #pragma mark NSURLConnection delegate methods
@@ -894,12 +585,7 @@
 {
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 
-   /* if (isRetrievingCompoundNames)
-    {
-        [self processPubChemCompoundTitles];
-    }
-    else
-    {*/
+
     
         if (connection == searchResultRetrievalConnection)
         {
@@ -909,101 +595,13 @@
         {
             [self processSearchResultsAppendingNewData:YES];
         }
-   // }
 }
 
-#pragma mark -
-#pragma mark NSXMLParser delegate methods
-
-// Append new characters from within the element to an existing, or newly created, string
-- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string 
-{
-    if (currentXMLElementString == nil) 
-	{
-		currentXMLElementString = [[NSMutableString alloc] init];
-    }
-    [currentXMLElementString appendString:string];
-}
-
-- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName attributes:(NSDictionary *)attributeDict
-{
-    if (isRetrievingCompoundNames)
-    {
-        if ([elementName isEqualToString:@"Item"])
-        {
-            NSString *attributeName = [attributeDict valueForKey:@"Name"];
-
-            if ([attributeName isEqualToString:@"IUPACName"])
-            {
-                insideIUPACName = YES;
-            }
-            else if ([attributeName isEqualToString:@"SynonymList"])
-            {
-                insideSynonym = YES;
-            }
-        }
-    }
-}
-
-- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName 
-{
-    if (!isRetrievingCompoundNames)
-    {
-        if ([elementName isEqualToString:@"Id"])
-        {
-            // Last item is nil, check for that
-            if (currentXMLElementString != nil)
-            {
-                NSString *trimmedID = [currentXMLElementString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                [searchResultIDs addObject:trimmedID];
-            }
-        }
-    }
-    else
-    {
-        if (insideIUPACName)
-        {
-            NSString *trimmedIUPACName = [currentXMLElementString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            
-            [searchResultIUPACNames addObject:trimmedIUPACName];
-            insideIUPACName = NO;
-        }
-        else if (insideSynonym)
-        {
-            NSString *tweakedSynonym = [[currentXMLElementString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] titlecaseString];
-            [searchResultTitles addObject:tweakedSynonym];            
-
-            insideSynonym = NO;
-        }
-    }
-	
-	[currentXMLElementString release];
-    currentXMLElementString = nil;
-}
-
-- (void)parserDidEndDocument:(NSXMLParser *)parser;
-{
-//	[self finishParsingXML];
-    if (!isRetrievingCompoundNames)
-    {
-        [self retrievePubChemCompoundTitles];
-    }
-    else
-    {
-        [self.tableView reloadData];
-        isRetrievingCompoundNames = NO;
-    }
-}
-
-- (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError
-{
-
-}
 - (void)addModelsToList:(NSArray *)models {
     
-    // insert the earthquakes into our rootViewController's data source (for KVO purposes)
-   // [self.rootViewController insertEarthquakes:earthquakes];
-    NSLog(@"Gonna insert %d\n",[models count]);
+    [downloadaleModelList addObjectsFromArray:models];
+    [self.tableView reloadData];
+
 }
 #pragma mark -
 #pragma mark Accessors

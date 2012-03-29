@@ -9,18 +9,17 @@
 //  This controller manages the pop-up modal view for downloading new molecules from the Protein Data Bank
 
 #import <UIKit/UIKit.h>
-
+#import "Model.h"
 typedef enum { PUBCHEMSEARCH, PROTEINDATABANKSEARCH } SLSSearchType;
 
 @interface SLSMoleculeDownloadController : NSObject
 {
-	NSString *codeForCurrentlyDownloadingMolecule, *titleForCurrentlyDownloadingMolecule;
+    Model *downloadingmodel;
 	NSMutableData *downloadedFileContents;
 
 	long long downloadFileSize;
 	BOOL downloadCancelled;
 	NSURLConnection *downloadConnection;
-    SLSSearchType searchType;
     UIProgressView *progressView;
     UILabel *downloadStatusText;
     UIButton *cancelDownloadButton;
@@ -33,7 +32,7 @@ typedef enum { PUBCHEMSEARCH, PROTEINDATABANKSEARCH } SLSSearchType;
 
 
 // Initialization and teardown
-- (id)initWithID:(NSString *)pdbCode title:(NSString *)title searchType:(SLSSearchType)newSearchType;
+- (id)initWithModel:(Model *)model;
 NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *width);
 NSString* formatBytesNoUnit(double bytes, uint8_t flags,int exponent,int width);
 - (void)downloadNewMolecule;

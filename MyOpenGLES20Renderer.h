@@ -13,15 +13,20 @@
 
 @class GLProgram;
 @class Scene;
-
+@class Simulation;
 @interface MyOpenGLES20Renderer : SLSOpenGLESRenderer 
 {
    
    
     CGSize currentViewportSize;
     Scene *scene;
+    Simulation *sim ;
 	NSString *defaultModelName;
+    int drawn;
 }
+@property(assign,nonatomic)     Simulation *sim ;
+
+
 // OpenGL drawing support
 - (BOOL)createFramebuffer:(GLuint *)framebufferPointer size:(CGSize)bufferSize renderBuffer:(GLuint *)renderbufferPointer depthBuffer:(GLuint *)depthbufferPointer texture:(GLuint *)backingTexturePointer layer:(CAEAGLLayer *)layer;
 - (void)switchToDisplayFramebuffer;

@@ -15,7 +15,7 @@
 #import "Skybox.h"
 #import "CollideableMesh.h"
 typedef enum { TEXTURED,SHADED, } GLVisualizationType;
-
+@class Scene;
 @interface Simulation :  NSObject
 {
 	int frames;
@@ -70,6 +70,7 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
     vector3f extentsMesh;
     CGPoint _lastPt;
     float _maxDist;
+    Scene *scene;
     
 }
 -(void) centeratPt: (CGPoint) pt;
@@ -84,7 +85,7 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 - (bool)isDoneMoving;
 - (void)apply3DTransformD:(CATransform3D *)transform3D toPoint:(double *)sourcePoint result:(double *)resultingPoint;
 - (void)apply3DTransform:(CATransform3D *)transform3D toPoint:(vector3f)sourcePoint result:(vector3f)resultingPoint;
-- (id)initWithString:(NSString *)name;
+- (id)initWithString:(NSString *)name withScene:(Scene *)newscene;
 
 - (void)SlerpToTargetOrientation:(float) percent;
 -(void) pan: (CGPoint)pt;

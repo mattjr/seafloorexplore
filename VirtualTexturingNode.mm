@@ -74,7 +74,8 @@ extern vtConfig c;
         int max_texture_size=0;
         glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
         max_texture_size=min(max_texture_size,8192);
-		vtInit([path UTF8String], [format UTF8String], border, miplength, tilesize,max_texture_size);
+		if(!vtInit([path UTF8String], [format UTF8String], border, miplength, tilesize,max_texture_size))
+            return nil;
 
 		char *prelude = vtGetShaderPrelude();
 		readbackShader = LoadShadersNoLink(@"readback", [NSString stringWithUTF8String:prelude]);

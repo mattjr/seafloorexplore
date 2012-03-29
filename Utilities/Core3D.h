@@ -136,7 +136,7 @@ extern Settings globalSettings;
 extern NSMutableArray *pressedKeys;
 extern NSMutableArray *activeTouches;
 extern BOOL wasShaking;
-extern Scene *scene;
+//extern Scene *scene;
 
 
 
