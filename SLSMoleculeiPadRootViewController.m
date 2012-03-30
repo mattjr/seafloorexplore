@@ -104,6 +104,12 @@
     // Overriden to allow any orientation.
     return YES;
 }
+- (BOOL)splitViewController:(UISplitViewController *)svc
+   shouldHideViewController:(UIViewController *)vc
+              inOrientation:(UIInterfaceOrientation)orientation
+{
+    return YES;
+}
 
 - (void)didReceiveMemoryWarning 
 {

@@ -201,7 +201,7 @@ float positions[60 * 60][6];
 
 - (void)dealloc
 {
-    printf("Sim dealloc\n");
+    //printf("Sim dealloc\n");
    // [vtnode release];
     if(vtnode!= nil)
     [[scene objects] removeObject:vtnode];
@@ -292,12 +292,13 @@ float positions[60 * 60][6];
  CATransform3D mTmp;
  CATransform3D tiltMat;
  CATransform3D headingMat;
-	
+	//printf("portrate %d landscape %d\n",interfaceOrientation == UIInterfaceOrientationPortrait,
+       //    interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
 	
 headingMat= CATransform3DMakeRotation(_heading * M_PI / 180.0,0,0,1);
- if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
- tiltMat=CATransform3DMakeRotation(-_tilt * M_PI / 180.0,1,0,0);
- else if(interfaceOrientation == UIInterfaceOrientationPortrait)
+// if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+ //tiltMat=CATransform3DMakeRotation(-_tilt * M_PI / 180.0,1,0,0);
+ //else if(interfaceOrientation == UIInterfaceOrientationPortrait)
  tiltMat=CATransform3DMakeRotation(-_tilt * M_PI / 180.0,0,1,0); 
  _invMat=CATransform3DMakeTranslation(_center[0],_center[1],_center[2]);
 
@@ -401,9 +402,9 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 	CATransform3D viewtest;
 	
     headingMat= CATransform3DMakeRotation(_targetHeading * M_PI / 180.0,0,0,1);
-    if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-        tiltMat=CATransform3DMakeRotation(-_targetTilt * M_PI / 180.0,1,0,0);
-    else if(interfaceOrientation == UIInterfaceOrientationPortrait)
+   // if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+     //   tiltMat=CATransform3DMakeRotation(-_targetTilt * M_PI / 180.0,1,0,0);
+   // else if(interfaceOrientation == UIInterfaceOrientationPortrait)
         tiltMat=CATransform3DMakeRotation(-_targetTilt * M_PI / 180.0,0,1,0); 
     viewtest=CATransform3DMakeTranslation(_targetCenter[0],_targetCenter[1],_targetCenter[2]);
     
@@ -588,9 +589,9 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     
     CATransform3D mTmp= CATransform3DMakeTranslation(0,0,tmp_targetDistance);
     CATransform3D headingMat= CATransform3DMakeRotation(-_heading * M_PI / 180.0,0,0,1);
-    if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-        tiltMat=CATransform3DMakeRotation(_tilt * M_PI / 180.0,1,0,0);
-    else if(interfaceOrientation == UIInterfaceOrientationPortrait)
+   // if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+      //  tiltMat=CATransform3DMakeRotation(_tilt * M_PI / 180.0,1,0,0);
+    //else if(interfaceOrientation == UIInterfaceOrientationPortrait)
         tiltMat=CATransform3DMakeRotation(_tilt * M_PI / 180.0,0,1,0); 
     
     // bring camera to center, reverse rotations
@@ -621,11 +622,11 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     float tiltAngleOffset=5.0;
 	double headingVal,tiltVal;
     // Heading
-	if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft){
+	/*if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft){
 		headingVal=pt.y;
 		tiltVal= -(pt.x);
 	}
-	else{
+	else*/{
 		headingVal=pt.x;
 		tiltVal= -pt.y;
 	}

@@ -81,6 +81,7 @@
 - (void)layoutSubviews 
 {
     CGSize newSize = self.bounds.size;
+   // printf("New Size %f %f\n",newSize.width,newSize.height);
     if (!CGSizeEqualToSize(newSize, previousSize))
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"GLViewSizeDidChange" object:nil];

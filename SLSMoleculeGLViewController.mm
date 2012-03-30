@@ -1,4 +1,4 @@
-//
+ //
 //  SLSMoleculeGLViewController.m
 //  Molecules
 //
@@ -269,11 +269,13 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 
 - (void)resizeView;
 {
+    [openGLESRenderer clearScreen];
 //	[EAGLContext setCurrentContext:glView.context];
 	[openGLESRenderer destroyFramebuffers];
 	[openGLESRenderer createFramebuffersForLayer:(CAEAGLLayer *)self.view.layer];
-	if (displayLink == nil)
-	{
+	//if (displayLink == nil)
+	{    moleculeToDisplay.hasRendered=NO;
+
         [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
 	}
 }

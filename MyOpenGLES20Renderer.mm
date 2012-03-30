@@ -93,7 +93,7 @@ extern vtConfig c;
             [self createFramebuffer:&viewFramebuffer size:CGSizeZero renderBuffer:&viewRenderbuffer depthBuffer:&viewDepthBuffer texture:NULL layer:glLayer];    
             [self switchToDisplayFramebuffer];
             glViewport(0, 0, backingWidth, backingHeight);
-            
+
             currentViewportSize = CGSizeMake(backingWidth, backingHeight);
 			//[scene reshape:[NSArray arrayWithObjects:[NSNumber numberWithInt:backingWidth], [NSNumber numberWithInt:backingHeight], nil]];
         });        
@@ -307,7 +307,6 @@ extern vtConfig c;
             isSceneReady=NO;
 
         }
-        drawn=0;
         [sim release];
         [pool drain];
     });
@@ -375,18 +374,7 @@ extern vtConfig c;
      }
 	
     
-    if (![molecule hasRendered])
-    {
-        [scene reshape:[NSArray arrayWithObjects:[NSNumber numberWithInt:backingWidth], [NSNumber numberWithInt:backingHeight], nil]];
-        //printf("%d %d\n",backingWidth,backingHeight);
-        [EAGLContext setCurrentContext:context];
-
-        [molecule setHasRendered:YES];
-       // printf("Setup render\n");
-    //    [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:NO];
-         [self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
-
-    }
+ 
 //    return;
 	
     // In order to prevent frames to be rendered from building up indefinitely, we use a dispatch semaphore to keep at most two frames in the queue
@@ -397,6 +385,20 @@ extern vtConfig c;
     }
     
     dispatch_async(openGLESContextQueue, ^{
+        if (![molecule hasRendered])
+        {
+            
+            [scene reshape:[NSArray arrayWithObjects:[NSNumber numberWithInt:backingWidth], [NSNumber numberWithInt:backingHeight], nil]];
+            [EAGLContext setCurrentContext:context];
+            
+            [molecule setHasRendered:YES];
+            // printf("Setup render\n");
+            //    [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:NO];
+            [self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
+            drawn=0;
+
+        }
+        
         if (isSceneReady)
         {
        
