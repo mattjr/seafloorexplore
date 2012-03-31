@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+        <title>Benthic Models</title>
+        <description>This is the ACFR's benthic model list</description>
+        <link>http://www-personal.acfr.usyd.edu.au/mattjr/benthos/</link>
+        <lastBuildDate>Mon, 06 Sep 2010 00:01:00 +0000 </lastBuildDate>
+        <pubDate>Mon, 06 Sep 2009 16:45:00 +0000 </pubDate>
+        <ttl>1800</ttl>
+        <item>
+                <title>Chamber Tomb</title>
+                <description>The city of Pavlopetri, underwater off the coast of southern Laconia in Greece, is about 5,000 years old, and is the oldest submerged archeological town site. It is unique in having an almost complete town plan, including streets, buildings, and tombs. It was discovered in 1967 by Nicholas Flemming and mapped in 1968 by a team of archaeologists from Cambridge.
+It has at least 15 buildings submerged in three to four metres of water. The newest discoveries in 2009 alone cover 9,000 square meters.</description>
+                <link>http://www-personal.acfr.usyd.edu.au/mattjr/benthos/chamber3.tar</link>
+		<filename>chamber3.tar</filename>
+		<geo:lat>36.518627</geo:lat>
+		<geo:long>22.988708</geo:long>
+		<folder>Greece</folder>
+        </item>
+
+</channel>
+</rss>
