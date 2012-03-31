@@ -49,8 +49,6 @@
 
 @implementation Model
 
-@synthesize magnitude;
-@synthesize location;
 @synthesize date;
 @synthesize weblink;
 @synthesize latitude;
@@ -58,7 +56,10 @@
 
 
 - (void)dealloc {
-    [location release];
+    [title release];
+    [desc release];
+    [filename release];
+    [folder release];
     [date release];
     [weblink release];
     [super dealloc];

@@ -22,6 +22,7 @@
 		7B48CBA8152279A1008FA151 /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBA7152279A1008FA151 /* MapAnnotation.m */; };
 		7B48CBB51522C188008FA151 /* Model.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBB21522C188008FA151 /* Model.m */; };
 		7B48CBB61522C188008FA151 /* ParseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBB41522C188008FA151 /* ParseOperation.m */; };
+		7B909178152669BB007DC3AC /* models.sql in Resources */ = {isa = PBXBuildFile; fileRef = 7B909177152669BB007DC3AC /* models.sql */; };
 		7BCBD12C1520B537009DC170 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCBD12B1520B537009DC170 /* MapKit.framework */; };
 		7BCBD12E1520B550009DC170 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCBD12D1520B550009DC170 /* CoreLocation.framework */; };
 		7BE606491398E0480072A1C5 /* pass.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7BE606281398DEA80072A1C5 /* pass.frag */; };
@@ -147,6 +148,7 @@
 		7B48CBB31522C188008FA151 /* ParseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseOperation.h; sourceTree = "<group>"; };
 		7B48CBB41522C188008FA151 /* ParseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseOperation.m; sourceTree = "<group>"; };
 		7B61FB0213991399006E50B3 /* renderVT.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = renderVT.frag; path = LibVT/renderVT.frag; sourceTree = "<group>"; };
+		7B909177152669BB007DC3AC /* models.sql */ = {isa = PBXFileReference; lastKnownFileType = file; path = models.sql; sourceTree = "<group>"; };
 		7BCBD12B1520B537009DC170 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		7BCBD12D1520B550009DC170 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		7BE606281398DEA80072A1C5 /* pass.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = pass.frag; path = LibVT/pass.frag; sourceTree = "<group>"; };
@@ -377,6 +379,7 @@
 				BCF495211040945400BE82D5 /* RotationIcon.png */,
 				BCDC9F9C0EB37B3400ADCFA5 /* Localized.strings */,
 				BC4E97F90E69F8E1006CD291 /* molecules.sql */,
+				7B909177152669BB007DC3AC /* models.sql */,
 				BC4FB7B90E4F80DB00B316CD /* redButton.png */,
 				BC4FB75C0E4F6BAF00B316CD /* greenButton.png */,
 				BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */,
@@ -719,6 +722,7 @@
 				7BF64D95139770C8002FEB23 /* renderVT_vert.cg in Resources */,
 				7B056F06150AC85A00621766 /* chamber3.tar in Resources */,
 				7B4772D9151D8E5200727C6C /* redx.png in Resources */,
+				7B909178152669BB007DC3AC /* models.sql in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

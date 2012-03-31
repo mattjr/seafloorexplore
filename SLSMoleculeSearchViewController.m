@@ -98,6 +98,9 @@
 	{
 		self.tableView.backgroundColor = [UIColor whiteColor];
 	}	
+    [self.navigationItem setHidesBackButton:NO animated:YES];
+    self.tableView.allowsSelection = YES;
+
 }
 
 - (void)dealloc 
@@ -128,7 +131,7 @@
 	
 	    
 	NSString *searchURL = nil;
-    searchURL = [[NSString alloc] initWithString:[urlbasepath stringByAppendingString:@"models.xml" ]] ;
+    searchURL = [[NSString alloc] initWithString:[urlbasepath stringByAppendingString:@"tmp.xml" ]] ;
     
 	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -414,6 +417,8 @@
 //                cell.contentView.backgroundColor = [UIColor colorWithWhite:0.6 alpha:1.0];
                 cell.textLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1.0];
                 cell.detailTextLabel.textColor = [UIColor colorWithWhite:0.2 alpha:1.0];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
             }else {
                 cell.textLabel.textColor = [UIColor blackColor];
 
@@ -481,6 +486,10 @@
         downloadController = [[SLSMoleculeDownloadController alloc] initWithModel:selectedModel];
         
         [downloadController downloadNewMolecule];
+        [self.navigationItem setHidesBackButton: YES animated: YES];
+        self.tableView.allowsSelection = NO;
+
+
 //		
 //		SLSMoleculeDownloadViewController *downloadViewController = [[SLSMoleculeDownloadViewController alloc] initWithPDBCode:selectedPDBCode andTitle:selectedTitle];
 //		
@@ -611,6 +620,9 @@
     self.tableView.backgroundColor = [UIColor whiteColor];
     self.tableView.separatorColor = [UIColor colorWithWhite:0.88 alpha:1.0];
     [self.tableView reloadData];
+    [self.navigationItem setHidesBackButton:NO animated:YES];
+
+    self.tableView.allowsSelection = YES;
     
 
 }

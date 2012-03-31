@@ -68,6 +68,7 @@ extern NSString *kModelsMsgErrorKey;
     BOOL didAbortParsing;
     NSUInteger parsedModelsCounter;
 }
+- (void) staticparse:(NSMutableArray *) list ;
 - (id)initWithData:(NSMutableData *)parseData;
 @property (copy, readonly) NSData *ModelData;
 

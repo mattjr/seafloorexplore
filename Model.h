@@ -50,9 +50,6 @@
 @interface Model : NSObject {
 @private
     // Magnitude of the ModelMeta on the Richter scale.
-    CGFloat magnitude;
-    // Name of the location of the ModelMeta.
-    NSString *location;
     NSString *title;
     NSString *desc;
     NSString *filename;
@@ -70,8 +67,6 @@
 }
 
 
-@property (nonatomic, assign) CGFloat magnitude;
-@property (nonatomic, retain) NSString *location;
 @property (nonatomic, retain) NSDate *date;
 @property (nonatomic, retain) NSURL *weblink;
 @property (nonatomic, assign) double latitude;

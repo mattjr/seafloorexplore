@@ -22,7 +22,7 @@
 		downloadCancelled = NO;
         
 		
-		downloadingmodel = [model  copy];
+		downloadingmodel = [model  retain];
         progressView = [[[UIProgressView alloc] initWithFrame:CGRectZero] retain];
         downloadStatusText = [[[UILabel alloc] initWithFrame:CGRectZero] retain ];
         downloadStatusText.textColor = [UIColor blackColor];
@@ -130,8 +130,8 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     cancelDownloadButton.hidden = NO;
 
     NSString *filename = [[[downloadingmodel filename] lastPathComponent] stringByDeletingPathExtension];	
-    NSString *octreepath=[NSString stringWithFormat: @"%@/%@.octree",filename,filename];
-	if ([[NSFileManager defaultManager] fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:octreepath]])
+    NSString *xmlpath=[NSString stringWithFormat: @"%@/%@.xml",filename,filename];
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:xmlpath]])
 	{
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"File already exists", @"Localized", nil) message:NSLocalizedStringFromTable(@"This model has already been downloaded", @"Localized", nil)
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
@@ -168,10 +168,11 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 - (BOOL)downloadMolecule;
 {
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+
 	downloadStatusText.hidden = NO;
 	downloadStatusText.text = NSLocalizedStringFromTable(@"Connecting...", @"Localized", nil);
     progressView.progress = 0.0f;
-
+   
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 	NSURLRequest *theRequest=[NSURLRequest requestWithURL:[downloadingmodel weblink]
 											  cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -357,7 +358,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 	[self downloadCompleted];	
 }
 -(void) sendDownloadFinishedMsg:(NSString*)filename {
-       [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:filename userInfo:[NSDictionary dictionaryWithObject:[downloadingmodel filename] forKey:@"title"]];  
+       [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:filename userInfo:[NSDictionary dictionaryWithObject:downloadingmodel  forKey:@"model"]];  
 }
 #pragma mark -
 #pragma mark Accessors

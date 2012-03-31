@@ -16,7 +16,7 @@
 #import "SLSMolecule.h"
 #import "NSData+Gzip.h"
 #import "NSFileManager+Tar.h"
-
+#import "ParseOperation.h"
 #import "VCTitleCase.h"
 
 #define MOLECULES_DATABASE_VERSION 1
@@ -170,19 +170,19 @@
     NSError *error;
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *writableDBPath = [documentsDirectory stringByAppendingPathComponent:@"molecules.sql"];
+    NSString *writableDBPath = [documentsDirectory stringByAppendingPathComponent:@"models.sql"];
     if ([fileManager fileExistsAtPath:writableDBPath])
 	{
-		[fileManager moveItemAtPath:writableDBPath toPath:[[self applicationSupportDirectory] stringByAppendingPathComponent:@"molecules.sql"] error:&error];
+		[fileManager moveItemAtPath:writableDBPath toPath:[[self applicationSupportDirectory] stringByAppendingPathComponent:@"models.sql"] error:&error];
 	}
 	
-	writableDBPath = [[self applicationSupportDirectory] stringByAppendingPathComponent:@"molecules.sql"];
+	writableDBPath = [[self applicationSupportDirectory] stringByAppendingPathComponent:@"models.sql"];
 	
     if ([fileManager fileExistsAtPath:writableDBPath])
 		return NO;
 	
     // The database does not exist, so copy a blank starter database to the Documents directory
-    NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"molecules.sql"];
+    NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"models.sql"];
     BOOL success = [fileManager copyItemAtPath:defaultDBPath toPath:writableDBPath error:&error];
     if (!success) {
 		NSAssert1(0,NSLocalizedStringFromTable(@"Failed to create writable database file with message '%@'.", @"Localized", nil), [error localizedDescription]);
@@ -195,7 +195,7 @@
 	molecules = [[NSMutableArray alloc] init];
 	
 	// The database is stored in the application bundle. 
-    NSString *path = [[self applicationSupportDirectory] stringByAppendingPathComponent:@"molecules.sql"];
+    NSString *path = [[self applicationSupportDirectory] stringByAppendingPathComponent:@"models.sql"];
     // Open the database. The database was prepared outside the application.
     if (sqlite3_open([path UTF8String], &database) == SQLITE_OK) 
 	{
@@ -320,7 +320,7 @@
 
 - (void)loadAllMoleculesFromDatabase;
 {
-	const char *sql = "SELECT * FROM molecules";
+	const char *sql = "SELECT * FROM models";
 	sqlite3_stmt *moleculeLoadingStatement;
 
 	if (sqlite3_prepare_v2(database, sql, -1, &moleculeLoadingStatement, NULL) == SQLITE_OK) 
@@ -343,17 +343,17 @@
 	// First, load all molecule names from the database
 	NSMutableDictionary *moleculeFilenameLookupTable = [[NSMutableDictionary alloc] init];
 	
-	const char *sql = "SELECT * FROM molecules";
+	const char *sql = "SELECT * FROM models";
 	sqlite3_stmt *moleculeLoadingStatement;
 	
 	if (sqlite3_prepare_v2(database, sql, -1, &moleculeLoadingStatement, NULL) == SQLITE_OK) 
 	{
 		while (sqlite3_step(moleculeLoadingStatement) == SQLITE_ROW) 
 		{
-			char *stringResult = (char *)sqlite3_column_text(moleculeLoadingStatement, 1);
+			char *stringResult = (char *)sqlite3_column_text(moleculeLoadingStatement, 3);
 			NSString *sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
-			NSString *filename = [sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"];
-			[moleculeFilenameLookupTable setValue:[NSNumber numberWithBool:YES] forKey:filename];
+			NSString *basename = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] stringByDeletingPathExtension];
+			[moleculeFilenameLookupTable setValue:[NSNumber numberWithBool:YES] forKey:basename];
 		}
 	}
 	sqlite3_finalize(moleculeLoadingStatement);	
@@ -383,22 +383,32 @@
         BOOL isDir = [[pathAttrs objectForKey:NSFileType] isEqual:NSFileTypeDirectory];
         if(isDir && level == 2)
             [direnum skipDescendents];
-        NSString *filename = [[pname lastPathComponent] stringByDeletingPathExtension];	
+        NSString *basename = [[pname lastPathComponent] stringByDeletingPathExtension];	
 
-		if ( ([moleculeFilenameLookupTable valueForKey:filename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"octree"] || [[[pname pathExtension] lowercaseString] isEqualToString:@"bz2"]) )
+		if ( ([moleculeFilenameLookupTable valueForKey:basename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"xml"] ) )
 		{
+            NSString *preloadedXMLPath = [documentsDirectory stringByAppendingPathComponent:pname];
+            NSMutableData* xmlData = [NSMutableData dataWithContentsOfFile:preloadedXMLPath];
+            ParseOperation *parseOperation = [[ParseOperation alloc] initWithData:xmlData];
+            NSMutableArray *filesystemModels = [NSMutableArray array];
+            [parseOperation staticparse:filesystemModels];
+            [parseOperation release];   // once added to the NSOperationQueue it's retained, we don't need it anymore
+            // earthquakeData will be retained by the NSOperation until it has finished executing,
+            // so we no longer need a reference to it in the main thread.
+            if([filesystemModels count] >0){
 
-			// Parse the PDB file into the database
-			SLSMolecule *newMolecule = [[SLSMolecule alloc] initWithFilename:filename database:database title:filename];
-			if (newMolecule != nil)
-			{
-				[molecules addObject:newMolecule];
-				if (rootViewController.tableViewController != nil)
-				{
-					[rootViewController.tableViewController.tableView reloadData];				
-				}					
-			}
-			[newMolecule release];			
+                // Parse the PDB file into the database
+                SLSMolecule *newMolecule = [[SLSMolecule alloc] initWithModel:[filesystemModels objectAtIndex:0] database:database];
+                if (newMolecule != nil)
+                {
+                    [molecules addObject:newMolecule];
+                    if (rootViewController.tableViewController != nil)
+                    {
+                        [rootViewController.tableViewController.tableView reloadData];				
+                    }					
+                }
+                [newMolecule release];		
+            }
 		}
 	}
 	

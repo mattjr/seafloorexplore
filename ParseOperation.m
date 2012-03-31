@@ -123,6 +123,36 @@ NSString *kModelsMsgErrorKey = @"ModelsMsgErrorKey";
     [parser release];
 }
 
+
+// the main function for this NSOperation, to start the parsing
+- (void) staticparse:(NSMutableArray *) list {
+    self.currentParseBatch = [NSMutableArray array];
+    self.currentParsedCharacterData = [NSMutableString string];
+    
+    // It's also possible to have NSXMLParser download the data, by passing it a URL, but this is
+    // not desirable because it gives less control over the network, particularly in responding to
+    // connection errors.
+    //
+    NSXMLParser *parser = [[NSXMLParser alloc] initWithData:self.ModelData];
+    [parser setDelegate:self];
+    [parser parse];
+    
+    // depending on the total number of Models parsed, the last batch might not have been a
+    // "full" batch, and thus not been part of the regular batch transfer. So, we check the count of
+    // the array and, if necessary, send it to the main thread.
+    //
+    if ([self.currentParseBatch count] > 0 && list != nil) {
+       [list addObjectsFromArray:self.currentParseBatch];
+    }
+    
+    self.currentParseBatch = nil;
+    self.currentModelObject = nil;
+    self.currentParsedCharacterData = nil;
+    
+    [parser release];
+}
+
+
 - (void)dealloc {
     [ModelData release];
     
@@ -160,8 +190,8 @@ static NSString * const kFolderElementName = @"folder";
 static NSString * const kTitleElementName = @"title";
 static NSString * const kDescElementName = @"description";
 static NSString * const kUpdatedElementName = @"updated";
-static NSString * const kGeoRSSPointElementName = @"georss:point";
-
+static NSString * const kGeoRSSLatElementName = @"geo:lat";
+static NSString * const kGeoRSSLonElementName = @"geo:long";
 
 #pragma mark -
 #pragma mark NSXMLParser delegate methods
@@ -184,15 +214,11 @@ static NSString * const kGeoRSSPointElementName = @"georss:point";
         Model *model = [[Model alloc] init];
         self.currentModelObject = model;
         [model release];
-    } else if ([elementName isEqualToString:kLinkElementName]) {
-        NSString *relAttribute = [attributeDict valueForKey:@"rel"];
-        if ([relAttribute isEqualToString:@"alternate"]) {
-            NSString *weblink = [attributeDict valueForKey:@"href"];
-            self.currentModelObject.weblink = [NSURL URLWithString:weblink];
-        }
     } else if ([elementName isEqualToString:kTitleElementName] ||
+               [elementName isEqualToString:kLinkElementName] ||
                [elementName isEqualToString:kUpdatedElementName] ||
-               [elementName isEqualToString:kGeoRSSPointElementName]||
+               [elementName isEqualToString:kGeoRSSLatElementName]||
+               [elementName isEqualToString:kGeoRSSLonElementName]||
                [elementName isEqualToString:kDescElementName]||
                [elementName isEqualToString:kFolderElementName] ||
                [elementName isEqualToString:kFilenameElementName]) {
@@ -227,7 +253,19 @@ static NSString * const kGeoRSSPointElementName = @"georss:point";
         if ([scanner scanUpToCharactersFromSet:[NSCharacterSet illegalCharacterSet] intoString:&title]) {
             self.currentModelObject.title = [title retain];
         }
-    }  else if ([elementName isEqualToString:kDescElementName]) {
+    }else if ([elementName isEqualToString:kLinkElementName]) {
+        // The title element contains the magnitude and location in the following format:
+        // <title>M 3.6, Virgin Islands region<title/>
+        // Extract the magnitude and the location using a scanner:
+        NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
+        // Scan past the "M " before the magnitude.
+        NSString *weblink = nil;
+        // Scan the remainer of the string.
+        if ([scanner scanUpToCharactersFromSet:[NSCharacterSet illegalCharacterSet] intoString:&weblink]) {
+            self.currentModelObject.weblink = [NSURL URLWithString:weblink] ;
+
+        }   
+    }else if ([elementName isEqualToString:kDescElementName]) {
         // The title element contains the magnitude and location in the following format:
         // <title>M 3.6, Virgin Islands region<title/>
         // Extract the magnitude and the location using a scanner:
@@ -268,19 +306,21 @@ static NSString * const kGeoRSSPointElementName = @"georss:point";
         else {
             // kUpdatedElementName can be found outside an entry element (i.e. in the XML header)
             // so don't process it here.
-        }
-    } else if ([elementName isEqualToString:kGeoRSSPointElementName]) {
-        // The georss:point element contains the latitude and longitude of the Model epicenter.
-        // 18.6477 -66.7452
-        //
-        NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
-        double latitude, longitude;
+        }                 
+    } else if ([elementName isEqualToString:kGeoRSSLatElementName]) {
+             NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
+        double latitude;
         if ([scanner scanDouble:&latitude]) {
-            if ([scanner scanDouble:&longitude]) {
                 self.currentModelObject.latitude = latitude;
-                self.currentModelObject.longitude = longitude;
             }
-        }
+        
+    }else if ([elementName isEqualToString:kGeoRSSLonElementName]) {
+       NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
+    double longitude;
+    if ([scanner scanDouble:&longitude]) {
+        self.currentModelObject.longitude = longitude;
+    }
+    
     }
     // Stop accumulating parsed character data. We won't start again until specific elements begin.
     accumulatingParsedCharacterData = NO;

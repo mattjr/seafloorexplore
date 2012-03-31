@@ -172,9 +172,9 @@
         }
 
 	SLSMolecule *newMolecule =nil;
-    NSString *pname=[filename  stringByDeletingPathExtension ]   ;
+ //   NSString *pname=[filename  stringByDeletingPathExtension ]   ;
     if(!extractError)
-        newMolecule=[[SLSMolecule alloc] initWithFilename:pname  database:database title:[[note userInfo] objectForKey:@"title"]];
+        newMolecule=[[SLSMolecule alloc] initWithModel:[[note userInfo] objectForKey:@"model"] database:self.database];
 	if (newMolecule == nil)
 	{
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Error in downloaded file", @"Localized", nil) message:NSLocalizedStringFromTable(@"The molecule file is either corrupted or not of a supported format", @"Localized", nil)
@@ -379,10 +379,10 @@
         }
   //      int l=[[molecules objectAtIndex:(index-1)] numberOfAtoms];
         //printf("Fail Val 0x%x %d\n",(int)[molecules objectAtIndex:(index-1)], l);
-		NSString *fileNameWithoutExtension = [[molecules objectAtIndex:(index-1)] filenameWithoutExtension];
-        cell.textLabel.text = fileNameWithoutExtension;
+		//NSString *fileNameWithoutExtension = [[molecules objectAtIndex:(index-1)] filenameWithoutExtension];
+        cell.textLabel.text = [[molecules objectAtIndex:(index-1)] title];
 
-		cell.detailTextLabel.text = fileNameWithoutExtension;
+		cell.detailTextLabel.text = [[molecules objectAtIndex:(index-1)] desc];
 		
 		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	}

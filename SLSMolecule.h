@@ -43,7 +43,7 @@ typedef struct {
 {
 	// Metadata from the Protein Data Bank
 	unsigned int numberOfAtoms, numberOfBonds, numberOfStructures;
-	NSString *filename, *filenameWithoutExtension, *title, *keywords, *journalAuthor, *journalTitle, *journalReference, *sequence, *compound, *source, *author,*desc;
+	NSString *filename, *filenameWithoutExtension, *title, *keywords, *journalAuthor, *journalTitle, *journalReference, *sequence, *compound, *source, *author,*desc,*weblink,*folder;
 
 	// Status of the molecule
     BOOL hasRendered;
@@ -81,7 +81,7 @@ typedef struct {
 @property (readwrite, retain) NSValue *previousTerminalAtomValue;
 @property (readwrite, nonatomic) SLSVisualizationType currentVisualizationType;
 @property (readwrite) unsigned int numberOfStructureBeingDisplayed;
-- (id)initWithModel:(Model *)newModel;
+- (id)initWithModel:(Model *)newModel database:(sqlite3 *)newDatabase;
 
 - (id)initWithFilename:(NSString *)newFilename database:(sqlite3 *)newDatabase title:(NSString *)newTitle;
 - (id)initWithSQLStatement:(sqlite3_stmt *)moleculeRetrievalStatement database:(sqlite3 *)newDatabase;

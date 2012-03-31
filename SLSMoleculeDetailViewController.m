@@ -32,8 +32,8 @@
 		self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
 		self.molecule = newMolecule;
-		[newMolecule readMetadataFromDatabaseIfNecessary];
-		self.title = molecule.compound;
+		//[newMolecule readMetadataFromDatabaseIfNecessary];
+		self.title = molecule.title;
 
         
         _placemark = [[[CLPlacemark alloc]init] retain];
@@ -53,7 +53,7 @@
 	{
 		self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
-		self.molecule = [[[SLSMolecule alloc] initWithModel:newModel] autorelease];
+		self.molecule = [[[SLSMolecule alloc] initWithModel:newModel database:NULL] autorelease];
 		self.title = molecule.compound;
         
         
@@ -329,11 +329,10 @@
     
     CGRect frame = CGRectMake(0, 0, cellWidth, 240);
     MKMapView *map = [[MKMapView alloc] initWithFrame:frame];
-    //MKCoordinateRegion region =  MKCoordinateRegionMakeWithDistance(self.placemark.location.coordinate, 200, 200);
-    CLLocationCoordinate2D AusLoc = {-19.048230,133.685730};
-    MKCoordinateSpan AusSpan = MKCoordinateSpanMake(45, 45);
-    MKCoordinateRegion AusRegion = MKCoordinateRegionMake(AusLoc, AusSpan);
-    [map setRegion:AusRegion];
+    MKCoordinateSpan Span = MKCoordinateSpanMake(5, 5);
+    MKCoordinateRegion region =  MKCoordinateRegionMake(self.molecule.coord, Span);
+
+    [map setRegion:region];
     
     map.layer.masksToBounds = YES;
     map.layer.cornerRadius = 10.0;
@@ -377,8 +376,8 @@
 
 - (CLLocationCoordinate2D)coordinate
 {
-    CLLocationCoordinate2D AusLoc = {-19.048230,133.685730};
-    return AusLoc;
+   
+    return self.molecule.coord;
 }
 
 - (NSString *)title
