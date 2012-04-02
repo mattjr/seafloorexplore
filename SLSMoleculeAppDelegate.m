@@ -39,6 +39,8 @@
 		return NO;
 	}
 	window.backgroundColor = [UIColor blackColor];
+	molecules = [[NSMutableArray alloc] init];
+	rootViewController.molecules = molecules;
 
 	if ([SLSMoleculeAppDelegate isRunningOniPad])
 	{
@@ -192,7 +194,6 @@
 
 - (void)connectToDatabase;
 {
-	molecules = [[NSMutableArray alloc] init];
 	
 	// The database is stored in the application bundle. 
     NSString *path = [[self applicationSupportDirectory] stringByAppendingPathComponent:@"models.sql"];
@@ -642,7 +643,7 @@
 			[molecules addObject:newMolecule];
 			[newMolecule release];
 			
-			[rootViewController updateTableListOfMolecules];
+			[rootViewController updateListOfMolecules];
 			[rootViewController selectedMoleculeDidChange:([molecules count] - 1)];
 			[rootViewController loadInitialMolecule];
 

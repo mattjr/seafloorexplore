@@ -26,6 +26,8 @@
 
     SLSOpenGLESRenderer *openGLESRenderer;
     Simulation *sim;
+    Scene *scene;
+
 	SLSMolecule *moleculeToDisplay;
 	BOOL isAutorotating;
 	CADisplayLink *displayLink;
@@ -45,6 +47,7 @@
 @property (readwrite, retain, nonatomic) UIActionSheet *visualizationActionSheet;
 @property (readwrite, retain, nonatomic) SLSMolecule *moleculeToDisplay;
 @property (readwrite, retain, nonatomic) CADisplayLink *displayLink;
+@property (readwrite, retain, nonatomic) SLSOpenGLESRenderer *openGLESRenderer;
 
 // Display indicator control
 - (void)showScanningIndicator:(NSNotification *)note;
@@ -56,15 +59,16 @@
 - (void)switchVisType:(id)sender;
 
 // Autorotation of molecule
-- (void)startOrStopAutorotation:(id)sender;
+- (void)startOrStopAutorotation:(BOOL)setTo;
 - (void)handleAutorotationTimer;
+- (void)stopAutorotate:(NSNotification *)note;
 
 // OpenGL molecule rendering
 - (void)resizeView;
 - (void)runOpenGLBenchmarks;
 - (void)updateSizeOfGLView:(NSNotification *)note;
 - (void)stopRender;
-- (void)startRender:(NSString*)name;
+- (void)startRender:(SLSMolecule*)mol;
 
 // Manage molecule rendering state
 - (void)handleFinishOfMoleculeRendering:(NSNotification *)note;

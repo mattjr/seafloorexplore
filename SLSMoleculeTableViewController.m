@@ -63,7 +63,7 @@
 - (void)viewDidLoad;
 {
 	[super viewDidLoad];
-    
+
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 	{
 		//		self.tableView.backgroundColor = [UIColor colorWithRed:0.0f green:0.0f blue:0.054f alpha:1.0f];
@@ -136,9 +136,8 @@
             NSString *installedTexPath = [documentsDirectory stringByAppendingPathComponent:[filename stringByDeletingPathExtension]];
             if (![fileManager fileExistsAtPath:installedTexPath])
             {
-                NSData* tarData = [NSData dataWithContentsOfFile:archivePath];
                 NSError *error=nil;
-                [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:documentsDirectory withTarData:tarData error:&error];
+                [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:documentsDirectory withTarPath:archivePath error:&error];
                 
                 if (error != nil)
                 {

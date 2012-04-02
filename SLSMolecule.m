@@ -243,10 +243,9 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
     
     coord.latitude=sqlite3_column_double(moleculeRetrievalStatement, 6);
     coord.longitude=sqlite3_column_double(moleculeRetrievalStatement, 7);
-    double version=sqlite3_column_double(moleculeRetrievalStatement, 8);
+    //double version=sqlite3_column_double(moleculeRetrievalStatement, 8);
 
-    NSLog(@"%f %f %@ %@ %@ %@ %@ %f\n",coord.latitude,coord.longitude,weblink,folder,filenameWithoutExtension,title
-          ,desc,version);
+    //NSLog(@"%f %f %@ %@ %@ %@ %@ %f\n",coord.latitude,coord.longitude,weblink,folder,filenameWithoutExtension,title,desc,version);
 		
 	return self;
 }

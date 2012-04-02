@@ -15,7 +15,7 @@
 #import "SLSMoleculeDataSourceViewController.h"
 #import "SLSMoleculeGLView.h"
 #include "SLSMolecule.h"
-
+#import "MyOpenGLES20Renderer.h"
 @implementation SLSMoleculeiPadRootViewController
 
 /*
@@ -97,6 +97,7 @@
 	[downloadBarButton release];
 
 	glViewController.view.frame = CGRectMake(mainScreenFrame.origin.x, mainToolbar.bounds.size.height, mainScreenFrame.size.width, mainScreenFrame.size.height -  mainToolbar.bounds.size.height);
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
@@ -201,8 +202,11 @@
 	
 	glViewController.moleculeToDisplay = bufferedMolecule;
 	
-	[moleculeTablePopover dismissPopoverAnimated:YES];
-	 moleculeTablePopover = nil;
+	//[moleculeTablePopover dismissPopoverAnimated:YES];
+	// moleculeTablePopover = nil;
+    [(MyOpenGLES20Renderer*)glViewController.openGLESRenderer setRemoveOnceRender:YES];
+    [glViewController startOrStopAutorotation:YES];
+
 	
 }
 
@@ -320,13 +324,15 @@
 	
 	[glViewController.visualizationActionSheet dismissWithClickedButtonIndex:2 animated:YES];
 	glViewController.visualizationActionSheet = nil;
-	
+	[glViewController startOrStopAutorotation:NO];
 	moleculeTablePopover = pc;
+    moleculeTablePopover.delegate=self;
 }
 
 - (void)splitViewController:(UISplitViewController*)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem*)barButtonItem forPopoverController:(UIPopoverController*)pc
 {		
 	[(UINavigationController *)aViewController navigationBar].barStyle = UIBarStyleBlackOpaque;
+
 //    barButtonItem.title = @"Molecules";
     NSMutableArray *items = [[mainToolbar items] mutableCopy];
     [items insertObject:barButtonItem atIndex:0];
@@ -357,7 +363,12 @@
 	else if (popoverController == moleculeTablePopover)
 	{
 		moleculeTablePopover = nil;
+
 	}
+    
+    [glViewController startOrStopAutorotation:YES];
+
+    
 }
 
 

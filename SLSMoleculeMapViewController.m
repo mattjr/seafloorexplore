@@ -18,7 +18,8 @@
 #import "NSFileManager+Tar.h"
 
 @implementation SLSMoleculeMapViewController
-@synthesize mapView;
+@synthesize mapView,    selectedAnnotation,firstView;
+;
 #pragma mark -
 #pragma mark Initialization and breakdown
 
@@ -29,7 +30,7 @@
         
 		selectedIndex = indexOfInitialMolecule;
         molecules=mol_list;
-      		
+        firstView=NO;
 		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moleculeDidFinishDownloading:) name:@"MoleculeDidFinishDownloading" object:nil];
 
 		
@@ -73,18 +74,13 @@
     mapView.mapType = MKMapTypeHybrid;
     mapView.delegate = self;
     
-        //MKCoordinateRegion region =  MKCoordinateRegionMakeWithDistance(self.placemark.location.coordinate, 200, 200);
+   /*     //MKCoordinateRegion region =  MKCoordinateRegionMakeWithDistance(self.placemark.location.coordinate, 200, 200);
     CLLocationCoordinate2D AusLoc = {-19.048230,133.685730};
     MKCoordinateSpan AusSpan = MKCoordinateSpanMake(45, 45);
     MKCoordinateRegion AusRegion = MKCoordinateRegionMake(AusLoc, AusSpan);
-    [mapView setRegion:AusRegion];
-    int idx=0;
+    [mapView setRegion:AusRegion];*/
 
-    for(SLSMolecule * mol in molecules){
-        MapAnnotation *ann =[[[MapAnnotation alloc] initWithCoordinate:mol.coord withName:mol.title withIndex:idx] autorelease];
-        [mapView addAnnotation:ann];
-        idx++;
-    }
+   
     [self.view addSubview:mapView];
 
 	/*if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
@@ -102,8 +98,71 @@
 	{
 		self.MapView.backgroundColor = [UIColor whiteColor];
 	}	*/
+
+}
+ -(void) viewDidAppear:(BOOL)animated {
+
+     if(!firstView){
+         [self doAnnotation];
+         firstView=YES;
+     }
+         
+     for (id <MKAnnotation> annotation in mapView.annotations){
+         if ([annotation isKindOfClass:[MapAnnotation class]])
+         {
+             MapAnnotation *ma = (MapAnnotation *)annotation;
+             if(ma.idx ==selectedIndex){
+                 [mapView deselectAnnotation:annotation animated:NO];
+
+                 [mapView selectAnnotation:annotation animated:YES];
+                 
+             }
+         }
+
+     
+     }
+}
+-(void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
+{
+    [self performSelector:@selector(reSelectAnnotationIfNoneSelected:) 
+               withObject:view.annotation afterDelay:0];
 }
 
+- (void)reSelectAnnotationIfNoneSelected:(id<MKAnnotation>)annotation
+{
+    if (mapView.selectedAnnotations.count == 0)
+        [mapView selectAnnotation:annotation animated:NO];
+}
+-(void) doAnnotation
+{
+    
+    int idx=0;
+    for(SLSMolecule * mol in molecules){
+        MapAnnotation *ann =[[[MapAnnotation alloc] initWithCoordinate:mol.coord withName:mol.title withIndex:idx] autorelease];
+        [mapView addAnnotation:ann];
+        if(idx ==selectedIndex){
+            [mapView selectAnnotation:ann animated:YES];
+            self.selectedAnnotation=ann;
+            
+        }
+        idx++;
+    }
+    
+    MKMapRect zoomRect = MKMapRectNull;
+    for (id <MKAnnotation> annotation in mapView.annotations)
+    {
+        MKMapPoint annotationPoint = MKMapPointForCoordinate(annotation.coordinate);
+        MKMapRect pointRect = MKMapRectMake(annotationPoint.x, annotationPoint.y, 0, 0);
+        if (MKMapRectIsNull(zoomRect)) {
+            zoomRect = pointRect;
+        } else {
+            zoomRect = MKMapRectUnion(zoomRect, pointRect);
+        }
+    }
+
+    [mapView setVisibleMapRect:zoomRect animated:NO];
+
+}
 - (void)dealloc 
 {
 	[tableTextColor release];
@@ -133,7 +192,7 @@
 	[dataSourceViewController release];
  */
 }
-
+/*
 - (void)moleculeDidFinishDownloading:(NSNotification *)note;
 {
     if ([note object] == nil)
@@ -259,7 +318,7 @@
 	[self.navigationController popToViewController:self animated:YES];
 }
 
-
+*/
 #pragma mark -
 #pragma mark Table view data source delegate methods
 
@@ -268,6 +327,11 @@
 {
     MapAnnotation *annotation = view.annotation;
     //NSString *temp = annotation.title;
+    if(selectedIndex == annotation.idx)
+        return;
+    
+    
+    selectedIndex = annotation.idx;
     [self.delegate selectedMoleculeDidChange:annotation.idx];
 }
 
@@ -298,17 +362,19 @@
         return nil;
     
             // try to dequeue an existing pin view first
-        static NSString* BridgeAnnotationIdentifier = @"bridgeAnnotationIdentifier";
+        NSString* AnnotationIdentifier = [[annotation title] stringByAppendingString:@"AnnotationIdentifier"] ;
         MKPinAnnotationView* pinView = (MKPinAnnotationView *)
-        [mapView dequeueReusableAnnotationViewWithIdentifier:BridgeAnnotationIdentifier];
+        [mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationIdentifier];
         if (!pinView)
         {
             // if an existing pin view was not available, create one
             MKPinAnnotationView* customPinView = [[[MKPinAnnotationView alloc]
-                                                   initWithAnnotation:annotation reuseIdentifier:BridgeAnnotationIdentifier] autorelease];
-            customPinView.pinColor = MKPinAnnotationColorGreen;
-            customPinView.animatesDrop = NO;
+                                                   initWithAnnotation:annotation reuseIdentifier:AnnotationIdentifier] autorelease];
+            customPinView.pinColor = MKPinAnnotationColorRed;
+            customPinView.animatesDrop = YES;
             customPinView.canShowCallout = YES;
+            customPinView.enabled=YES;
+            [customPinView setSelected:YES];
             
             // add a detail disclosure button to the callout which will open a new view controller page
             //
@@ -331,7 +397,13 @@
     
       
 }
-
+-(void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
+    [self performSelector:@selector(selectInitialAnnotation)
+               withObject:nil afterDelay:0.5];
+}
+-(void)selectInitialAnnotation {
+    [self.mapView selectAnnotation:self.selectedAnnotation animated:YES];
+}
 - (void)showDetails:(id)sender
 {
     

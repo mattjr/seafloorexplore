@@ -52,7 +52,7 @@
 - (void)loadInitialMolecule;
 - (void)selectedMoleculeDidChange:(NSInteger)newMoleculeIndex;
 - (void)cancelMoleculeLoading;
-- (void)updateTableListOfMolecules;
+- (void)updateListOfMolecules;
 - (void)customURLSelectedForMoleculeDownload:(NSNotification *)note;
 - (NSArray *)segmentViewControllers;
 - (void)firstUserExperience;

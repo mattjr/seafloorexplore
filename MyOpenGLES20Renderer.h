@@ -14,6 +14,7 @@
 @class GLProgram;
 @class Scene;
 @class Simulation;
+@class Molecule;
 @interface MyOpenGLES20Renderer : SLSOpenGLESRenderer 
 {
    
@@ -23,17 +24,22 @@
     Simulation *sim ;
 	NSString *defaultModelName;
     int drawn;
+    BOOL removeOnceRender;
 }
 @property(assign,nonatomic)     Simulation *sim ;
+@property(assign,nonatomic)     Scene *scene ;
+@property(assign,atomic)      BOOL removeOnceRender;
+
 
 
 // OpenGL drawing support
 - (BOOL)createFramebuffer:(GLuint *)framebufferPointer size:(CGSize)bufferSize renderBuffer:(GLuint *)renderbufferPointer depthBuffer:(GLuint *)depthbufferPointer texture:(GLuint *)backingTexturePointer layer:(CAEAGLLayer *)layer;
 - (void)switchToDisplayFramebuffer;
 - (void)shutdownVT;
--(void)startupVT:(NSString *)name;
+-(void)startupVT:(SLSMolecule *)molecule;
 - (void)showStatusIndicator;
 - (void)hideStatusIndicator;
+- (void)reshapeScenes;
 
 
 @end

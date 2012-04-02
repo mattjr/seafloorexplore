@@ -324,7 +324,7 @@
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
     {
-        cellWidth = self.view.bounds.size.width - 90;
+        cellWidth = self.view.bounds.size.width - 20;
     }
     
     CGRect frame = CGRectMake(0, 0, cellWidth, 240);

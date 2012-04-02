@@ -124,6 +124,7 @@
 	} 
 	else 
 	{
+        [glViewController startOrStopAutorotation:YES];
 		[glViewController viewWillAppear:YES];
 		[tableNavigationController viewWillDisappear:YES];
 		[tableView removeFromSuperview];
@@ -139,6 +140,7 @@
 		else
 			previousMolecule.isBeingDisplayed = YES;
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
+        
 	}
 	[UIView commitAnimations];
 }
@@ -158,13 +160,15 @@
 	{
 		glViewController.moleculeToDisplay = [molecules objectAtIndex:indexOfInitialMolecule];
 
-        [glViewController startRender:glViewController.moleculeToDisplay.filenameWithoutExtension];
+        [glViewController startRender:glViewController.moleculeToDisplay];
 
 	}
+ 
 		
 }
 - (void)selectedMoleculeDidChange:(NSInteger)newMoleculeIndex;
 {
+
 	if (newMoleculeIndex >= [molecules count])
 	{
 		newMoleculeIndex = 0;		
@@ -174,7 +178,8 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
 	tableViewController.selectedIndex = newMoleculeIndex;
-    
+    [self updateListOfMolecules];
+    [mapViewController setSelectedIndex:newMoleculeIndex];
 	// Defer sending the change message to the OpenGL view until the view is loaded, to make sure that rendering occurs only then
 	if ([molecules count] == 0)
 	{
@@ -186,11 +191,13 @@
 	}
 	else
 	{
+
       //  if(bufferedMolecule != nil)
             [glViewController stopRender];
              
         SLSMolecule *tmp=[molecules objectAtIndex:newMoleculeIndex];
-        [glViewController startRender:tmp.filenameWithoutExtension];
+
+        [glViewController startRender:tmp];
 		bufferedMolecule = [molecules objectAtIndex:newMoleculeIndex];
 	}
 }
@@ -244,10 +251,14 @@
 	}
 }
 
-- (void)updateTableListOfMolecules;
+- (void)updateListOfMolecules;
 {
 	UITableView *tableView = (UITableView *)tableViewController.view;
 	[tableView reloadData];
+    
+   // MKMapView *mapView = (MKMapView *)mapViewController.view;
+//	[mapView removeAllAnnotations];
+    //[mapView setCenterCoordinate:mapView.region.center animated:NO];
 }
 
 
@@ -312,7 +323,8 @@
 	[molecules release];
 	molecules = [newValue retain];
 	tableViewController.molecules = molecules;
-	
+    mapViewController.molecules = molecules;
+
 	NSInteger indexOfInitialMolecule = [[NSUserDefaults standardUserDefaults] integerForKey:@"indexOfLastSelectedMolecule"];
 	if (indexOfInitialMolecule >= [molecules count])
 	{
@@ -320,10 +332,13 @@
 	}
 	
 	tableViewController.selectedIndex = indexOfInitialMolecule;
+    mapViewController.selectedIndex = indexOfInitialMolecule;
+
 }
 
 - (UINavigationController *)tableNavigationController;
 {
+
 	if (tableNavigationController == nil)
 	{
 		bufferedMolecule = nil;
@@ -343,10 +358,11 @@
         mapViewController = [[SLSMoleculeMapViewController alloc] init:indexOfInitialMolecule withMolecules:molecules];
         mapViewController.database = database;
         mapViewController.title=@"Map View";
-        
+
 		tableViewController.database = database;
 		tableViewController.molecules = molecules;
-   
+        mapViewController.molecules = molecules;
+
 		[tableNavigationController pushViewController:tableViewController animated:NO];
 		tableViewController.delegate = self;
 		

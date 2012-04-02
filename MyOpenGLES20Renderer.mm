@@ -21,7 +21,8 @@ extern vtConfig c;
 #define SPHEREDEPTHTEXTUREWIDTH 32
 
 @implementation MyOpenGLES20Renderer
-@synthesize sim;
+@synthesize sim,scene,     removeOnceRender;
+;
 #pragma mark -
 #pragma mark Initialization and teardown
 
@@ -34,7 +35,7 @@ extern vtConfig c;
 
     currentViewportSize = CGSizeZero;
    	[EAGLContext setCurrentContext:context];
-
+    removeOnceRender=NO;
 	//scene = [Scene sharedScene];
     return self;
 }
@@ -83,24 +84,31 @@ extern vtConfig c;
             /*	CGRect layerBounds = glLayer.bounds;
              CGFloat newWidth = (CGFloat)((int)layerBounds.size.width / 32) * 32.0f;
              CGFloat newHeight = (CGFloat)((int)layerBounds.size.height / 32) * 32.0f;
+             */
+            // NSLog(@"Bounds before: %@", NSStringFromCGRect(glLayer.bounds));
              
-             NSLog(@"Bounds before: %@", NSStringFromCGRect(glLayer.bounds));
+           //  glLayer.bounds = CGRectMake(layerBounds.origin.x, layerBounds.origin.y, newWidth, newHeight);
              
-             glLayer.bounds = CGRectMake(layerBounds.origin.x, layerBounds.origin.y, newWidth, newHeight);
-             
-             NSLog(@"Bounds after: %@", NSStringFromCGRect(glLayer.bounds));
-             */            
+            // NSLog(@"Bounds after: %@", NSStringFromCGRect(glLayer.bounds));
+                       
             [self createFramebuffer:&viewFramebuffer size:CGSizeZero renderBuffer:&viewRenderbuffer depthBuffer:&viewDepthBuffer texture:NULL layer:glLayer];    
             [self switchToDisplayFramebuffer];
             glViewport(0, 0, backingWidth, backingHeight);
 
             currentViewportSize = CGSizeMake(backingWidth, backingHeight);
-			//[scene reshape:[NSArray arrayWithObjects:[NSNumber numberWithInt:backingWidth], [NSNumber numberWithInt:backingHeight], nil]];
+			[scene reshape:[NSArray arrayWithObjects:[NSNumber numberWithInt:backingWidth], [NSNumber numberWithInt:backingHeight], nil]];
         });        
     });
     
     return YES;
 }
+- (void)reshapeScenes;
+{
+    
+    [scene reshape:[NSArray arrayWithObjects:[NSNumber numberWithInt:backingWidth], [NSNumber numberWithInt:backingHeight], nil]];
+
+}
+
 
 - (BOOL)createFramebuffer:(GLuint *)framebufferPointer size:(CGSize)bufferSize renderBuffer:(GLuint *)renderbufferPointer depthBuffer:(GLuint *)depthbufferPointer texture:(GLuint *)backingTexturePointer layer:(CAEAGLLayer *)layer;
 {
@@ -266,23 +274,23 @@ extern vtConfig c;
 - (void)showStatusIndicator;
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kSLSMoleculeLoadingStartedNotification object:nil ];
-}
+}	
 
 - (void)hideStatusIndicator;
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kSLSMoleculeLoadingEndedNotification object:nil ];
 }
--(void)startupVT:(NSString *)name
+-(void)startupVT:(SLSMolecule *)mol
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory =[paths objectAtIndex:0];
     
-    
+  //  NSLog(@"Startt VT %@\n",name);
     //if(documentsDirectory != nil)
     //  printf("NIL %s\n",[documentsDirectory UTF8String]);
    // [self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
 
-    NSString *fullpath=[documentsDirectory stringByAppendingPathComponent:name];
+    NSString *fullpath=[documentsDirectory stringByAppendingPathComponent:[[mol filename] stringByDeletingPathExtension]];
     dispatch_sync(openGLESContextQueue, ^{
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
@@ -296,7 +304,14 @@ extern vtConfig c;
         sim = [[Simulation alloc] initWithString:fullpath withScene:scene] ;
         if (sim){
         [scene setSimulator:sim];
+            
             isSceneReady=YES;
+            [mol setHasRendered:NO];
+            [scene reshape:[NSArray arrayWithObjects:[NSNumber numberWithInt:backingWidth], [NSNumber numberWithInt:backingHeight], nil]];
+
+         //   [self renderFrameForMolecule:mol];
+
+
         }else{
             NSError *error=nil;
 
@@ -388,7 +403,7 @@ extern vtConfig c;
         if (![molecule hasRendered])
         {
             
-            [scene reshape:[NSArray arrayWithObjects:[NSNumber numberWithInt:backingWidth], [NSNumber numberWithInt:backingHeight], nil]];
+          //  [scene reshape:[NSArray arrayWithObjects:[NSNumber numberWithInt:backingWidth], [NSNumber numberWithInt:backingHeight], nil]];
             [EAGLContext setCurrentContext:context];
             
             [molecule setHasRendered:YES];
@@ -403,7 +418,7 @@ extern vtConfig c;
         {
        
         [EAGLContext setCurrentContext:context];
-		//        CFTimeInterval previousTimestamp = CFAbsoluteTimeGetCurrent();
+		      // CFTimeInterval previousTimestamp = CFAbsoluteTimeGetCurrent();
 
 		[scene update];
 		
@@ -418,19 +433,25 @@ extern vtConfig c;
                 //printf("First render\n");
 
                 [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:NO];
+               
+            }
+            if(drawn>2){
+                [self presentRenderBuffer];
+                if(removeOnceRender){
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"UnhookAutoRotate" object:nil ];
+                    removeOnceRender=NO;
+                }
 
             }
-            if(drawn>2)
-                [self presentRenderBuffer];
             else
                 drawn++;
 
 		// Discarding is only supported starting with 4.0, so I need to do a check here for 3.2 devices
         const GLenum discards[]  = {GL_COLOR_ATTACHMENT0};
         glDiscardFramebufferEXT(GL_FRAMEBUFFER, 1, discards);
-		//        CFTimeInterval frameDuration = CFAbsoluteTimeGetCurrent() - previousTimestamp;
+		       // CFTimeInterval frameDuration = CFAbsoluteTimeGetCurrent() - previousTimestamp;
 		//        
-		//        NSLog(@"Frame duration: %f ms", frameDuration * 1000.0);
+		    //    NSLog(@"Frame duration: %f ms", frameDuration * 1000.0);
         }
         dispatch_semaphore_signal(frameRenderingSemaphore);
     });

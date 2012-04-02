@@ -131,7 +131,7 @@
 	
 	    
 	NSString *searchURL = nil;
-    searchURL = [[NSString alloc] initWithString:[urlbasepath stringByAppendingString:@"tmp.xml" ]] ;
+    searchURL = [[NSString alloc] initWithString:[urlbasepath stringByAppendingString:@"models.xml" ]] ;
     
 	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];

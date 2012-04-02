@@ -95,6 +95,7 @@ Settings globalSettings;
 
 - (void)reshape:(NSArray *)size
 {
+    //NSLog(@"Global reshape %d %d\n",[[size objectAtIndex:0] intValue],[[size objectAtIndex:1] intValue]);
 	[camera reshape:size];
 
 	[objects makeObjectsPerformSelector:@selector(reshape:) withObject:size];

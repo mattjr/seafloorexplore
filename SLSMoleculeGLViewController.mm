@@ -40,6 +40,8 @@
 
 		[nc addObserver:self selector:@selector(updateSizeOfGLView:) name:@"GLViewSizeDidChange" object:nil];
 
+        [nc addObserver:self selector:@selector(stopAutorotate:) name:@"UnhookAutoRotate" object:nil];
+
 		isAutorotating = YES;
 		
 		// Initialize values for the touch interaction
@@ -70,7 +72,9 @@
 	self.displayLink = nil;
 	[super dealloc];
 }
-
+- (void)stopAutorotate:(NSNotification *)note{
+    [self startOrStopAutorotation:NO];
+}
 - (void)loadView 
 {
 	CGRect applicationFrame = [[UIScreen mainScreen] applicationFrame];
@@ -219,8 +223,10 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 #pragma mark -
 #pragma mark Autorotation of molecule
 
-- (void)startOrStopAutorotation:(id)sender;
+- (void)startOrStopAutorotation:(BOOL)setTo;
 {
+    isAutorotating= !setTo;
+    
 	if (isAutorotating)
 	{
         [self.displayLink invalidate];
@@ -237,7 +243,8 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 //		[aDisplayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
         
 		self.displayLink = aDisplayLink;
-		
+     //  printf("Autorating now\n");
+
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:YES]];
 	}
 	isAutorotating = !isAutorotating;
@@ -274,10 +281,14 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 	[openGLESRenderer destroyFramebuffers];
 	[openGLESRenderer createFramebuffersForLayer:(CAEAGLLayer *)self.view.layer];
 	//if (displayLink == nil)
-	{    moleculeToDisplay.hasRendered=NO;
+   /* if ([openGLESRenderer isKindOfClass:[MyOpenGLES20Renderer class]])
+        [(MyOpenGLES20Renderer*)openGLESRenderer reshapeScenes];
 
-        [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
-	}
+	{*/    moleculeToDisplay.hasRendered=NO;
+
+      //  [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
+	//}
+   
 }
 
 - (void)runOpenGLBenchmarks;
@@ -303,11 +314,20 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 {
 //	if (displayLink == nil)
 //	{
-		[self resizeView];
+	//	[self resizeView];
 //	}
 //	else
 //	{
-//		shouldResizeDisplay = YES;
+		//shouldResizeDisplay = YES;
+        BOOL currentAutorotate=isAutorotating;
+        [self startOrStopAutorotation:NO];
+        [openGLESRenderer waitForLastFrameToFinishRendering];
+        [self resizeView];
+        if(!currentAutorotate)
+            [(MyOpenGLES20Renderer*)openGLESRenderer setRemoveOnceRender:YES];
+        [self startOrStopAutorotation:YES];
+      
+
 //	}
 }
 
@@ -334,7 +354,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 #else
     if (!isAutorotating)
     {
-        [self startOrStopAutorotation:self];	
+        [self startOrStopAutorotation:YES];	
     }
 #endif	
 }
@@ -651,7 +671,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 	
 	if (isAutorotating)
 	{
-		[self startOrStopAutorotation:nil];
+		[self startOrStopAutorotation:NO];
         [openGLESRenderer waitForLastFrameToFinishRendering];
 	}
 
@@ -732,7 +752,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 
 @synthesize visualizationActionSheet;
 @synthesize moleculeToDisplay;
-@synthesize displayLink;
+@synthesize displayLink,openGLESRenderer;
 
 - (void)setMoleculeToDisplay:(SLSMolecule *)newMolecule;
 {
@@ -740,10 +760,10 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 	{
 		return;
 	}
-	
-	if (isAutorotating)
+
+	if (isAutorotating && 	/*Hack */![SLSMoleculeAppDelegate isRunningOniPad] )
 	{
-		[self startOrStopAutorotation:self];
+		[self startOrStopAutorotation:NO];
         [openGLESRenderer waitForLastFrameToFinishRendering];
 	}
 	
@@ -772,6 +792,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 	[[NSUserDefaults standardUserDefaults] setInteger:renderMode forKey:@"currentVisualizationMode"];
     
 	moleculeToDisplay.isBeingDisplayed = YES;
+    
     [moleculeToDisplay performSelectorInBackground:@selector(renderMolecule:) withObject:openGLESRenderer];
     
 	instantObjectScale = 1.0f;
@@ -798,16 +819,17 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 
 }
 
-- (void)startRender:(NSString*)name;
+- (void)startRender:(SLSMolecule*)mol;
 {
    // printf("Starting scene ready\n");
     if ([openGLESRenderer isKindOfClass:[MyOpenGLES20Renderer class]])
-        [(MyOpenGLES20Renderer*)openGLESRenderer startupVT:name];
+        [(MyOpenGLES20Renderer*)openGLESRenderer startupVT:mol];
     else
         printf("Can't start scene\n");
  
     if ([openGLESRenderer isKindOfClass:[MyOpenGLES20Renderer class]]){
         sim = [(MyOpenGLES20Renderer*)openGLESRenderer sim];
+        scene =[(MyOpenGLES20Renderer*)openGLESRenderer scene];
     }
 }
 

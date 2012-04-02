@@ -26,10 +26,14 @@
 	NSInteger selectedIndex;
 	UIColor *tableTextColor;
     MKMapView *mapView;
-
 	sqlite3 *database;
+    BOOL firstView;
 }
 @property(nonatomic,retain) MKMapView *mapView;
+
+@property(readwrite,retain)     MapAnnotation *selectedAnnotation;
+@property(nonatomic,assign)     BOOL firstView;
+
 
 
 @property(readwrite,assign) SLSMoleculeRootViewController *delegate;
@@ -40,12 +44,14 @@
 // Initialization and teardown
 - (id)init:(NSInteger)indexOfInitialMolecule withMolecules:(NSMutableArray*) mol_list;
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view;
-
+-(void)selectInitialAnnotation ;
 - (void)showDetails:(id)sender;
-
+-(void) doAnnotation;
 - (IBAction)displayMoleculeDownloadView;
 - (IBAction)switchBackToGLView;
+- (void)reSelectAnnotationIfNoneSelected:(id<MKAnnotation>)annotation;
 
-- (void)moleculeDidFinishDownloading:(NSNotification *)note;
+
+//- (void)moleculeDidFinishDownloading:(NSNotification *)note;
 
 @end
