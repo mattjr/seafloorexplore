@@ -10,16 +10,17 @@
 
 #import <UIKit/UIKit.h>
 #import "Model.h"
+#import "AFHTTPRequestOperation.h"
 typedef enum { PUBCHEMSEARCH, PROTEINDATABANKSEARCH } SLSSearchType;
 
 @interface SLSMoleculeDownloadController : NSObject
 {
     Model *downloadingmodel;
-	NSMutableData *downloadedFileContents;
+	//NSMutableData *downloadedFileContents;
 
-	long long downloadFileSize;
+	//long long downloadFileSize;
 	BOOL downloadCancelled;
-	NSURLConnection *downloadConnection;
+	//NSURLConnection *downloadConnection;
     UIProgressView *progressView;
     UILabel *downloadStatusText;
     UIButton *cancelDownloadButton;
@@ -37,6 +38,10 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 NSString* formatBytesNoUnit(double bytes, uint8_t flags,int exponent,int width);
 - (void)downloadNewMolecule;
 - (BOOL)downloadMolecule;
+- (void)connectionError:(NSError *)error;
+- (void)connectionFinish;
+- (void)progress:(NSInteger)bytesRead totalRead:(NSInteger)totalBytesRead totalFileBytes:(NSInteger)totalBytesExpectedToRead;
+
 - (void)downloadCompleted;
 -(void) sendDownloadFinishedMsg:(NSString*)filename;
 - (void)cancelDownload;

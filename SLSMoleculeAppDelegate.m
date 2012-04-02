@@ -83,6 +83,12 @@
 	return YES;
 }
 
+/*- (void)applicationWillResignActive:(UIApplication *)application {
+    [application beginBackgroundTaskWithExpirationHandler:^(void) {
+        [networkOperationQueue cancelAllOperations];
+        [[YourHTTPClient sharedClient] cancelAllHTTPOperations];
+    }];
+}*/
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
 	
