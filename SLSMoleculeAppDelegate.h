@@ -11,7 +11,7 @@
 #import <UIKit/UIKit.h>
 #import <sqlite3.h>
 #import "SLSMoleculeCustomDownloadViewController.h"
-
+#import "NSOperationQueue+SharedQueue.h"
 @class SLSMoleculeRootViewController;
 
 
@@ -20,18 +20,18 @@
 	UIWindow *window;
 	SLSMoleculeRootViewController *rootViewController;
 	UIViewController *splitViewController;
-	
 	NSURLConnection *downloadConnection;
 	NSMutableData *downloadedFileContents;
 	NSString *nameOfDownloadedMolecule;
 	BOOL downloadCancelled;
 	NSLock *initialDatabaseLoadLock;
 	BOOL isGzipCompressionUsedOnDownload, isHandlingCustomURLMoleculeDownload;
-	
+	UIBackgroundTaskIdentifier bgTask;
 	// SQLite database of all molecules
 	sqlite3 *database;
 	NSMutableArray *molecules;
 }
+@property (nonatomic, strong) UIImageView *splashView;
 
 @property (nonatomic, retain) UIWindow *window;
 @property (nonatomic, retain) SLSMoleculeRootViewController *rootViewController;

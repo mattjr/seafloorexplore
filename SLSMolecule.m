@@ -252,21 +252,39 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 
 - (void)deleteMolecule;
 {
+   /* [self performSelectorOnMainThread:@selector(showStatusIndicator)
+                           withObject:self
+                        waitUntilDone:YES];*/
 	[self deleteMoleculeDataFromDatabase];
 
 	// Remove the file from disk
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *documentsDirectory = [paths objectAtIndex:0];
-	
-	NSError *error = nil;
-	if (![[NSFileManager defaultManager] removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:[filename stringByDeletingPathExtension]] error:&error])
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not delete file", @"Localized", nil) message:[error localizedDescription]
+    CFUUIDRef newUniqueId = CFUUIDCreate(kCFAllocatorDefault);
+    CFStringRef newUniqueIdString = CFUUIDCreateString(kCFAllocatorDefault, newUniqueId);
+    NSString *tmpPath = [NSTemporaryDirectory() stringByAppendingPathComponent:(__bridge NSString *)newUniqueIdString];
+    CFRelease(newUniqueId);
+    CFRelease(newUniqueIdString);
+    NSError *error = nil;
+
+    BOOL ret=[[NSFileManager defaultManager] moveItemAtPath:[documentsDirectory stringByAppendingPathComponent:[filename stringByDeletingPathExtension]]  toPath:tmpPath error:&error];
+    if(ret){
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+        NSError *error2 = nil;
+
+        NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
+    if(![fileManager removeItemAtPath:tmpPath error:&error2])
+      {
+        [self hideStatusIndicator];
+
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not delete file", @"Localized", nil) message:[error2 localizedDescription]
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles:nil, nil];
 		[alert show];
 		[alert release];					
 		return;
 	}
+          });
+    }
 }
 
 - (void)dealloc;

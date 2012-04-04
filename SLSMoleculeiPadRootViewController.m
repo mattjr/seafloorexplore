@@ -62,14 +62,14 @@
 	downloadBarButton.width = 44.0f;
 	[downloadImage release];
 	
-	UIImage *visualizationImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"VisualizationIcon" ofType:@"png"]];	
-	visualizationBarButton = [[UIBarButtonItem alloc] initWithImage:visualizationImage style:UIBarButtonItemStylePlain target:self action:@selector(showVisualizationModes:)];
+	UIImage *visualizationImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"homeIcon" ofType:@"png"]];	
+	visualizationBarButton = [[UIBarButtonItem alloc] initWithImage:visualizationImage style:UIBarButtonItemStylePlain target:self action:@selector(sendHome:)];
 	visualizationBarButton.width = 44.0f;
 	[visualizationImage release];
 	
 	spacerItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 
-	unselectedRotationImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"RotationIconiPad" ofType:@"png"]];	
+	unselectedRotationImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"PaintOn" ofType:@"png"]];	
 	rotationBarButton = [[UIBarButtonItem alloc] initWithImage:unselectedRotationImage style:UIBarButtonItemStylePlain target:glViewController action:@selector(switchVisType:)];
 	rotationBarButton.width = 44.0f;
 	
@@ -87,12 +87,12 @@
 	}
 	else
 	{*/
-	/*	[mainToolbar setItems:[NSArray arrayWithObjects:spacerItem, downloadBarButton, visualizationBarButton, rotationBarButton, nil] animated:NO];
+		[mainToolbar setItems:[NSArray arrayWithObjects:spacerItem, downloadBarButton, visualizationBarButton, rotationBarButton, nil]animated:NO];
     [mainToolbar setItems:[NSArray arrayWithObjects:spacerItem, visualizationBarButton, rotationBarButton, nil] animated:NO];
-     */
+     /*
     [mainToolbar setItems:[NSArray arrayWithObjects:spacerItem, downloadBarButton, rotationBarButton, nil] animated:NO];
     [mainToolbar setItems:[NSArray arrayWithObjects:spacerItem, rotationBarButton, nil] animated:NO];
-//	}
+*///	}
 		
 	[downloadBarButton release];
 
@@ -148,7 +148,10 @@
 	[moleculeListPopover setDelegate:self];
 	[moleculeListPopover presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }*/
-
+- (void)sendHome:(id)sender;
+{
+    [glViewController sendHome];
+}
 - (void)showVisualizationModes:(id)sender;
 {
 	if (glViewController.visualizationActionSheet != nil)
@@ -219,7 +222,8 @@
 	{
 		if (selectedRotationImage == nil)
         {
-			selectedRotationImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"RotationIconiPadCancel" ofType:@"png"]];
+			//selectedRotationImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"PaintOn" ofType:@"png"]];
+            selectedRotationImage = [UIImage imageNamed:@"PaintIpad.png"];
         }
 		
 		rotationBarButton.image = selectedRotationImage;

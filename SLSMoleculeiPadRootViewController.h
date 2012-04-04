@@ -32,5 +32,6 @@
 - (void)handleConnectionOfMonitor:(NSNotification *)note;
 - (void)handleDisconnectionOfMonitor:(NSNotification *)note;
 - (void)displayOnExternalOrLocalScreen:(id)sender;
+- (void)sendHome:(id)sender;
 
 @end

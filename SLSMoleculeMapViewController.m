@@ -333,6 +333,7 @@
     
     selectedIndex = annotation.idx;
     [self.delegate selectedMoleculeDidChange:annotation.idx];
+    
 }
 
 /*- (void)MapView:(UIMapView *)MapView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath

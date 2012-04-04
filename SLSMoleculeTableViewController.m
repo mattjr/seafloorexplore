@@ -16,7 +16,7 @@
 #import "SLSMoleculeAppDelegate.h"
 #import "SLSMoleculeLibraryTableCell.h"
 #import "NSFileManager+Tar.h"
-
+#import "SLSMoleculeGLViewController.h"
 @implementation SLSMoleculeTableViewController
 
 #pragma mark -
@@ -80,7 +80,10 @@
 		self.tableView.backgroundColor = [UIColor whiteColor];
 	}	
 }
+-(void) viewDidAppear:(BOOL)animated{
+	[self.tableView reloadData];
 
+}
 - (void)dealloc 
 {
 	[tableTextColor release];

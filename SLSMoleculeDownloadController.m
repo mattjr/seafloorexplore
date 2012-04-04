@@ -12,7 +12,7 @@
 #import "SLSMoleculeAppDelegate.h"
 #import "AFNetworking.h"
 @implementation SLSMoleculeDownloadController
-@synthesize progressView,downloadStatusText,cancelDownloadButton,spinningIndicator;
+@synthesize progressView,downloadStatusText,cancelDownloadButton,spinningIndicator,isBackgrounded;
 - (id)initWithModel:(Model *)model
 {
 	if ((self = [super init])) 
@@ -20,7 +20,16 @@
 		// Initialization code
 	//	downloadedFileContents = nil;
 		downloadCancelled = NO;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(appHasGoneToBackground)
+                                                     name:UIApplicationDidEnterBackgroundNotification
+                                                   object:nil];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(appHasGoneToForground)
+                                                     name:UIApplicationWillEnterForegroundNotification
+                                                   object:nil];
+        isBackgrounded=NO;
 		
 		downloadingmodel = [model  retain];
         progressView = [[[UIProgressView alloc] initWithFrame:CGRectZero] retain];
@@ -47,6 +56,8 @@
 
 - (void)dealloc;
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[self cancelDownload];
 	[downloadingmodel release];
     [progressView release];
@@ -62,7 +73,15 @@ enum {
     kUnitStringOSNativeUnits   = 1 << 1,
     kUnitStringLocalizedFormat = 1 << 2
 };
-
+-(void)appHasGoneToForground;
+{
+    isBackgrounded=NO;
+    
+}
+-(void)appHasGoneToBackground;
+{
+    isBackgrounded=YES;
+}
 NSString* formatBytesNoUnit(double bytes, uint8_t flags,int exponent,int width){
     int multiplier = ((flags & kUnitStringOSNativeUnits && /*!leopardOrGreater()*/0) || flags & kUnitStringBinaryUnits) ? 1024 : 1000;
 
@@ -196,8 +215,8 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
         [self connectionError:error];
     }];
     progressView.hidden = NO;
-
-    [operation start];
+    [[NSOperationQueue sharedOperationQueue] addOperation:operation];
+   // [operation start];
 	/*if (downloadConnection) 
 	{
 		// Create the NSMutableData that will hold
@@ -264,9 +283,9 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 {
 	// Concatenate the new data with the existing data to build up the downloaded file
 	// Update the status of the download
-
 	if (downloadCancelled)
 	{
+        [[NSOperationQueue sharedOperationQueue] cancelAllOperations];
 		//[connection cancel];
 		[self downloadCompleted];
 		downloadCancelled = NO;
@@ -370,14 +389,27 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     progressView.hidden = YES;
     cancelDownloadButton.hidden=YES;
     spinningIndicator.hidden=NO;
-    [self.spinningIndicator performSelectorOnMainThread:@selector(startAnimating) withObject:nil waitUntilDone:NO];
+    [self.spinningIndicator performSelectorOnMainThread:@selector(startAnimating) withObject:nil waitUntilDone:YES];
 
     [spinningIndicator startAnimating];
 	downloadStatusText.text = NSLocalizedStringFromTable(@"Decompressing...", @"Localized", nil);
 
  	NSString *filename = [downloadingmodel filename];
-    [self performSelector:@selector(sendDownloadFinishedMsg:) withObject:filename afterDelay:0.3];
+    printf("Download complete\n");
+    if(![self isBackgrounded])
+        [self performSelector:@selector(sendDownloadFinishedMsg:) withObject:filename afterDelay:0.3];
+    else 
+        [self performSelector:@selector(sendDownloadFinishedMsg:) withObject:nil afterDelay:0.3];
 
+  
+   /// else {
+      // [self performSelector:@selector(sendDownloadFinishedMsg:) withObject:nil afterDelay:0.3];
+
+   // }
+/*    else {
+              [self performSelector:@selector(sendDownloadFinishedMsg:) withObject:filename afterDelay:5.0];
+
+    }*/
     //}
 	
 //	if ([SLSMoleculeAppDelegate isRunningOniPad])
@@ -388,6 +420,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 	[self downloadCompleted];	
 }
 -(void) sendDownloadFinishedMsg:(NSString*)filename {
+
        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:filename userInfo:[NSDictionary dictionaryWithObject:downloadingmodel  forKey:@"model"]];  
 }
 #pragma mark -

@@ -41,7 +41,10 @@
 		[nc addObserver:self selector:@selector(updateSizeOfGLView:) name:@"GLViewSizeDidChange" object:nil];
 
         [nc addObserver:self selector:@selector(stopAutorotate:) name:@"UnhookAutoRotate" object:nil];
-
+       /* [nc addObserver:self
+                                                 selector:@selector(reloadBackgroundDownloadedModels:)
+                                                     name:UIApplicationDidBecomeActiveNotification object:nil];
+*/
 		isAutorotating = YES;
 		
 		// Initialize values for the touch interaction
@@ -67,7 +70,7 @@
 
 - (void)dealloc 
 {
-//	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self.displayLink invalidate];
 	self.displayLink = nil;
 	[super dealloc];
@@ -89,7 +92,11 @@
 
 #pragma mark -
 #pragma mark Display indicator control
-
+/*- (void)reloadBackgroundDownloadedModels:(NSNotification *)note;
+{
+    printf("Reload downloaded models\n");
+    sleep(10);
+}*/
 - (void)showScanningIndicator:(NSNotification *)note;
 {
 	if (scanningActivityIndicator != nil)
@@ -103,7 +110,7 @@
 	scanningActivityIndicator.frame = CGRectMake(round(self.view.frame.size.width / 2.0f - 37.0f / 2.0f), round(self.view.frame.size.height / 2.0f + 15.0f), 37.0f, 37.0f);
 	scanningActivityIndicator.hidesWhenStopped = YES;
 	[scanningActivityIndicator startAnimating];
-		
+
 	if (renderingActivityLabel != nil)
 	{
 		[renderingActivityLabel removeFromSuperview];
@@ -200,11 +207,11 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
     GLVisualizationType newVisualizationType;
     if (currentVisualizationType == TEXTURED){
     newVisualizationType=SHADED;
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:NO]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:YES]];
 
     }
     else{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:YES]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:NO]];
 
         newVisualizationType=TEXTURED;
     }
@@ -232,7 +239,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
         [self.displayLink invalidate];
         self.displayLink = nil;
 		//printf("Not autorating now\n");
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:NO]];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:NO]];
 	}
 	else
 	{
@@ -245,7 +252,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 		self.displayLink = aDisplayLink;
      //  printf("Autorating now\n");
 
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:YES]];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:YES]];
 	}
 	isAutorotating = !isAutorotating;
 }
@@ -273,7 +280,10 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 
 #pragma mark -
 #pragma mark OpenGL molecule rendering
-
+-(void)sendHome{
+    if ([[scene simulator] respondsToSelector:@selector(resetCamera)])
+           [(Simulation *)[scene simulator] resetCamera];
+}
 - (void)resizeView;
 {
     [openGLESRenderer clearScreen];

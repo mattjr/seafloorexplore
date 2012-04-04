@@ -33,6 +33,14 @@
 		7B48CBB51522C188008FA151 /* Model.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBB21522C188008FA151 /* Model.m */; };
 		7B48CBB61522C188008FA151 /* ParseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBB41522C188008FA151 /* ParseOperation.m */; };
 		7B909178152669BB007DC3AC /* models.sql in Resources */ = {isa = PBXBuildFile; fileRef = 7B909177152669BB007DC3AC /* models.sql */; };
+		7BC4E86E152C041000BF1B8F /* Paint@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4E86A152C041000BF1B8F /* Paint@2x.png */; };
+		7BC4E86F152C041000BF1B8F /* Paint.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4E86B152C041000BF1B8F /* Paint.png */; };
+		7BC4E870152C041000BF1B8F /* PaintOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4E86C152C041000BF1B8F /* PaintOn@2x.png */; };
+		7BC4E871152C041000BF1B8F /* PaintOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4E86D152C041000BF1B8F /* PaintOn.png */; };
+		7BC4E874152C0CE100BF1B8F /* PaintIpad.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4E872152C0CE100BF1B8F /* PaintIpad.png */; };
+		7BC4E875152C0CE100BF1B8F /* PaintIpad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4E873152C0CE100BF1B8F /* PaintIpad@2x.png */; };
+		7BC4E878152C0F1A00BF1B8F /* homeIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4E876152C0F1900BF1B8F /* homeIcon.png */; };
+		7BC4E879152C0F1A00BF1B8F /* homeIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4E877152C0F1900BF1B8F /* homeIcon@2x.png */; };
 		7BCBD12C1520B537009DC170 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCBD12B1520B537009DC170 /* MapKit.framework */; };
 		7BCBD12E1520B550009DC170 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCBD12D1520B550009DC170 /* CoreLocation.framework */; };
 		7BE606491398E0480072A1C5 /* pass.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7BE606281398DEA80072A1C5 /* pass.frag */; };
@@ -83,7 +91,6 @@
 		BC33740C1370C6830036428C /* SLSMolecule+SDF.m in Sources */ = {isa = PBXBuildFile; fileRef = BC33740B1370C6830036428C /* SLSMolecule+SDF.m */; };
 		BC37E7CA0E14779E00E11F4F /* SLSMolecule.m in Sources */ = {isa = PBXBuildFile; fileRef = BC37E7C90E14779E00E11F4F /* SLSMolecule.m */; };
 		BC4E97C20E69F736006CD291 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BC4E97C10E69F736006CD291 /* libsqlite3.dylib */; };
-		BC4E97FA0E69F8E1006CD291 /* molecules.sql in Resources */ = {isa = PBXBuildFile; fileRef = BC4E97F90E69F8E1006CD291 /* molecules.sql */; };
 		BC4FB6670E4E875900B316CD /* VCTitleCase.m in Sources */ = {isa = PBXBuildFile; fileRef = BC4FB6660E4E875900B316CD /* VCTitleCase.m */; };
 		BC4FB75D0E4F6BB000B316CD /* greenButton.png in Resources */ = {isa = PBXBuildFile; fileRef = BC4FB75C0E4F6BAF00B316CD /* greenButton.png */; };
 		BC4FB7BA0E4F80DB00B316CD /* redButton.png in Resources */ = {isa = PBXBuildFile; fileRef = BC4FB7B90E4F80DB00B316CD /* redButton.png */; };
@@ -180,8 +187,17 @@
 		7B48CBB41522C188008FA151 /* ParseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseOperation.m; sourceTree = "<group>"; };
 		7B61FB0213991399006E50B3 /* renderVT.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = renderVT.frag; path = LibVT/renderVT.frag; sourceTree = "<group>"; };
 		7B909177152669BB007DC3AC /* models.sql */ = {isa = PBXFileReference; lastKnownFileType = file; path = models.sql; sourceTree = "<group>"; };
+		7BC4E86A152C041000BF1B8F /* Paint@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Paint@2x.png"; sourceTree = "<group>"; };
+		7BC4E86B152C041000BF1B8F /* Paint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Paint.png; sourceTree = "<group>"; };
+		7BC4E86C152C041000BF1B8F /* PaintOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PaintOn@2x.png"; sourceTree = "<group>"; };
+		7BC4E86D152C041000BF1B8F /* PaintOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PaintOn.png; sourceTree = "<group>"; };
+		7BC4E872152C0CE100BF1B8F /* PaintIpad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PaintIpad.png; sourceTree = "<group>"; };
+		7BC4E873152C0CE100BF1B8F /* PaintIpad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PaintIpad@2x.png"; sourceTree = "<group>"; };
+		7BC4E876152C0F1900BF1B8F /* homeIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = homeIcon.png; sourceTree = "<group>"; };
+		7BC4E877152C0F1900BF1B8F /* homeIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "homeIcon@2x.png"; sourceTree = "<group>"; };
 		7BCBD12B1520B537009DC170 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		7BCBD12D1520B550009DC170 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		7BD40039152A55ED003922C2 /* NSOperationQueue+SharedQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSOperationQueue+SharedQueue.h"; sourceTree = "<group>"; };
 		7BE606281398DEA80072A1C5 /* pass.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = pass.frag; path = LibVT/pass.frag; sourceTree = "<group>"; };
 		7BE606291398DEA80072A1C5 /* pass.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = pass.vert; path = LibVT/pass.vert; sourceTree = "<group>"; };
 		7BF64D56139770AD002FEB23 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
@@ -259,7 +275,6 @@
 		BC37E7C80E14779E00E11F4F /* SLSMolecule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSMolecule.h; sourceTree = "<group>"; };
 		BC37E7C90E14779E00E11F4F /* SLSMolecule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLSMolecule.m; sourceTree = "<group>"; };
 		BC4E97C10E69F736006CD291 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
-		BC4E97F90E69F8E1006CD291 /* molecules.sql */ = {isa = PBXFileReference; lastKnownFileType = file; path = molecules.sql; sourceTree = "<group>"; };
 		BC4FB6650E4E875900B316CD /* VCTitleCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VCTitleCase.h; sourceTree = "<group>"; };
 		BC4FB6660E4E875900B316CD /* VCTitleCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VCTitleCase.m; sourceTree = "<group>"; };
 		BC4FB75C0E4F6BAF00B316CD /* greenButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greenButton.png; sourceTree = "<group>"; };
@@ -406,13 +421,18 @@
 				BC835183117545C600B478D5 /* 69-display.png */,
 				BC281A6911727A89005B7946 /* Document-molecules-64.png */,
 				BC281A6A11727A89005B7946 /* Document-molecules-320.png */,
+				7BC4E86A152C041000BF1B8F /* Paint@2x.png */,
+				7BC4E86B152C041000BF1B8F /* Paint.png */,
+				7BC4E86C152C041000BF1B8F /* PaintOn@2x.png */,
+				7BC4E86D152C041000BF1B8F /* PaintOn.png */,
 				BCDFF5AD1154819A005C984C /* 57-download.png */,
 				BCF496CB1040FB9D00BE82D5 /* RotationIconSelected.png */,
 				BCF495211040945400BE82D5 /* RotationIcon.png */,
 				BCDC9F9C0EB37B3400ADCFA5 /* Localized.strings */,
-				BC4E97F90E69F8E1006CD291 /* molecules.sql */,
 				7B909177152669BB007DC3AC /* models.sql */,
 				BC4FB7B90E4F80DB00B316CD /* redButton.png */,
+				7BC4E872152C0CE100BF1B8F /* PaintIpad.png */,
+				7BC4E873152C0CE100BF1B8F /* PaintIpad@2x.png */,
 				BC4FB75C0E4F6BAF00B316CD /* greenButton.png */,
 				BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */,
 				BC540D0F1145E04500045DE1 /* BenthosIcon72.png */,
@@ -429,6 +449,8 @@
 				7BF64D7B139770C8002FEB23 /* renderVT.vert */,
 				7BF64D7C139770C8002FEB23 /* renderVT_frag.cg */,
 				7BF64D78139770C8002FEB23 /* readback_frag.cg */,
+				7BC4E876152C0F1900BF1B8F /* homeIcon.png */,
+				7BC4E877152C0F1900BF1B8F /* homeIcon@2x.png */,
 				7BF64D79139770C8002FEB23 /* readback_vert.cg */,
 				7BF64D7D139770C8002FEB23 /* renderVT_vert.cg */,
 				7BF64D66139770C8002FEB23 /* combined_vert.cg */,
@@ -625,6 +647,7 @@
 		BCC7617C0E0EF8180050DD95 /* Application Control */ = {
 			isa = PBXGroup;
 			children = (
+				7BD40039152A55ED003922C2 /* NSOperationQueue+SharedQueue.h */,
 				BCC286BD0E1D8F9300978ECA /* SLSMoleculeAppDelegate.h */,
 				BCC286BE0E1D8F9300978ECA /* SLSMoleculeAppDelegate.m */,
 				BCC286BF0E1D8F9300978ECA /* SLSMoleculeRootViewController.h */,
@@ -739,7 +762,6 @@
 				BC5BBCD40E219AB90001DFD0 /* BenthosIcon.png in Resources */,
 				BC4FB75D0E4F6BB000B316CD /* greenButton.png in Resources */,
 				BC4FB7BA0E4F80DB00B316CD /* redButton.png in Resources */,
-				BC4E97FA0E69F8E1006CD291 /* molecules.sql in Resources */,
 				BCDC9F9D0EB37B3400ADCFA5 /* Localized.strings in Resources */,
 				BCF495221040945400BE82D5 /* RotationIcon.png in Resources */,
 				BCF496CC1040FB9D00BE82D5 /* RotationIconSelected.png in Resources */,
@@ -783,6 +805,14 @@
 				7B056F06150AC85A00621766 /* chamber3.tar in Resources */,
 				7B4772D9151D8E5200727C6C /* redx.png in Resources */,
 				7B909178152669BB007DC3AC /* models.sql in Resources */,
+				7BC4E86E152C041000BF1B8F /* Paint@2x.png in Resources */,
+				7BC4E86F152C041000BF1B8F /* Paint.png in Resources */,
+				7BC4E870152C041000BF1B8F /* PaintOn@2x.png in Resources */,
+				7BC4E871152C041000BF1B8F /* PaintOn.png in Resources */,
+				7BC4E874152C0CE100BF1B8F /* PaintIpad.png in Resources */,
+				7BC4E875152C0CE100BF1B8F /* PaintIpad@2x.png in Resources */,
+				7BC4E878152C0F1A00BF1B8F /* homeIcon.png in Resources */,
+				7BC4E879152C0F1A00BF1B8F /* homeIcon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -896,6 +926,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos3.0]" = "iPhone Developer";
@@ -919,6 +950,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
@@ -972,6 +1004,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos3.0]" = "iPhone Developer";

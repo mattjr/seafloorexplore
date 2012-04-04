@@ -78,17 +78,17 @@
 	
 	rotationButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	
-	UIImage *rotationImage = [UIImage imageNamed:@"RotationIcon.png"];
+	UIImage *rotationImage = [UIImage imageNamed:@"Paint.png"];
 	if (rotationImage == nil)
 	{
-		rotationImage = [[[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"RotationIcon" ofType:@"png"]] autorelease];
+		rotationImage = [[[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Paint" ofType:@"png"]] autorelease];
 	}
 	[rotationButton setImage:rotationImage forState:UIControlStateNormal];
 	
-	UIImage *selectedRotationImage = [UIImage imageNamed:@"RotationIconSelected.png"];
+	UIImage *selectedRotationImage = [UIImage imageNamed:@"PaintOn.png"];
 	if (selectedRotationImage == nil)
 	{
-		selectedRotationImage = [[[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"RotationIconSelected" ofType:@"png"]] autorelease];
+		selectedRotationImage = [[[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"PaintOn" ofType:@"png"]] autorelease];
 	}
 	[rotationButton setImage:selectedRotationImage forState:UIControlStateSelected];
 	
@@ -96,6 +96,7 @@
 	[rotationButton addTarget:glViewController action:@selector(switchVisType:) forControlEvents:UIControlEventTouchUpInside];
 	rotationButton.frame = CGRectMake(0.0f, 460.0f - 70.0f, 70.0f, 70.0f);
 	rotationButton.clipsToBounds = NO;
+    rotationButton.selected=YES;
 	[glViewController.view addSubview:rotationButton];
 }
 
@@ -178,7 +179,6 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
 	tableViewController.selectedIndex = newMoleculeIndex;
-    [self updateListOfMolecules];
     [mapViewController setSelectedIndex:newMoleculeIndex];
 	// Defer sending the change message to the OpenGL view until the view is loaded, to make sure that rendering occurs only then
 	if ([molecules count] == 0)

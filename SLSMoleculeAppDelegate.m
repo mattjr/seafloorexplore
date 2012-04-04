@@ -18,6 +18,7 @@
 #import "NSFileManager+Tar.h"
 #import "ParseOperation.h"
 #import "VCTitleCase.h"
+#import "SLSOpenGLESRenderer.h"
 
 #define MOLECULES_DATABASE_VERSION 1
 
@@ -25,7 +26,7 @@
 
 @synthesize window;
 @synthesize rootViewController;
-
+ @synthesize splashView;
 #pragma mark -
 #pragma mark Initialization / teardown
 
@@ -41,7 +42,6 @@
 	window.backgroundColor = [UIColor blackColor];
 	molecules = [[NSMutableArray alloc] init];
 	rootViewController.molecules = molecules;
-
 	if ([SLSMoleculeAppDelegate isRunningOniPad])
 	{
 		UISplitViewController *newSplitViewController = [[UISplitViewController alloc] init];
@@ -68,6 +68,7 @@
 	isHandlingCustomURLMoleculeDownload = NO;
 	downloadedFileContents = nil;
 	initialDatabaseLoadLock = [[NSLock alloc] init];
+    //networkQueue = [[[NSOperationQueue alloc] init] autorelease];
 
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 
@@ -77,18 +78,15 @@
 	{
 		isHandlingCustomURLMoleculeDownload = YES;		
 	}
-	
+    [self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
+
 	[self performSelectorInBackground:@selector(loadInitialMoleculesFromDisk) withObject:nil];	
-	
+    [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:YES];
+
 	return YES;
 }
 
-/*- (void)applicationWillResignActive:(UIApplication *)application {
-    [application beginBackgroundTaskWithExpirationHandler:^(void) {
-        [networkOperationQueue cancelAllOperations];
-        [[YourHTTPClient sharedClient] cancelAllHTTPOperations];
-    }];
-}*/
+
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
 	
@@ -237,7 +235,6 @@
 
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	rootViewController.molecules = nil;
-    [self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
 
 	if ([self createEditableCopyOfDatabaseIfNeeded])
 	{
@@ -320,7 +317,6 @@
 	
 	if (!isHandlingCustomURLMoleculeDownload)
 		[rootViewController loadInitialMolecule];
-    [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:YES];
 
 	[pool release];
 }
@@ -392,29 +388,69 @@
             [direnum skipDescendents];
         NSString *basename = [[pname lastPathComponent] stringByDeletingPathExtension];	
 
-		if ( ([moleculeFilenameLookupTable valueForKey:basename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"xml"] ) )
+		if ( ([moleculeFilenameLookupTable valueForKey:basename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"xml"] ||[[[pname pathExtension] lowercaseString] isEqualToString:@"tar"])  )
 		{
-            NSString *preloadedXMLPath = [documentsDirectory stringByAppendingPathComponent:pname];
-            NSMutableData* xmlData = [NSMutableData dataWithContentsOfFile:preloadedXMLPath];
-            ParseOperation *parseOperation = [[ParseOperation alloc] initWithData:xmlData];
-            NSMutableArray *filesystemModels = [NSMutableArray array];
-            [parseOperation staticparse:filesystemModels];
-            [parseOperation release];   // once added to the NSOperationQueue it's retained, we don't need it anymore
-            // earthquakeData will be retained by the NSOperation until it has finished executing,
-            // so we no longer need a reference to it in the main thread.
-            if([filesystemModels count] >0){
+            BOOL extractFail=NO;
+            if([[[pname pathExtension] lowercaseString] isEqualToString:@"tar"]){
+                NSString *archivePath = [documentsDirectory stringByAppendingPathComponent:pname ];
 
-                // Parse the PDB file into the database
-                SLSMolecule *newMolecule = [[SLSMolecule alloc] initWithModel:[filesystemModels objectAtIndex:0] database:database];
-                if (newMolecule != nil)
+                NSError *error=nil;
+                [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:documentsDirectory withTarPath:archivePath error:&error];
+                
+                if (error != nil)
                 {
-                    [molecules addObject:newMolecule];
-                    if (rootViewController.tableViewController != nil)
+                    NSLog(@"Failed to untar preinstalled files %@ with error: '%@'.",archivePath, [error localizedDescription]);
+                    extractFail=YES;
+                    // TODO: Report the file copying problem to the user or do something about it
+                    NSString *folderPath = [documentsDirectory stringByAppendingPathComponent:basename ];
+
+                    if (![[NSFileManager defaultManager] removeItemAtPath:folderPath error:&error])
                     {
-                        [rootViewController.tableViewController.tableView reloadData];				
-                    }					
+                        NSLog(@"Failed to Deleting folder %@  with error: '%@'.", folderPath,[error localizedDescription]);
+                    }
+
                 }
-                [newMolecule release];		
+                
+                {
+                    //Sucess delete tar
+                    //   NSLog(@"Deleting %@\n",archivePath);
+                    NSError *error2=nil;
+                    
+                    if (![[NSFileManager defaultManager] removeItemAtPath:archivePath error:&error2])
+                    {
+                        NSLog(@"Failed to Deleting tar file  with error: '%@'.", [error2 localizedDescription]);
+                    }
+                }
+                //}
+                pname=[NSString stringWithFormat:@"%@/%@.xml", basename,basename];
+            }
+            if(!extractFail){
+                NSString *preloadedXMLPath = [documentsDirectory stringByAppendingPathComponent:pname];
+                NSMutableData* xmlData = [NSMutableData dataWithContentsOfFile:preloadedXMLPath];
+                ParseOperation *parseOperation = [[ParseOperation alloc] initWithData:xmlData];
+                NSMutableArray *filesystemModels = [NSMutableArray array];
+                [parseOperation staticparse:filesystemModels];
+                [parseOperation release];   // once added to the NSOperationQueue it's retained, we don't need it anymore
+                // earthquakeData will be retained by the NSOperation until it has finished executing,
+                // so we no longer need a reference to it in the main thread.
+                if([filesystemModels count] >0){
+                    
+                    // Parse the PDB file into the database
+                    SLSMolecule *newMolecule = [[SLSMolecule alloc] initWithModel:[filesystemModels objectAtIndex:0] database:database];
+                    if (newMolecule != nil)
+                    {
+                        [molecules addObject:newMolecule];
+                        if (rootViewController.tableViewController != nil)
+                        {
+                            [rootViewController.tableViewController.tableView reloadData];				
+                        }					
+                    }
+                    [newMolecule release];		
+                }
+                else{
+                    NSLog(@"Failed to Parse'%@'.", preloadedXMLPath);
+                    
+                }
             }
 		}
 	}
@@ -450,11 +486,16 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application 
 {
+    [[NSOperationQueue sharedOperationQueue] setSuspended:YES]; 
+    
 	[[NSUserDefaults standardUserDefaults] synchronize];		
+
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application 
 {
+    [[NSOperationQueue sharedOperationQueue] setSuspended:NO]; 
+
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application 
@@ -465,6 +506,30 @@
 		[self disconnectFromDatabase];
 	}
 }
+- (void) splashFade
+{
+    printf("Blah\n");
+    splashView = [[[UIImageView alloc] initWithFrame:CGRectMake(0,0, 320, 480)] autorelease];
+    splashView.image = [UIImage imageNamed:@"Default.png"];
+    [window addSubview:splashView];
+    [window bringSubviewToFront:splashView];
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:10.0];
+    [UIView setAnimationDelay:2.5];
+    [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:window cache:YES];
+    [UIView setAnimationDelegate:self]; 
+    [UIView setAnimationDidStopSelector:@selector(startupAnimationDone:finished:context:)];
+    splashView.alpha = 0.0;
+    [UIView commitAnimations];
+    
+    //Create and add the Activity Indicator to splashView
+    UIActivityIndicatorView *activityIndicator = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite] autorelease];
+    activityIndicator.alpha = 1.0;
+    activityIndicator.center = CGPointMake(160, 360);
+    activityIndicator.hidesWhenStopped = NO;
+    [splashView addSubview:activityIndicator];
+    [activityIndicator startAnimating];
+}
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
@@ -472,13 +537,48 @@
 	{
 		[self connectToDatabase];
 	}*/
-	
-	[self loadMissingMoleculesIntoDatabase];
+    bgTask = UIBackgroundTaskInvalid; 
+ //   [rootViewController.glViewController showScanningIndicator:nil];
+   //[rootViewController.glViewController.moleculeToDisplay showStatusIndicator];
+   // dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+ //sleep(10);
+   // });
+  //  [self performSelectorOnMainThread:@selector(splashFade) withObject:nil waitUntilDone:YES];
+    //[self splashFade];
+    [self performSelectorInBackground:@selector(loadMissingMoleculesIntoDatabase) withObject:nil];
+	//[self loadMissingMoleculesIntoDatabase];
+ //  [rootViewController.glViewController hideScanningIndicator:nil];
+    rootViewController.glViewController.openGLESRenderer.isSceneReady=YES;
+    [rootViewController.glViewController startOrStopAutorotation:YES];
+
+   // [rootViewController.glViewController.moleculeToDisplay hideStatusIndicator];
+
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+    [rootViewController.glViewController startOrStopAutorotation:NO];
+    rootViewController.glViewController.openGLESRenderer.isSceneReady=NO;
+    [rootViewController.glViewController.openGLESRenderer waitForLastFrameToFinishRendering];
 	[rootViewController cancelMoleculeLoading];
+
+    
+    if ([[NSOperationQueue sharedOperationQueue] operationCount]>0) { 
+        UIApplication*  app = [UIApplication sharedApplication]; 
+        bgTask = [app beginBackgroundTaskWithExpirationHandler:^{ 
+            [app endBackgroundTask:bgTask]; 
+            bgTask = UIBackgroundTaskInvalid; 
+        }]; 
+        
+        // Start the long-running task and return immediately. 
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 
+                                                 0), ^{ 
+            [[NSOperationQueue sharedOperationQueue] waitUntilAllOperationsAreFinished]; 
+            [app endBackgroundTask:bgTask]; 
+            bgTask = UIBackgroundTaskInvalid; 
+        }); 
+    }         
+    
 //	[self disconnectFromDatabase];
 }
 
