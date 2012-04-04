@@ -617,6 +617,10 @@
 - (void)moleculeFailedDownloading:(NSNotification *)note;{
     indexOfDownloadingMolecule = -1;
     isDownloading = NO;
+    if(!self.tableView){
+        NSLog(@"Null tableview\n");
+            return;
+    }
     self.tableView.backgroundColor = [UIColor whiteColor];
     self.tableView.separatorColor = [UIColor colorWithWhite:0.88 alpha:1.0];
     [self.tableView reloadData];

@@ -540,12 +540,14 @@
     bgTask = UIBackgroundTaskInvalid; 
  //   [rootViewController.glViewController showScanningIndicator:nil];
    //[rootViewController.glViewController.moleculeToDisplay showStatusIndicator];
-   // dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
- //sleep(10);
-   // });
+dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]; 
+    [self loadMissingMoleculesIntoDatabase];
+    [pool drain];
+    });
   //  [self performSelectorOnMainThread:@selector(splashFade) withObject:nil waitUntilDone:YES];
     //[self splashFade];
-    [self performSelectorInBackground:@selector(loadMissingMoleculesIntoDatabase) withObject:nil];
+  //  [self performSelectorInBackground:@selector(loadMissingMoleculesIntoDatabase) withObject:nil];
 	//[self loadMissingMoleculesIntoDatabase];
  //  [rootViewController.glViewController hideScanningIndicator:nil];
     rootViewController.glViewController.openGLESRenderer.isSceneReady=YES;
@@ -573,9 +575,11 @@
         // Start the long-running task and return immediately. 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 
                                                  0), ^{ 
+
             [[NSOperationQueue sharedOperationQueue] waitUntilAllOperationsAreFinished]; 
             [app endBackgroundTask:bgTask]; 
-            bgTask = UIBackgroundTaskInvalid; 
+            bgTask = UIBackgroundTaskInvalid;
+
         }); 
     }         
     
