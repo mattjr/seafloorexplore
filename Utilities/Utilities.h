@@ -16,3 +16,4 @@ SOUND_TYPE LoadSound(NSString *name);
 void PlaySound(SOUND_TYPE soundID);
 void UnloadSound(SOUND_TYPE soundID);
 bool PointInFrustum(const float frustum[6][4], float x, float y, float z );
+GLint validateProgram(GLuint prog);

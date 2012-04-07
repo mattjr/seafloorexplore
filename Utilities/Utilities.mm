@@ -71,6 +71,26 @@ NSLog(@"Warning: shader log: %s\n", infoLog);										\
 	return program_object;
 }
 #endif
+GLint validateProgram(GLuint prog)
+{
+    GLint logLength, status;
+    
+    glValidateProgram(prog);
+    glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
+    if (logLength > 0)
+    {
+        GLchar *log = (GLchar *)malloc(logLength);
+        glGetProgramInfoLog(prog, logLength, &logLength, log);
+        NSLog(@"Program validate log:\n%s", log);
+        free(log);
+    }
+    
+    glGetProgramiv(prog, GL_VALIDATE_STATUS, &status);
+    if (status == GL_FALSE)
+        NSLog(@"Failed to validate program %d", prog);
+    
+    return status;
+}
 GLuint LoadShadersNoLink(NSString *shadername, NSString *preprocessorDefines)
 {
     

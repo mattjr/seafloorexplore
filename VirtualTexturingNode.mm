@@ -92,23 +92,36 @@ extern vtConfig c;
 		minMS = 10000;
 		maxMS = 0;
 		allMS = 0;
-
-		glUseProgram(renderVTShader);
-		glUniform1i(glGetUniformLocation(renderVTShader, "mipcalcTexture"), TEXUNIT_FOR_MIPCALC);
-		glUniform1i(glGetUniformLocation(renderVTShader, "normalTexture"), NORMAL_TEXUNIT);
+        
 #if GL_ES_VERSION_2_0
 		glBindAttribLocation(renderVTShader, TEXCOORD_ARRAY, "texcoord0");
 		glBindAttribLocation(renderVTShader, VERTEX_ARRAY, "vertex");
-		glUseProgram(readbackShader);
+
 		glBindAttribLocation(readbackShader, TEXCOORD_ARRAY, "texcoord0");
 		glBindAttribLocation(readbackShader, VERTEX_ARRAY, "vertex");
-		glBindAttribLocation(passShader, VERTEX_ARRAY, "vertex");
+		
+        glBindAttribLocation(passShader, VERTEX_ARRAY, "vertex");
 		glBindAttribLocation(passShader, NORMAL_ARRAY, "normal");
 
 #endif
         LinkShader(renderVTShader);
+        if(!validateProgram(renderVTShader))
+            return nil;
+        GLint mipcalcTextureLoc=glGetUniformLocation(renderVTShader, "mipcalcTexture");
+        GLint normalTextureLoc=glGetUniformLocation(renderVTShader, "normalTexture");
+		glUseProgram(renderVTShader);
+		glUniform1i(mipcalcTextureLoc, TEXUNIT_FOR_MIPCALC);
+		glUniform1i(normalTextureLoc, NORMAL_TEXUNIT);
+
+        
         LinkShader(readbackShader);
+        if(!validateProgram(readbackShader))
+            return nil;
+
         LinkShader(passShader);
+        if(!validateProgram(passShader))
+            return nil;
+
 
 		glUseProgram(0);
 
