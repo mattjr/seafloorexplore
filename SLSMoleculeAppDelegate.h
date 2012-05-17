@@ -58,6 +58,6 @@
 - (BOOL)handleCustomURLScheme:(NSURL *)url;
 - (void)downloadCompleted;
 - (void)saveMoleculeWithData:(NSData *)moleculeData toFilename:(NSString *)filename;
-
+void uncaughtExceptionHandler(NSException *exception);
 @end
 

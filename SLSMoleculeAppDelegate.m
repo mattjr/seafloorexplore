@@ -19,6 +19,7 @@
 #import "ParseOperation.h"
 #import "VCTitleCase.h"
 #import "SLSOpenGLESRenderer.h"
+#import "FlurryAnalytics.h"
 
 #define MOLECULES_DATABASE_VERSION 1
 
@@ -29,9 +30,13 @@
  @synthesize splashView;
 #pragma mark -
 #pragma mark Initialization / teardown
-
+void uncaughtExceptionHandler(NSException *exception) {
+    [FlurryAnalytics logError:@"Uncaught" message:@"Crash!" exception:exception];
+}
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions   
 {	
+    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    [FlurryAnalytics startSession:@"JG3NFXX5AU3T8PGFPQRU"];
 	//Initialize the application window
 	window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	if (!window) 
