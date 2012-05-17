@@ -19,7 +19,6 @@
 #import "ParseOperation.h"
 #import "VCTitleCase.h"
 #import "SLSOpenGLESRenderer.h"
-#import "FlurryAnalytics.h"
 
 #define MOLECULES_DATABASE_VERSION 1
 

@@ -174,7 +174,7 @@
 	{
 		newMoleculeIndex = 0;		
 	}
-	
+
 	[[NSUserDefaults standardUserDefaults] setInteger:newMoleculeIndex forKey:@"indexOfLastSelectedMolecule"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
@@ -196,7 +196,7 @@
             [glViewController stopRender];
              
         SLSMolecule *tmp=[molecules objectAtIndex:newMoleculeIndex];
-
+      
         [glViewController startRender:tmp];
 		bufferedMolecule = [molecules objectAtIndex:newMoleculeIndex];
 	}

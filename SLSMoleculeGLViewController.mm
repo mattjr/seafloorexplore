@@ -627,6 +627,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 		}
 	}*/
 	[self handleTouchesEnding:touches withEvent:event];
+   // [sim logCameraPosition];
 
 	// This is placed here to avoid an infinite spawning of alerts under iPhone OS 4.0
 	if (([[touches anyObject] tapCount] >= 2)/* && (![SLSMoleculeAppDelegate isRunningOniPad])*/)

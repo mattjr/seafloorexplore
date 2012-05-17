@@ -10,6 +10,7 @@
  */
 
 #import "Simulation.h"
+#import "FlurryAnalytics.h"
 #include "LibVT.h"
 #include "LibVT_Internal.h"
 float positions[60 * 60][6];
@@ -721,7 +722,30 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 	NSLog(@"|%f,%f,%f,%f|", matrix[12], matrix[13], matrix[14], matrix[15]);
 	NSLog(@"___________________________");			
 }
+-(void)logCameraPosition:(NSString*)type 
+{
+    [FlurryAnalytics endTimedEvent:type withParameters:nil];
 
+    NSDictionary *dictionary = 
+    [NSDictionary dictionaryWithObjectsAndKeys:[mesh name],
+     @"mesh",
+     [NSNumber numberWithDouble:_center[0]], 
+     @"centerX", 
+     [NSNumber numberWithDouble:_center[1]], 
+     @"centerY",
+     [NSNumber numberWithDouble:_center[2]], 
+     @"centerZ",
+     [NSNumber numberWithDouble:_distance], 
+     @"distance",
+     [NSNumber numberWithDouble:_tilt], 
+     @"tilt",
+     [NSNumber numberWithDouble:_heading], 
+     @"heading",
+     nil];
+    [FlurryAnalytics logEvent:type withParameters:dictionary timed:YES];
+
+    
+}
 
 - (void)resetCamera
 {

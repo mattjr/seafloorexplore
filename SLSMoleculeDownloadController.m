@@ -179,6 +179,8 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
 		[alert show];
 		[alert release];
+        [FlurryAnalytics logError:@"MoleculeFailedDownloading" message:errorMessage exception:nil];
+
         [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:nil];
 		return;
 	}
@@ -272,7 +274,8 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 												   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
 	[alert show];
 	[alert release];
-	
+    [FlurryAnalytics logError:@"MoleculeFailedDownloading" message:errorMessage exception:nil];
+
 	[self downloadCompleted];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
 
@@ -386,6 +389,14 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     }
     else
     {*/
+    NSString *filename = [downloadingmodel filename];
+
+    NSDictionary *dictionary = 
+    [NSDictionary dictionaryWithObjectsAndKeys:filename, 
+     @"downloadmodel", 
+     nil];
+    [FlurryAnalytics logEvent:@"DOWNLOADMODEL" withParameters:dictionary];
+
     progressView.hidden = YES;
     cancelDownloadButton.hidden=YES;
     spinningIndicator.hidden=NO;
@@ -394,7 +405,6 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     [spinningIndicator startAnimating];
 	downloadStatusText.text = NSLocalizedStringFromTable(@"Decompressing...", @"Localized", nil);
 
- 	NSString *filename = [downloadingmodel filename];
     printf("Download complete\n");
     if(![self isBackgrounded])
         [self performSelector:@selector(sendDownloadFinishedMsg:) withObject:filename afterDelay:0.3];

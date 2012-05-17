@@ -12,6 +12,8 @@
 #import <sqlite3.h>
 #import "SLSMoleculeCustomDownloadViewController.h"
 #import "NSOperationQueue+SharedQueue.h"
+#import "FlurryAnalytics.h"
+
 @class SLSMoleculeRootViewController;
 
 
