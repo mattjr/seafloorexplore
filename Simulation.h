@@ -97,8 +97,14 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 -(void) panstart: (CGPoint) pt;
 -(void) pancont: (CGPoint)pt;
 - (void)printMatrix:(GLfloat *)matrix;
--(void)logCameraPosition:(NSString*)type ;
+typedef enum {
+    kPanning,
+    kZoom,
+    kTilt,
+} MovementType;
+-(void)logCameraPosition:(MovementType)type ;
 
 -(void)setValidPos;
 -(void) checkInFrame;
+
 @end

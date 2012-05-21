@@ -60,11 +60,11 @@ float positions[60 * 60][6];
 		[[scene camera] setFarPlane:20000];
 		[[scene camera] setNearPlane:0.5];
 		renderMode=TEXTURED;
-        NSString *filename = [[name lastPathComponent] stringByDeletingPathExtension];	
+      //  NSString *filename = [[name lastPathComponent] stringByDeletingPathExtension];	
 
-        NSString *dataName = [NSString stringWithFormat:@"%@/%@.vtex",name,filename] ;
+        NSString *dataName = [NSString stringWithFormat:@"%@/vtex",name] ;
         //NSLog(@"%@\n",dataName);
-		mesh = [[CollideableMesh alloc] initWithOctreeNamed:[NSString stringWithFormat:@"%@/%@", name,filename]];
+		mesh = [[CollideableMesh alloc] initWithOctreeNamed:[NSString stringWithFormat:@"%@/m", name]];
         mesh.scene =scene;
         if(mesh == nil)
             return nil;
@@ -722,13 +722,15 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 	NSLog(@"|%f,%f,%f,%f|", matrix[12], matrix[13], matrix[14], matrix[15]);
 	NSLog(@"___________________________");			
 }
--(void)logCameraPosition:(NSString*)type 
+-(void)logCameraPosition:(MovementType)type 
 {
-    [FlurryAnalytics endTimedEvent:type withParameters:nil];
+    [FlurryAnalytics endTimedEvent:@"MOVEMENT_EVENT" withParameters:nil];
 
     NSDictionary *dictionary = 
     [NSDictionary dictionaryWithObjectsAndKeys:[mesh name],
      @"mesh",
+     [NSNumber numberWithInt:type],
+     @"movement",
      [NSNumber numberWithDouble:_center[0]], 
      @"centerX", 
      [NSNumber numberWithDouble:_center[1]], 
@@ -742,7 +744,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
      [NSNumber numberWithDouble:_heading], 
      @"heading",
      nil];
-    [FlurryAnalytics logEvent:type withParameters:dictionary timed:YES];
+    [FlurryAnalytics logEvent:@"MOVEMENT_EVENT" withParameters:dictionary timed:YES];
 
     
 }

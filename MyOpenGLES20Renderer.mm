@@ -1,6 +1,6 @@
 
 //
-//  SLSOpenGLES20Renderer.m
+//  BenthosOpenGLES20Renderer.m
 //  Molecules
 //
 //  The source code for Molecules is available under a BSD license.  See License.txt for details.
@@ -277,14 +277,14 @@ extern vtConfig c;
 }
 - (void)showStatusIndicator;
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:kSLSMoleculeLoadingStartedNotification object:nil ];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kBenthosLoadingStartedNotification object:nil ];
 }	
 
 - (void)hideStatusIndicator;
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:kSLSMoleculeLoadingEndedNotification object:nil ];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kBenthosLoadingEndedNotification object:nil ];
 }
--(void)startupVT:(SLSMolecule *)mol
+-(void)startupVT:(Benthos *)mol
 {
     NSDictionary *dictionary = 
     [NSDictionary dictionaryWithObjectsAndKeys:mol.filenameWithoutExtension, 
@@ -391,7 +391,7 @@ extern vtConfig c;
   //  printf("Finished loading!\n");    
 //    isSceneReady = YES;
 }
-- (void)renderFrameForMolecule:(SLSMolecule *)molecule;
+- (void)renderFrameForMolecule:(Benthos *)molecule;
 {
     if (!isSceneReady)
     {

@@ -11,7 +11,7 @@
 int main(int argc, char *argv[]) {
 	
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	int retVal = UIApplicationMain(argc, argv, nil, @"SLSMoleculeAppDelegate");
+	int retVal = UIApplicationMain(argc, argv, nil, @"BenthosAppDelegate");
 	[pool release];
 	return retVal;
 }
