@@ -99,23 +99,9 @@
 		BC5BBCD40E219AB90001DFD0 /* BenthosIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */; };
 		BC61CC310E2463180074BE04 /* BenthosCellTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC61CC2E0E2463180074BE04 /* BenthosCellTextView.m */; };
 		BC61CC320E2463180074BE04 /* BenthosTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC61CC300E2463180074BE04 /* BenthosTextViewController.m */; };
-		BC67B8BC137B5DF10075A361 /* SphereAOLookup.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BC67B8BA137B5DF10075A361 /* SphereAOLookup.fsh */; };
-		BC67B8BD137B5DF10075A361 /* SphereAOLookup.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BC67B8BB137B5DF10075A361 /* SphereAOLookup.vsh */; };
 		BC67B8BF137C4B7A0075A361 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC67B8BE137C4B7A0075A361 /* Default@2x.png */; };
 		BC6A9FCC11CAA8CB00E62D55 /* BenthosIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC6A9FCB11CAA8CB00E62D55 /* BenthosIcon@2x.png */; };
 		BC835184117545C600B478D5 /* 69-display.png in Resources */ = {isa = PBXBuildFile; fileRef = BC835183117545C600B478D5 /* 69-display.png */; };
-		BCA2E7E2135A1B9B00D7206C /* CylinderDepth.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E7DA135A1B9B00D7206C /* CylinderDepth.fsh */; };
-		BCA2E7E3135A1B9B00D7206C /* CylinderDepth.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E7DB135A1B9B00D7206C /* CylinderDepth.vsh */; };
-		BCA2E7E4135A1B9B00D7206C /* CylinderRaytracing.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E7DC135A1B9B00D7206C /* CylinderRaytracing.fsh */; };
-		BCA2E7E5135A1B9B00D7206C /* CylinderRaytracing.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E7DD135A1B9B00D7206C /* CylinderRaytracing.vsh */; };
-		BCA2E7E6135A1B9B00D7206C /* SphereDepth.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E7DE135A1B9B00D7206C /* SphereDepth.fsh */; };
-		BCA2E7E7135A1B9B00D7206C /* SphereDepth.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E7DF135A1B9B00D7206C /* SphereDepth.vsh */; };
-		BCA2E7E8135A1B9B00D7206C /* SphereRaytracing.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E7E0135A1B9B00D7206C /* SphereRaytracing.fsh */; };
-		BCA2E7E9135A1B9B00D7206C /* SphereRaytracing.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E7E1135A1B9B00D7206C /* SphereRaytracing.vsh */; };
-		BCA2E814135BBA3000D7206C /* SphereAmbientOcclusion.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E812135BBA3000D7206C /* SphereAmbientOcclusion.fsh */; };
-		BCA2E815135BBA3000D7206C /* SphereAmbientOcclusion.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E813135BBA3000D7206C /* SphereAmbientOcclusion.vsh */; };
-		BCA2E81E135E54C500D7206C /* CylinderAmbientOcclusion.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E81C135E54C400D7206C /* CylinderAmbientOcclusion.fsh */; };
-		BCA2E81F135E54C500D7206C /* CylinderAmbientOcclusion.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCA2E81D135E54C400D7206C /* CylinderAmbientOcclusion.vsh */; };
 		BCB3A67A13553F9D000A286B /* BenthosOpenGLESRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB3A67913553F9D000A286B /* BenthosOpenGLESRenderer.m */; };
 		BCB3A67D13553FC1000A286B /* BenthosOpenGLES11Renderer.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB3A67C13553FC1000A286B /* BenthosOpenGLES11Renderer.m */; };
 		BCB3A68013553FD2000A286B /* BenthosOpenGLES20Renderer.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB3A67F13553FD2000A286B /* BenthosOpenGLES20Renderer.m */; };
@@ -127,8 +113,6 @@
 		BCC286D20E1D905400978ECA /* BenthosDownloadController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC286CD0E1D905400978ECA /* BenthosDownloadController.m */; };
 		BCC286D40E1D905400978ECA /* BenthosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC286D00E1D905400978ECA /* BenthosTableViewController.m */; };
 		BCC8FE800EC7E4CA00853857 /* BenthosDataSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC8FE7F0EC7E4CA00853857 /* BenthosDataSourceViewController.m */; };
-		BCCB1EFB1361E6BC006F00A0 /* PlainDisplay.fsh in Resources */ = {isa = PBXBuildFile; fileRef = BCCB1EF91361E6BC006F00A0 /* PlainDisplay.fsh */; };
-		BCCB1EFC1361E6BC006F00A0 /* PlainDisplay.vsh in Resources */ = {isa = PBXBuildFile; fileRef = BCCB1EFA1361E6BC006F00A0 /* PlainDisplay.vsh */; };
 		BCD12CFA11308E1000737166 /* BenthosiPadRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD12CF811308E1000737166 /* BenthosiPadRootViewController.m */; };
 		BCDC9F9D0EB37B3400ADCFA5 /* Localized.strings in Resources */ = {isa = PBXBuildFile; fileRef = BCDC9F9C0EB37B3400ADCFA5 /* Localized.strings */; };
 		BCDFF560115469C1005C984C /* RotationIconiPad.png in Resources */ = {isa = PBXBuildFile; fileRef = BCDFF55F115469BF005C984C /* RotationIconiPad.png */; };
@@ -286,23 +270,9 @@
 		BC61CC2E0E2463180074BE04 /* BenthosCellTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosCellTextView.m; sourceTree = "<group>"; };
 		BC61CC2F0E2463180074BE04 /* BenthosTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosTextViewController.h; sourceTree = "<group>"; };
 		BC61CC300E2463180074BE04 /* BenthosTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosTextViewController.m; sourceTree = "<group>"; };
-		BC67B8BA137B5DF10075A361 /* SphereAOLookup.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereAOLookup.fsh; path = Shaders/SphereAOLookup.fsh; sourceTree = "<group>"; };
-		BC67B8BB137B5DF10075A361 /* SphereAOLookup.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereAOLookup.vsh; path = Shaders/SphereAOLookup.vsh; sourceTree = "<group>"; };
 		BC67B8BE137C4B7A0075A361 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		BC6A9FCB11CAA8CB00E62D55 /* BenthosIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BenthosIcon@2x.png"; sourceTree = "<group>"; };
 		BC835183117545C600B478D5 /* 69-display.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "69-display.png"; sourceTree = "<group>"; };
-		BCA2E7DA135A1B9B00D7206C /* CylinderDepth.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = CylinderDepth.fsh; path = Shaders/CylinderDepth.fsh; sourceTree = "<group>"; };
-		BCA2E7DB135A1B9B00D7206C /* CylinderDepth.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = CylinderDepth.vsh; path = Shaders/CylinderDepth.vsh; sourceTree = "<group>"; };
-		BCA2E7DC135A1B9B00D7206C /* CylinderRaytracing.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = CylinderRaytracing.fsh; path = Shaders/CylinderRaytracing.fsh; sourceTree = "<group>"; };
-		BCA2E7DD135A1B9B00D7206C /* CylinderRaytracing.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = CylinderRaytracing.vsh; path = Shaders/CylinderRaytracing.vsh; sourceTree = "<group>"; };
-		BCA2E7DE135A1B9B00D7206C /* SphereDepth.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereDepth.fsh; path = Shaders/SphereDepth.fsh; sourceTree = "<group>"; };
-		BCA2E7DF135A1B9B00D7206C /* SphereDepth.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereDepth.vsh; path = Shaders/SphereDepth.vsh; sourceTree = "<group>"; };
-		BCA2E7E0135A1B9B00D7206C /* SphereRaytracing.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereRaytracing.fsh; path = Shaders/SphereRaytracing.fsh; sourceTree = "<group>"; };
-		BCA2E7E1135A1B9B00D7206C /* SphereRaytracing.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereRaytracing.vsh; path = Shaders/SphereRaytracing.vsh; sourceTree = "<group>"; };
-		BCA2E812135BBA3000D7206C /* SphereAmbientOcclusion.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereAmbientOcclusion.fsh; path = Shaders/SphereAmbientOcclusion.fsh; sourceTree = "<group>"; };
-		BCA2E813135BBA3000D7206C /* SphereAmbientOcclusion.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = SphereAmbientOcclusion.vsh; path = Shaders/SphereAmbientOcclusion.vsh; sourceTree = "<group>"; };
-		BCA2E81C135E54C400D7206C /* CylinderAmbientOcclusion.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = CylinderAmbientOcclusion.fsh; path = Shaders/CylinderAmbientOcclusion.fsh; sourceTree = "<group>"; };
-		BCA2E81D135E54C400D7206C /* CylinderAmbientOcclusion.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = CylinderAmbientOcclusion.vsh; path = Shaders/CylinderAmbientOcclusion.vsh; sourceTree = "<group>"; };
 		BCB3A67813553F9D000A286B /* BenthosOpenGLESRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosOpenGLESRenderer.h; sourceTree = "<group>"; };
 		BCB3A67913553F9D000A286B /* BenthosOpenGLESRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosOpenGLESRenderer.m; sourceTree = "<group>"; };
 		BCB3A67B13553FC0000A286B /* BenthosOpenGLES11Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosOpenGLES11Renderer.h; sourceTree = "<group>"; };
@@ -328,8 +298,6 @@
 		BCC286D50E1D909600978ECA /* Benthos_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Benthos_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		BCC8FE7E0EC7E4CA00853857 /* BenthosDataSourceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosDataSourceViewController.h; sourceTree = "<group>"; };
 		BCC8FE7F0EC7E4CA00853857 /* BenthosDataSourceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosDataSourceViewController.m; sourceTree = "<group>"; };
-		BCCB1EF91361E6BC006F00A0 /* PlainDisplay.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = PlainDisplay.fsh; path = Shaders/PlainDisplay.fsh; sourceTree = "<group>"; };
-		BCCB1EFA1361E6BC006F00A0 /* PlainDisplay.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = PlainDisplay.vsh; path = Shaders/PlainDisplay.vsh; sourceTree = "<group>"; };
 		BCD12CF711308E1000737166 /* BenthosiPadRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosiPadRootViewController.h; sourceTree = "<group>"; };
 		BCD12CF811308E1000737166 /* BenthosiPadRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosiPadRootViewController.m; sourceTree = "<group>"; };
 		BCDC9F870EB3760300ADCFA5 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = French; path = French.lproj/Info.plist; sourceTree = "<group>"; };
@@ -580,29 +548,6 @@
 			name = "Benthos Details View ";
 			sourceTree = "<group>";
 		};
-		BCA2E7D9135A1B7B00D7206C /* Shaders */ = {
-			isa = PBXGroup;
-			children = (
-				BCCB1EFA1361E6BC006F00A0 /* PlainDisplay.vsh */,
-				BCCB1EF91361E6BC006F00A0 /* PlainDisplay.fsh */,
-				BCA2E7DB135A1B9B00D7206C /* CylinderDepth.vsh */,
-				BCA2E7DA135A1B9B00D7206C /* CylinderDepth.fsh */,
-				BCA2E7DD135A1B9B00D7206C /* CylinderRaytracing.vsh */,
-				BCA2E7DC135A1B9B00D7206C /* CylinderRaytracing.fsh */,
-				BCA2E81D135E54C400D7206C /* CylinderAmbientOcclusion.vsh */,
-				BCA2E81C135E54C400D7206C /* CylinderAmbientOcclusion.fsh */,
-				BCA2E7DF135A1B9B00D7206C /* SphereDepth.vsh */,
-				BCA2E7DE135A1B9B00D7206C /* SphereDepth.fsh */,
-				BCA2E7E1135A1B9B00D7206C /* SphereRaytracing.vsh */,
-				BCA2E7E0135A1B9B00D7206C /* SphereRaytracing.fsh */,
-				BCA2E813135BBA3000D7206C /* SphereAmbientOcclusion.vsh */,
-				BCA2E812135BBA3000D7206C /* SphereAmbientOcclusion.fsh */,
-				BC67B8BB137B5DF10075A361 /* SphereAOLookup.vsh */,
-				BC67B8BA137B5DF10075A361 /* SphereAOLookup.fsh */,
-			);
-			name = Shaders;
-			sourceTree = "<group>";
-		};
 		BCC246AB112E3DB500710932 /* Resources-iPad */ = {
 			isa = PBXGroup;
 			children = (
@@ -645,7 +590,6 @@
 				BCB3A67C13553FC1000A286B /* BenthosOpenGLES11Renderer.m */,
 				BCB3A67E13553FD2000A286B /* BenthosOpenGLES20Renderer.h */,
 				BCB3A67F13553FD2000A286B /* BenthosOpenGLES20Renderer.m */,
-				BCA2E7D9135A1B7B00D7206C /* Shaders */,
 				BC57EBF91358DE9000FA1060 /* GLProgram.h */,
 				BC57EBFA1358DE9000FA1060 /* GLProgram.m */,
 			);
@@ -783,22 +727,6 @@
 				BC286E1011C4751E005D720C /* RotationIcon@2x.png in Resources */,
 				BC286E2611C47956005D720C /* RotationIconSelected@2x.png in Resources */,
 				BC6A9FCC11CAA8CB00E62D55 /* BenthosIcon@2x.png in Resources */,
-				BCA2E7E2135A1B9B00D7206C /* CylinderDepth.fsh in Resources */,
-				BCA2E7E3135A1B9B00D7206C /* CylinderDepth.vsh in Resources */,
-				BCA2E7E4135A1B9B00D7206C /* CylinderRaytracing.fsh in Resources */,
-				BCA2E7E5135A1B9B00D7206C /* CylinderRaytracing.vsh in Resources */,
-				BCA2E7E6135A1B9B00D7206C /* SphereDepth.fsh in Resources */,
-				BCA2E7E7135A1B9B00D7206C /* SphereDepth.vsh in Resources */,
-				BCA2E7E8135A1B9B00D7206C /* SphereRaytracing.fsh in Resources */,
-				BCA2E7E9135A1B9B00D7206C /* SphereRaytracing.vsh in Resources */,
-				BCA2E814135BBA3000D7206C /* SphereAmbientOcclusion.fsh in Resources */,
-				BCA2E815135BBA3000D7206C /* SphereAmbientOcclusion.vsh in Resources */,
-				BCA2E81E135E54C500D7206C /* CylinderAmbientOcclusion.fsh in Resources */,
-				BCA2E81F135E54C500D7206C /* CylinderAmbientOcclusion.vsh in Resources */,
-				BCCB1EFB1361E6BC006F00A0 /* PlainDisplay.fsh in Resources */,
-				BCCB1EFC1361E6BC006F00A0 /* PlainDisplay.vsh in Resources */,
-				BC67B8BC137B5DF10075A361 /* SphereAOLookup.fsh in Resources */,
-				BC67B8BD137B5DF10075A361 /* SphereAOLookup.vsh in Resources */,
 				BC67B8BF137C4B7A0075A361 /* Default@2x.png in Resources */,
 				7BF64D80139770C8002FEB23 /* combined_frag.cg in Resources */,
 				7BF64D81139770C8002FEB23 /* combined_vert.cg in Resources */,

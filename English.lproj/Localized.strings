@@ -12,7 +12,7 @@
 "Initializing database..." = "Initializing database...";
 "Downloading molecule..." = "Downloading molecule...";
 "Error in downloaded file" = "Error in downloaded file";
-"The molecule file is either corrupted or not of a supported format" = "The molecule file is either corrupted or not of a supported format";
+"The model file is either corrupted or not of a supported format" = "The model file is either corrupted or not of a supported format";
 "Connection failed" = "Connection failed";
 "Could not connect to the Protein Data Bank" = "Could not connect to the Protein Data Bank";
 "Could not find file" = "Could not find file";
@@ -37,11 +37,9 @@
 "Download" = "Download";
 "Done" = "Done";
 "File already exists" = "File already exists";
-"The molecule with this PDB code has already been downloaded" = "The molecule with this PDB code has already been downloaded";
 "Cancel download" = "Cancel download";
 "Connecting..." = "Connecting...";
 "Downloading" = "Downloading";
-"No protein with the code %@ exists in the data bank" = "No protein with the code %@ exists in the data bank";
 "Connected" = "Connected";
 "Processing..." = "Processing...";
 "Triangles: %d" = "Triangles: %d";

@@ -13,7 +13,7 @@
 "Initializing database..." = "Initialisation de la base de donnée...";
 "Downloading molecule..." = "Téléchargement de la molécule...";
 "Error in downloaded file" = "Erreur sur le fichier téléchargé";
-"The molecule file is either corrupted or not of a supported format" = "Le fichier molécule est corrompu ou n'est pas dans un format supporté";
+"The molecule file is either corrupted or not of a supported format" = "Le fichier model est corrompu ou n'est pas dans un format supporté";
 "Connection failed" = "Connexion échouée";
 "Could not connect to the Protein Data Bank" = "Impossible de se connecter à la Base de Donnée des Protéines";
 "Could not find file" = "Impossible de trouver le fichier";
@@ -37,11 +37,9 @@
 "Download" = "Download";
 "Done" = "Terminer";
 "File already exists" = "Le fichier existe déjà";
-"The molecule with this PDB code has already been downloaded" = "La molécule avec ce code PDB à déjà été téléchargée.";
 "Cancel download" = "Annuler le téléchargement";
 "Connecting..." = "Connexion...";
 "Downloading" = "Téléchargement";
-"No protein with the code %@ exists in the data bank" = "Aucune protéine avec le code %@ éxiste dans la banque de donnée";
 "Connected" = "Connecté";
 "Processing..." = "En cours...";
 "Triangles: %d" = "Triangles: %d";
