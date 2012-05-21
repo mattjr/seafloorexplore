@@ -16,6 +16,7 @@
 @class Benthos;
 @class BenthosTableViewController;
 @class BenthosMapViewController;
+@class BenthosHelpScrollViewController;
 @class Scene;
 @interface BenthosRootViewController : UIViewController
 {
@@ -24,6 +25,7 @@
 	UINavigationController *tableNavigationController;
 	BenthosTableViewController *tableViewController;
     BenthosMapViewController *mapViewController;
+    BenthosHelpScrollViewController *helpviewController;
 
     SegmentsController     * segmentsController;
     UISegmentedControl     * segmentedControl;

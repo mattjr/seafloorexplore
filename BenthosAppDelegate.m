@@ -26,7 +26,6 @@
 
 @synthesize window;
 @synthesize rootViewController;
- @synthesize splashView;
 #pragma mark -
 #pragma mark Initialization / teardown
 void uncaughtExceptionHandler(NSException *exception) {
@@ -510,30 +509,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 		[self disconnectFromDatabase];
 	}
 }
-- (void) splashFade
-{
-    printf("Blah\n");
-    splashView = [[[UIImageView alloc] initWithFrame:CGRectMake(0,0, 320, 480)] autorelease];
-    splashView.image = [UIImage imageNamed:@"Default.png"];
-    [window addSubview:splashView];
-    [window bringSubviewToFront:splashView];
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:10.0];
-    [UIView setAnimationDelay:2.5];
-    [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:window cache:YES];
-    [UIView setAnimationDelegate:self]; 
-    [UIView setAnimationDidStopSelector:@selector(startupAnimationDone:finished:context:)];
-    splashView.alpha = 0.0;
-    [UIView commitAnimations];
-    
-    //Create and add the Activity Indicator to splashView
-    UIActivityIndicatorView *activityIndicator = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite] autorelease];
-    activityIndicator.alpha = 1.0;
-    activityIndicator.center = CGPointMake(160, 360);
-    activityIndicator.hidesWhenStopped = NO;
-    [splashView addSubview:activityIndicator];
-    [activityIndicator startAnimating];
-}
+
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {

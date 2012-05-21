@@ -12,6 +12,7 @@
 #import "BenthosRootViewController.h"
 #import "BenthosTableViewController.h"
 #import "BenthosMapViewController.h"
+#import "BenthosHelpScrollViewController.h"
 #import "BenthosGLViewController.h"
 #import "BenthosGLView.h"
 #import "MyOpenGLES20Renderer.h"
@@ -357,7 +358,10 @@
         
         mapViewController = [[BenthosMapViewController alloc] init:indexOfInitialMolecule withMolecules:molecules];
         mapViewController.database = database;
-        mapViewController.title=@"Map View";
+        mapViewController.title=@"Map";
+        
+        helpviewController = [[BenthosHelpScrollViewController alloc] init];
+        helpviewController.title=@"Help";
 
 		tableViewController.database = database;
 		tableViewController.molecules = molecules;
@@ -406,7 +410,7 @@
 
 - (NSArray *)segmentViewControllers {
     
-    NSArray * viewControllers = [NSArray arrayWithObjects:tableViewController, mapViewController, nil];
+    NSArray * viewControllers = [NSArray arrayWithObjects:tableViewController, mapViewController,helpviewController, nil];
     
     return viewControllers;
 }

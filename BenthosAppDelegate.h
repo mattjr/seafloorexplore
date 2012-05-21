@@ -33,7 +33,6 @@
 	sqlite3 *database;
 	NSMutableArray *molecules;
 }
-@property (nonatomic, strong) UIImageView *splashView;
 
 @property (nonatomic, retain) UIWindow *window;
 @property (nonatomic, retain) BenthosRootViewController *rootViewController;
