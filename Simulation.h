@@ -16,6 +16,13 @@
 #import "CollideableMesh.h"
 typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 @class Scene;
+typedef enum {
+    kNoLog,
+    kPanning,
+    kZoom,
+    kTilt,
+    kDoubleClick,
+} MovementType;
 @interface Simulation :  NSObject
 {
 	int frames;
@@ -71,8 +78,12 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
     CGPoint _lastPt;
     float _maxDist;
     Scene *scene;
+    MovementType logOnNextUpdate;
     
 }
+@property (atomic)     MovementType logOnNextUpdate;
+
+
 -(void) centeratPt: (CGPoint) pt;
 - (void)mouseDragged:(vector2f)delta withFlags:(uint32_t)flags;
 - (void)scrollWheel:(float)delta;
@@ -97,11 +108,7 @@ typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 -(void) panstart: (CGPoint) pt;
 -(void) pancont: (CGPoint)pt;
 - (void)printMatrix:(GLfloat *)matrix;
-typedef enum {
-    kPanning,
-    kZoom,
-    kTilt,
-} MovementType;
+
 -(void)logCameraPosition:(MovementType)type ;
 
 -(void)setValidPos;

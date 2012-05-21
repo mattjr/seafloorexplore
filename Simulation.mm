@@ -36,6 +36,8 @@ float positions[60 * 60][6];
 
 
 @implementation Simulation
+@synthesize logOnNextUpdate;
+
 - (id)initWithString:(NSString *)name withScene:(Scene *)newscene;
 {
     self = [super init];
@@ -195,6 +197,7 @@ float positions[60 * 60][6];
         bbox[1]=[mesh maxbb];
         extentsMesh=bbox[1]-bbox[0];
         _meshcent =[mesh center];
+        logOnNextUpdate=kNoLog;
 
     }
     return self;
@@ -383,6 +386,10 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
        _targetDistance=_lastValidDist;
        _targetTilt =_lastValidTilt;
        _targetHeading=_lastValidHeading;
+    }
+    if(logOnNextUpdate!=kNoLog){
+        [self logCameraPosition: logOnNextUpdate];
+        logOnNextUpdate=kNoLog;
     }
 
    
@@ -615,6 +622,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
         _targetCenter[1]=cent[1];
         _targetCenter[2]=cent[2];
         _targetDistance=tmp_targetDistance;
+
     }
 }
 -(void) orient: (CGPoint) pt
@@ -681,7 +689,6 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     else
         _targetDistance *= 1.0/percent;// std::min((double)tmp,  _radius *4.0);
     
-
     
 }
 -(void) centeratPt: (CGPoint) pt{
@@ -724,6 +731,16 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 }
 -(void)logCameraPosition:(MovementType)type 
 {
+   /* if(type == kPanning)
+        printf("Logging Panning\n");
+    else if(type == kZoom)
+        printf("Logging Zoom\n");
+    else if(type == kTilt)
+        printf("Logging Tilt\n");
+    else if(type == kDoubleClick)
+        printf("Logging Click\n");
+
+*/
     [FlurryAnalytics endTimedEvent:@"MOVEMENT_EVENT" withParameters:nil];
 
     NSDictionary *dictionary = 
@@ -731,17 +748,17 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
      @"mesh",
      [NSNumber numberWithInt:type],
      @"movement",
-     [NSNumber numberWithDouble:_center[0]], 
+     [NSNumber numberWithDouble:_targetCenter[0]], 
      @"centerX", 
-     [NSNumber numberWithDouble:_center[1]], 
+     [NSNumber numberWithDouble:_targetCenter[1]], 
      @"centerY",
-     [NSNumber numberWithDouble:_center[2]], 
+     [NSNumber numberWithDouble:_targetCenter[2]], 
      @"centerZ",
-     [NSNumber numberWithDouble:_distance], 
+     [NSNumber numberWithDouble:_targetDistance], 
      @"distance",
-     [NSNumber numberWithDouble:_tilt], 
+     [NSNumber numberWithDouble:_targetTilt], 
      @"tilt",
-     [NSNumber numberWithDouble:_heading], 
+     [NSNumber numberWithDouble:_targetHeading], 
      @"heading",
      nil];
     [FlurryAnalytics logEvent:@"MOVEMENT_EVENT" withParameters:dictionary timed:YES];

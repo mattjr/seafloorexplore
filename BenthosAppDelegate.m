@@ -390,9 +390,9 @@ void uncaughtExceptionHandler(NSException *exception) {
         BOOL isDir = [[pathAttrs objectForKey:NSFileType] isEqual:NSFileTypeDirectory];
         if(isDir && level == 2)
             [direnum skipDescendents];
-        NSString *basename = [[pname lastPathComponent] stringByDeletingPathExtension];	
+        NSString *basename = [[[pname stringByDeletingLastPathComponent] lastPathComponent] stringByDeletingPathExtension];	
 
-		if ( ([moleculeFilenameLookupTable valueForKey:basename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"xml"] ||[[[pname pathExtension] lowercaseString] isEqualToString:@"tar"])  )
+		if (([basename length] > 0) && ([moleculeFilenameLookupTable valueForKey:basename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"xml"] ||[[[pname pathExtension] lowercaseString] isEqualToString:@"tar"])  )
 		{
             BOOL extractFail=NO;
             if([[[pname pathExtension] lowercaseString] isEqualToString:@"tar"]){
@@ -426,7 +426,7 @@ void uncaughtExceptionHandler(NSException *exception) {
                     }
                 }
                 //}
-                pname=[NSString stringWithFormat:@"%@/m.xml", basename,basename];
+                pname=[NSString stringWithFormat:@"%@/m.xml", basename];
             }
             if(!extractFail){
                 NSString *preloadedXMLPath = [documentsDirectory stringByAppendingPathComponent:pname];

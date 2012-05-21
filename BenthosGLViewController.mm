@@ -626,6 +626,16 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 			count++;	
 		}
 	}*/
+    MovementType logType;
+    if(pinchGestureUnderway)
+        logType=kZoom;
+    else if([touches count]>1 && !pinchGestureUnderway)
+        logType= kTilt;
+    else {
+        logType=kPanning;
+    }
+
+    
 	[self handleTouchesEnding:touches withEvent:event];
    // [sim logCameraPosition];
 
@@ -637,12 +647,18 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
        // if ([[scene simulator] respondsToSelector:@selector(resetCamera)])
          //   [(Simulation *)[scene simulator] resetCamera];
         [sim centeratPt:endPos];
+        [sim setLogOnNextUpdate: kDoubleClick];
+
 		/*if (moleculeToDisplay.isDoneRendering == YES)
 		{
 			UIActionSheet *actionSheet = [self actionSheetForVisualizationState];
 			[actionSheet showInView:self.view];
 		}*/		
-	}
+	}else{
+        [sim setLogOnNextUpdate: logType];
+
+    }
+
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event 
@@ -665,7 +681,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
         [sim checkInFrame];
 		lastMovementPosition = [[remainingTouches anyObject] locationInView:self.view];
         [sim pancont:lastMovementPosition];
-    
+
 
 	}	
 }
