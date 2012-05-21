@@ -628,7 +628,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 -(void) orient: (CGPoint) pt
 {
     
-    float tiltAngleOffset=5.0;
+    float tiltAngleOffset=15.0;
 	double headingVal,tiltVal;
     // Heading
 	/*if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft){

@@ -84,10 +84,6 @@
 		BC2795BA1162500A006DE4C8 /* Default-Landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = BC2795B81162500A006DE4C8 /* Default-Landscape.png */; };
 		BC2795BB1162500A006DE4C8 /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = BC2795B91162500A006DE4C8 /* Default-Portrait.png */; };
 		BC2795BD11625065006DE4C8 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = BC2795BC11625065006DE4C8 /* Default.png */; };
-		BC281A6B11727A89005B7946 /* Document-molecules-64.png in Resources */ = {isa = PBXBuildFile; fileRef = BC281A6911727A89005B7946 /* Document-molecules-64.png */; };
-		BC281A6C11727A89005B7946 /* Document-molecules-320.png in Resources */ = {isa = PBXBuildFile; fileRef = BC281A6A11727A89005B7946 /* Document-molecules-320.png */; };
-		BC286E1011C4751E005D720C /* RotationIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC286E0F11C4751E005D720C /* RotationIcon@2x.png */; };
-		BC286E2611C47956005D720C /* RotationIconSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC286E2511C47956005D720C /* RotationIconSelected@2x.png */; };
 		BC37E7CA0E14779E00E11F4F /* Benthos.m in Sources */ = {isa = PBXBuildFile; fileRef = BC37E7C90E14779E00E11F4F /* Benthos.m */; };
 		BC4E97C20E69F736006CD291 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BC4E97C10E69F736006CD291 /* libsqlite3.dylib */; };
 		BC4FB6670E4E875900B316CD /* VCTitleCase.m in Sources */ = {isa = PBXBuildFile; fileRef = BC4FB6660E4E875900B316CD /* VCTitleCase.m */; };
@@ -115,12 +111,7 @@
 		BCC8FE800EC7E4CA00853857 /* BenthosDataSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC8FE7F0EC7E4CA00853857 /* BenthosDataSourceViewController.m */; };
 		BCD12CFA11308E1000737166 /* BenthosiPadRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD12CF811308E1000737166 /* BenthosiPadRootViewController.m */; };
 		BCDC9F9D0EB37B3400ADCFA5 /* Localized.strings in Resources */ = {isa = PBXBuildFile; fileRef = BCDC9F9C0EB37B3400ADCFA5 /* Localized.strings */; };
-		BCDFF560115469C1005C984C /* RotationIconiPad.png in Resources */ = {isa = PBXBuildFile; fileRef = BCDFF55F115469BF005C984C /* RotationIconiPad.png */; };
-		BCDFF57311546FB2005C984C /* RotationIconiPadCancel.png in Resources */ = {isa = PBXBuildFile; fileRef = BCDFF57211546FB2005C984C /* RotationIconiPadCancel.png */; };
-		BCDFF580115473AD005C984C /* VisualizationIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = BCDFF57F115473AD005C984C /* VisualizationIcon.png */; };
 		BCDFF5AE1154819A005C984C /* 57-download.png in Resources */ = {isa = PBXBuildFile; fileRef = BCDFF5AD1154819A005C984C /* 57-download.png */; };
-		BCF495221040945400BE82D5 /* RotationIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = BCF495211040945400BE82D5 /* RotationIcon.png */; };
-		BCF496CC1040FB9D00BE82D5 /* RotationIconSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = BCF496CB1040FB9D00BE82D5 /* RotationIconSelected.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -249,10 +240,6 @@
 		BC2795B81162500A006DE4C8 /* Default-Landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape.png"; sourceTree = "<group>"; };
 		BC2795B91162500A006DE4C8 /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait.png"; sourceTree = "<group>"; };
 		BC2795BC11625065006DE4C8 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		BC281A6911727A89005B7946 /* Document-molecules-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Document-molecules-64.png"; sourceTree = "<group>"; };
-		BC281A6A11727A89005B7946 /* Document-molecules-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Document-molecules-320.png"; sourceTree = "<group>"; };
-		BC286E0F11C4751E005D720C /* RotationIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RotationIcon@2x.png"; sourceTree = "<group>"; };
-		BC286E2511C47956005D720C /* RotationIconSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RotationIconSelected@2x.png"; sourceTree = "<group>"; };
 		BC37E7C80E14779E00E11F4F /* Benthos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Benthos.h; sourceTree = "<group>"; };
 		BC37E7C90E14779E00E11F4F /* Benthos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Benthos.m; sourceTree = "<group>"; };
 		BC4E97C10E69F736006CD291 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -303,12 +290,7 @@
 		BCDC9F870EB3760300ADCFA5 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = French; path = French.lproj/Info.plist; sourceTree = "<group>"; };
 		BCDC9F9A0EB37B1E00ADCFA5 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localized.strings; sourceTree = "<group>"; };
 		BCDC9F9E0EB37B4100ADCFA5 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = French.lproj/Localized.strings; sourceTree = "<group>"; };
-		BCDFF55F115469BF005C984C /* RotationIconiPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RotationIconiPad.png; sourceTree = "<group>"; };
-		BCDFF57211546FB2005C984C /* RotationIconiPadCancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RotationIconiPadCancel.png; sourceTree = "<group>"; };
-		BCDFF57F115473AD005C984C /* VisualizationIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = VisualizationIcon.png; sourceTree = "<group>"; };
 		BCDFF5AD1154819A005C984C /* 57-download.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "57-download.png"; sourceTree = "<group>"; };
-		BCF495211040945400BE82D5 /* RotationIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RotationIcon.png; sourceTree = "<group>"; };
-		BCF496CB1040FB9D00BE82D5 /* RotationIconSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RotationIconSelected.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -381,18 +363,12 @@
 				7B056F05150AC85A00621766 /* chamber3.tar */,
 				BC6A9FCB11CAA8CB00E62D55 /* BenthosIcon@2x.png */,
 				7B4772D8151D8E5200727C6C /* redx.png */,
-				BC286E2511C47956005D720C /* RotationIconSelected@2x.png */,
-				BC286E0F11C4751E005D720C /* RotationIcon@2x.png */,
 				BC835183117545C600B478D5 /* 69-display.png */,
-				BC281A6911727A89005B7946 /* Document-molecules-64.png */,
-				BC281A6A11727A89005B7946 /* Document-molecules-320.png */,
 				7BC4E86A152C041000BF1B8F /* Paint@2x.png */,
 				7BC4E86B152C041000BF1B8F /* Paint.png */,
 				7BC4E86C152C041000BF1B8F /* PaintOn@2x.png */,
 				7BC4E86D152C041000BF1B8F /* PaintOn.png */,
 				BCDFF5AD1154819A005C984C /* 57-download.png */,
-				BCF496CB1040FB9D00BE82D5 /* RotationIconSelected.png */,
-				BCF495211040945400BE82D5 /* RotationIcon.png */,
 				BCDC9F9C0EB37B3400ADCFA5 /* Localized.strings */,
 				7B909177152669BB007DC3AC /* models.sql */,
 				BC4FB7B90E4F80DB00B316CD /* redButton.png */,
@@ -402,10 +378,8 @@
 				BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */,
 				BC540D0F1145E04500045DE1 /* BenthosIcon72.png */,
 				BCDC9F860EB375FB00ADCFA5 /* Info.plist */,
-				BCDFF55F115469BF005C984C /* RotationIconiPad.png */,
 				7BF64D63139770C8002FEB23 /* combined.frag */,
 				7BF64D64139770C8002FEB23 /* combined.vert */,
-				BCDFF57211546FB2005C984C /* RotationIconiPadCancel.png */,
 				7BF64D65139770C8002FEB23 /* combined_frag.cg */,
 				7BF64D7A139770C8002FEB23 /* renderVT.frag */,
 				7BE606281398DEA80072A1C5 /* pass.frag */,
@@ -421,7 +395,6 @@
 				7BF64D66139770C8002FEB23 /* combined_vert.cg */,
 				7BF64D76139770C8002FEB23 /* readback.frag */,
 				7BF64D77139770C8002FEB23 /* readback.vert */,
-				BCDFF57F115473AD005C984C /* VisualizationIcon.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -711,21 +684,12 @@
 				BC4FB75D0E4F6BB000B316CD /* greenButton.png in Resources */,
 				BC4FB7BA0E4F80DB00B316CD /* redButton.png in Resources */,
 				BCDC9F9D0EB37B3400ADCFA5 /* Localized.strings in Resources */,
-				BCF495221040945400BE82D5 /* RotationIcon.png in Resources */,
-				BCF496CC1040FB9D00BE82D5 /* RotationIconSelected.png in Resources */,
 				BC540D101145E04600045DE1 /* BenthosIcon72.png in Resources */,
-				BCDFF560115469C1005C984C /* RotationIconiPad.png in Resources */,
-				BCDFF57311546FB2005C984C /* RotationIconiPadCancel.png in Resources */,
-				BCDFF580115473AD005C984C /* VisualizationIcon.png in Resources */,
 				BCDFF5AE1154819A005C984C /* 57-download.png in Resources */,
 				BC2795BA1162500A006DE4C8 /* Default-Landscape.png in Resources */,
 				BC2795BB1162500A006DE4C8 /* Default-Portrait.png in Resources */,
 				BC2795BD11625065006DE4C8 /* Default.png in Resources */,
-				BC281A6B11727A89005B7946 /* Document-molecules-64.png in Resources */,
-				BC281A6C11727A89005B7946 /* Document-molecules-320.png in Resources */,
 				BC835184117545C600B478D5 /* 69-display.png in Resources */,
-				BC286E1011C4751E005D720C /* RotationIcon@2x.png in Resources */,
-				BC286E2611C47956005D720C /* RotationIconSelected@2x.png in Resources */,
 				BC6A9FCC11CAA8CB00E62D55 /* BenthosIcon@2x.png in Resources */,
 				BC67B8BF137C4B7A0075A361 /* Default@2x.png in Resources */,
 				7BF64D80139770C8002FEB23 /* combined_frag.cg in Resources */,
