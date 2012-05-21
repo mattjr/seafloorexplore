@@ -88,8 +88,6 @@
 		BC281A6C11727A89005B7946 /* Document-molecules-320.png in Resources */ = {isa = PBXBuildFile; fileRef = BC281A6A11727A89005B7946 /* Document-molecules-320.png */; };
 		BC286E1011C4751E005D720C /* RotationIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC286E0F11C4751E005D720C /* RotationIcon@2x.png */; };
 		BC286E2611C47956005D720C /* RotationIconSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC286E2511C47956005D720C /* RotationIconSelected@2x.png */; };
-		BC2CF8650E5784ED00653418 /* Benthos+PDB.m in Sources */ = {isa = PBXBuildFile; fileRef = BC2CF8640E5784ED00653418 /* Benthos+PDB.m */; };
-		BC33740C1370C6830036428C /* Benthos+SDF.m in Sources */ = {isa = PBXBuildFile; fileRef = BC33740B1370C6830036428C /* Benthos+SDF.m */; };
 		BC37E7CA0E14779E00E11F4F /* Benthos.m in Sources */ = {isa = PBXBuildFile; fileRef = BC37E7C90E14779E00E11F4F /* Benthos.m */; };
 		BC4E97C20E69F736006CD291 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BC4E97C10E69F736006CD291 /* libsqlite3.dylib */; };
 		BC4FB6670E4E875900B316CD /* VCTitleCase.m in Sources */ = {isa = PBXBuildFile; fileRef = BC4FB6660E4E875900B316CD /* VCTitleCase.m */; };
@@ -271,10 +269,6 @@
 		BC281A6A11727A89005B7946 /* Document-molecules-320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Document-molecules-320.png"; sourceTree = "<group>"; };
 		BC286E0F11C4751E005D720C /* RotationIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RotationIcon@2x.png"; sourceTree = "<group>"; };
 		BC286E2511C47956005D720C /* RotationIconSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RotationIconSelected@2x.png"; sourceTree = "<group>"; };
-		BC2CF8630E5784EC00653418 /* Benthos+PDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "Benthos+PDB.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		BC2CF8640E5784ED00653418 /* Benthos+PDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "Benthos+PDB.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		BC33740A1370C6830036428C /* Benthos+SDF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "Benthos+SDF.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		BC33740B1370C6830036428C /* Benthos+SDF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Benthos+SDF.m"; sourceTree = "<group>"; };
 		BC37E7C80E14779E00E11F4F /* Benthos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Benthos.h; sourceTree = "<group>"; };
 		BC37E7C90E14779E00E11F4F /* Benthos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Benthos.m; sourceTree = "<group>"; };
 		BC4E97C10E69F736006CD291 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -685,10 +679,6 @@
 				7BF6543C13977C10002FEB23 /* VirtualTexturingNode.mm */,
 				BCC281280E1B1FCD00978ECA /* NSData+Gzip.h */,
 				BCC281290E1B1FCD00978ECA /* NSData+Gzip.m */,
-				BC2CF8630E5784EC00653418 /* Benthos+PDB.h */,
-				BC2CF8640E5784ED00653418 /* Benthos+PDB.m */,
-				BC33740A1370C6830036428C /* Benthos+SDF.h */,
-				BC33740B1370C6830036428C /* Benthos+SDF.m */,
 			);
 			name = Benthos;
 			sourceTree = "<group>";
@@ -851,7 +841,6 @@
 				BC61CC320E2463180074BE04 /* BenthosTextViewController.m in Sources */,
 				BC1EF3830E36BD6100B09043 /* BenthosSearchViewController.m in Sources */,
 				BC4FB6670E4E875900B316CD /* VCTitleCase.m in Sources */,
-				BC2CF8650E5784ED00653418 /* Benthos+PDB.m in Sources */,
 				BCC8FE800EC7E4CA00853857 /* BenthosDataSourceViewController.m in Sources */,
 				BC146A9B0EC9173000CE5E72 /* BenthosCustomDownloadViewController.m in Sources */,
 				BCD12CFA11308E1000737166 /* BenthosiPadRootViewController.m in Sources */,
@@ -861,7 +850,6 @@
 				BC57EBFB1358DE9000FA1060 /* GLProgram.m in Sources */,
 				BC15728A136CC58A00EEFBEC /* BenthosLibraryTableCell.m in Sources */,
 				BC15728D136CD96800EEFBEC /* BenthosWebDetailViewController.m in Sources */,
-				BC33740C1370C6830036428C /* Benthos+SDF.m in Sources */,
 				7BF64D5E139770AD002FEB23 /* Camera.mm in Sources */,
 				7BF64D5F139770AD002FEB23 /* Mesh.mm in Sources */,
 				7BF64D60139770AD002FEB23 /* Scene.mm in Sources */,

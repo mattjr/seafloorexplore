@@ -10,8 +10,6 @@
 
 #import "Benthos.h"
 // Filetypes
-#import "Benthos+PDB.h"
-#import "Benthos+SDF.h"
 
 #import "BenthosOpenGLESRenderer.h"
 #import "BenthosOpenGLES20Renderer.h"
