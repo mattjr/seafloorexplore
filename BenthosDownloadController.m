@@ -250,6 +250,8 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 - (void)cancelDownload;
 {
 	downloadCancelled = YES;
+    [self progress:0 totalRead:-1 totalFileBytes:-1];
+
 }
 
 #pragma mark -

@@ -72,6 +72,9 @@
 	unselectedRotationImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"PaintOn" ofType:@"png"]];	
 	rotationBarButton = [[UIBarButtonItem alloc] initWithImage:unselectedRotationImage style:UIBarButtonItemStylePlain target:glViewController action:@selector(switchVisType:)];
 	rotationBarButton.width = 44.0f;
+    
+    selectedRotationImage = [UIImage imageNamed:@"PaintIpad.png"];
+
 	
 /*	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleConnectionOfMonitor:) name:UIScreenDidConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDisconnectionOfMonitor:) name:UIScreenDidDisconnectNotification object:nil];
@@ -220,11 +223,6 @@
 {
 	if ([[note object] boolValue])
 	{
-		if (selectedRotationImage == nil)
-        {
-			//selectedRotationImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"PaintOn" ofType:@"png"]];
-            selectedRotationImage = [UIImage imageNamed:@"PaintIpad.png"];
-        }
 		
 		rotationBarButton.image = selectedRotationImage;
 	}
