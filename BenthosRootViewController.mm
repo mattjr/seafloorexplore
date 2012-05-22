@@ -270,11 +270,11 @@
 {
 	if ([[note object] boolValue])
 	{
-		rotationButton.selected = YES;
+		rotationButton.selected = NO;
 	}
 	else
 	{
-		rotationButton.selected = NO;
+		rotationButton.selected = YES;
 	}
 }
 

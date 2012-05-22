@@ -13,5 +13,6 @@
 
 }
 @property (nonatomic, retain) IBOutlet UIScrollView* scrollView;
-
+- (IBAction)displayMoleculeDownloadView;
+- (IBAction)switchBackToGLView;
 @end
