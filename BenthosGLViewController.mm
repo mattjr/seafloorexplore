@@ -215,15 +215,33 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 
         newVisualizationType=TEXTURED;
     }
+    BOOL resetAR=isAutorotating;
+    if (isAutorotating)
+	{
+		[self startOrStopAutorotation:NO];
+        [openGLESRenderer waitForLastFrameToFinishRendering];
+	}
+		
+	moleculeToDisplay.isBeingDisplayed = NO;
+  
+
+    
+    
+    
+    
     
     [sim setRenderMode: newVisualizationType];
     
     
     //   moleculeToDisplay.currentVisualizationType = newVisualizationType;
     [[NSUserDefaults standardUserDefaults] setInteger:newVisualizationType forKey:@"currentVisualizationMode"];
-    
-    [openGLESRenderer freeVertexBuffers];
+    moleculeToDisplay.isBeingDisplayed = YES;
+
+    //[openGLESRenderer freeVertexBuffers];
     [moleculeToDisplay performSelectorInBackground:@selector(renderMolecule:) withObject:openGLESRenderer];
+    if(resetAR)
+        [self startOrStopAutorotation:YES];
+
 }
 
 
