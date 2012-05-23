@@ -159,8 +159,10 @@ bool vtInit(const char *_tileDir, const char *_pageExtension, const uint8_t _pag
 		snprintf(buf, 255, "%s%stiles_b%u_level%u%stile_%u_0_0.%s", _tileDir, PATH_SEPERATOR, c.pageBorder, i, PATH_SEPERATOR, i, c.pageCodec.c_str());
 
 
-		if (vtuFileExists(buf) != (i < c.mipChainLength))
-			vt_fatal("Error: %s doesn't seem to be a page store with MIP_CHAIN_LENGTH = %u, c.pageCodec.c_str() = %s and c.pageBorder = %u!", c.tileDir.c_str(), c.mipChainLength, c.pageCodec.c_str(), c.pageBorder);
+		if (vtuFileExists(buf) != (i < c.mipChainLength)){
+			printf("Error: %s doesn't seem to be a page store with MIP_CHAIN_LENGTH = %u, c.pageCodec.c_str() = %s and c.pageBorder = %u!", c.tileDir.c_str(), c.mipChainLength, c.pageCodec.c_str(), c.pageBorder);
+            return false;
+        }
 	}
 
 	// precache some pages
