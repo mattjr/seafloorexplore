@@ -79,6 +79,8 @@ typedef enum {
     float _maxDist;
     Scene *scene;
     MovementType logOnNextUpdate;
+    NSArray *movementStrings;
+    NSString *basename;
     
 }
 @property (atomic)     MovementType logOnNextUpdate;

@@ -63,7 +63,7 @@ float positions[60 * 60][6];
 		[[scene camera] setNearPlane:0.5];
 		renderMode=TEXTURED;
       //  NSString *filename = [[name lastPathComponent] stringByDeletingPathExtension];	
-
+        basename = [[name lastPathComponent ] copy];
         NSString *dataName = [NSString stringWithFormat:@"%@/vtex",name] ;
         //NSLog(@"%@\n",dataName);
 		mesh = [[CollideableMesh alloc] initWithOctreeNamed:[NSString stringWithFormat:@"%@/m", name]];
@@ -198,6 +198,11 @@ float positions[60 * 60][6];
         extentsMesh=bbox[1]-bbox[0];
         _meshcent =[mesh center];
         logOnNextUpdate=kNoLog;
+        movementStrings = [[NSArray arrayWithObjects:@"NoLog",
+                           @"pann",
+                           @"zoom",
+                           @"tilt",
+                            @"dblc",nil] retain];
 
     }
     return self;
@@ -207,6 +212,8 @@ float positions[60 * 60][6];
 {
     //printf("Sim dealloc\n");
    // [vtnode release];
+    [movementStrings release];
+    [basename release];
     if(vtnode!= nil)
     [[scene objects] removeObject:vtnode];
 	[super dealloc];
@@ -744,10 +751,12 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     [FlurryAnalytics endTimedEvent:@"MOVEMENT_EVENT" withParameters:nil];
 
     NSDictionary *dictionary = 
-    [NSDictionary dictionaryWithObjectsAndKeys:[mesh name],
+    [NSDictionary dictionaryWithObjectsAndKeys:basename,
      @"mesh",
-     [NSNumber numberWithInt:type],
+     [movementStrings objectAtIndex:type],
      @"movement",
+     [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]], 
+     @"time", 
      [NSNumber numberWithDouble:_targetCenter[0]], 
      @"centerX", 
      [NSNumber numberWithDouble:_targetCenter[1]], 
@@ -762,8 +771,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
      @"heading",
      nil];
     [FlurryAnalytics logEvent:@"MOVEMENT_EVENT" withParameters:dictionary timed:YES];
-
-    
+       
 }
 
 - (void)resetCamera
