@@ -261,7 +261,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     self.downloadingFileHandle = [NSFileHandle fileHandleForWritingAtPath:pathtmp];
     [self.downloadingFileHandle seekToEndOfFile];
 
-    downloadFileSize =downloadedBytes;
+    downloadProgress =downloadedBytes;
     NSURLConnection *conn = nil;
     conn = [NSURLConnection connectionWithRequest:req delegate:self];
     self.downloadConnection = conn;
@@ -399,7 +399,9 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
         // I don't know what kind of request this is!
         return;
     }
-   
+    //Will be overridden if resuming
+   	downloadFileSize = [response expectedContentLength];
+
 
     NSFileHandle *fh =    self.downloadingFileHandle;
     
@@ -433,9 +435,17 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
             NSInteger bytes = [byteStr integerValue];
             if (bytes <= 0) {
                 [fh truncateFileAtOffset:0];
+                downloadProgress =0;
                 break;
             } else {
                 [fh seekToFileOffset:bytes];
+                downloadProgress =bytes;
+                if ([range hasPrefix:@"bytes"]) {
+                    NSArray *bytes = [range componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" -/"]];
+                    if ([bytes count] == 4) {
+                        downloadFileSize = [[bytes objectAtIndex:2] longLongValue] ?: -1; // if this is *, it's converted to 0, but -1 is default.
+                    }
+                }
             }
             break;
         }
@@ -457,10 +467,10 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
             
         default:
             [fh truncateFileAtOffset:0];
+            downloadProgress =0;
             break;
     }
     
-	downloadFileSize = [response expectedContentLength];
 	
 	// Stop the spinning wheel and start the status bar for download
 	
