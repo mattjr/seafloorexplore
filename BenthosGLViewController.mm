@@ -207,11 +207,11 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
     GLVisualizationType newVisualizationType;
     if (currentVisualizationType == TEXTURED){
     newVisualizationType=SHADED;
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:YES]];
+      //  [[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:YES]];
 
     }
     else{
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:NO]];
+       //  [[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:NO]];
 
         newVisualizationType=TEXTURED;
     }
@@ -299,9 +299,14 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 #pragma mark -
 #pragma mark OpenGL molecule rendering
 -(void)sendHome{
-    if ([[scene simulator] respondsToSelector:@selector(resetCamera)])
-           [(Simulation *)[scene simulator] resetCamera];
-}
+   if(sim == nil)	{
+		return;
+	}
+        
+    if ([sim respondsToSelector:@selector(resetCamera)])
+           [sim resetCamera];
+    }
+
 - (void)resizeView;
 {
     [openGLESRenderer clearScreen];

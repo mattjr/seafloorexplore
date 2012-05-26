@@ -24,7 +24,7 @@
 	BenthosRootViewController *delegate;
 	NSInteger selectedIndex;
 	UIColor *tableTextColor;
-	
+    
 	sqlite3 *database;
 }
 
@@ -41,7 +41,6 @@
 + (CAGradientLayer *)shadowGradientForSize:(CGSize)gradientSize;
 - (IBAction)displayMoleculeDownloadView;
 - (IBAction)switchBackToGLView;
-
 - (void)moleculeDidFinishDownloading:(NSNotification *)note;
-
+-(void)addMolAndShow:(Benthos *)newMolecule;
 @end

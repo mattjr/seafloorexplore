@@ -92,11 +92,19 @@
 -(BOOL)createFilesAndDirectoriesAtPath:(NSString *)path withTarObject:(id)object size:(int)size error:(NSError **)error
 {
     [self createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil]; //Create path on filesystem
-    
+    long statusChunk=size/100;
+    long lastValidStatus=0;
     long location = 0; // Position in the file
     while (location<size) {       
         long blockCount = 1; // 1 block for the header
-        
+        if(location % statusChunk == 0 || floor(location/statusChunk) > lastValidStatus){
+            lastValidStatus=floor(location/statusChunk);
+           // NSLog(@"Status %ld %f\n",lastValidStatus, location/(float)size);
+            NSNumber * progress = [[[NSNumber alloc] initWithFloat:(location/(float)size) ] autorelease];
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"UntarProgress"
+             object:progress];
+        }
         switch ([NSFileManager typeForObject:object atOffset:location]) {
             case '0': // It's a File
             {                
@@ -165,6 +173,11 @@
         
         location+=blockCount*TAR_BLOCK_SIZE;
     }
+    NSNumber * progress = [[[NSNumber alloc] initWithFloat:(1.0) ] autorelease];
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"UntarProgress"
+     object:progress];
+
     return YES;
 }
 

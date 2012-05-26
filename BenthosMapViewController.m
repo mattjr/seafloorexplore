@@ -18,7 +18,7 @@
 #import "NSFileManager+Tar.h"
 
 @implementation BenthosMapViewController
-@synthesize mapView,    selectedAnnotation,firstView;
+@synthesize mapView,    firstView,selectedMolecule;
 ;
 #pragma mark -
 #pragma mark Initialization and breakdown
@@ -27,9 +27,12 @@
 {
 	if ((self = [super init])) 
 	{        
-        
-		selectedIndex = indexOfInitialMolecule;
         molecules=mol_list;
+        if([molecules count] && [molecules count] > indexOfInitialMolecule )
+            selectedMolecule=[molecules objectAtIndex:indexOfInitialMolecule];
+        else {
+            selectedMolecule=nil;
+        }
         firstView=NO;
 		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moleculeDidFinishDownloading:) name:@"MoleculeDidFinishDownloading" object:nil];
 
@@ -98,29 +101,62 @@
 	{
 		self.MapView.backgroundColor = [UIColor whiteColor];
 	}	*/
+    [self doAnnotation];
+
 
 }
- -(void) viewDidAppear:(BOOL)animated {
-
-     if(!firstView){
-         [self doAnnotation];
-         firstView=YES;
-     }
-         
-     for (id <MKAnnotation> annotation in mapView.annotations){
-         if ([annotation isKindOfClass:[MapAnnotation class]])
-         {
-             MapAnnotation *ma = (MapAnnotation *)annotation;
-             if(ma.idx ==selectedIndex){
-                 [mapView deselectAnnotation:annotation animated:NO];
-
-                 [mapView selectAnnotation:annotation animated:YES];
-                 
-             }
-         }
-
+-(void) viewDidAppear:(BOOL)animated {
+    
+    /* if(!firstView){
+     firstView=YES;
+     [self doAnnotation];
      
-     }
+     }*/
+    for(MapAnnotation * ann in [mapView annotations]){
+        if(ann != nil){
+            bool found=NO;
+            for(Benthos * mol in molecules){
+                if(mol == ann.model){
+                    found=YES;
+                    break;
+                }
+            }
+            if(!found){
+                [mapView removeAnnotation:ann];
+            }
+        }
+    }
+    for(Benthos * mol in molecules){
+        bool found=NO;
+        for(MapAnnotation * ann in [mapView annotations]){
+            if(ann.model == mol){
+                found=YES;
+                break;
+            }
+        }
+        if(!found){
+            MapAnnotation *ann =[[[MapAnnotation alloc] initWithCoordinate:mol.coord withName:mol.title withModel:mol] autorelease];
+            [mapView addAnnotation:ann];
+     //       if(mol ==selectedMolecule){
+       //         [mapView selectAnnotation:ann animated:YES];
+         //   }
+        }
+    }
+    
+    for (id <MKAnnotation> annotation in mapView.annotations){
+        if ([annotation isKindOfClass:[MapAnnotation class]])
+        {
+            MapAnnotation *ma = (MapAnnotation *)annotation;
+            if(selectedMolecule && ma.model ==selectedMolecule){
+                [mapView deselectAnnotation:annotation animated:NO];
+                
+                [mapView selectAnnotation:annotation animated:YES];
+                
+            }
+        }
+        
+        
+    }
 }
 -(void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
 {
@@ -130,19 +166,20 @@
 
 - (void)reSelectAnnotationIfNoneSelected:(id<MKAnnotation>)annotation
 {
-    if (mapView.selectedAnnotations.count == 0)
+    if (mapView.selectedAnnotations.count == 0 && [mapView.annotations count] != 0)
         [mapView selectAnnotation:annotation animated:NO];
 }
+
 -(void) doAnnotation
 {
+
     
     int idx=0;
     for(Benthos * mol in molecules){
-        MapAnnotation *ann =[[[MapAnnotation alloc] initWithCoordinate:mol.coord withName:mol.title withIndex:idx] autorelease];
+        MapAnnotation *ann =[[[MapAnnotation alloc] initWithCoordinate:mol.coord withName:mol.title withModel:mol] autorelease];
         [mapView addAnnotation:ann];
-        if(idx ==selectedIndex){
+        if(mol ==selectedMolecule){
             [mapView selectAnnotation:ann animated:YES];
-            self.selectedAnnotation=ann;
             
         }
         idx++;
@@ -185,140 +222,7 @@
     [self.navigationController pushViewController:searchViewController animated:YES];
     [searchViewController release];
 
-/*    
-	BenthosDataSourceViewController *dataSourceViewController = [[BenthosDataSourceViewController alloc] initWithStyle:UIMapViewStylePlain];
-	
-	[self.navigationController pushViewController:dataSourceViewController animated:YES];
-	[dataSourceViewController release];
- */
 }
-/*
-- (void)moleculeDidFinishDownloading:(NSNotification *)note;
-{
-    if ([note object] == nil)
-    {
-        [self.navigationController popToViewController:self animated:YES];
-        return;
-    }
-    
-	NSString *filename = [note object];
-	
-	// Add the new protein to the list by gunzipping the data and pulling out the title
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    // Iterate through all files sitting in the application's Resources directory
-    // TODO: Can you fast enumerate this?
-    BOOL extractError=NO;
-    if ([[filename pathExtension] isEqualToString:@"tar"])
-        {
-            NSString *archivePath = [documentsDirectory stringByAppendingPathComponent:filename ];
-
-            NSString *installedTexPath = [documentsDirectory stringByAppendingPathComponent:[filename stringByDeletingPathExtension]];
-            if (![fileManager fileExistsAtPath:installedTexPath])
-            {
-                NSData* tarData = [NSData dataWithContentsOfFile:archivePath];
-                NSError *error=nil;
-                [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:documentsDirectory withTarData:tarData error:&error];
-                
-                if (error != nil)
-                {
-                    NSLog(@"Failed to untar preinstalled files  with error: '%@'.", [error localizedDescription]);
-                    // TODO: Report the file copying problem to the user or do something about it
-                    extractError=YES;
-                }else{
-                    //Sucess delete tar
-                 //   NSLog(@"Deleting %@\n",archivePath);
-                    NSError *error2=nil;
-
-                    if (![[NSFileManager defaultManager] removeItemAtPath:archivePath error:&error2])
-                    {
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not delete file", @"Localized", nil) message:[error2 localizedDescription]
-                                                                       delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
-                        [alert show];
-                        [alert release];					
-                        return;
-                    }
-                }
-                //}
-            }else{
-                NSLog(@"Folder already exists ERROR\n");
-                extractError=YES;
-            }
-            
-        }else{
-            NSLog(@"Error Not tar file\n");
-            extractError=YES;
-
-        }
-
-	Benthos *newMolecule =nil;
-    NSString *pname=[filename  stringByDeletingPathExtension ]   ;
-    if(!extractError)
-        newMolecule=[[Benthos alloc] initWithFilename:pname  database:database title:[[note userInfo] objectForKey:@"title"]];
-	if (newMolecule == nil)
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Error in downloaded file", @"Localized", nil) message:NSLocalizedStringFromTable(@"The molecule file is either corrupted or not of a supported format", @"Localized", nil)
-													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
-		[alert show];
-		[alert release];
-		
-		// Delete the corrupted or sunsupported file
-		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-		NSString *documentsDirectory = [paths objectAtIndex:0];
-		
-		NSError *error = nil;
-		if (![[NSFileManager defaultManager] removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:filename] error:&error])
-		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not delete file", @"Localized", nil) message:[error localizedDescription]
-														   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
-			[alert show];
-			[alert release];					
-			return;
-		}
-        NSLog(@"Removing corrupt file %@\n",filename );
-        error = nil;
-        NSString *folder=[filename stringByDeletingPathExtension];
-		if (![[NSFileManager defaultManager] removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:folder] error:&error])
-		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not delete file", @"Localized", nil) message:[error localizedDescription]
-														   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
-			[alert show];
-			[alert release];					
-			return;
-		}
-        NSLog(@"Removing corrupt folder %@\n",folder );
-
-
-		
-	}
-	else
-	{
-		[molecules addObject:newMolecule];
-		[newMolecule release];
-		
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        {
-            selectedIndex = ([molecules count] - 1);
-
-            [self.delegate selectedMoleculeDidChange:selectedIndex];            
-        }else{
-        
-            if ([molecules count] == 1)
-            {
-                [self.delegate selectedMoleculeDidChange:0];
-            }
-        }
-        
-       // [self.MapView reloadData];
-//		[self.MapView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:([molecules count] - 1) inSection:0]] withRowAnimation:UIMapViewRowAnimationBottom];		
-	}			
-
-	[self.navigationController popToViewController:self animated:YES];
-}
-
-*/
 #pragma mark -
 #pragma mark Table view data source delegate methods
 
@@ -327,33 +231,15 @@
 {
     MapAnnotation *annotation = view.annotation;
     //NSString *temp = annotation.title;
-    if(selectedIndex == annotation.idx)
+    if(selectedMolecule == annotation.model)
         return;
     
-    
-    selectedIndex = annotation.idx;
-    [self.delegate selectedMoleculeDidChange:annotation.idx];
-    
+    if([molecules containsObject:annotation.model]){
+        selectedMolecule = annotation.model;
+        [self.delegate selectedMoleculeDidChange:[molecules indexOfObject:selectedMolecule]];
+    }
 }
 
-/*- (void)MapView:(UIMapView *)MapView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
-{
-	NSInteger index = [indexPath row];
-	if ([BenthosAppDelegate isRunningOniPad])
-		index++;
-	
-	if (index == 0)
-		[self displayMoleculeDownloadView];
-	else
-	{
-		// Display detail view for the protein
-		BenthosDetailViewController *detailViewController = [[BenthosDetailViewController alloc] initWithStyle:UIMapViewStyleGrouped andMolecule: [molecules objectAtIndex:(index - 1)]];
-		
-		[self.navigationController pushViewController:detailViewController animated:YES];
-		[detailViewController release];
-		
-	}
-}*/
 
 
 - (MKAnnotationView *)mapView:(MKMapView *)theMapView viewForAnnotation:(id <MKAnnotation>)annotation
@@ -362,6 +248,8 @@
     if ([annotation isKindOfClass:[MKUserLocation class]])
         return nil;
     
+    if ([annotation isKindOfClass:[MapAnnotation class]]){
+
             // try to dequeue an existing pin view first
         NSString* AnnotationIdentifier = [[annotation title] stringByAppendingString:@"AnnotationIdentifier"] ;
         MKPinAnnotationView* pinView = (MKPinAnnotationView *)
@@ -395,16 +283,19 @@
             pinView.annotation = annotation;
         }
         return pinView;
+
+    }
     
-      
+    return nil;
 }
--(void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
+/*-(void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
     [self performSelector:@selector(selectInitialAnnotation)
                withObject:nil afterDelay:0.5];
 }
 -(void)selectInitialAnnotation {
+    
     [self.mapView selectAnnotation:self.selectedAnnotation animated:YES];
-}
+}*/
 - (void)showDetails:(id)sender
 {
     
@@ -415,20 +306,20 @@
     }
     
     id<MKAnnotation> selectedAnn = [mapView.selectedAnnotations objectAtIndex:0];
-    NSInteger idx=0;
+    MapAnnotation *ma =nil;
     if ([selectedAnn isKindOfClass:[MapAnnotation class]])
     {
-        MapAnnotation *ma = (MapAnnotation *)selectedAnn;
-        idx=ma.idx;
+        ma = (MapAnnotation *)selectedAnn;
     }
     else
     {        NSLog(@"selected annotation (not a Map Annontation) = %@", selectedAnn);
 
         return;
     }
-
+    if([molecules count] == 0 || ma == nil || ![molecules containsObject:ma.model])
+        return;
     // Display detail view for the protein
-    BenthosDetailViewController *detailViewController = [[BenthosDetailViewController alloc] initWithStyle:UITableViewStyleGrouped andMolecule: [molecules objectAtIndex:idx]];
+    BenthosDetailViewController *detailViewController = [[BenthosDetailViewController alloc] initWithStyle:UITableViewStyleGrouped andMolecule: ma.model];
     
     [self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
@@ -455,6 +346,5 @@
 @synthesize delegate;
 @synthesize database;
 @synthesize molecules;
-@synthesize selectedIndex;
 
 @end

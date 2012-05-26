@@ -17,22 +17,25 @@ typedef enum { PUBCHEMSEARCH, PROTEINDATABANKSEARCH } BenthosSearchType;
 {
     Model *downloadingmodel;
 	//NSMutableData *downloadedFileContents;
+	long long downloadProgress;
 
-	//long long downloadFileSize;
+	long long downloadFileSize;
 	BOOL downloadCancelled;
-	//NSURLConnection *downloadConnection;
+	NSURLConnection *downloadConnection;
     
-    BOOL isBackgrounded; 
     UIProgressView *progressView;
     UILabel *downloadStatusText;
     UIButton *cancelDownloadButton;
     UIActivityIndicatorView *spinningIndicator;
+    NSFileHandle *downloadingFileHandle;
 }
 @property(nonatomic,assign)BOOL isBackgrounded;
 @property(nonatomic, retain)UIProgressView * progressView;
 @property(nonatomic, retain)UILabel *downloadStatusText;
 @property(nonatomic, retain)UIButton *cancelDownloadButton;
 @property(nonatomic, retain)UIActivityIndicatorView *spinningIndicator;
+@property(atomic, retain)NSURLConnection *downloadConnection;
+@property(atomic, retain) NSFileHandle *downloadingFileHandle;
 
 
 // Initialization and teardown
@@ -41,13 +44,14 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 NSString* formatBytesNoUnit(double bytes, uint8_t flags,int exponent,int width);
 - (void)downloadNewMolecule;
 - (BOOL)downloadMolecule;
-- (void)connectionError:(NSError *)error;
-- (void)connectionFinish;
-- (void)progress:(NSInteger)bytesRead totalRead:(NSInteger)totalBytesRead totalFileBytes:(NSInteger)totalBytesExpectedToRead;
+//- (void)connectionError:(NSError *)error;
+//- (void)connectionFinish;
+//- (void)progress:(NSInteger)bytesRead totalRead:(NSInteger)totalBytesRead totalFileBytes:(NSInteger)totalBytesExpectedToRead;
 -(void)appHasGoneToForground;
 -(void)appHasGoneToBackground;
 - (void)downloadCompleted;
 -(void) sendDownloadFinishedMsg:(NSString*)filename;
+-(void)updateUntarProgress:(NSNotification *)note;
 - (void)cancelDownload;
 
 @end

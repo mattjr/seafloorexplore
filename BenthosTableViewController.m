@@ -113,6 +113,43 @@
 	[dataSourceViewController release];
  */
 }
+-(void) showError:(NSError *)error{
+    if(error != nil)
+    {
+        [[[[UIAlertView alloc] initWithTitle:[error localizedDescription]
+                                     message:[error localizedFailureReason]
+                                    delegate:nil
+                           cancelButtonTitle:NSLocalizedString(@"OK", nil)
+                           otherButtonTitles:nil] autorelease] show];
+    }
+
+}
+-(void)addMolAndShow:(Benthos *)newMolecule{
+    
+    [molecules addObject:newMolecule];
+    [newMolecule release];
+    
+    if(    UIApplicationStateActive== [[UIApplication sharedApplication] applicationState]){
+        
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+        {
+            selectedIndex = ([molecules count] - 1);
+            
+            [self.delegate selectedMoleculeDidChange:selectedIndex];            
+        }else{
+            
+            if ([molecules count] == 1)
+            {
+                [self.delegate selectedMoleculeDidChange:0];
+            }
+        }
+    }
+    [self.tableView reloadData];
+    //		[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:([molecules count] - 1) inSection:0]] withRowAnimation:UITableViewRowAnimationBottom];		
+
+    [self.navigationController popToViewController:self animated:YES];
+
+}
 
 - (void)moleculeDidFinishDownloading:(NSNotification *)note;
 {
@@ -121,121 +158,79 @@
         [self.navigationController popToViewController:self animated:YES];
         return;
     }
+
+     dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     
 	NSString *filename = [note object];
-	
-	// Add the new protein to the list by gunzipping the data and pulling out the title
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    // Iterate through all files sitting in the application's Resources directory
-    // TODO: Can you fast enumerate this?
-    BOOL extractError=NO;
-    if ([[filename pathExtension] isEqualToString:@"tar"])
-        {
-            NSString *archivePath = [documentsDirectory stringByAppendingPathComponent:filename ];
-
-            NSString *installedTexPath = [documentsDirectory stringByAppendingPathComponent:[filename stringByDeletingPathExtension]];
-            if (![fileManager fileExistsAtPath:installedTexPath])
-            {
-                NSError *error=nil;
-                [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:documentsDirectory withTarPath:archivePath error:&error];
+	NSError *error=nil;
+         Benthos *newMolecule=nil;
+	if([BenthosAppDelegate processArchive:filename error:&error]){
+        
+         newMolecule=[[Benthos alloc] initWithModel:[[note userInfo] objectForKey:@"model"] database:self.database];
                 
-                if (error != nil)
-                {
-                    NSLog(@"Failed to untar preinstalled files  with error: '%@'.", [error localizedDescription]);
-                    // TODO: Report the file copying problem to the user or do something about it
-                    extractError=YES;
-                }else{
-                    //Sucess delete tar
-                 //   NSLog(@"Deleting %@\n",archivePath);
-                    NSError *error2=nil;
+    }else{
+         dispatch_async(dispatch_get_main_queue(), ^{ [self showError:error];               
+             [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];});
+ 
+    }
+         if (newMolecule == nil)
+         {
+             NSMutableDictionary* details = [NSMutableDictionary dictionary];
+             [details setValue:NSLocalizedStringFromTable(@"Error in downloaded file", @"Localized", nil) forKey:NSLocalizedDescriptionKey];
+             [details setValue:NSLocalizedStringFromTable(@"The model file is either corrupted or not of a supported format", @"Localized", nil) forKey:NSLocalizedFailureReasonErrorKey];
+             
+             // populate the error object with the details
+             error = [NSError errorWithDomain:@"benthos" code:200 userInfo:details];
+             dispatch_async(dispatch_get_main_queue(), ^{ [self showError:error]; });
+             
+             // Delete the corrupted or sunsupported file
+             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+             NSString *documentsDirectory = [paths objectAtIndex:0];
+             
+             error = nil;
+             if(        [[NSFileManager defaultManager]  fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:filename]]){
 
-                    if (![[NSFileManager defaultManager] removeItemAtPath:archivePath error:&error2])
-                    {
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not delete file", @"Localized", nil) message:[error2 localizedDescription]
-                                                                       delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
-                        [alert show];
-                        [alert release];					
-                        return;
-                    }
-                }
-                //}
-            }else{
-                NSLog(@"Folder already exists ERROR\n");
-                extractError=YES;
-            }
-            
-        }else{
-            NSLog(@"Error Not tar file\n");
-            extractError=YES;
+             if (![[NSFileManager defaultManager] removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:filename] error:&error])
+             {
+                 
+                /* NSMutableDictionary* details = [NSMutableDictionary dictionary];
+                 [details setValue:NSLocalizedStringFromTable(@"Could not delete file", @"Localized", nil) forKey:NSLocalizedDescriptionKey];
+                 [details setValue:[documentsDirectory stringByAppendingPathComponent:filename] forKey:NSLocalizedFailureReasonErrorKey];
+                 // populate the error object with the details
+                 error = [NSError errorWithDomain:@"benthos" code:200 userInfo:details];*/
+                 dispatch_async(dispatch_get_main_queue(), ^{ [self showError:error]; });
+                 
+             }
+                 NSLog(@"Removing corrupt file %@\n",filename );
 
-        }
+             }
+             error = nil;
+             NSString *folder=[filename stringByDeletingPathExtension];
+             if(        [[NSFileManager defaultManager]  fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:folder]]){
 
-	Benthos *newMolecule =nil;
- //   NSString *pname=[filename  stringByDeletingPathExtension ]   ;
-    if(!extractError)
-        newMolecule=[[Benthos alloc] initWithModel:[[note userInfo] objectForKey:@"model"] database:self.database];
-	if (newMolecule == nil)
-	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Error in downloaded file", @"Localized", nil) message:NSLocalizedStringFromTable(@"The model file is either corrupted or not of a supported format", @"Localized", nil)
-													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
-		[alert show];
-		[alert release];
-		
-		// Delete the corrupted or sunsupported file
-		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-		NSString *documentsDirectory = [paths objectAtIndex:0];
-		
-		NSError *error = nil;
-		if (![[NSFileManager defaultManager] removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:filename] error:&error])
-		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not delete file", @"Localized", nil) message:[error localizedDescription]
-														   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
-			[alert show];
-			[alert release];					
-			return;
-		}
-        NSLog(@"Removing corrupt file %@\n",filename );
-        error = nil;
-        NSString *folder=[filename stringByDeletingPathExtension];
-		if (![[NSFileManager defaultManager] removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:folder] error:&error])
-		{
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not delete file", @"Localized", nil) message:[error localizedDescription]
-														   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
-			[alert show];
-			[alert release];					
-			return;
-		}
-        NSLog(@"Removing corrupt folder %@\n",folder );
+             if (![[NSFileManager defaultManager] removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:folder] error:&error])
+             {
+                 /*NSMutableDictionary* details = [NSMutableDictionary dictionary];
+                 [details setValue:NSLocalizedStringFromTable(@"Could not delete file", @"Localized", nil) forKey:NSLocalizedDescriptionKey];
+                 [details setValue:[documentsDirectory stringByAppendingPathComponent:folder] forKey:NSLocalizedFailureReasonErrorKey];
 
+                 // populate the error object with the details
+                 error = [NSError errorWithDomain:@"benthos" code:200 userInfo:details];*/
+                 dispatch_async(dispatch_get_main_queue(), ^{ [self showError:error];
+                     [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
+                 });
+             }
+             NSLog(@"Removing corrupt folder %@\n",folder );
+             }
+             
+             
+         }
+         else
+         {
+             dispatch_async(dispatch_get_main_queue(), ^{ [self addMolAndShow:newMolecule]; });
+         }			
 
-		
-	}
-	else
-	{
-		[molecules addObject:newMolecule];
-		[newMolecule release];
-		
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        {
-            selectedIndex = ([molecules count] - 1);
-
-            [self.delegate selectedMoleculeDidChange:selectedIndex];            
-        }else{
-        
-            if ([molecules count] == 1)
-            {
-                [self.delegate selectedMoleculeDidChange:0];
-            }
-        }
-        
-        [self.tableView reloadData];
-//		[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:([molecules count] - 1) inSection:0]] withRowAnimation:UITableViewRowAnimationBottom];		
-	}			
-
-	[self.navigationController popToViewController:self animated:YES];
+     });
 }
 
 #pragma mark -
@@ -381,6 +376,7 @@
         }
   //      int l=[[molecules objectAtIndex:(index-1)] numberOfAtoms];
         //printf("Fail Val 0x%x %d\n",(int)[molecules objectAtIndex:(index-1)], l);
+        printf("%d\n",index-1);
 		//NSString *fileNameWithoutExtension = [[molecules objectAtIndex:(index-1)] filenameWithoutExtension];
         cell.textLabel.text = [[molecules objectAtIndex:(index-1)] title];
 
@@ -482,6 +478,7 @@
     // If row is deleted, remove it from the list.
     if (editingStyle == UITableViewCellEditingStyleDelete) 
 	{
+        //[mapViewController removeModel:[molecules objectAtIndex:(index - 1)]];
 		[[molecules objectAtIndex:(index - 1)] deleteMolecule];
 		[molecules removeObjectAtIndex:(index - 1)];
 		if ( (index - 1) == selectedIndex )

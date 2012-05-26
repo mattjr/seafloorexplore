@@ -163,6 +163,7 @@
 		glViewController.moleculeToDisplay = [molecules objectAtIndex:indexOfInitialMolecule];
 
         [glViewController startRender:glViewController.moleculeToDisplay];
+        [glViewController startOrStopAutorotation:YES];
 
 	}
  
@@ -180,12 +181,13 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
 	tableViewController.selectedIndex = newMoleculeIndex;
-    [mapViewController setSelectedIndex:newMoleculeIndex];
 	// Defer sending the change message to the OpenGL view until the view is loaded, to make sure that rendering occurs only then
 	if ([molecules count] == 0)
 	{
+        [mapViewController setSelectedMolecule:nil];
+
 		bufferedMolecule = nil;
-        NSLog(@"No Render Situation\n");
+     //   NSLog(@"No Render Situation\n");
         [glViewController stopRender];
 
 
@@ -197,7 +199,8 @@
             [glViewController stopRender];
              
         Benthos *tmp=[molecules objectAtIndex:newMoleculeIndex];
-      
+        [mapViewController setSelectedMolecule:tmp];
+
         [glViewController startRender:tmp];
 		bufferedMolecule = [molecules objectAtIndex:newMoleculeIndex];
 	}
@@ -268,6 +271,8 @@
 
 - (void)toggleRotationButton:(NSNotification *)note;
 {
+    dispatch_async(dispatch_get_main_queue(), ^{
+
 	if ([[note object] boolValue])
 	{
 		rotationButton.selected = NO;
@@ -276,6 +281,7 @@
 	{
 		rotationButton.selected = YES;
 	}
+    });
 }
 
 - (void)customURLSelectedForMoleculeDownload:(NSNotification *)note;
@@ -330,10 +336,13 @@
 	if (indexOfInitialMolecule >= [molecules count])
 	{
 		indexOfInitialMolecule = 0;
-	}
+        mapViewController.selectedMolecule = nil;
+
+	}else {
+        mapViewController.selectedMolecule = [molecules objectAtIndex:indexOfInitialMolecule];
+    }
 	
 	tableViewController.selectedIndex = indexOfInitialMolecule;
-    mapViewController.selectedIndex = indexOfInitialMolecule;
 
 }
 

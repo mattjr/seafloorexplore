@@ -10,7 +10,7 @@
 
 @implementation MapAnnotation
 
-@synthesize coordinate, title, subtitle,idx;
+@synthesize coordinate, title, subtitle,model;
 
 - (id)initWithCoordinate:(CLLocationCoordinate2D) c {
     coordinate = c;
@@ -19,12 +19,12 @@
     return self;
 }
 
--(id)initWithCoordinate:(CLLocationCoordinate2D)c withName:(NSString*)name withIndex:(NSInteger)index {
+-(id)initWithCoordinate:(CLLocationCoordinate2D)c withName:(NSString*)name withModel:(Benthos*)mol {
     self = [super init];
     if (self) {
         coordinate = c;
         title = name;
-        idx = index;
+        model = [mol retain];
     }
     return self;
 }

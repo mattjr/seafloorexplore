@@ -81,11 +81,12 @@ void uncaughtExceptionHandler(NSException *exception) {
 	{
 		isHandlingCustomURLMoleculeDownload = YES;		
 	}
-    [self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
-
-	[self performSelectorInBackground:@selector(loadInitialMoleculesFromDisk) withObject:nil];	
-    [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:YES];
-
+    [self showStatusIndicator];
+  //  [self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
+  //  [self loadInitialMoleculesFromDisk];
+    [self performSelectorInBackground:@selector(loadInitialMoleculesFromDisk) withObject:nil];	
+   // [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:YES];
+    [self hideStatusIndicator];
 	return YES;
 }
 
@@ -288,6 +289,11 @@ void uncaughtExceptionHandler(NSException *exception) {
 						if (error != nil)
 						{
 											NSLog(@"Failed to untar preinstalled files  with error: '%@'.", [error localizedDescription]);
+                            /*if (![[NSFileManager defaultManager] removeItemAtPath:preloadedPDBPath error:&error])
+                            {
+                                
+                            }*/
+
 							// TODO: Report the file copying problem to the user or do something about it
 						}
 					//}
@@ -343,6 +349,40 @@ void uncaughtExceptionHandler(NSException *exception) {
 	// "Finalize" the statement - releases the resources associated with the statement.
 	sqlite3_finalize(moleculeLoadingStatement);	
 }
+-(void)addNewModel:(NSString*)pname
+{
+    // Now, check all the files on disk to see if any are missing from the database
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *documentsDirectory = [paths objectAtIndex:0];
+
+    NSString *preloadedXMLPath = [documentsDirectory stringByAppendingPathComponent:pname];
+    NSMutableData* xmlData = [NSMutableData dataWithContentsOfFile:preloadedXMLPath];
+    ParseOperation *parseOperation = [[ParseOperation alloc] initWithData:xmlData];
+    NSMutableArray *filesystemModels = [NSMutableArray array];
+    [parseOperation staticparse:filesystemModels];
+    [parseOperation release];   // once added to the NSOperationQueue it's retained, we don't need it anymore
+    // earthquakeData will be retained by the NSOperation until it has finished executing,
+    // so we no longer need a reference to it in the main thread.
+    if([filesystemModels count] >0){
+        
+        // Parse the PDB file into the database
+        Benthos *newMolecule = [[Benthos alloc] initWithModel:[filesystemModels objectAtIndex:0] database:database];
+        if (newMolecule != nil)
+        {
+            [molecules addObject:newMolecule];
+            if (rootViewController.tableViewController != nil)
+            {
+                [rootViewController.tableViewController.tableView reloadData];				
+            }					
+        }
+        [newMolecule release];		
+    }
+    else{
+        NSLog(@"Failed to Parse'%@'.", preloadedXMLPath);
+        
+    }
+
+}
 
 - (void)loadMissingMoleculesIntoDatabase;
 {
@@ -373,89 +413,41 @@ void uncaughtExceptionHandler(NSException *exception) {
 	NSString *pname;
 	while ((pname = [direnum nextObject]))
 	{
-	/*	NSString *lastPathComponent = [pname lastPathComponent];
-		if (![lastPathComponent isEqualToString:pname])
-		{
-			NSError *error = nil;
-			// The file has been passed in using a subdirectory, so move it into the flattened /Documents directory
-			[[NSFileManager defaultManager]	moveItemAtPath:[documentsDirectory stringByAppendingPathComponent:pname] toPath:[documentsDirectory stringByAppendingPathComponent:lastPathComponent] error:&error];
-			[[NSFileManager defaultManager] removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:[pname stringByDeletingLastPathComponent]] error:&error];
-			pname = lastPathComponent;
-		}
-     */	     
+        /*	NSString *lastPathComponent = [pname lastPathComponent];
+         if (![lastPathComponent isEqualToString:pname])
+         {
+         NSError *error = nil;
+         // The file has been passed in using a subdirectory, so move it into the flattened /Documents directory
+         [[NSFileManager defaultManager]	moveItemAtPath:[documentsDirectory stringByAppendingPathComponent:pname] toPath:[documentsDirectory stringByAppendingPathComponent:lastPathComponent] error:&error];
+         [[NSFileManager defaultManager] removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:[pname stringByDeletingLastPathComponent]] error:&error];
+         pname = lastPathComponent;
+         }
+         */	     
         NSDictionary *pathAttrs = [direnum fileAttributes];
         NSUInteger level = [direnum level];
-
+        
         BOOL isDir = [[pathAttrs objectForKey:NSFileType] isEqual:NSFileTypeDirectory];
         if(isDir && level == 2)
             [direnum skipDescendents];
         NSString *basename = [[[pname stringByDeletingLastPathComponent] lastPathComponent] stringByDeletingPathExtension];	
-
-		if (([basename length] > 0) && ([moleculeFilenameLookupTable valueForKey:basename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"xml"] ||[[[pname pathExtension] lowercaseString] isEqualToString:@"tar"])  )
-		{
-            BOOL extractFail=NO;
-            if([[[pname pathExtension] lowercaseString] isEqualToString:@"tar"]){
-                NSString *archivePath = [documentsDirectory stringByAppendingPathComponent:pname ];
-
+        
+        if([[[pname pathExtension] lowercaseString] isEqualToString:@"tar"]){
+            
+            dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                NSString *fname = [pname stringByDeletingPathExtension];	
+                
                 NSError *error=nil;
-                [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:documentsDirectory withTarPath:archivePath error:&error];
-                
-                if (error != nil)
-                {
-                    NSLog(@"Failed to untar preinstalled files %@ with error: '%@'.",archivePath, [error localizedDescription]);
-                    extractFail=YES;
-                    // TODO: Report the file copying problem to the user or do something about it
-                    NSString *folderPath = [documentsDirectory stringByAppendingPathComponent:basename ];
-
-                    if (![[NSFileManager defaultManager] removeItemAtPath:folderPath error:&error])
-                    {
-                        NSLog(@"Failed to Deleting folder %@  with error: '%@'.", folderPath,[error localizedDescription]);
-                    }
-
+                if([BenthosAppDelegate processArchive:pname error:&error]){
+                    NSString *pname=[NSString stringWithFormat:@"%@/m.xml", fname];
+                    dispatch_async(dispatch_get_main_queue(), ^{ [self addNewModel: pname]; });
                 }
-                
-                {
-                    //Sucess delete tar
-                    //   NSLog(@"Deleting %@\n",archivePath);
-                    NSError *error2=nil;
-                    
-                    if (![[NSFileManager defaultManager] removeItemAtPath:archivePath error:&error2])
-                    {
-                        NSLog(@"Failed to Deleting tar file  with error: '%@'.", [error2 localizedDescription]);
-                    }
-                }
-                //}
-                pname=[NSString stringWithFormat:@"%@/m.xml", basename];
-            }
-            if(!extractFail){
-                NSString *preloadedXMLPath = [documentsDirectory stringByAppendingPathComponent:pname];
-                NSMutableData* xmlData = [NSMutableData dataWithContentsOfFile:preloadedXMLPath];
-                ParseOperation *parseOperation = [[ParseOperation alloc] initWithData:xmlData];
-                NSMutableArray *filesystemModels = [NSMutableArray array];
-                [parseOperation staticparse:filesystemModels];
-                [parseOperation release];   // once added to the NSOperationQueue it's retained, we don't need it anymore
-                // earthquakeData will be retained by the NSOperation until it has finished executing,
-                // so we no longer need a reference to it in the main thread.
-                if([filesystemModels count] >0){
-                    
-                    // Parse the PDB file into the database
-                    Benthos *newMolecule = [[Benthos alloc] initWithModel:[filesystemModels objectAtIndex:0] database:database];
-                    if (newMolecule != nil)
-                    {
-                        [molecules addObject:newMolecule];
-                        if (rootViewController.tableViewController != nil)
-                        {
-                            [rootViewController.tableViewController.tableView reloadData];				
-                        }					
-                    }
-                    [newMolecule release];		
-                }
-                else{
-                    NSLog(@"Failed to Parse'%@'.", preloadedXMLPath);
-                    
-                }
-            }
-		}
+            });
+        }else if(([basename length] > 0) && ([moleculeFilenameLookupTable valueForKey:basename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"xml"])){
+            [self addNewModel: pname]; 
+            
+        }
+        
+		
 	}
 	
 	[moleculeFilenameLookupTable release];
@@ -489,7 +481,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 
 - (void)applicationWillResignActive:(UIApplication *)application 
 {
-    [[NSOperationQueue sharedOperationQueue] setSuspended:YES]; 
+   // [[NSOperationQueue sharedOperationQueue] setSuspended:YES]; 
     
 	[[NSUserDefaults standardUserDefaults] synchronize];		
 
@@ -497,7 +489,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 
 - (void)applicationDidBecomeActive:(UIApplication *)application 
 {
-    [[NSOperationQueue sharedOperationQueue] setSuspended:NO]; 
+    //[[NSOperationQueue sharedOperationQueue] setSuspended:NO]; 
 
 }
 
@@ -517,14 +509,16 @@ void uncaughtExceptionHandler(NSException *exception) {
 	{
 		[self connectToDatabase];
 	}*/
-    bgTask = UIBackgroundTaskInvalid; 
+  //  bgTask = UIBackgroundTaskInvalid; 
  //   [rootViewController.glViewController showScanningIndicator:nil];
    //[rootViewController.glViewController.moleculeToDisplay showStatusIndicator];
-dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+
+    /*dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]; 
     [self loadMissingMoleculesIntoDatabase];
     [pool drain];
-    });
+    });*/
+ 
   //  [self performSelectorOnMainThread:@selector(splashFade) withObject:nil waitUntilDone:YES];
     //[self splashFade];
   //  [self performSelectorInBackground:@selector(loadMissingMoleculesIntoDatabase) withObject:nil];
@@ -545,7 +539,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(
 	[rootViewController cancelMoleculeLoading];
 
     
-    if ([[NSOperationQueue sharedOperationQueue] operationCount]>0) { 
+   /* if ([[NSOperationQueue sharedOperationQueue] operationCount]>0) { 
         UIApplication*  app = [UIApplication sharedApplication]; 
         bgTask = [app beginBackgroundTaskWithExpirationHandler:^{ 
             [app endBackgroundTask:bgTask]; 
@@ -561,7 +555,7 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(
             bgTask = UIBackgroundTaskInvalid;
 
         }); 
-    }         
+    }       */  
     
 //	[self disconnectFromDatabase];
 }
@@ -811,6 +805,61 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(
 	[self saveMoleculeWithData:downloadedFileContents toFilename:nameOfDownloadedMolecule];
 	
 	[self downloadCompleted];	
+}
++ (BOOL) processArchive:(NSString*)filename error:(NSError**)error {
+    NSLog(@"Processing Archive %@\n",filename);
+    // Add the new protein to the list by gunzipping the data and pulling out the title
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    // Iterate through all files sitting in the application's Resources directory
+    // TODO: Can you fast enumerate this?
+    
+    if ([[filename pathExtension] isEqualToString:@"tar"])
+    {
+        NSString *archivePath = [documentsDirectory stringByAppendingPathComponent:filename ];
+        
+        NSString *installedTexPath = [documentsDirectory stringByAppendingPathComponent:[filename stringByDeletingPathExtension]];
+        if (![fileManager fileExistsAtPath:installedTexPath])
+        {
+            [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:documentsDirectory withTarPath:archivePath error:error];
+            //Sucess delete tar
+            //   NSLog(@"Deleting %@\n",archivePath);                
+            if (![[NSFileManager defaultManager] removeItemAtPath:archivePath error:error])
+            {
+                
+                return NO;
+            }
+
+            if (*error != nil)
+            {
+                NSLog(@"Failed to untar preinstalled files  with error: '%@'.", [*error localizedDescription]);
+                // TODO: Report the file copying problem to the user or do something about it
+                return NO;
+            }
+            //}
+        }else{
+            NSMutableDictionary* details = [NSMutableDictionary dictionary];
+            [details setValue:@"ERROR Folder already exists \n" forKey:NSLocalizedDescriptionKey];
+            // populate the error object with the details
+            if (error != nil) 
+                *error = [[[NSError alloc ] initWithDomain:@"benthos" code:200 userInfo:details] autorelease];
+            [[NSFileManager defaultManager] removeItemAtPath:installedTexPath error:error];
+           
+            return NO;
+        }
+        
+    }else{
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
+        [details setValue:@"Not Tar File\n" forKey:NSLocalizedDescriptionKey];
+        // populate the error object with the details
+        if(error != nil)
+            *error = [[[NSError alloc ] initWithDomain:@"benthos" code:200 userInfo:details] autorelease];
+        return NO;
+    }
+    
+    return YES;
 }
 
 @end

@@ -10,9 +10,9 @@
 
 #import "BenthosDownloadController.h"
 #import "BenthosAppDelegate.h"
-#import "AFNetworking.h"
+//#import "AFNetworking.h"
 @implementation BenthosDownloadController
-@synthesize progressView,downloadStatusText,cancelDownloadButton,spinningIndicator,isBackgrounded;
+@synthesize progressView,downloadStatusText,cancelDownloadButton,spinningIndicator,isBackgrounded,downloadConnection,downloadingFileHandle;
 - (id)initWithModel:(Model *)model
 {
 	if ((self = [super init])) 
@@ -20,14 +20,11 @@
 		// Initialization code
 	//	downloadedFileContents = nil;
 		downloadCancelled = NO;
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(appHasGoneToBackground)
-                                                     name:UIApplicationDidEnterBackgroundNotification
-                                                   object:nil];
+ 
         
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(appHasGoneToForground)
-                                                     name:UIApplicationWillEnterForegroundNotification
+                                                 selector:@selector(updateUntarProgress:)
+                                                     name:@"UntarProgress"
                                                    object:nil];
         isBackgrounded=NO;
 		
@@ -47,7 +44,7 @@
         [cancelDownloadButton addTarget:self action:@selector(cancelDownload) forControlEvents:UIControlEventTouchUpInside];
         
         spinningIndicator = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray] retain];
-
+        self.downloadingFileHandle=nil; 
 
 	}
 	return self;
@@ -58,7 +55,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[self cancelDownload];
+	//[self cancelDownload];
 	[downloadingmodel release];
     [progressView release];
     [spinningIndicator release];
@@ -81,6 +78,30 @@ enum {
 -(void)appHasGoneToBackground;
 {
     isBackgrounded=YES;
+}
+-(void)updateUntarProgress:(NSNotification *)note{
+     dispatch_async(dispatch_get_main_queue(), ^{
+    progressView.hidden = NO;
+
+    if (note != nil){
+        float progress=[[note object] floatValue];
+       // NSLog(@"Progress %f\n",progress);
+        progressView.progress = progress;
+        NSNumberFormatter* formatter = [[[NSNumberFormatter alloc] init] autorelease];
+        [formatter setMaximumFractionDigits:2];
+        [formatter setMinimumFractionDigits:2];
+        [formatter setMinimumIntegerDigits:1];
+        
+        [formatter setFormatWidth:3];
+        [formatter setPaddingCharacter:@" "];
+        
+        downloadStatusText.text = [NSString stringWithFormat:@"Decompressing... %@%%", [formatter stringFromNumber: [NSNumber numberWithDouble: progress*100.0]]];
+
+
+
+    }
+     });
+
 }
 NSString* formatBytesNoUnit(double bytes, uint8_t flags,int exponent,int width){
     int multiplier = ((flags & kUnitStringOSNativeUnits && /*!leopardOrGreater()*/0) || flags & kUnitStringBinaryUnits) ? 1024 : 1000;
@@ -195,14 +216,58 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     progressView.progress = 0.0f;
    
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-	NSURLRequest *theRequest=[NSURLRequest requestWithURL:[downloadingmodel weblink]
+    NSMutableURLRequest *req;
+    req = [NSMutableURLRequest requestWithURL:[downloadingmodel weblink]
+                                  cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
+                              timeoutInterval:60.0];
+    if (![NSURLConnection canHandleRequest:req]) {
+        NSString *errorMessage = NSLocalizedStringFromTable(@"Could not connect to server", @"Localized", nil);
+        
+        
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Connection failed", @"Localized", nil) message:errorMessage
+													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
+        [alert show];
+		[alert release];
+		return NO;
+    }
+    
+    
+	/*NSURLRequest *theRequest=[NSURLRequest requestWithURL:[downloadingmodel weblink]
 											  cachePolicy:NSURLRequestUseProtocolCachePolicy
 										  timeoutInterval:60.0];
-	//downloadConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+	//downloadConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];*/
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *path = [[paths objectAtIndex:0] stringByAppendingPathComponent:[downloadingmodel filename]];
+    NSString *pathtmp = [[[paths objectAtIndex:0] stringByAppendingPathComponent:[downloadingmodel filename]] stringByAppendingString:@".tmp"];;
 
-    AFHTTPRequestOperation *operation =  [[[AFHTTPRequestOperation alloc] initWithRequest:theRequest] autorelease];
+    
+    // Check to see if the download is in progress
+    NSUInteger downloadedBytes = 0;
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if ([fm fileExistsAtPath:pathtmp]) {
+        NSError *error = nil;
+        NSDictionary *fileDictionary = [fm attributesOfItemAtPath:pathtmp
+                                                            error:&error];
+        if (!error && fileDictionary)
+            downloadedBytes = [fileDictionary fileSize];
+    } else {
+        [fm createFileAtPath:pathtmp contents:nil attributes:nil];
+    }
+    if (downloadedBytes > 0) {
+     //   NSLog(@"Resuming %d\n",downloadedBytes);
+        NSString *requestRange = [NSString stringWithFormat:@"bytes=%d-", downloadedBytes];
+        [req setValue:requestRange forHTTPHeaderField:@"Range"];
+    }
+    
+    self.downloadingFileHandle = [NSFileHandle fileHandleForWritingAtPath:pathtmp];
+    [self.downloadingFileHandle seekToEndOfFile];
+
+    downloadFileSize =downloadedBytes;
+    NSURLConnection *conn = nil;
+    conn = [NSURLConnection connectionWithRequest:req delegate:self];
+    self.downloadConnection = conn;
+    [conn start];
+
+    /*AFHTTPRequestOperation *operation =  [[[AFHTTPRequestOperation alloc] initWithRequest:theRequest] autorelease];
     
     operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
     
@@ -215,9 +280,10 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
         [self connectionFinish ];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [self connectionError:error];
-    }];
+    }];*/
+    
     progressView.hidden = NO;
-    [[NSOperationQueue sharedOperationQueue] addOperation:operation];
+   // [[NSOperationQueue sharedOperationQueue] addOperation:operation];
    // [operation start];
 	/*if (downloadConnection) 
 	{
@@ -231,6 +297,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 		// inform the user that the download could not be made
 		return NO;
 	}*/
+    
 	return YES;
 }
 
@@ -241,6 +308,11 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     progressView.hidden = YES;
     cancelDownloadButton.hidden=YES;
 
+    [self.downloadingFileHandle closeFile];
+    
+    self.downloadingFileHandle = nil;
+    self.downloadConnection = nil;
+
 	//[downloadedFileContents release];
 //	downloadedFileContents = nil;
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -250,17 +322,23 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 - (void)cancelDownload;
 {
 	downloadCancelled = YES;
-    [self progress:0 totalRead:-1 totalFileBytes:-1];
+   // [self progress:0 totalRead:-1 totalFileBytes:-1];
+    [downloadConnection cancel];
+    [self downloadCompleted];
+    downloadCancelled = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
 
 }
 
 #pragma mark -
 #pragma mark URL connection delegate methods
 
-//- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error;
-- (void)connectionError:(NSError *)error;
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error;
+//- (void)connectionError:(NSError *)error;
 
 {
+    self.downloadConnection = nil;
+
     NSString *errorMessage = nil;
     
     /*if (searchType == PROTEINDATABANKSEARCH)
@@ -283,60 +361,108 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 
 }
 
-//- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data;
-- (void)progress:(NSInteger)bytesRead totalRead:(NSInteger)totalBytesRead totalFileBytes:(NSInteger)totalBytesExpectedToRead;
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data;
+//- (void)progress:(NSInteger)bytesRead totalRead:(NSInteger)totalBytesRead totalFileBytes:(NSInteger)totalBytesExpectedToRead;
 {
 	// Concatenate the new data with the existing data to build up the downloaded file
 	// Update the status of the download
 	if (downloadCancelled)
 	{
-        [[NSOperationQueue sharedOperationQueue] cancelAllOperations];
-		//[connection cancel];
+      //  [[NSOperationQueue sharedOperationQueue] cancelAllOperations];
+        [downloadConnection cancel];
 		[self downloadCompleted];
 		downloadCancelled = NO;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
 		return;
 	}
 	//[downloadedFileContents appendData:data];
-	progressView.progress = (float)totalBytesRead / (float)  totalBytesExpectedToRead  ;
+    downloadProgress += [data length];
+    
+    [self.downloadingFileHandle writeData:data];
+  //  [self.downloadingFileHandle synchronizeFile];
+    
+
+	progressView.progress = (float)downloadProgress / (float)  downloadFileSize  ;
     int exponent=0;
     int width=0;
 
-    NSString *totalStr= unitStringFromBytes((double)totalBytesExpectedToRead,0,&exponent,&width);
-    NSString *progStr=formatBytesNoUnit((double)totalBytesRead,0,exponent,width);
+    NSString *totalStr= unitStringFromBytes((double)downloadFileSize,0,&exponent,&width);
+    NSString *progStr=formatBytesNoUnit((double)downloadProgress,0,exponent,width);
 	downloadStatusText.text = [NSString stringWithFormat:@"%@: %@/%@",NSLocalizedStringFromTable(@"Downloading", @"Localized", nil),progStr,totalStr];
     //NSLog(@"|%@| %d\n",downloadStatusText.text,[downloadStatusText.text length]);
 }
 
-#if 0
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response;
 {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
+    if (![httpResponse isKindOfClass:[NSHTTPURLResponse class]]) {
+        // I don't know what kind of request this is!
+        return;
+    }
+   
+
+    NSFileHandle *fh =    self.downloadingFileHandle;
+    
+    switch (httpResponse.statusCode) {
+        case 206: {
+            NSString *range = [httpResponse.allHeaderFields valueForKey:@"Content-Range"];
+            NSError *error = nil;
+            NSRegularExpression *regex = nil;
+            // Check to see if the server returned a valid byte-range
+            regex = [NSRegularExpression regularExpressionWithPattern:@"bytes (\\d+)-\\d+/\\d+"
+                                                              options:NSRegularExpressionCaseInsensitive
+                                                                error:&error];
+            if (error) {
+                [fh truncateFileAtOffset:0];
+                break;
+            }
+            
+            // If the regex didn't match the number of bytes, start the download from the beginning
+            NSTextCheckingResult *match = [regex firstMatchInString:range
+                                                            options:NSMatchingAnchored
+                                                              range:NSMakeRange(0, range.length)];
+            if (match.numberOfRanges < 2) {
+                [fh truncateFileAtOffset:0];
+                break;
+            }
+            
+            // Extract the byte offset the server reported to us, and truncate our
+            // file if it is starting us at "0".  Otherwise, seek our file to the
+            // appropriate offset.
+            NSString *byteStr = [range substringWithRange:[match rangeAtIndex:1]];
+            NSInteger bytes = [byteStr integerValue];
+            if (bytes <= 0) {
+                [fh truncateFileAtOffset:0];
+                break;
+            } else {
+                [fh seekToFileOffset:bytes];
+            }
+            break;
+        }
+            
+        case 404: {
+            NSString *errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTable(@"No file %@ exists", @"Localized", nil), [downloadingmodel filename]];
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not find file", @"Localized", nil) message:errorMessage
+                                                           delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
+            [alert show];
+            [alert release];		
+            [connection cancel];
+            [self downloadCompleted];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
+            
+            return;
+        }
+
+            
+        default:
+            [fh truncateFileAtOffset:0];
+            break;
+    }
+    
 	downloadFileSize = [response expectedContentLength];
 	
 	// Stop the spinning wheel and start the status bar for download
-	if ([response textEncodingName] != nil)
-	{
-        NSString *errorMessage = nil;
-        
-       /* if (searchType == PROTEINDATABANKSEARCH)
-        {
-            errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTable(@"No protein with the code %@ exists in the data bank", @"Localized", nil), codeForCurrentlyDownloadingMolecule];
-        }
-        else
-        {*/
-            errorMessage = [NSString stringWithFormat:NSLocalizedStringFromTable(@"No file %@ exists", @"Localized", nil), [downloadingmodel filename]];
-        //}
-
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not find file", @"Localized", nil) message:errorMessage
-													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
-		[alert show];
-		[alert release];		
-		[connection cancel];
-		[self downloadCompleted];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
-
-		return;
-	}
 	
 	if (downloadFileSize > 0)
 	{
@@ -346,11 +472,10 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 	}
 	downloadStatusText.text = NSLocalizedStringFromTable(@"Connected", @"Localized", nil);
 
-	// TODO: Deal with a 404 error by checking filetype header
 }
-#endif
-//- (void)connectionDidFinishLoading:(NSURLConnection *)connection;
-- (void)connectionFinish;
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection;
+//- (void)connectionFinish;
 {
 //	downloadStatusText.text = NSLocalizedStringFromTable(@"Processing...", @"Localized", nil);
 
@@ -391,6 +516,29 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     }
     else
     {*/
+    
+    [self downloadCompleted];
+
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *pathtmp = [[[paths objectAtIndex:0] stringByAppendingPathComponent:[downloadingmodel filename]] stringByAppendingString:@".tmp"];;
+    NSString *path = [[paths objectAtIndex:0] stringByAppendingPathComponent:[downloadingmodel filename]];
+
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSError *error = nil;
+
+    if (![fm moveItemAtPath:pathtmp toPath:path error:&error]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Write failed", @"Localized", nil) message:@"Could not write file to disk out of space?"
+													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
+        [alert show];
+		[alert release];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
+        
+		// TODO: Do some error handling here
+		return;
+    }
+  
+    
+    
     NSString *filename = [downloadingmodel filename];
 
     NSDictionary *dictionary = 
@@ -399,15 +547,17 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
      nil];
     [FlurryAnalytics logEvent:@"DOWNLOADMODEL" withParameters:dictionary];
 
-    progressView.hidden = YES;
+    //progressView.hidden = YES;
+    progressView.progress = 0.0f;
+
     cancelDownloadButton.hidden=YES;
     spinningIndicator.hidden=NO;
     [self.spinningIndicator performSelectorOnMainThread:@selector(startAnimating) withObject:nil waitUntilDone:YES];
 
     [spinningIndicator startAnimating];
-	downloadStatusText.text = NSLocalizedStringFromTable(@"Decompressing...", @"Localized", nil);
+	//downloadStatusText.text = NSLocalizedStringFromTable(@"Decompressing...", @"Localized", nil);
 
-    printf("Download complete\n");
+    //printf("Download complete\n");
     if(![self isBackgrounded])
         [self performSelector:@selector(sendDownloadFinishedMsg:) withObject:filename afterDelay:0.3];
     else 

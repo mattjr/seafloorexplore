@@ -11,7 +11,7 @@
 #import <UIKit/UIKit.h>
 #import <sqlite3.h>
 #import "BenthosCustomDownloadViewController.h"
-#import "NSOperationQueue+SharedQueue.h"
+//#import "NSOperationQueue+SharedQueue.h"
 #import "FlurryAnalytics.h"
 
 @class BenthosRootViewController;
@@ -28,7 +28,7 @@
 	BOOL downloadCancelled;
 	NSLock *initialDatabaseLoadLock;
 	BOOL isGzipCompressionUsedOnDownload, isHandlingCustomURLMoleculeDownload;
-	UIBackgroundTaskIdentifier bgTask;
+//	UIBackgroundTaskIdentifier bgTask;
 	// SQLite database of all molecules
 	sqlite3 *database;
 	NSMutableArray *molecules;
@@ -59,6 +59,8 @@
 - (BOOL)handleCustomURLScheme:(NSURL *)url;
 - (void)downloadCompleted;
 - (void)saveMoleculeWithData:(NSData *)moleculeData toFilename:(NSString *)filename;
+-(void)addNewModel:(NSString*)pname;
++ (BOOL) processArchive:(NSString*)filename error:(NSError**)error;
 void uncaughtExceptionHandler(NSException *exception);
 @end
 
