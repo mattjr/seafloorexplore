@@ -10,7 +10,6 @@
 
 #import <UIKit/UIKit.h>
 #import "Model.h"
-#import "AFHTTPRequestOperation.h"
 typedef enum { PUBCHEMSEARCH, PROTEINDATABANKSEARCH } BenthosSearchType;
 
 @interface BenthosDownloadController : NSObject

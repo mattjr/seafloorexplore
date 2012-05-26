@@ -376,7 +376,7 @@
         }
   //      int l=[[molecules objectAtIndex:(index-1)] numberOfAtoms];
         //printf("Fail Val 0x%x %d\n",(int)[molecules objectAtIndex:(index-1)], l);
-        printf("%d\n",index-1);
+        //printf("%d\n",index-1);
 		//NSString *fileNameWithoutExtension = [[molecules objectAtIndex:(index-1)] filenameWithoutExtension];
         cell.textLabel.text = [[molecules objectAtIndex:(index-1)] title];
 
