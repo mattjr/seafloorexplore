@@ -137,7 +137,7 @@
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 	
 	NSURLRequest *fileRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:searchURL]
-													cachePolicy:NSURLRequestUseProtocolCachePolicy
+													cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData//NSURLRequestUseProtocolCachePolicy
 												timeoutInterval:60.0];
 	[searchURL release];
 	searchResultRetrievalConnection = [[NSURLConnection alloc] initWithRequest:fileRequest delegate:self];
@@ -423,8 +423,10 @@
                 cell.textLabel.textColor = [UIColor blackColor];
 
             }
-            
-			cell.textLabel.text = [[downloadaleModelList objectAtIndex:[indexPath row]] title];
+            int exponent,width;
+            NSString *totalStr= unitStringFromBytes((double)[[downloadaleModelList objectAtIndex:[indexPath row]] fileSize],0,&exponent,&width);
+
+			cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)", [[downloadaleModelList objectAtIndex:[indexPath row]] title], totalStr];
             cell.detailTextLabel.text = [[downloadaleModelList objectAtIndex:[indexPath row]] desc];
             
 			

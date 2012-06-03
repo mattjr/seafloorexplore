@@ -174,7 +174,7 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
             return nil;
 #ifdef TARGET_OS_IPHONE
 		if (octree->vertexCount > 0xFFFF)
-			printf("Error: only 0xFFFF vertices per object supported on the iPhone");
+			printf("Error: only 0xFFFF vertices per object supported on the iPhone this model has %d\n",octree->vertexCount);
 #endif
         zbound_cache =vector2f(FLT_MAX,-FLT_MAX);
         struct octree_node *n1 = (struct octree_node *) NODE_NUM(0);
@@ -249,6 +249,13 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
    vector3f origin = vector3f(n1->aabbOriginX, n1->aabbOriginY, n1->aabbOriginZ);
    
    return vector3f(origin);
+}
+-(vector3f)extents
+{
+    struct octree_node *n1 = (struct octree_node *) NODE_NUM(0);
+                       
+    vector3f extent = vector3f(n1->aabbExtentX, n1->aabbExtentY, n1->aabbExtentZ);
+    return extent;
 }
 
 - (vector2f)zbound

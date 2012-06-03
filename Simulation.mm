@@ -65,11 +65,40 @@ float positions[60 * 60][6];
       //  NSString *filename = [[name lastPathComponent] stringByDeletingPathExtension];	
         basename = [[name lastPathComponent ] copy];
         NSString *dataName = [NSString stringWithFormat:@"%@/vtex",name] ;
+        
+        NSString *numMeshesFile = [NSString stringWithFormat:@"%@/cnt",name,basename] ;
+
         //NSLog(@"%@\n",dataName);
-		mesh = [[CollideableMesh alloc] initWithOctreeNamed:[NSString stringWithFormat:@"%@/m", name]];
-        mesh.scene =scene;
-        if(mesh == nil)
+        meshes = [[NSMutableArray alloc] init]; 
+
+        BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:numMeshesFile];
+        int numMeshes=1;
+        if(!fileExists){
+            NSLog(@"No mesh count file at %@\n",numMeshesFile);
             return nil;
+        }else{
+            NSError *error;
+            
+            NSString * fileContents = [NSString stringWithContentsOfFile:numMeshesFile encoding:NSUTF8StringEncoding error:&error];
+            if (fileContents == nil) {
+                // an error occurred
+                NSLog(@"Error reading file at %@\n%@",
+                      numMeshesFile, [error localizedFailureReason]);
+                if(numMeshes<=0)
+                    return nil;
+
+            }
+            numMeshes = [fileContents intValue];
+            if(numMeshes<=0)
+                return nil;
+        }
+        for(int i=0; i < numMeshes; i++){
+            CollideableMesh *mesh = [[CollideableMesh alloc] initWithOctreeNamed:[NSString stringWithFormat:@"%@/m-%04d", name,i]];
+            mesh.scene =scene;
+            if(mesh == nil)
+                return nil;
+            [meshes addObject:[mesh autorelease]];
+        }
 		char ext [5] = "    ";
         uint8_t border, length;
         uint32_t dim;
@@ -117,9 +146,14 @@ float positions[60 * 60][6];
         }
         */
       //  NSLog(@"%x\n",(int)scene);
-		[[vtnode children] addObject:[mesh autorelease]];
-		[vtnode setZRange: [mesh zbound]];
-		[[scene objects] addObject:[vtnode autorelease]];
+        for (id mesh in meshes) {
+       
+            [[vtnode children] addObject:[mesh autorelease]];
+            [vtnode setZRange: [mesh zbound]];
+        }
+        
+        [[scene objects] addObject:[vtnode autorelease]];
+
        // NSLog(@"blah %x %d\n",(int)[scene objects],[[scene objects] count]);
 
 //		[[scene objects] addObject:mesh];
@@ -183,20 +217,20 @@ float positions[60 * 60][6];
         _cameraPanAcceleration = 30.0;
         _panKeyDist=0.005;
         _minimumZoomScale = 0.5f;
-        _maxZoomScale =  6*[mesh radius];
+        _maxZoomScale =  6*[self radius];
         _minalt=0.0;
         cameraRotationSpeed = 0.01;
-        _maxDist = 3.5*[mesh radius];
+        _maxDist = 3.5*[self radius];
 
 		
 		[self resetCamera];
         _firstPan=false;
-        _radius = [mesh radius];
+        _radius = [self radius];
         donePanning=true;
-        bbox[0]=[mesh minbb];
-        bbox[1]=[mesh maxbb];
+        bbox[0]=[self minbb];
+        bbox[1]=[self maxbb];
         extentsMesh=bbox[1]-bbox[0];
-        _meshcent =[mesh center];
+        _meshcent =[self center];
         logOnNextUpdate=kNoLog;
         movementStrings = [[NSArray arrayWithObjects:@"NoLog",
                            @"pann",
@@ -386,7 +420,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 	[[scene camera] load:data];
    // [self printMatrix:[[scene camera] modelViewMatrix].data()];
    // printf("%d %d\n",[self isDoneMoving] , goneOutOfFrame);
-    if(goneOutOfFrame && ![mesh anyTrianlgesInFrustum:frustum]){
+    if(goneOutOfFrame && ![self anyTrianlgesInFrustum:frustum]){
         _targetCenter[0]=_lastValidCenter[0];
        _targetCenter[1]=_lastValidCenter[1];
        _targetCenter[2]=_lastValidCenter[2];
@@ -439,7 +473,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     extract_frustum_planes(data,[[scene camera] projectionMatrix], test_frustum, cml::z_clip_neg_one, false);
     
 
-    if(![mesh anyTrianlgesInFrustum:test_frustum]){
+    if(![self anyTrianlgesInFrustum:test_frustum]){
         goneOutOfFrame=YES;
      //   printf("Not in frame\n");
 
@@ -501,7 +535,8 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     //CC3Plane plane=[mesh centeredPlane];
     CC3Plane normPlane=CC3PlaneNormalize(plane);
     
-    vector4f unprojected_diff =[[scene camera] pick:pt intoMesh: [mesh octree] ];
+    vector4f unprojected_diff =[self pickPt:[scene camera] pick:pt];
+//[[scene camera] pick:pt intoMesh: [mesh octree] ];
     if(!isfinite(unprojected_diff[0]))
         unprojected_diff= [[scene camera] unprojectPoint:pt ontoPlane: normPlane];
 
@@ -574,7 +609,8 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     CC3Ray ray=[[scene camera] unprojectPoint: centerScreenWorld withModelView:data];
     float intersectionPoint[4];
     intersectionPoint[3]=1;
-    if(intersectOctreeNodeWithRay([mesh octree], 0,ray, intersectionPoint))
+    if([self intersectOctreeNodeWithRay:0 withRay:ray inter:intersectionPoint])
+    //if(intersectOctreeNodeWithRay([mesh octree], 0,ray, intersectionPoint))
         ;//printf("Hit %f %f %f\n",intersectionPoint[0],intersectionPoint[1],intersectionPoint[2]);
     else{
        vector4f ret=CC3RayIntersectionWithPlane(ray, plane);// printf("No hit\n");
@@ -699,7 +735,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     
 }
 -(void) centeratPt: (CGPoint) pt{
-    vector4f tmp =[[scene camera] pick:pt intoMesh: [mesh octree] ];
+    vector4f tmp =[self pickPt:[scene camera] pick:pt];//[self pickPt camera:[scene camera] pick:pt intoMesh: [mesh octree] ];
     if(isfinite(tmp[0])){
         _targetCenter[0]=-tmp[0];
         _targetCenter[1]=-tmp[1];
@@ -709,10 +745,10 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 
 }
 -(void) panstart: (CGPoint) pt{
-    CC3Plane plane=[mesh centeredPlane];
+    CC3Plane plane=[self centeredPlane];
     CC3Plane normPlane=CC3PlaneNormalize(plane);
     
-    vector4f tmp =[[scene camera] pick:pt intoMesh: [mesh octree] ];
+    vector4f tmp =[self pickPt:[scene camera] pick:pt];//[[scene camera] pick:pt intoMesh: [mesh octree] ];
     
     //[[scene camera] unprojectPoint:_lastPt ontoPlane: normPlane];
     if(isfinite(tmp[0]))
@@ -779,11 +815,11 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
         
 	//[[scene camera] setPosition:vector3f(10, 1, 0)]; 
     //[[scene camera] setRotation:vector3f(-90, 0, 0)];
-    vector3f tmp= [mesh center];
+    vector3f tmp= [self center];
     _center[0] = -tmp[0];
     _center[1] = -tmp[1];
     _center[2] = -tmp[2];
-    _distance = 3*[mesh radius];
+    _distance = 3*[self radius];
     _lastValidCenter[0]=_center[0];
      _lastValidCenter[1]=_center[1];
     _lastValidCenter[2]=_center[2];
@@ -829,6 +865,97 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 	return renderMode;
 }
 
+-(vector3f) center
+{
+    vector3f cp;
+    cp[0]=0;
+    cp[1]=0;
+    cp[2]=0;
+    for (CollideableMesh *mesh in meshes) {
+        cp+=[mesh center];
+    }
+    cp[0]/=[meshes count];
+    cp[1]/=[meshes count];
+    cp[2]/=[meshes count];
+  
+    return cp;
+
+}
+- (CC3Plane)centeredPlane{
+   vector3f cen= [self center];
+    vector3f v1=vector3f(cen[0],cen[1],cen[2]);
+    vector3f v2=vector3f(cen[0]+1.0,cen[1],cen[2]);
+    vector3f v3=vector3f(cen[0],cen[1]+1.0,cen[2]);
+    return CC3PlaneFromPoints(v1,v2,v3);
+}
+
+- (float)radius
+{
+    vector3f cp;
+    cp[0]=-FLT_MAX;
+    cp[1]=-FLT_MAX;
+    cp[2]=-FLT_MAX;
+    for (CollideableMesh *mesh in meshes) {
+        for(int i=0; i<3; i++)
+            cp[i]=MAX([mesh extents][i], cp[i]);
+    }
+    
+	return cp.length() / 2.0;
+}
+- (vector3f)maxbb{
+    vector3f cp;
+    cp[0]=-FLT_MAX;
+    cp[1]=-FLT_MAX;
+    cp[2]=-FLT_MAX;
+    for (CollideableMesh *mesh in meshes) {
+        for(int i=0; i<3; i++)
+            cp[i]=MAX([mesh maxbb][i], cp[i]);
+    }
+    
+    return cp;
+}
+- (vector3f)minbb{
+    vector3f cp;
+    cp[0]=FLT_MAX;
+    cp[1]=FLT_MAX;
+    cp[2]=FLT_MAX;
+    for (CollideableMesh *mesh in meshes) {
+        for(int i=0; i<3; i++)
+            cp[i]=MIN([mesh minbb][i], cp[i]);
+    }
+   
+    return cp;
+}
+
+-(BOOL) intersectOctreeNodeWithRay:(int)nodeNumber withRay:(CC3Ray)ray inter:(float *)pt
+{
+    for (CollideableMesh *mesh in meshes) {
+        
+        if(intersectOctreeNodeWithRay([mesh octree], nodeNumber,ray, pt))
+            return YES;
+    }
+    return NO;
+}
+
+-(BOOL)anyTrianlgesInFrustum:(const GLfloat [6][4])frustum
+{
+    for (CollideableMesh *mesh in meshes) {
+        if([mesh anyTrianlgesInFrustum:frustum])
+            return YES;
+    }
+    return NO;
+
+}
+-(vector4f)pickPt:(Camera *)cam pick:(CGPoint)pt
+{
+    for (CollideableMesh *mesh in meshes) {
+        vector4f tmp =[[scene camera] pick:pt intoMesh: [mesh octree] ];
+            if(tmp != vector4f(INFINITY,INFINITY,INFINITY,INFINITY))
+                return tmp;
+    }
+    return vector4f(INFINITY,INFINITY,INFINITY,INFINITY);
+
+}
 
 
 @end

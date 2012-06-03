@@ -44,7 +44,6 @@ typedef struct {
 	// Metadata from the Protein Data Bank
 	unsigned int numberOfAtoms, numberOfBonds, numberOfStructures;
 	NSString *filename, *filenameWithoutExtension, *title, *keywords, *journalAuthor, *journalTitle, *journalReference, *sequence, *compound, *source, *author,*desc,*weblink,*folder;
-
 	// Status of the molecule
     BOOL hasRendered;
 	BOOL isBeingDisplayed, isDoneRendering, isRenderingCancelled;

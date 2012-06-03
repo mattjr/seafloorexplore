@@ -192,6 +192,7 @@ static NSString * const kDescElementName = @"description";
 static NSString * const kUpdatedElementName = @"updated";
 static NSString * const kGeoRSSLatElementName = @"geo:lat";
 static NSString * const kGeoRSSLonElementName = @"geo:long";
+static NSString * const kSizeElementName = @"size";
 
 #pragma mark -
 #pragma mark NSXMLParser delegate methods
@@ -221,7 +222,8 @@ static NSString * const kGeoRSSLonElementName = @"geo:long";
                [elementName isEqualToString:kGeoRSSLonElementName]||
                [elementName isEqualToString:kDescElementName]||
                [elementName isEqualToString:kFolderElementName] ||
-               [elementName isEqualToString:kFilenameElementName]) {
+               [elementName isEqualToString:kFilenameElementName]||
+               [elementName isEqualToString:kSizeElementName]) {
         // For the 'title', 'updated', or 'georss:point' element begin accumulating parsed character data.
         // The contents are collected in parser:foundCharacters:.
         accumulatingParsedCharacterData = YES;
@@ -313,6 +315,13 @@ static NSString * const kGeoRSSLonElementName = @"geo:long";
         if ([scanner scanDouble:&latitude]) {
                 self.currentModelObject.latitude = latitude;
             }
+        
+    } else if ([elementName isEqualToString:kSizeElementName]) {
+        NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
+        long long int fileSize;
+        if ([scanner scanLongLong:&fileSize]) {
+            self.currentModelObject.fileSize = fileSize;
+        }
         
     }else if ([elementName isEqualToString:kGeoRSSLonElementName]) {
        NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];

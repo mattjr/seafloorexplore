@@ -64,6 +64,7 @@
     // to be shown in a map view.
     double latitude;
     double longitude;
+    
 }
 
 
@@ -75,5 +76,5 @@
 @property (nonatomic, assign) NSString *desc;
 @property (nonatomic, assign) NSString *filename;
 @property (nonatomic, assign) NSString *folder;
-
+@property (nonatomic, assign) long long fileSize;
 @end

@@ -90,6 +90,8 @@ struct octree_struct // TODO: optimization: add optimized prefetch indices for g
 - (vector2f)zbound;
 -(vector3f)maxbb;
 -(vector3f)minbb;
+-(vector3f)extents;
+
 -(BOOL)anyTrianlgesInFrustum:(const GLfloat [6][4])frustum;
 extern int numVisCenters;
 extern GLfloat frustum[6][4];

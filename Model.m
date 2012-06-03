@@ -52,7 +52,7 @@
 @synthesize date;
 @synthesize weblink;
 @synthesize latitude;
-@synthesize longitude,title,desc,filename,folder;
+@synthesize longitude,title,desc,filename,folder,fileSize;
 
 
 - (void)dealloc {

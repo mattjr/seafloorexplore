@@ -103,7 +103,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
     desc=[[newModel desc] retain];
     coord.longitude=newModel.longitude;
     coord.latitude=newModel.latitude;
-    
+
     title=[[newModel title] retain];
     if(database){
     if (insertMoleculeSQLStatement == nil) 

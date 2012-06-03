@@ -27,7 +27,7 @@ typedef enum {
 {
 	int frames;
 	float speedModifier;
-	CollideableMesh *mesh;
+	NSMutableArray *meshes;
     CATransform3D currentCalculatedMatrix;
 	BOOL isAutorotating;
 	BOOL isFirstDrawingOfMolecule, isFrameRenderingFinished;
@@ -115,5 +115,14 @@ typedef enum {
 
 -(void)setValidPos;
 -(void) checkInFrame;
+-(vector3f) center;
+-(float) radius;
+-(vector3f) minbb;
+-(vector3f) maxbb;
+- (CC3Plane)centeredPlane;
+-(BOOL) intersectOctreeNodeWithRay:(int)nodeNumber withRay:(CC3Ray)ray inter:(float *)pt;
+
+-(BOOL)anyTrianlgesInFrustum:(const GLfloat [6][4])frustum;
+-(vector4f)pickPt:(Camera *)cam pick:(CGPoint)pt;
 
 @end
