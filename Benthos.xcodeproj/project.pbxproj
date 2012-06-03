@@ -91,8 +91,6 @@
 		BC57EBFB1358DE9000FA1060 /* GLProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = BC57EBFA1358DE9000FA1060 /* GLProgram.m */; };
 		BC5BB8BD0E204DC20001DFD0 /* BenthosDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5BB8BC0E204DC20001DFD0 /* BenthosDetailViewController.m */; };
 		BC5BBCD40E219AB90001DFD0 /* BenthosIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */; };
-		BC61CC310E2463180074BE04 /* BenthosCellTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC61CC2E0E2463180074BE04 /* BenthosCellTextView.m */; };
-		BC61CC320E2463180074BE04 /* BenthosTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC61CC300E2463180074BE04 /* BenthosTextViewController.m */; };
 		BC67B8BF137C4B7A0075A361 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC67B8BE137C4B7A0075A361 /* Default@2x.png */; };
 		BC6A9FCC11CAA8CB00E62D55 /* BenthosIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC6A9FCB11CAA8CB00E62D55 /* BenthosIcon@2x.png */; };
 		BC835184117545C600B478D5 /* 69-display.png in Resources */ = {isa = PBXBuildFile; fileRef = BC835183117545C600B478D5 /* 69-display.png */; };
@@ -239,10 +237,6 @@
 		BC5BB8BB0E204DC20001DFD0 /* BenthosDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosDetailViewController.h; sourceTree = "<group>"; };
 		BC5BB8BC0E204DC20001DFD0 /* BenthosDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosDetailViewController.m; sourceTree = "<group>"; };
 		BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BenthosIcon.png; sourceTree = "<group>"; };
-		BC61CC2D0E2463180074BE04 /* BenthosCellTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosCellTextView.h; sourceTree = "<group>"; };
-		BC61CC2E0E2463180074BE04 /* BenthosCellTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosCellTextView.m; sourceTree = "<group>"; };
-		BC61CC2F0E2463180074BE04 /* BenthosTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosTextViewController.h; sourceTree = "<group>"; };
-		BC61CC300E2463180074BE04 /* BenthosTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosTextViewController.m; sourceTree = "<group>"; };
 		BC67B8BE137C4B7A0075A361 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		BC6A9FCB11CAA8CB00E62D55 /* BenthosIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BenthosIcon@2x.png"; sourceTree = "<group>"; };
 		BC835183117545C600B478D5 /* 69-display.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "69-display.png"; sourceTree = "<group>"; };
@@ -472,10 +466,6 @@
 		BC5BB99E0E207ED10001DFD0 /* Benthos Details View  */ = {
 			isa = PBXGroup;
 			children = (
-				BC61CC2D0E2463180074BE04 /* BenthosCellTextView.h */,
-				BC61CC2E0E2463180074BE04 /* BenthosCellTextView.m */,
-				BC61CC2F0E2463180074BE04 /* BenthosTextViewController.h */,
-				BC61CC300E2463180074BE04 /* BenthosTextViewController.m */,
 				BC5BB8BB0E204DC20001DFD0 /* BenthosDetailViewController.h */,
 				BC5BB8BC0E204DC20001DFD0 /* BenthosDetailViewController.m */,
 			);
@@ -698,8 +688,6 @@
 				BCC286D20E1D905400978ECA /* BenthosDownloadController.m in Sources */,
 				BCC286D40E1D905400978ECA /* BenthosTableViewController.m in Sources */,
 				BC5BB8BD0E204DC20001DFD0 /* BenthosDetailViewController.m in Sources */,
-				BC61CC310E2463180074BE04 /* BenthosCellTextView.m in Sources */,
-				BC61CC320E2463180074BE04 /* BenthosTextViewController.m in Sources */,
 				BC1EF3830E36BD6100B09043 /* BenthosSearchViewController.m in Sources */,
 				BC4FB6670E4E875900B316CD /* VCTitleCase.m in Sources */,
 				BCD12CFA11308E1000737166 /* BenthosiPadRootViewController.m in Sources */,

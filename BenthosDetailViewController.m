@@ -10,7 +10,6 @@
 
 #import "BenthosDetailViewController.h"
 #import "Benthos.h"
-#import "BenthosTextViewController.h"
 #import "BenthosAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
