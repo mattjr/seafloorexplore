@@ -193,6 +193,8 @@ static NSString * const kUpdatedElementName = @"updated";
 static NSString * const kGeoRSSLatElementName = @"geo:lat";
 static NSString * const kGeoRSSLonElementName = @"geo:long";
 static NSString * const kSizeElementName = @"size";
+static NSString * const kVerElementName = @"ver";
+static NSString * const kIconURLElementName = @"icon";
 
 #pragma mark -
 #pragma mark NSXMLParser delegate methods
@@ -223,6 +225,8 @@ static NSString * const kSizeElementName = @"size";
                [elementName isEqualToString:kDescElementName]||
                [elementName isEqualToString:kFolderElementName] ||
                [elementName isEqualToString:kFilenameElementName]||
+               [elementName isEqualToString:kVerElementName]||
+               [elementName isEqualToString:kIconURLElementName]||
                [elementName isEqualToString:kSizeElementName]) {
         // For the 'title', 'updated', or 'georss:point' element begin accumulating parsed character data.
         // The contents are collected in parser:foundCharacters:.
@@ -267,6 +271,18 @@ static NSString * const kSizeElementName = @"size";
             self.currentModelObject.weblink = [NSURL URLWithString:weblink] ;
 
         }   
+    }else if ([elementName isEqualToString:kIconURLElementName]) {
+        // The title element contains the magnitude and location in the following format:
+        // <title>M 3.6, Virgin Islands region<title/>
+        // Extract the magnitude and the location using a scanner:
+        NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
+        // Scan past the "M " before the magnitude.
+        NSString *weblink = nil;
+        // Scan the remainer of the string.
+        if ([scanner scanUpToCharactersFromSet:[NSCharacterSet illegalCharacterSet] intoString:&weblink]) {
+            self.currentModelObject.imageURL = [NSURL URLWithString:weblink] ;
+            
+        }   
     }else if ([elementName isEqualToString:kDescElementName]) {
         // The title element contains the magnitude and location in the following format:
         // <title>M 3.6, Virgin Islands region<title/>
@@ -309,6 +325,13 @@ static NSString * const kSizeElementName = @"size";
             // kUpdatedElementName can be found outside an entry element (i.e. in the XML header)
             // so don't process it here.
         }                 
+    } else if ([elementName isEqualToString:kVerElementName]) {
+        NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
+        double ver;
+        if ([scanner scanDouble:&ver]) {
+            self.currentModelObject.appVersion = ver;
+        }
+        
     } else if ([elementName isEqualToString:kGeoRSSLatElementName]) {
              NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
         double latitude;

@@ -52,9 +52,13 @@
 @synthesize date;
 @synthesize weblink;
 @synthesize latitude;
-@synthesize longitude,title,desc,filename,folder,fileSize;
+@synthesize longitude,title,desc,filename,folder,fileSize,appVersion,imageURL,modelIcon;
 
-
+-(id) init {
+    [super init];
+    appVersion=0.0;
+    return self;
+}
 - (void)dealloc {
     [title release];
     [desc release];
@@ -62,6 +66,9 @@
     [folder release];
     [date release];
     [weblink release];
+    [imageURL release];
+    [modelIcon release];
+
     [super dealloc];
 }
 

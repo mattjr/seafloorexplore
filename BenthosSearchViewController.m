@@ -14,12 +14,17 @@
 #import "VCTitleCase.h"
 #import "BenthosAppDelegate.h"
 #import "ModelParseOperation.h"
-#define MAX_SEARCH_RESULT_CODES 10
 #import "Model.h"
+
+@interface BenthosSearchViewController ()
+- (void)startIconDownload:(Model *)model forIndexPath:(NSIndexPath *)indexPath;
+@end
+
 @implementation BenthosSearchViewController
-@synthesize modelData,parseQueue,listURL,molecules;
+@synthesize modelData,parseQueue,listURL,molecules,imageDownloadsInProgress,downloadaleModelList;
 #pragma mark -
 #pragma mark Initialization and teardown
+
 
 - (id)initWithStyle:(UITableViewStyle)style andURL:(NSURL*)url andTitle:(NSString*)title
 {
@@ -61,9 +66,7 @@
 		downloadedFileContents = nil;
 		downloadaleModelList = nil;
 		searchResultRetrievalConnection = nil;
-		nextResultsRetrievalConnection = nil;
 		searchCancelled = NO;
-		currentPageOfResults = 0;
 		
 		if ([BenthosAppDelegate isRunningOniPad])
 		{
@@ -99,7 +102,7 @@
 	}	
     [self.navigationItem setHidesBackButton:NO animated:YES];
     self.tableView.allowsSelection = YES;
-
+    self.imageDownloadsInProgress = [NSMutableDictionary dictionary];
 }
 
 - (void)dealloc 
@@ -114,10 +117,11 @@
     [currentXMLElementString release];
     currentXMLElementString = nil;
 
-	[keywordSearchBar release];
 	[searchResultRetrievalConnection release];
 	[downloadaleModelList release];
 	[downloadedFileContents release];
+    [imageDownloadsInProgress release];
+
 	[super dealloc];
 }
 - (void)addModels:(NSNotification *)notif {
@@ -162,20 +166,13 @@
 
 - (void)processSearchResultsAppendingNewData:(BOOL)appendData;
 {
-	if (!appendData)
-	{
+	
 		[searchResultRetrievalConnection release];
 		searchResultRetrievalConnection = nil;
 
 		downloadaleModelList = [[NSMutableArray alloc] init];
-	}
-	else
-	{
-		[nextResultsRetrievalConnection release];
-		nextResultsRetrievalConnection = nil;
-	}	
-    
-
+	
+	
     [self processHTMLResults];
 
 }
@@ -184,6 +181,7 @@
     ModelParseOperation *parseOperation = [[ModelParseOperation alloc] initWithData:downloadedFileContents];
     [self.parseQueue addOperation:parseOperation];
     [parseOperation release];   // once added to the NSOperationQueue it's retained, we don't need it anymore
+    //Remove models that are too new for this version of the code
     
     // earthquakeData will be retained by the NSOperation until it has finished executing,
     // so we no longer need a reference to it in the main thread.
@@ -223,7 +221,6 @@
         }
     }
 	[titlesAndPDBCodeString release];*/
-    currentPageOfResults = 1;
 
 }
 
@@ -264,7 +261,7 @@
 {	          
 	UITableViewCell *cell;
 	// Running a search, so display a status cell
-	if ((searchResultRetrievalConnection != nil) || ((nextResultsRetrievalConnection != nil) && (indexPath.row >= [downloadaleModelList count])))
+	if ((searchResultRetrievalConnection != nil)  && (indexPath.row >= [downloadaleModelList count]))
 	{
 		cell = [tableView dequeueReusableCellWithIdentifier:@"SearchInProgress"];
 		if (cell == nil) 
@@ -360,7 +357,7 @@
     }
 	else
 	{
-		if ([indexPath row] >= [downloadaleModelList count])
+		/*if ([indexPath row] >= [downloadaleModelList count])
 		{
 			cell = [tableView dequeueReusableCellWithIdentifier:@"LoadMore"];
 			if (cell == nil) 
@@ -385,7 +382,7 @@
 				cell.detailTextLabel.text = @"";
 			}
 		}
-		else
+		else*/
 		{
 			cell = [tableView dequeueReusableCellWithIdentifier:NSLocalizedStringFromTable(@"Results", @"Localized", nil)];
 			if (cell == nil) 
@@ -409,59 +406,78 @@
 				cell.textLabel.font = [UIFont boldSystemFontOfSize:14.0];
                 cell.textLabel.numberOfLines = 2;
 				cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:14.0];
-
-//                cell.textLabel.font = [UIFont boldSystemFontOfSize:12.0];
-//				cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:12.0];
+                
+                //                cell.textLabel.font = [UIFont boldSystemFontOfSize:12.0];
+                //				cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:12.0];
             }
             
             BOOL alreadyInList=NO;
-            NSString *filename = [[[[downloadaleModelList objectAtIndex:[indexPath row]] filename] lastPathComponent] stringByDeletingPathExtension];	
-            if(molecules != nil){
-                for(Benthos *model in molecules){
-                    if([[[model filename] stringByDeletingPathExtension] isEqualToString:filename]){
-                        alreadyInList=YES;
-                        break;
+            Model *curModel=[downloadaleModelList objectAtIndex:[indexPath row]];
+            if(curModel != nil){
+                
+                
+                NSString *filename = [[[curModel filename] lastPathComponent] stringByDeletingPathExtension];	
+                if(molecules != nil){
+                    for(Benthos *model in molecules){
+                        if([[[model filename] stringByDeletingPathExtension] isEqualToString:filename]){
+                            alreadyInList=YES;
+                            break;
+                        }
                     }
                 }
-            }
-            
-            
-            if (((isDownloading) && ([indexPath row] != indexOfDownloadingMolecule)) || alreadyInList)
-            {
-                if((isDownloading) && ([indexPath row] != indexOfDownloadingMolecule)){
-                    cell.textLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1.0];
-                    cell.detailTextLabel.textColor = [UIColor colorWithWhite:0.2 alpha:1.0];                 
-                }else{
-                    cell.textLabel.textColor = [UIColor colorWithWhite:0.7 alpha:1.0];
-                    cell.detailTextLabel.textColor = [UIColor colorWithWhite:0.7 alpha:1.0];
+                
+                
+                if (((isDownloading) && ([indexPath row] != indexOfDownloadingMolecule)) || alreadyInList)
+                {
+                    if((isDownloading) && ([indexPath row] != indexOfDownloadingMolecule)){
+                        cell.textLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1.0];
+                        cell.detailTextLabel.textColor = [UIColor colorWithWhite:0.2 alpha:1.0];                 
+                    }else{
+                        cell.textLabel.textColor = [UIColor colorWithWhite:0.7 alpha:1.0];
+                        cell.detailTextLabel.textColor = [UIColor colorWithWhite:0.7 alpha:1.0];
+                        
+                        
+                    }
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                    // cell.accessoryType = UITableViewCellAccessoryNone;
+                    cell.userInteractionEnabled =NO;
+                    
+                }else {
+                    cell.userInteractionEnabled =YES;
+                    
+                    cell.textLabel.textColor = [UIColor blackColor];
+                    cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
                     
                     
                 }
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
-               // cell.accessoryType = UITableViewCellAccessoryNone;
-                cell.userInteractionEnabled =NO;
-
-            }else {
-                cell.userInteractionEnabled =YES;
-
-                cell.textLabel.textColor = [UIColor blackColor];
-                cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-
-
-            }
-        
-            int exponent,width;
-            NSString *totalStr= unitStringFromBytes((double)[[downloadaleModelList objectAtIndex:[indexPath row]] fileSize],0,&exponent,&width);
-            
-            if(!alreadyInList)
-                cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)", [[downloadaleModelList objectAtIndex:[indexPath row]] title], totalStr];
-            else{ 
-                cell.textLabel.text = [NSString stringWithFormat:@"%@ (Downloaded)", [[downloadaleModelList objectAtIndex:[indexPath row]] title]];
-            }
-            
-            cell.detailTextLabel.text = [[downloadaleModelList objectAtIndex:[indexPath row]] desc];
-            
-			
+                
+                int exponent,width;
+                NSString *totalStr= unitStringFromBytes((double)[curModel fileSize],0,&exponent,&width);
+                
+                if(!alreadyInList)
+                    cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)", [curModel title], totalStr];
+                else{ 
+                    cell.textLabel.text = [NSString stringWithFormat:@"%@ (Downloaded)", [curModel title]];
+                }
+                
+                cell.detailTextLabel.text = [curModel desc];
+                // Only load cached images; defer new downloads until scrolling ends
+                if (!curModel.modelIcon)
+                {
+                    if (self.tableView.dragging == NO && self.tableView.decelerating == NO)
+                    {
+                        [self startIconDownload:curModel forIndexPath:indexPath];
+                    }
+                    // if a download is deferred or in progress, return a placeholder image
+                    cell.imageView.image = [UIImage imageNamed:@"Placeholder.png"];                
+                }
+                else
+                {
+                    cell.imageView.image = curModel.modelIcon;
+                }
+                
+                
+			}
 		}
 	}
 
@@ -545,8 +561,11 @@
 
 - (void)didReceiveMemoryWarning 
 {
-    NSLog(@"My Memory warning\n");
-}
+    [super didReceiveMemoryWarning];
+    
+    // terminate all pending download connections
+    NSArray *allDownloads = [self.imageDownloadsInProgress allValues];
+    [allDownloads makeObjectsPerformSelector:@selector(cancelDownload)];}
 
 #pragma mark -
 #pragma mark UIViewController methods
@@ -591,10 +610,7 @@
 	[searchResultRetrievalConnection release];
 	searchResultRetrievalConnection = nil;
 	
-	[nextResultsRetrievalConnection release];
-	nextResultsRetrievalConnection = nil;
-	
-	[self.tableView reloadData];
+		[self.tableView reloadData];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data;
@@ -640,8 +656,10 @@
 }
 
 - (void)addModelsToList:(NSArray *)models {
-    
-    [downloadaleModelList addObjectsFromArray:models];
+    for (Model *item in models) {
+        if(item.appVersion <= kMaxiumSupportedFileVersion)
+        [downloadaleModelList addObject:item];
+    }
     [self.tableView reloadData];
 
 }
@@ -662,6 +680,73 @@
     self.tableView.allowsSelection = YES;
     
 
+}
+
+#pragma mark -
+#pragma mark Table cell image support
+
+- (void)startIconDownload:(Model *)Model forIndexPath:(NSIndexPath *)indexPath
+{
+    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:indexPath];
+    if (iconDownloader == nil) 
+    {
+        iconDownloader = [[IconDownloader alloc] init];
+        iconDownloader.modelRecord = Model;
+        iconDownloader.indexPathInTableView = indexPath;
+        iconDownloader.delegate = self;
+        [imageDownloadsInProgress setObject:iconDownloader forKey:indexPath];
+        [iconDownloader startDownload];
+        [iconDownloader release];   
+    }
+}
+
+// this method is used in case the user scrolled into a set of cells that don't have their app icons yet
+- (void)loadImagesForOnscreenRows
+{
+    if ([self.downloadaleModelList count] > 0)
+    {
+        NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
+        for (NSIndexPath *indexPath in visiblePaths)
+        {
+            Model *model = [self.downloadaleModelList objectAtIndex:indexPath.row];
+            
+            if (!model.modelIcon) // avoid the app icon download if the app already has an icon
+            {
+                [self startIconDownload:model forIndexPath:indexPath];
+            }
+        }
+    }
+}
+
+// called by our ImageDownloader when an icon is ready to be displayed
+- (void)appImageDidLoad:(NSIndexPath *)indexPath
+{
+    IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:indexPath];
+    if (iconDownloader != nil)
+    {
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:iconDownloader.indexPathInTableView];
+        
+        // Display the newly loaded image
+        cell.imageView.image = iconDownloader.modelRecord.modelIcon;
+    }
+}
+
+
+#pragma mark -
+#pragma mark Deferred image loading (UIScrollViewDelegate)
+
+// Load images for all onscreen rows when scrolling is finished
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate)
+	{
+        [self loadImagesForOnscreenRows];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self loadImagesForOnscreenRows];
 }
 
 

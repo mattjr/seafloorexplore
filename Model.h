@@ -64,6 +64,10 @@
     // to be shown in a map view.
     double latitude;
     double longitude;
+    double appVersion;
+    NSURL *imageURL;
+    UIImage *modelIcon;
+
     
 }
 
@@ -77,4 +81,10 @@
 @property (nonatomic, assign) NSString *filename;
 @property (nonatomic, assign) NSString *folder;
 @property (nonatomic, assign) long long fileSize;
+@property (nonatomic, retain) NSURL *imageURL;
+@property (nonatomic, retain) UIImage *modelIcon;
+
+@property (nonatomic, assign) double appVersion;
+
+
 @end
