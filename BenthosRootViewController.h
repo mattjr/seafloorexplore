@@ -10,7 +10,6 @@
 
 #import <UIKit/UIKit.h>
 #import <sqlite3.h>
-#import "BenthosCustomDownloadViewController.h"
 #import "SegmentsController.h"
 @class BenthosGLViewController;
 @class Benthos;

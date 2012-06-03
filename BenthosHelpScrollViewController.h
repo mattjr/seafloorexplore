@@ -10,9 +10,12 @@
 
 @interface BenthosHelpScrollViewController : UIViewController <UIScrollViewDelegate>{
     UIScrollView* scrollView;
+    NSMutableArray *molecules;
 
 }
 @property (nonatomic, retain) IBOutlet UIScrollView* scrollView;
+@property(readwrite,retain) NSMutableArray *molecules;
+
 - (IBAction)displayMoleculeDownloadView;
 - (IBAction)switchBackToGLView;
 @end

@@ -12,7 +12,6 @@
 
 #import "BenthosiPadRootViewController.h"
 #import "BenthosGLViewController.h"
-#import "BenthosDataSourceViewController.h"
 #import "BenthosGLView.h"
 #include "Benthos.h"
 #import "MyOpenGLES20Renderer.h"
@@ -57,11 +56,11 @@
 	screenBarButton.width = 44.0f;
 	[screenImage release];	
 	
-	UIImage *downloadImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"57-download" ofType:@"png"]];	
+	/*UIImage *downloadImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"57-download" ofType:@"png"]];	
 	UIBarButtonItem *downloadBarButton = [[UIBarButtonItem alloc] initWithImage:downloadImage style:UIBarButtonItemStylePlain target:self action:@selector(showDownloadOptions:)];
 	downloadBarButton.width = 44.0f;
 	[downloadImage release];
-	
+	*/
 	UIImage *visualizationImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"homeIcon" ofType:@"png"]];	
 	visualizationBarButton = [[UIBarButtonItem alloc] initWithImage:visualizationImage style:UIBarButtonItemStylePlain target:self action:@selector(sendHome:)];
 	visualizationBarButton.width = 44.0f;
@@ -90,14 +89,14 @@
 	}
 	else
 	{*/
-		[mainToolbar setItems:[NSArray arrayWithObjects:spacerItem, downloadBarButton, visualizationBarButton, rotationBarButton, nil]animated:NO];
+		[mainToolbar setItems:[NSArray arrayWithObjects:spacerItem,  visualizationBarButton, rotationBarButton, nil]animated:NO];
     [mainToolbar setItems:[NSArray arrayWithObjects:spacerItem, visualizationBarButton, rotationBarButton, nil] animated:NO];
      /*
     [mainToolbar setItems:[NSArray arrayWithObjects:spacerItem, downloadBarButton, rotationBarButton, nil] animated:NO];
     [mainToolbar setItems:[NSArray arrayWithObjects:spacerItem, rotationBarButton, nil] animated:NO];
 *///	}
 		
-	[downloadBarButton release];
+	//[downloadBarButton release];
 
 	glViewController.view.frame = CGRectMake(mainScreenFrame.origin.x, mainToolbar.bounds.size.height, mainScreenFrame.size.width, mainScreenFrame.size.height -  mainToolbar.bounds.size.height);
     
@@ -172,32 +171,6 @@
 	downloadOptionsPopover = nil;
 }
 
-- (void)showDownloadOptions:(id)sender;
-{
-	if (downloadOptionsPopover != nil)
-		return;
-	
-	UINavigationController *downloadNavigationController = [[UINavigationController alloc] init];
-	downloadNavigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
-	
-	BenthosDataSourceViewController *dataSourceViewController = [[BenthosDataSourceViewController alloc] initWithStyle:UITableViewStylePlain];
-//	dataSourceViewController.delegate = self;
-	[downloadNavigationController pushViewController:dataSourceViewController animated:NO];
-	[dataSourceViewController release];
-	
-	downloadOptionsPopover = [[UIPopoverController alloc] initWithContentViewController:downloadNavigationController];
-	[downloadNavigationController release];
-	[downloadOptionsPopover setDelegate:self];
-	[downloadOptionsPopover presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-//	[downloadOptionsPopover release];
-	
-	[glViewController.visualizationActionSheet dismissWithClickedButtonIndex:2 animated:YES];
-	glViewController.visualizationActionSheet = nil;
-
-	[moleculeTablePopover dismissPopoverAnimated:YES];
-	moleculeTablePopover = nil;
-	
-}
 
 #pragma mark -
 #pragma mark Passthroughs for managing molecules

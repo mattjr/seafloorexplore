@@ -26,7 +26,6 @@
 // Bar response methods
 //- (void)showMolecules:(id)sender;
 - (void)showVisualizationModes:(id)sender;
-- (void)showDownloadOptions:(id)sender;
 
 // External monitor support
 - (void)handleConnectionOfMonitor:(NSNotification *)note;

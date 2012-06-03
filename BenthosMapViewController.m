@@ -10,7 +10,6 @@
 
 #import "BenthosMapViewController.h"
 #import "BenthosRootViewController.h"
-#import "BenthosDataSourceViewController.h"
 #import "BenthosFolderViewController.h"
 #import "Benthos.h"
 #import "BenthosAppDelegate.h"
@@ -218,7 +217,8 @@
 - (IBAction)displayMoleculeDownloadView;
 {
     BenthosFolderViewController *folderViewController = [[BenthosFolderViewController alloc] initWithStyle:UITableViewStylePlain];
-    
+    folderViewController.molecules = molecules;
+
     [self.navigationController pushViewController:folderViewController animated:YES];
     [folderViewController release];
 

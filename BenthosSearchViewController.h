@@ -30,7 +30,8 @@
     BOOL insideIUPACName, insideSynonym;
     NSMutableData *modelData;
     NSURL *listURL;
-    
+    NSMutableArray *molecules;
+
     NSOperationQueue *parseQueue;
 
     
@@ -38,6 +39,7 @@
 @property (nonatomic, retain) NSMutableData *modelData;    // the data returned from the NSURLConnection
 @property (nonatomic, retain) NSOperationQueue *parseQueue;     // the queue that manages our NSOperation for parsing earthquake data
 @property (nonatomic, retain) NSURL *listURL;     
+@property(readwrite,retain) NSMutableArray *molecules;
 
 
 // Performing search

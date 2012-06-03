@@ -807,7 +807,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 	[self downloadCompleted];	
 }
 + (BOOL) processArchive:(NSString*)filename error:(NSError**)error {
-    NSLog(@"Processing Archive %@\n",filename);
+    //NSLog(@"Processing Archive %@\n",filename);
     // Add the new protein to the list by gunzipping the data and pulling out the title
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];

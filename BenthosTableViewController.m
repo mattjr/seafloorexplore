@@ -10,7 +10,6 @@
 
 #import "BenthosTableViewController.h"
 #import "BenthosRootViewController.h"
-#import "BenthosDataSourceViewController.h"
 #import "BenthosFolderViewController.h"
 #import "Benthos.h"
 #import "BenthosAppDelegate.h"
@@ -102,16 +101,12 @@
 - (IBAction)displayMoleculeDownloadView;
 {
     BenthosFolderViewController *folderViewController = [[BenthosFolderViewController alloc] initWithStyle:UITableViewStylePlain];
-    
+    folderViewController.molecules = molecules;
+
     [self.navigationController pushViewController:folderViewController animated:YES];
     [folderViewController release];
 
-/*    
-	BenthosDataSourceViewController *dataSourceViewController = [[BenthosDataSourceViewController alloc] initWithStyle:UITableViewStylePlain];
-	
-	[self.navigationController pushViewController:dataSourceViewController animated:YES];
-	[dataSourceViewController release];
- */
+
 }
 -(void) showError:(NSError *)error{
     if(error != nil)

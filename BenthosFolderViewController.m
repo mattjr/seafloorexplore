@@ -14,12 +14,11 @@
 #import "BenthosSearchViewController.h"
 #import "VCTitleCase.h"
 #import "BenthosAppDelegate.h"
-#import "BenthosWebDetailViewController.h" 
 #import "FolderParseOperation.h"
 #define MAX_SEARCH_RESULT_CODES 10
 
 @implementation BenthosFolderViewController
-@synthesize folderData,parseQueue;
+@synthesize folderData,parseQueue,molecules;
 #pragma mark -
 #pragma mark Initialization and teardown
 
@@ -28,7 +27,7 @@
 	if ((self = [super initWithStyle:style])) 
 	{
 		// Initialize the search bar and title
-		
+		molecules =nil;
 		self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
         urlbasepath = [[NSString alloc] initWithString:@"http://www-personal.acfr.usyd.edu.au/mattjr/benthos/"];
@@ -89,7 +88,7 @@
 - (void)dealloc 
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kAddFoldersNotif object:nil];
-
+    [molecules release];
 
 	[searchResultRetrievalConnection release];
 	[downloadaleFolderList release];
@@ -344,6 +343,7 @@
 		Folder *selFolder = [downloadaleFolderList objectAtIndex:[indexPath row]];
 
         BenthosSearchViewController *searchViewController = [[BenthosSearchViewController alloc] initWithStyle:UITableViewStylePlain andURL:[selFolder weblink] andTitle:[selFolder title]];
+        searchViewController.molecules=molecules;
         [self.navigationController pushViewController:searchViewController animated:YES];
         [searchViewController release];	
 

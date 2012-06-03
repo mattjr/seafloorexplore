@@ -331,6 +331,7 @@
 	molecules = [newValue retain];
 	tableViewController.molecules = molecules;
     mapViewController.molecules = molecules;
+    helpviewController.molecules = molecules;
 
 	NSInteger indexOfInitialMolecule = [[NSUserDefaults standardUserDefaults] integerForKey:@"indexOfLastSelectedMolecule"];
 	if (indexOfInitialMolecule >= [molecules count])

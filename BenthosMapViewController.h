@@ -16,7 +16,6 @@
 #import "BenthosFolderViewController.h"
 #import "BenthosDownloadController.h"
 #import "BenthosDetailViewController.h"
-#import "BenthosCustomDownloadViewController.h"
 #import "MapAnnotation.h"
 
 @interface BenthosMapViewController : UIViewController <MKMapViewDelegate>

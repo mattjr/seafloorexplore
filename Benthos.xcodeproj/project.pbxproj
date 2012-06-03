@@ -77,9 +77,7 @@
 		7BF662191397B015002FEB23 /* readback.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7BF64D77139770C8002FEB23 /* readback.vert */; };
 		7BF968BD156C4596004061DE /* Default-Landscape@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BF968BC156C4596004061DE /* Default-Landscape@2x.png */; };
 		7BF968BF156C45A2004061DE /* Default-Portrait@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BF968BE156C45A2004061DE /* Default-Portrait@2x.png */; };
-		BC146A9B0EC9173000CE5E72 /* BenthosCustomDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC146A9A0EC9173000CE5E72 /* BenthosCustomDownloadViewController.m */; };
 		BC15728A136CC58A00EEFBEC /* BenthosLibraryTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BC157289136CC58A00EEFBEC /* BenthosLibraryTableCell.m */; };
-		BC15728D136CD96800EEFBEC /* BenthosWebDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC15728C136CD96800EEFBEC /* BenthosWebDetailViewController.m */; };
 		BC1EF3830E36BD6100B09043 /* BenthosSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1EF3820E36BD6100B09043 /* BenthosSearchViewController.m */; };
 		BC2795BA1162500A006DE4C8 /* Default-Landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = BC2795B81162500A006DE4C8 /* Default-Landscape.png */; };
 		BC2795BB1162500A006DE4C8 /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = BC2795B91162500A006DE4C8 /* Default-Portrait.png */; };
@@ -108,7 +106,6 @@
 		BCC286CA0E1D8FB100978ECA /* BenthosGLViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = BCC286C70E1D8FB100978ECA /* BenthosGLViewController.mm */; };
 		BCC286D20E1D905400978ECA /* BenthosDownloadController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC286CD0E1D905400978ECA /* BenthosDownloadController.m */; };
 		BCC286D40E1D905400978ECA /* BenthosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC286D00E1D905400978ECA /* BenthosTableViewController.m */; };
-		BCC8FE800EC7E4CA00853857 /* BenthosDataSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC8FE7F0EC7E4CA00853857 /* BenthosDataSourceViewController.m */; };
 		BCD12CFA11308E1000737166 /* BenthosiPadRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCD12CF811308E1000737166 /* BenthosiPadRootViewController.m */; };
 		BCDC9F9D0EB37B3400ADCFA5 /* Localized.strings in Resources */ = {isa = PBXBuildFile; fileRef = BCDC9F9C0EB37B3400ADCFA5 /* Localized.strings */; };
 		BCDFF5AE1154819A005C984C /* 57-download.png in Resources */ = {isa = PBXBuildFile; fileRef = BCDFF5AD1154819A005C984C /* 57-download.png */; };
@@ -222,12 +219,8 @@
 		7BF968BC156C4596004061DE /* Default-Landscape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x.png"; sourceTree = "<group>"; };
 		7BF968BE156C45A2004061DE /* Default-Portrait@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x.png"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = English; path = English.lproj/Info.plist; sourceTree = "<group>"; };
-		BC146A990EC9173000CE5E72 /* BenthosCustomDownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosCustomDownloadViewController.h; sourceTree = "<group>"; };
-		BC146A9A0EC9173000CE5E72 /* BenthosCustomDownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosCustomDownloadViewController.m; sourceTree = "<group>"; };
 		BC157288136CC58A00EEFBEC /* BenthosLibraryTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosLibraryTableCell.h; sourceTree = "<group>"; };
 		BC157289136CC58A00EEFBEC /* BenthosLibraryTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosLibraryTableCell.m; sourceTree = "<group>"; };
-		BC15728B136CD96800EEFBEC /* BenthosWebDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosWebDetailViewController.h; sourceTree = "<group>"; };
-		BC15728C136CD96800EEFBEC /* BenthosWebDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosWebDetailViewController.m; sourceTree = "<group>"; };
 		BC1EF3810E36BD6100B09043 /* BenthosSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosSearchViewController.h; sourceTree = "<group>"; };
 		BC1EF3820E36BD6100B09043 /* BenthosSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosSearchViewController.m; sourceTree = "<group>"; };
 		BC2795B81162500A006DE4C8 /* Default-Landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape.png"; sourceTree = "<group>"; };
@@ -276,8 +269,6 @@
 		BCC286CF0E1D905400978ECA /* BenthosTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosTableViewController.h; sourceTree = SOURCE_ROOT; };
 		BCC286D00E1D905400978ECA /* BenthosTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosTableViewController.m; sourceTree = SOURCE_ROOT; };
 		BCC286D50E1D909600978ECA /* Benthos_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Benthos_Prefix.pch; sourceTree = SOURCE_ROOT; };
-		BCC8FE7E0EC7E4CA00853857 /* BenthosDataSourceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosDataSourceViewController.h; sourceTree = "<group>"; };
-		BCC8FE7F0EC7E4CA00853857 /* BenthosDataSourceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosDataSourceViewController.m; sourceTree = "<group>"; };
 		BCD12CF711308E1000737166 /* BenthosiPadRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosiPadRootViewController.h; sourceTree = "<group>"; };
 		BCD12CF811308E1000737166 /* BenthosiPadRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosiPadRootViewController.m; sourceTree = "<group>"; };
 		BCDC9F870EB3760300ADCFA5 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = French; path = French.lproj/Info.plist; sourceTree = "<group>"; };
@@ -589,12 +580,6 @@
 				7B48CBB21522C188008FA151 /* Model.m */,
 				BCC286CC0E1D905400978ECA /* BenthosDownloadController.h */,
 				BCC286CD0E1D905400978ECA /* BenthosDownloadController.m */,
-				BCC8FE7E0EC7E4CA00853857 /* BenthosDataSourceViewController.h */,
-				BCC8FE7F0EC7E4CA00853857 /* BenthosDataSourceViewController.m */,
-				BC146A990EC9173000CE5E72 /* BenthosCustomDownloadViewController.h */,
-				BC146A9A0EC9173000CE5E72 /* BenthosCustomDownloadViewController.m */,
-				BC15728B136CD96800EEFBEC /* BenthosWebDetailViewController.h */,
-				BC15728C136CD96800EEFBEC /* BenthosWebDetailViewController.m */,
 			);
 			name = "Searching and Retrieving Models";
 			sourceTree = "<group>";
@@ -717,15 +702,12 @@
 				BC61CC320E2463180074BE04 /* BenthosTextViewController.m in Sources */,
 				BC1EF3830E36BD6100B09043 /* BenthosSearchViewController.m in Sources */,
 				BC4FB6670E4E875900B316CD /* VCTitleCase.m in Sources */,
-				BCC8FE800EC7E4CA00853857 /* BenthosDataSourceViewController.m in Sources */,
-				BC146A9B0EC9173000CE5E72 /* BenthosCustomDownloadViewController.m in Sources */,
 				BCD12CFA11308E1000737166 /* BenthosiPadRootViewController.m in Sources */,
 				BCB3A67A13553F9D000A286B /* BenthosOpenGLESRenderer.m in Sources */,
 				BCB3A67D13553FC1000A286B /* BenthosOpenGLES11Renderer.m in Sources */,
 				BCB3A68013553FD2000A286B /* BenthosOpenGLES20Renderer.m in Sources */,
 				BC57EBFB1358DE9000FA1060 /* GLProgram.m in Sources */,
 				BC15728A136CC58A00EEFBEC /* BenthosLibraryTableCell.m in Sources */,
-				BC15728D136CD96800EEFBEC /* BenthosWebDetailViewController.m in Sources */,
 				7BF64D5E139770AD002FEB23 /* Camera.mm in Sources */,
 				7BF64D5F139770AD002FEB23 /* Mesh.mm in Sources */,
 				7BF64D60139770AD002FEB23 /* Scene.mm in Sources */,

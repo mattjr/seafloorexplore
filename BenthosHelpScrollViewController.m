@@ -10,9 +10,10 @@
 #import "BenthosAppDelegate.h"
 #import "BenthosFolderViewController.h"
 @implementation BenthosHelpScrollViewController
-@synthesize scrollView;
+@synthesize scrollView,molecules;
 -(id) init
 {
+    molecules=nil;
     if ([BenthosAppDelegate isRunningOniPad])
     {
         //			self.MapView.backgroundColor = [UIColor blackColor];
@@ -142,7 +143,8 @@
 - (IBAction)displayMoleculeDownloadView;
 {
     BenthosFolderViewController *folderViewController = [[BenthosFolderViewController alloc] initWithStyle:UITableViewStylePlain];
-    
+    folderViewController.molecules = molecules;
+
     [self.navigationController pushViewController:folderViewController animated:YES];
     [folderViewController release];
     
@@ -155,6 +157,7 @@
 }
 
 - (void)dealloc {
+    [molecules release];
     [scrollView release];
     [super dealloc];
 }

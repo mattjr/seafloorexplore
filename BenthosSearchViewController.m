@@ -13,12 +13,11 @@
 #import "BenthosTableViewController.h"
 #import "VCTitleCase.h"
 #import "BenthosAppDelegate.h"
-#import "BenthosWebDetailViewController.h"
 #import "ModelParseOperation.h"
 #define MAX_SEARCH_RESULT_CODES 10
 #import "Model.h"
 @implementation BenthosSearchViewController
-@synthesize modelData,parseQueue,listURL;
+@synthesize modelData,parseQueue,listURL,molecules;
 #pragma mark -
 #pragma mark Initialization and teardown
 
@@ -27,7 +26,7 @@
 	if ((self = [super initWithStyle:style])) 
 	{
 		// Initialize the search bar and title
-		
+		molecules=nil;
 		self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
         listURL = [url retain];;//[[NSString alloc] initWithString:@"http://www-personal.acfr.usyd.edu.au/mattjr/benthos/"];
@@ -105,6 +104,8 @@
 
 - (void)dealloc 
 {
+    [molecules release];
+    
     [downloadController release];
     downloadController = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kAddModelsNotif object:nil];
@@ -412,25 +413,55 @@
 //                cell.textLabel.font = [UIFont boldSystemFontOfSize:12.0];
 //				cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:12.0];
             }
-            if ((isDownloading) && ([indexPath row] != indexOfDownloadingMolecule))
+            
+            BOOL alreadyInList=NO;
+            NSString *filename = [[[[downloadaleModelList objectAtIndex:[indexPath row]] filename] lastPathComponent] stringByDeletingPathExtension];	
+            if(molecules != nil){
+                for(Benthos *model in molecules){
+                    if([[[model filename] stringByDeletingPathExtension] isEqualToString:filename]){
+                        alreadyInList=YES;
+                        break;
+                    }
+                }
+            }
+            
+            
+            if (((isDownloading) && ([indexPath row] != indexOfDownloadingMolecule)) || alreadyInList)
             {
-//                cell.contentView.backgroundColor = [UIColor colorWithWhite:0.6 alpha:1.0];
-                cell.textLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1.0];
-                cell.detailTextLabel.textColor = [UIColor colorWithWhite:0.2 alpha:1.0];
+                if((isDownloading) && ([indexPath row] != indexOfDownloadingMolecule)){
+                    cell.textLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1.0];
+                    cell.detailTextLabel.textColor = [UIColor colorWithWhite:0.2 alpha:1.0];                 
+                }else{
+                    cell.textLabel.textColor = [UIColor colorWithWhite:0.7 alpha:1.0];
+                    cell.detailTextLabel.textColor = [UIColor colorWithWhite:0.7 alpha:1.0];
+                    
+                    
+                }
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
+               // cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.userInteractionEnabled =NO;
 
             }else {
+                cell.userInteractionEnabled =YES;
+
                 cell.textLabel.textColor = [UIColor blackColor];
+                cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+
 
             }
+        
             int exponent,width;
             NSString *totalStr= unitStringFromBytes((double)[[downloadaleModelList objectAtIndex:[indexPath row]] fileSize],0,&exponent,&width);
-
-			cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)", [[downloadaleModelList objectAtIndex:[indexPath row]] title], totalStr];
+            
+            if(!alreadyInList)
+                cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)", [[downloadaleModelList objectAtIndex:[indexPath row]] title], totalStr];
+            else{ 
+                cell.textLabel.text = [NSString stringWithFormat:@"%@ (Downloaded)", [[downloadaleModelList objectAtIndex:[indexPath row]] title]];
+            }
+            
             cell.detailTextLabel.text = [[downloadaleModelList objectAtIndex:[indexPath row]] desc];
             
 			
-            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 		}
 	}
 
