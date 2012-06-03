@@ -8,7 +8,7 @@
 
 #import "BenthosHelpScrollViewController.h"
 #import "BenthosAppDelegate.h"
-#import "BenthosSearchViewController.h"
+#import "BenthosFolderViewController.h"
 @implementation BenthosHelpScrollViewController
 @synthesize scrollView;
 -(id) init
@@ -141,10 +141,10 @@
 
 - (IBAction)displayMoleculeDownloadView;
 {
-    BenthosSearchViewController *searchViewController = [[BenthosSearchViewController alloc] initWithStyle:UITableViewStylePlain];
+    BenthosFolderViewController *folderViewController = [[BenthosFolderViewController alloc] initWithStyle:UITableViewStylePlain];
     
-    [self.navigationController pushViewController:searchViewController animated:YES];
-    [searchViewController release];
+    [self.navigationController pushViewController:folderViewController animated:YES];
+    [folderViewController release];
     
     /*    
      BenthosDataSourceViewController *dataSourceViewController = [[BenthosDataSourceViewController alloc] initWithStyle:UIMapViewStylePlain];

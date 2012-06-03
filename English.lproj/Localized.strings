@@ -10,6 +10,7 @@
 "Error: failed to close database with message '%s'." = "Error: failed to close database with message '%s'.";
 "Failed to open database with message '%s'." = "Failed to open database with message '%s'.";
 "Initializing database..." = "Initializing database...";
+"Downloading..." = "Downloading...";
 "Downloading molecule..." = "Downloading molecule...";
 "Error in downloaded file" = "Error in downloaded file";
 "The model file is either corrupted or not of a supported format" = "The model file is either corrupted or not of a supported format";
@@ -58,6 +59,7 @@
 "Results" = "Results";
 "Models" = "Models";
 "Models" = "Models";
+"Campaigns" = "Campaigns";
 "3D Model" = "3D Model";
 "Download new Models" = "Download new Models";
 "Map" = "Map";

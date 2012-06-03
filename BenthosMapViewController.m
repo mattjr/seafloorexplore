@@ -11,7 +11,7 @@
 #import "BenthosMapViewController.h"
 #import "BenthosRootViewController.h"
 #import "BenthosDataSourceViewController.h"
-#import "BenthosSearchViewController.h"
+#import "BenthosFolderViewController.h"
 #import "Benthos.h"
 #import "BenthosAppDelegate.h"
 #import "BenthosLibraryTableCell.h"
@@ -217,10 +217,10 @@
 
 - (IBAction)displayMoleculeDownloadView;
 {
-    BenthosSearchViewController *searchViewController = [[BenthosSearchViewController alloc] initWithStyle:UITableViewStylePlain];
+    BenthosFolderViewController *folderViewController = [[BenthosFolderViewController alloc] initWithStyle:UITableViewStylePlain];
     
-    [self.navigationController pushViewController:searchViewController animated:YES];
-    [searchViewController release];
+    [self.navigationController pushViewController:folderViewController animated:YES];
+    [folderViewController release];
 
 }
 #pragma mark -

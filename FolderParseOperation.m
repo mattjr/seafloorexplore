@@ -1,6 +1,6 @@
 /*
-     File: ParseOperation.m
- Abstract: The NSOperation class used to perform the XML parsing of Model data.
+     File: FolderParseOperation.m
+ Abstract: The NSOperation class used to perform the XML parsing of Folder data.
   Version: 2.3
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
@@ -45,36 +45,36 @@
  
  */
 
-#import "ParseOperation.h"
-#import "Model.h"
+#import "FolderParseOperation.h"
+#import "Folder.h"
 
-// NSNotification name for sending Model data back to the app delegate
-NSString *kAddModelsNotif = @"AddModelsNotif";
+// NSNotification name for sending Folder data back to the app delegate
+NSString *kAddFoldersNotif = @"AddFoldersNotif";
 
-// NSNotification userInfo key for obtaining the Model data
-NSString *kModelResultsKey = @"ModelResultsKey";
+// NSNotification userInfo key for obtaining the Folder data
+NSString *kFolderResultsKey = @"FolderResultsKey";
 
 // NSNotification name for reporting errors
-NSString *kModelsErrorNotif = @"ModelErrorNotif";
+NSString *kFoldersErrorNotif = @"FolderErrorNotif";
 
 // NSNotification userInfo key for obtaining the error message
-NSString *kModelsMsgErrorKey = @"ModelsMsgErrorKey";
+NSString *kFoldersMsgErrorKey = @"FoldersMsgErrorKey";
 
 
-@interface ParseOperation () <NSXMLParserDelegate>
-    @property (nonatomic, retain) Model *currentModelObject;
+@interface FolderParseOperation () <NSXMLParserDelegate>
+    @property (nonatomic, retain) Folder *currentFolderObject;
     @property (nonatomic, retain) NSMutableArray *currentParseBatch;
     @property (nonatomic, retain) NSMutableString *currentParsedCharacterData;
 @end
 
-@implementation ParseOperation
+@implementation FolderParseOperation
 
-@synthesize ModelData, currentModelObject, currentParsedCharacterData, currentParseBatch;
+@synthesize FolderData, currentFolderObject, currentParsedCharacterData, currentParseBatch;
 
 - (id)initWithData:(NSMutableData *)parseData
 {
     if (self = [super init]) {    
-        ModelData = [parseData copy];
+        FolderData = [parseData copy];
         
         dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
@@ -84,13 +84,13 @@ NSString *kModelsMsgErrorKey = @"ModelsMsgErrorKey";
     return self;
 }
 
-- (void)addModelsToList:(NSArray *)Models {
+- (void)addFoldersToList:(NSArray *)Folders {
     assert([NSThread isMainThread]);
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:kAddModelsNotif
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAddFoldersNotif
                                                         object:self
-                                                      userInfo:[NSDictionary dictionaryWithObject:Models
-                                                                                           forKey:kModelResultsKey]]; 
+                                                      userInfo:[NSDictionary dictionaryWithObject:Folders
+                                                                                        forKey:kFolderResultsKey]]; 
 }
      
 // the main function for this NSOperation, to start the parsing
@@ -102,22 +102,22 @@ NSString *kModelsMsgErrorKey = @"ModelsMsgErrorKey";
     // not desirable because it gives less control over the network, particularly in responding to
     // connection errors.
     //
-    NSXMLParser *parser = [[NSXMLParser alloc] initWithData:self.ModelData];
+    NSXMLParser *parser = [[NSXMLParser alloc] initWithData:self.FolderData];
     [parser setDelegate:self];
     [parser parse];
     
-    // depending on the total number of Models parsed, the last batch might not have been a
+    // depending on the total number of Folders parsed, the last batch might not have been a
     // "full" batch, and thus not been part of the regular batch transfer. So, we check the count of
     // the array and, if necessary, send it to the main thread.
     //
     if ([self.currentParseBatch count] > 0) {
-        [self performSelectorOnMainThread:@selector(addModelsToList:)
+        [self performSelectorOnMainThread:@selector(addFoldersToList:)
                                withObject:self.currentParseBatch
                             waitUntilDone:NO];
     }
     
     self.currentParseBatch = nil;
-    self.currentModelObject = nil;
+    self.currentFolderObject = nil;
     self.currentParsedCharacterData = nil;
     
     [parser release];
@@ -133,11 +133,11 @@ NSString *kModelsMsgErrorKey = @"ModelsMsgErrorKey";
     // not desirable because it gives less control over the network, particularly in responding to
     // connection errors.
     //
-    NSXMLParser *parser = [[NSXMLParser alloc] initWithData:self.ModelData];
+    NSXMLParser *parser = [[NSXMLParser alloc] initWithData:self.FolderData];
     [parser setDelegate:self];
     [parser parse];
     
-    // depending on the total number of Models parsed, the last batch might not have been a
+    // depending on the total number of Folders parsed, the last batch might not have been a
     // "full" batch, and thus not been part of the regular batch transfer. So, we check the count of
     // the array and, if necessary, send it to the main thread.
     //
@@ -146,7 +146,7 @@ NSString *kModelsMsgErrorKey = @"ModelsMsgErrorKey";
     }
     
     self.currentParseBatch = nil;
-    self.currentModelObject = nil;
+    self.currentFolderObject = nil;
     self.currentParsedCharacterData = nil;
     
     [parser release];
@@ -154,9 +154,9 @@ NSString *kModelsMsgErrorKey = @"ModelsMsgErrorKey";
 
 
 - (void)dealloc {
-    [ModelData release];
+    [FolderData release];
     
-    [currentModelObject release];
+    [currentFolderObject release];
     [currentParsedCharacterData release];
     [currentParseBatch release];
     [dateFormatter release];
@@ -168,19 +168,19 @@ NSString *kModelsMsgErrorKey = @"ModelsMsgErrorKey";
 #pragma mark -
 #pragma mark Parser constants
 
-// Limit the number of parsed Models to 50
-// (a given day may have more than 50 Models around the world, so we only take the first 50)
+// Limit the number of parsed Folders to 50
+// (a given day may have more than 50 Folders around the world, so we only take the first 50)
 //
-static const const NSUInteger kMaximumNumberOfModelsToParse = 50;
+static const const NSUInteger kMaximumNumberOfFoldersToParse = 50;
 
-// When an Model object has been fully constructed, it must be passed to the main thread and
+// When an Folder object has been fully constructed, it must be passed to the main thread and
 // the table view in RootViewController must be reloaded to display it. It is not efficient to do
-// this for every Model object - the overhead in communicating between the threads and reloading
+// this for every Folder object - the overhead in communicating between the threads and reloading
 // the table exceed the benefit to the user. Instead, we pass the objects in batches, sized by the
 // constant below. In your application, the optimal batch size will vary 
 // depending on the amount of data in the object and other factors, as appropriate.
 //
-static NSUInteger const kSizeOfModelBatch = 10;
+static NSUInteger const kSizeOfFolderBatch = 10;
 
 // Reduce potential parsing errors by using string constants declared in a single place.
 static NSString * const kItemElementName = @"item";
@@ -201,10 +201,10 @@ static NSString * const kSizeElementName = @"size";
                                         namespaceURI:(NSString *)namespaceURI
                                        qualifiedName:(NSString *)qName
                                           attributes:(NSDictionary *)attributeDict {
-    // If the number of parsed Models is greater than
-    // kMaximumNumberOfModelsToParse, abort the parse.
+    // If the number of parsed Folders is greater than
+    // kMaximumNumberOfFoldersToParse, abort the parse.
     //
-    if (parsedModelsCounter >= kMaximumNumberOfModelsToParse) {
+    if (parsedFoldersCounter >= kMaximumNumberOfFoldersToParse) {
         // Use the flag didAbortParsing to distinguish between this deliberate stop
         // and other parser errors.
         //
@@ -212,9 +212,9 @@ static NSString * const kSizeElementName = @"size";
         [parser abortParsing];
     }
     if ([elementName isEqualToString:kItemElementName]) {
-        Model *model = [[Model alloc] init];
-        self.currentModelObject = model;
-        [model release];
+        Folder *folder = [[Folder alloc] init];
+        self.currentFolderObject = folder;
+        [folder release];
     } else if ([elementName isEqualToString:kTitleElementName] ||
                [elementName isEqualToString:kLinkElementName] ||
                [elementName isEqualToString:kUpdatedElementName] ||
@@ -236,10 +236,10 @@ static NSString * const kSizeElementName = @"size";
                                       namespaceURI:(NSString *)namespaceURI
                                      qualifiedName:(NSString *)qName {     
     if ([elementName isEqualToString:kItemElementName]) {
-        [self.currentParseBatch addObject:self.currentModelObject];
-        parsedModelsCounter++;
-        if ([self.currentParseBatch count] >= kMaximumNumberOfModelsToParse) {
-            [self performSelectorOnMainThread:@selector(addModelsToList:)
+        [self.currentParseBatch addObject:self.currentFolderObject];
+        parsedFoldersCounter++;
+        if ([self.currentParseBatch count] >= kMaximumNumberOfFoldersToParse) {
+            [self performSelectorOnMainThread:@selector(addFoldersToList:)
                                    withObject:self.currentParseBatch
                                 waitUntilDone:NO];
             self.currentParseBatch = [NSMutableArray array];
@@ -253,7 +253,7 @@ static NSString * const kSizeElementName = @"size";
         NSString *title = nil;
         // Scan the remainer of the string.
         if ([scanner scanUpToCharactersFromSet:[NSCharacterSet illegalCharacterSet] intoString:&title]) {
-            self.currentModelObject.title = [title retain];
+            self.currentFolderObject.title = [title retain];
         }
     }else if ([elementName isEqualToString:kLinkElementName]) {
         // The title element contains the magnitude and location in the following format:
@@ -264,7 +264,7 @@ static NSString * const kSizeElementName = @"size";
         NSString *weblink = nil;
         // Scan the remainer of the string.
         if ([scanner scanUpToCharactersFromSet:[NSCharacterSet illegalCharacterSet] intoString:&weblink]) {
-            self.currentModelObject.weblink = [NSURL URLWithString:weblink] ;
+            self.currentFolderObject.weblink = [NSURL URLWithString:weblink] ;
 
         }   
     }else if ([elementName isEqualToString:kDescElementName]) {
@@ -276,7 +276,7 @@ static NSString * const kSizeElementName = @"size";
         NSString *desc = nil;
         // Scan the remainer of the string.
         if ([scanner scanUpToCharactersFromSet:[NSCharacterSet illegalCharacterSet] intoString:&desc]) {
-            self.currentModelObject.desc = [desc retain];
+            self.currentFolderObject.desc = [desc retain];
         }
     }else if ([elementName isEqualToString:kFolderElementName]) {
         // The title element contains the magnitude and location in the following format:
@@ -287,7 +287,7 @@ static NSString * const kSizeElementName = @"size";
         NSString *folder = nil;
         // Scan the remainer of the string.
         if ([scanner scanUpToCharactersFromSet:[NSCharacterSet illegalCharacterSet] intoString:&folder]) {
-            self.currentModelObject.folder = [folder retain];
+            self.currentFolderObject.folder = [folder retain];
         }
     }else if ([elementName isEqualToString:kFilenameElementName]) {
         // The title element contains the magnitude and location in the following format:
@@ -298,11 +298,11 @@ static NSString * const kSizeElementName = @"size";
         NSString *filename = nil;
         // Scan the remainer of the string.
         if ([scanner scanUpToCharactersFromSet:[NSCharacterSet illegalCharacterSet] intoString:&filename]) {
-            self.currentModelObject.filename = [filename retain];
+            self.currentFolderObject.filename = [filename retain];
         }
     }else if ([elementName isEqualToString:kUpdatedElementName]) {
-        if (self.currentModelObject != nil) {
-            self.currentModelObject.date =
+        if (self.currentFolderObject != nil) {
+            self.currentFolderObject.date =
             [dateFormatter dateFromString:self.currentParsedCharacterData];
         }
         else {
@@ -313,21 +313,21 @@ static NSString * const kSizeElementName = @"size";
              NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
         double latitude;
         if ([scanner scanDouble:&latitude]) {
-                self.currentModelObject.latitude = latitude;
+                self.currentFolderObject.latitude = latitude;
             }
         
     } else if ([elementName isEqualToString:kSizeElementName]) {
         NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
         long long int fileSize;
         if ([scanner scanLongLong:&fileSize]) {
-            self.currentModelObject.fileSize = fileSize;
+            self.currentFolderObject.fileSize = fileSize;
         }
         
     }else if ([elementName isEqualToString:kGeoRSSLonElementName]) {
        NSScanner *scanner = [NSScanner scannerWithString:self.currentParsedCharacterData];
     double longitude;
     if ([scanner scanDouble:&longitude]) {
-        self.currentModelObject.longitude = longitude;
+        self.currentFolderObject.longitude = longitude;
     }
     
     }
@@ -348,24 +348,24 @@ static NSString * const kSizeElementName = @"size";
     }
 }
 
-// an error occurred while parsing the Model data,
+// an error occurred while parsing the Folder data,
 // post the error as an NSNotification to our app delegate.
 // 
-- (void)handleModelsError:(NSError *)parseError {
-    [[NSNotificationCenter defaultCenter] postNotificationName:kModelsErrorNotif
+- (void)handleFoldersError:(NSError *)parseError {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFoldersErrorNotif
                                                     object:self
                                                   userInfo:[NSDictionary dictionaryWithObject:parseError
-                                                                                       forKey:kModelsMsgErrorKey]];
+                                                                                       forKey:kFoldersMsgErrorKey]];
 }
 
-// an error occurred while parsing the Model data,
+// an error occurred while parsing the Folder data,
 // pass the error to the main thread for handling.
-// (note: don't report an error if we aborted the parse due to a max limit of Models)
+// (note: don't report an error if we aborted the parse due to a max limit of Folders)
 //
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
     if ([parseError code] != NSXMLParserDelegateAbortedParseError && !didAbortParsing)
     {
-        [self performSelectorOnMainThread:@selector(handleModelsError:)
+        [self performSelectorOnMainThread:@selector(handleFoldersError:)
                                withObject:parseError
                             waitUntilDone:NO];
     }

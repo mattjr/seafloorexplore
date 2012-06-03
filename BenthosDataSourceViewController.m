@@ -9,7 +9,7 @@
 //  This handles the table view listing the different data sources Molecule supports
 
 #import "BenthosDataSourceViewController.h"
-#import "BenthosSearchViewController.h"
+#import "BenthosFolderViewController.h"
 #import "BenthosAppDelegate.h"
 
 @implementation BenthosDataSourceViewController
@@ -90,10 +90,10 @@
 		case 0:
 		{			
 			// Go to the PDB search view
-			BenthosSearchViewController *searchViewController = [[BenthosSearchViewController alloc] initWithStyle:UITableViewStylePlain];
+			BenthosFolderViewController *folderViewController = [[BenthosFolderViewController alloc] initWithStyle:UITableViewStylePlain];
 			
-			[self.navigationController pushViewController:searchViewController animated:YES];
-			[searchViewController release];
+			[self.navigationController pushViewController:folderViewController animated:YES];
+			[folderViewController release];
 		}; break;
 		case 1: 
 		{

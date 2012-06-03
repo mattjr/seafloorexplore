@@ -26,9 +26,10 @@
     BenthosDownloadController *downloadController;
     NSMutableString *currentXMLElementString;
     NSXMLParser *searchResultsParser;
-    NSString *urlbasepath;
+   //NSString *urlbasepath;
     BOOL insideIUPACName, insideSynonym;
     NSMutableData *modelData;
+    NSURL *listURL;
     
     NSOperationQueue *parseQueue;
 
@@ -36,6 +37,7 @@
 }
 @property (nonatomic, retain) NSMutableData *modelData;    // the data returned from the NSURLConnection
 @property (nonatomic, retain) NSOperationQueue *parseQueue;     // the queue that manages our NSOperation for parsing earthquake data
+@property (nonatomic, retain) NSURL *listURL;     
 
 
 // Performing search
@@ -44,5 +46,5 @@
 - (void)addModels:(NSNotification *)notif ;
 - (void)moleculeFailedDownloading:(NSNotification *)note;
 - (void)addModelsToList:(NSArray *)models ;
-
+- (id)initWithStyle:(UITableViewStyle)style andURL:(NSURL*)url andTitle:(NSString*)title;
 @end

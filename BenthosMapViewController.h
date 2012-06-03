@@ -13,7 +13,7 @@
 #import <MapKit/MapKit.h>
 
 #import "BenthosRootViewController.h"
-#import "BenthosSearchViewController.h"
+#import "BenthosFolderViewController.h"
 #import "BenthosDownloadController.h"
 #import "BenthosDetailViewController.h"
 #import "BenthosCustomDownloadViewController.h"

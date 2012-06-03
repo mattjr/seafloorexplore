@@ -9,20 +9,20 @@
 //  This handles the keyword searching functionality of the Protein Data Bank
 
 #import "BenthosSearchViewController.h"
-#import "BenthosDownloadController.h"
+#import "BenthosDownloadController.h" 
 #import "BenthosTableViewController.h"
 #import "VCTitleCase.h"
 #import "BenthosAppDelegate.h"
 #import "BenthosWebDetailViewController.h"
-#import "ParseOperation.h"
+#import "ModelParseOperation.h"
 #define MAX_SEARCH_RESULT_CODES 10
-
+#import "Model.h"
 @implementation BenthosSearchViewController
-@synthesize modelData,parseQueue;
+@synthesize modelData,parseQueue,listURL;
 #pragma mark -
 #pragma mark Initialization and teardown
 
-- (id)initWithStyle:(UITableViewStyle)style 
+- (id)initWithStyle:(UITableViewStyle)style andURL:(NSURL*)url andTitle:(NSString*)title
 {
 	if ((self = [super initWithStyle:style])) 
 	{
@@ -30,7 +30,7 @@
 		
 		self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
-        urlbasepath = [[NSString alloc] initWithString:@"http://www-personal.acfr.usyd.edu.au/mattjr/benthos/"];
+        listURL = [url retain];;//[[NSString alloc] initWithString:@"http://www-personal.acfr.usyd.edu.au/mattjr/benthos/"];
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moleculeFailedDownloading:) name:@"MoleculeFailedDownloading" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -54,8 +54,8 @@
 //        }
 		[keywordSearchBar becomeFirstResponder];
 				*/
-		self.navigationItem.title = NSLocalizedStringFromTable(@"Download new Models", @"Localized", nil);
-		self.navigationItem.rightBarButtonItem = nil;
+		self.navigationItem.title = [title retain];
+        self.navigationItem.rightBarButtonItem = nil;
 
 		//self.tableView.tableHeaderView = keywordSearchBar;
 		
@@ -108,6 +108,7 @@
     [downloadController release];
     downloadController = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kAddModelsNotif object:nil];
+	[listURL release];
 
     [currentXMLElementString release];
     currentXMLElementString = nil;
@@ -130,16 +131,15 @@
 	downloadaleModelList = nil;
 	
 	    
-	NSString *searchURL = nil;
-    searchURL = [[NSString alloc] initWithString:[urlbasepath stringByAppendingString:@"models.xml" ]] ;
-    
+	/*NSString *searchURL = nil;
+    searchURL = [[NSString alloc] initWithString:[urlbasepath stringByAppendingString:listFile ]] ;
+    */
 	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 	
-	NSURLRequest *fileRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:searchURL]
+	NSURLRequest *fileRequest=[NSURLRequest requestWithURL:[self listURL]
 													cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData//NSURLRequestUseProtocolCachePolicy
 												timeoutInterval:60.0];
-	[searchURL release];
 	searchResultRetrievalConnection = [[NSURLConnection alloc] initWithRequest:fileRequest delegate:self];
 	
 	downloadedFileContents = [[NSMutableData data] retain];
@@ -180,7 +180,7 @@
 }
 - (void)processHTMLResults;
 {
-    ParseOperation *parseOperation = [[ParseOperation alloc] initWithData:downloadedFileContents];
+    ModelParseOperation *parseOperation = [[ModelParseOperation alloc] initWithData:downloadedFileContents];
     [self.parseQueue addOperation:parseOperation];
     [parseOperation release];   // once added to the NSOperationQueue it's retained, we don't need it anymore
     

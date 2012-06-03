@@ -16,7 +16,7 @@
 #import "Benthos.h"
 #import "NSData+Gzip.h"
 #import "NSFileManager+Tar.h"
-#import "ParseOperation.h"
+#import "ModelParseOperation.h"
 #import "VCTitleCase.h"
 #import "BenthosOpenGLESRenderer.h"
 
@@ -357,7 +357,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 
     NSString *preloadedXMLPath = [documentsDirectory stringByAppendingPathComponent:pname];
     NSMutableData* xmlData = [NSMutableData dataWithContentsOfFile:preloadedXMLPath];
-    ParseOperation *parseOperation = [[ParseOperation alloc] initWithData:xmlData];
+    ModelParseOperation *parseOperation = [[ModelParseOperation alloc] initWithData:xmlData];
     NSMutableArray *filesystemModels = [NSMutableArray array];
     [parseOperation staticparse:filesystemModels];
     [parseOperation release];   // once added to the NSOperationQueue it's retained, we don't need it anymore

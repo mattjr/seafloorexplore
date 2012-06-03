@@ -1,6 +1,6 @@
 /*
-     File: ParseOperation.h
- Abstract: The NSOperation class used to perform the XML parsing of Model data.
+     File: FolderParseOperation.h
+ Abstract: The NSOperation class used to perform the XML parsing of Folder data.
   Version: 2.3
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
@@ -45,31 +45,31 @@
  
  */
 
-extern NSString *kAddModelsNotif;
-extern NSString *kModelResultsKey;
+extern NSString *kAddFoldersNotif;
+extern NSString *kFolderResultsKey;
 
-extern NSString *kModelsErrorNotif;
-extern NSString *kModelsMsgErrorKey;
+extern NSString *kFoldersErrorNotif;
+extern NSString *kFoldersMsgErrorKey;
 
-@class Model;
+@class Folder;
 
-@interface ParseOperation : NSOperation {
-    NSData *ModelData;
+@interface FolderParseOperation : NSOperation {
+    NSData *FolderData;
 
 @private
     NSDateFormatter *dateFormatter;
     
     // these variables are used during parsing
-    Model *currentModelObject;
+    Folder *currentFolderObject;
     NSMutableArray *currentParseBatch;
     NSMutableString *currentParsedCharacterData;
     
     BOOL accumulatingParsedCharacterData;
     BOOL didAbortParsing;
-    NSUInteger parsedModelsCounter;
+    NSUInteger parsedFoldersCounter;
 }
 - (void) staticparse:(NSMutableArray *) list ;
 - (id)initWithData:(NSMutableData *)parseData;
-@property (copy, readonly) NSData *ModelData;
+@property (copy, readonly) NSData *FolderData;
 
 @end
