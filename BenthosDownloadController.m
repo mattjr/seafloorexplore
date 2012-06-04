@@ -84,8 +84,11 @@ enum {
     progressView.hidden = NO;
 
     if (note != nil){
-        float progress=[[note object] floatValue];
-       // NSLog(@"Progress %f\n",progress);
+        NSDictionary *userDict = [note userInfo];
+
+        float progress=[[userDict objectForKey:@"progress"] floatValue];
+       // NSString *filename =[userDict objectForKey:@"filename"];
+       // NSLog(@"Progress %f %@\n",progress,filename);
         progressView.progress = progress;
         NSNumberFormatter* formatter = [[[NSNumberFormatter alloc] init] autorelease];
         [formatter setMaximumFractionDigits:2];
@@ -96,7 +99,7 @@ enum {
         [formatter setPaddingCharacter:@" "];
         
         downloadStatusText.text = [NSString stringWithFormat:@"Decompressing... %@%%", [formatter stringFromNumber: [NSNumber numberWithDouble: progress*100.0]]];
-
+       // NSLog(@"Progress %@ : %.2f%%\n",filename,progress*100.0);
 
 
     }
