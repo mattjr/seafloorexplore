@@ -97,7 +97,7 @@
 	[rotationButton addTarget:glViewController action:@selector(switchVisType:) forControlEvents:UIControlEventTouchUpInside];
 	rotationButton.frame = CGRectMake(0.0f, 460.0f - 70.0f, 70.0f, 70.0f);
 	rotationButton.clipsToBounds = NO;
-    rotationButton.selected=YES;
+    rotationButton.selected=NO;
 	[glViewController.view addSubview:rotationButton];
 }
 
@@ -313,6 +313,7 @@
 @synthesize database;
 @synthesize molecules;
 @synthesize segmentsController, segmentedControl;
+@synthesize decompressingfiles;
 
 - (void)setDatabase:(sqlite3 *)newValue
 {
@@ -347,6 +348,20 @@
 
 }
 
+- (void)setDecompressingfiles:(NSMutableArray *)newValue;
+{
+	if (decompressingfiles == newValue)
+	{
+		return;
+	}
+	
+	[decompressingfiles release];
+	decompressingfiles = [newValue retain];
+	tableViewController.decompressingfiles = decompressingfiles;
+       
+}
+
+
 - (UINavigationController *)tableNavigationController;
 {
 
@@ -376,7 +391,7 @@
 		tableViewController.database = database;
 		tableViewController.molecules = molecules;
         mapViewController.molecules = molecules;
-
+        tableViewController.decompressingfiles= decompressingfiles;
 		[tableNavigationController pushViewController:tableViewController animated:NO];
 		tableViewController.delegate = self;
 		
