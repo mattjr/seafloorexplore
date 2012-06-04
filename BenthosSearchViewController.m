@@ -335,6 +335,19 @@
             cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadInProgress"] autorelease];
 
         }
+        /*  float widthMargin=0.05;
+         float heightMargin=0.75;
+         CGRect textframe = CGRectMake(CGRectGetMinX(cell.contentView.bounds)+widthMargin*CGRectGetWidth(cell.contentView.bounds),
+         0.0f,
+         CGRectGetWidth(cell.contentView.bounds)-((3*widthMargin)* CGRectGetWidth(cell.contentView.bounds)),
+         CGRectGetHeight(cell.contentView.bounds)*heightMargin);
+         CGRect progframe = CGRectMake(CGRectGetMinX(cell.contentView.bounds)+widthMargin*CGRectGetWidth(cell.contentView.bounds), 
+         CGRectGetHeight(cell.contentView.bounds)*heightMargin, CGRectGetWidth(cell.contentView.bounds)-((3*widthMargin)* CGRectGetWidth(cell.contentView.bounds)),
+         CGRectGetHeight(cell.contentView.bounds)*1.0-heightMargin);
+         
+         //float buttonwidth=20.0f;
+         CGRect buttonframe = CGRectMake(CGRectGetWidth(cell.contentView.bounds) -(CGRectGetWidth(cell.contentView.bounds)*2*widthMargin), CGRectGetHeight(cell.contentView.bounds)*0.33, CGRectGetHeight(cell.contentView.bounds)*0.33, CGRectGetHeight(cell.contentView.bounds)*0.33);*/
+        
         CGRect progframe = CGRectMake(CGRectGetMinX(cell.contentView.bounds) + 20.0f, 45.0f, CGRectGetWidth(cell.contentView.bounds)-80.0f, 20.0f);
         CGRect textframe = CGRectMake(CGRectGetMinX(cell.contentView.bounds) + 25.0f, 0.0f, CGRectGetWidth(cell.contentView.bounds)-40.0f, 40.0f);
         float buttonwidth=20.0f;
