@@ -204,7 +204,7 @@
             [formatter setFormatWidth:3];
             [formatter setPaddingCharacter:@" "];
             
-          //  curProg.text = [NSString stringWithFormat:@"Extract %@: %@%%", basename,[formatter stringFromNumber: [NSNumber numberWithDouble: progress*100.0]]];
+            curProg.textLabel.text = [NSString stringWithFormat:@"Extract %@: %@%%", basename,[formatter stringFromNumber: [NSNumber numberWithDouble: progress*100.0]]];
             // NSLog(@"Progress %@ : %.2f%%\n",filename,progress*100.0);
            // [self.tableView reloadData];
 
@@ -552,12 +552,16 @@
             CGRect buttonframe = CGRectMake(CGRectGetWidth(cell.contentView.bounds) -buttonwidth-10.0, 8.0f, buttonwidth, buttonwidth);
             
             [file progressView].frame=progframe;
-            cell.textLabel.frame=textframe;
-            cell.textLabel.text=[file text];
+            [file textLabel].frame=textframe;
+            [file textLabel].backgroundColor = cell.textLabel.backgroundColor;
+            [file textLabel].textColor = cell.textLabel.textColor;
+
             [file spinningIndicator].frame=buttonframe;
             [file spinningIndicator].hidden=YES;
             
             [cell.contentView addSubview:[file progressView]];
+            [cell.contentView addSubview:[file textLabel]];
+
             //[cell.contentView addSubview:[file downloadStatusText]];
             [cell.contentView addSubview:[file spinningIndicator]];
             

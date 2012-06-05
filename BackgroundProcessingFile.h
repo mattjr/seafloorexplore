@@ -11,12 +11,12 @@
 @interface BackgroundProcessingFile : NSObject{
     NSString *filenameWithoutExtension;
     UIProgressView *progressView;
-    NSString *text;
+    UILabel *textLabel;
     UIActivityIndicatorView *spinningIndicator;
 }
 @property (nonatomic, retain) NSString *filenameWithoutExtension;
 @property(nonatomic, retain)UIProgressView * progressView;
-@property(nonatomic, retain)NSString *text;
+@property(nonatomic, retain)UILabel *textLabel;
 @property(nonatomic, retain)UIActivityIndicatorView *spinningIndicator;
 
 - (id)initWithName:(NSString *)name;

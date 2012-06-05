@@ -46,6 +46,8 @@
 		7BDA0B06156B0461002C0F31 /* finger-drag-down.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BDA0B02156B0461002C0F31 /* finger-drag-down.png */; };
 		7BDA0B07156B0461002C0F31 /* spread.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BDA0B03156B0461002C0F31 /* spread.png */; };
 		7BE04E091564B4BF004E59F9 /* libFlurryAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BE04E081564B4BF004E59F9 /* libFlurryAnalytics.a */; };
+		7BE0EEAC157DF4A200C23BA8 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = BC2795BC11625065006DE4C8 /* Default.png */; };
+		7BE0EEAD157DF4A800C23BA8 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC67B8BE137C4B7A0075A361 /* Default@2x.png */; };
 		7BE606491398E0480072A1C5 /* pass.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7BE606281398DEA80072A1C5 /* pass.frag */; };
 		7BE6064A1398E0480072A1C5 /* pass.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7BE606291398DEA80072A1C5 /* pass.vert */; };
 		7BF64D5E139770AD002FEB23 /* Camera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D57139770AD002FEB23 /* Camera.mm */; };
@@ -85,18 +87,13 @@
 		BC1EF3830E36BD6100B09043 /* BenthosSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1EF3820E36BD6100B09043 /* BenthosSearchViewController.m */; };
 		BC2795BA1162500A006DE4C8 /* Default-Landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = BC2795B81162500A006DE4C8 /* Default-Landscape.png */; };
 		BC2795BB1162500A006DE4C8 /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = BC2795B91162500A006DE4C8 /* Default-Portrait.png */; };
-		BC2795BD11625065006DE4C8 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = BC2795BC11625065006DE4C8 /* Default.png */; };
 		BC37E7CA0E14779E00E11F4F /* Benthos.m in Sources */ = {isa = PBXBuildFile; fileRef = BC37E7C90E14779E00E11F4F /* Benthos.m */; };
 		BC4E97C20E69F736006CD291 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BC4E97C10E69F736006CD291 /* libsqlite3.dylib */; };
 		BC4FB6670E4E875900B316CD /* VCTitleCase.m in Sources */ = {isa = PBXBuildFile; fileRef = BC4FB6660E4E875900B316CD /* VCTitleCase.m */; };
 		BC4FB75D0E4F6BB000B316CD /* greenButton.png in Resources */ = {isa = PBXBuildFile; fileRef = BC4FB75C0E4F6BAF00B316CD /* greenButton.png */; };
 		BC4FB7BA0E4F80DB00B316CD /* redButton.png in Resources */ = {isa = PBXBuildFile; fileRef = BC4FB7B90E4F80DB00B316CD /* redButton.png */; };
-		BC540D101145E04600045DE1 /* BenthosIcon72.png in Resources */ = {isa = PBXBuildFile; fileRef = BC540D0F1145E04500045DE1 /* BenthosIcon72.png */; };
 		BC57EBFB1358DE9000FA1060 /* GLProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = BC57EBFA1358DE9000FA1060 /* GLProgram.m */; };
 		BC5BB8BD0E204DC20001DFD0 /* BenthosDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5BB8BC0E204DC20001DFD0 /* BenthosDetailViewController.m */; };
-		BC5BBCD40E219AB90001DFD0 /* BenthosIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */; };
-		BC67B8BF137C4B7A0075A361 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC67B8BE137C4B7A0075A361 /* Default@2x.png */; };
-		BC6A9FCC11CAA8CB00E62D55 /* BenthosIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC6A9FCB11CAA8CB00E62D55 /* BenthosIcon@2x.png */; };
 		BC835184117545C600B478D5 /* 69-display.png in Resources */ = {isa = PBXBuildFile; fileRef = BC835183117545C600B478D5 /* 69-display.png */; };
 		BCB3A67A13553F9D000A286B /* BenthosOpenGLESRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB3A67913553F9D000A286B /* BenthosOpenGLESRenderer.m */; };
 		BCB3A67D13553FC1000A286B /* BenthosOpenGLES11Renderer.m in Sources */ = {isa = PBXBuildFile; fileRef = BCB3A67C13553FC1000A286B /* BenthosOpenGLES11Renderer.m */; };
@@ -242,14 +239,11 @@
 		BC4FB6660E4E875900B316CD /* VCTitleCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VCTitleCase.m; sourceTree = "<group>"; };
 		BC4FB75C0E4F6BAF00B316CD /* greenButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greenButton.png; sourceTree = "<group>"; };
 		BC4FB7B90E4F80DB00B316CD /* redButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redButton.png; sourceTree = "<group>"; };
-		BC540D0F1145E04500045DE1 /* BenthosIcon72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BenthosIcon72.png; sourceTree = "<group>"; };
 		BC57EBF91358DE9000FA1060 /* GLProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLProgram.h; sourceTree = "<group>"; };
 		BC57EBFA1358DE9000FA1060 /* GLProgram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLProgram.m; sourceTree = "<group>"; };
 		BC5BB8BB0E204DC20001DFD0 /* BenthosDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosDetailViewController.h; sourceTree = "<group>"; };
 		BC5BB8BC0E204DC20001DFD0 /* BenthosDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosDetailViewController.m; sourceTree = "<group>"; };
-		BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BenthosIcon.png; sourceTree = "<group>"; };
 		BC67B8BE137C4B7A0075A361 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		BC6A9FCB11CAA8CB00E62D55 /* BenthosIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BenthosIcon@2x.png"; sourceTree = "<group>"; };
 		BC835183117545C600B478D5 /* 69-display.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "69-display.png"; sourceTree = "<group>"; };
 		BCB3A67813553F9D000A286B /* BenthosOpenGLESRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosOpenGLESRenderer.h; sourceTree = "<group>"; };
 		BCB3A67913553F9D000A286B /* BenthosOpenGLESRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosOpenGLESRenderer.m; sourceTree = "<group>"; };
@@ -351,7 +345,6 @@
 			isa = PBXGroup;
 			children = (
 				7B056F05150AC85A00621766 /* chamber3.tar */,
-				BC6A9FCB11CAA8CB00E62D55 /* BenthosIcon@2x.png */,
 				7B4772D8151D8E5200727C6C /* redx.png */,
 				BC835183117545C600B478D5 /* 69-display.png */,
 				7BC4E86A152C041000BF1B8F /* Paint@2x.png */,
@@ -365,8 +358,6 @@
 				7BC4E872152C0CE100BF1B8F /* PaintIpad.png */,
 				7BC4E873152C0CE100BF1B8F /* PaintIpad@2x.png */,
 				BC4FB75C0E4F6BAF00B316CD /* greenButton.png */,
-				BC5BBCD30E219AB90001DFD0 /* BenthosIcon.png */,
-				BC540D0F1145E04500045DE1 /* BenthosIcon72.png */,
 				BCDC9F860EB375FB00ADCFA5 /* Info.plist */,
 				7BF64D63139770C8002FEB23 /* combined.frag */,
 				7BF64D64139770C8002FEB23 /* combined.vert */,
@@ -651,18 +642,13 @@
 				7BF662191397B015002FEB23 /* readback.vert in Resources */,
 				7BE606491398E0480072A1C5 /* pass.frag in Resources */,
 				7BE6064A1398E0480072A1C5 /* pass.vert in Resources */,
-				BC5BBCD40E219AB90001DFD0 /* BenthosIcon.png in Resources */,
 				BC4FB75D0E4F6BB000B316CD /* greenButton.png in Resources */,
 				BC4FB7BA0E4F80DB00B316CD /* redButton.png in Resources */,
 				BCDC9F9D0EB37B3400ADCFA5 /* Localized.strings in Resources */,
-				BC540D101145E04600045DE1 /* BenthosIcon72.png in Resources */,
 				BCDFF5AE1154819A005C984C /* 57-download.png in Resources */,
 				BC2795BA1162500A006DE4C8 /* Default-Landscape.png in Resources */,
 				BC2795BB1162500A006DE4C8 /* Default-Portrait.png in Resources */,
-				BC2795BD11625065006DE4C8 /* Default.png in Resources */,
 				BC835184117545C600B478D5 /* 69-display.png in Resources */,
-				BC6A9FCC11CAA8CB00E62D55 /* BenthosIcon@2x.png in Resources */,
-				BC67B8BF137C4B7A0075A361 /* Default@2x.png in Resources */,
 				7BF64D80139770C8002FEB23 /* combined_frag.cg in Resources */,
 				7BF64D81139770C8002FEB23 /* combined_vert.cg in Resources */,
 				7BF64D90139770C8002FEB23 /* readback_frag.cg in Resources */,
@@ -687,6 +673,8 @@
 				7BF968BD156C4596004061DE /* Default-Landscape@2x.png in Resources */,
 				7BF968BF156C45A2004061DE /* Default-Portrait@2x.png in Resources */,
 				7BB1DE05157C2005008699B1 /* Placeholder.png in Resources */,
+				7BE0EEAC157DF4A200C23BA8 /* Default.png in Resources */,
+				7BE0EEAD157DF4A800C23BA8 /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

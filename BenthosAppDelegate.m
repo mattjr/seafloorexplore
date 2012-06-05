@@ -397,7 +397,6 @@ void uncaughtExceptionHandler(NSException *exception) {
     }
     [decompressingfiles removeObjectsInArray:discardedItems];
 
-
     if (rootViewController.tableViewController != nil)
     {
         [rootViewController.tableViewController.tableView reloadData];				
@@ -496,7 +495,12 @@ void uncaughtExceptionHandler(NSException *exception) {
                         }
                     }
                     [decompressingfiles removeObjectsInArray:discardedItems];
-                    NSLog(@"Count %d removed %d \n",[decompressingfiles count],[discardedItems count]);
+
+                    dispatch_async(dispatch_get_main_queue(), ^{  if (rootViewController.tableViewController != nil)
+                    {
+                        [rootViewController.tableViewController.tableView reloadData];				
+                    }	
+                   });
 
                 }
             }];
