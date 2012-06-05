@@ -49,7 +49,7 @@
 
 #pragma mark - Private Methods
 @interface NSFileManager(Tar_Private)
--(BOOL)createFilesAndDirectoriesAtPath:(NSString *)path withTarObject:(id)object size:(int)size error:(NSError **)error;
+-(BOOL)createFilesAndDirectoriesAtPath:(NSString *)path withTarObject:(id)object name:(NSString*)name size:(int)size error:(NSError **)error;
 
 + (char)typeForObject:(id)object atOffset:(int)offset;
 + (NSString*)nameForObject:(id)object atOffset:(int)offset;
@@ -68,7 +68,7 @@
 
 - (BOOL)createFilesAndDirectoriesAtPath:(NSString*)path withTarData:(NSData*)tarData error:(NSError**)error
 {
-    return [self createFilesAndDirectoriesAtPath:path withTarObject:tarData size:[tarData length] error:error];
+    return [self createFilesAndDirectoriesAtPath:path withTarObject:tarData name:@"NSData" size:[tarData length] error:error];
 }
 
 -(BOOL)createFilesAndDirectoriesAtPath:(NSString *)path withTarPath:(NSString *)tarPath error:(NSError **)error
@@ -79,7 +79,7 @@
         int size = [[attributes objectForKey:NSFileSize] intValue];
         
         NSFileHandle* fileHandle = [NSFileHandle fileHandleForReadingAtPath:tarPath];
-        BOOL result = [self createFilesAndDirectoriesAtPath:path withTarObject:fileHandle size:size error:error];
+        BOOL result = [self createFilesAndDirectoriesAtPath:path withTarObject:fileHandle name:tarPath size:size error:error];
         [fileHandle closeFile];
         return result;
     }
@@ -89,7 +89,7 @@
     return NO;
 }
 
--(BOOL)createFilesAndDirectoriesAtPath:(NSString *)path withTarObject:(id)object size:(int)size error:(NSError **)error
+-(BOOL)createFilesAndDirectoriesAtPath:(NSString *)path withTarObject:(id)object name:(NSString*)name size:(int)size error:(NSError **)error
 {
     [self createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil]; //Create path on filesystem
     long statusChunk=size/100;
@@ -98,12 +98,18 @@
     while (location<size) {       
         long blockCount = 1; // 1 block for the header
         if(location % statusChunk == 0 || floor(location/statusChunk) > lastValidStatus){
+           // [NSThread sleepForTimeInterval:0.5];
+
             lastValidStatus=floor(location/statusChunk);
-           // NSLog(@"Status %ld %f\n",lastValidStatus, location/(float)size);
-            NSNumber * progress = [[[NSNumber alloc] initWithFloat:(location/(float)size) ] autorelease];
+            //NSLog(@"Status %ld %f\n",lastValidStatus, location/(float)size);
+            NSString *filename = [[name lastPathComponent] copy] ;
+            NSDictionary*  userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                       [NSNumber numberWithFloat:(location/(float)size)], @"progress", filename, @"filename",nil];
+            [filename release];
+     
             [[NSNotificationCenter defaultCenter]
              postNotificationName:@"UntarProgress"
-             object:progress];
+             object:self userInfo:userInfo];
         }
         switch ([NSFileManager typeForObject:object atOffset:location]) {
             case '0': // It's a File
@@ -173,10 +179,13 @@
         
         location+=blockCount*TAR_BLOCK_SIZE;
     }
-    NSNumber * progress = [[[NSNumber alloc] initWithFloat:(1.0) ] autorelease];
+    NSString *filename = [name lastPathComponent];
+    NSDictionary*  userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                               [NSNumber numberWithFloat:1.0], @"progress", filename, @"filename",nil];
+
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"UntarProgress"
-     object:progress];
+     object:self userInfo:userInfo];
 
     return YES;
 }

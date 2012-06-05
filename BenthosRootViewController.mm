@@ -358,7 +358,9 @@
 	[decompressingfiles release];
 	decompressingfiles = [newValue retain];
 	tableViewController.decompressingfiles = decompressingfiles;
-       
+    mapViewController.decompressingfiles = decompressingfiles;
+	helpviewController.decompressingfiles = decompressingfiles;
+
 }
 
 
@@ -392,6 +394,10 @@
 		tableViewController.molecules = molecules;
         mapViewController.molecules = molecules;
         tableViewController.decompressingfiles= decompressingfiles;
+        helpviewController.decompressingfiles= decompressingfiles;
+
+        tableViewController.decompressingfiles= decompressingfiles;
+
 		[tableNavigationController pushViewController:tableViewController animated:NO];
 		tableViewController.delegate = self;
 		

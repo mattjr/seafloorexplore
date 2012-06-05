@@ -23,13 +23,16 @@
 	BenthosRootViewController *delegate;
 	NSInteger selectedIndex;
 	UIColor *tableTextColor;
-    
+    NSMutableArray *decompressingfiles;
+
 	sqlite3 *database;
 }
 
 @property(readwrite,assign) BenthosRootViewController *delegate;
 @property(readwrite,assign) sqlite3 *database;
 @property(readwrite,retain) NSMutableArray *molecules;
+@property(readwrite,retain) NSMutableArray *decompressingfiles;
+
 @property(readwrite) NSInteger selectedIndex;
 
 // Initialization and teardown
@@ -42,4 +45,6 @@
 - (IBAction)switchBackToGLView;
 - (void)moleculeDidFinishDownloading:(NSNotification *)note;
 -(void)addMolAndShow:(Benthos *)newMolecule;
+-(void)updateUntarProgress:(NSNotification *)note;
+-(void)addNewBGTask:(NSNotification *)note;
 @end

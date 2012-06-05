@@ -17,7 +17,7 @@
 #import "NSFileManager+Tar.h"
 
 @implementation BenthosMapViewController
-@synthesize mapView,    firstView,selectedMolecule;
+@synthesize mapView,    firstView,selectedMolecule,decompressingfiles;
 ;
 #pragma mark -
 #pragma mark Initialization and breakdown
@@ -218,6 +218,7 @@
 {
     BenthosFolderViewController *folderViewController = [[BenthosFolderViewController alloc] initWithStyle:UITableViewStylePlain];
     folderViewController.molecules = molecules;
+    folderViewController.decompressingfiles = decompressingfiles;
 
     [self.navigationController pushViewController:folderViewController animated:YES];
     [folderViewController release];

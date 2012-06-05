@@ -30,6 +30,7 @@
     UISegmentedControl     * segmentedControl;
 	Benthos *bufferedMolecule, *previousMolecule;
 	NSMutableArray *molecules;
+    NSMutableArray *decompressingfiles;
 	
 	BOOL toggleViewDisabled;
 	sqlite3 *database;
@@ -42,6 +43,7 @@
 @property (nonatomic, readonly) BenthosTableViewController *tableViewController;
 @property (nonatomic, assign) sqlite3 *database;
 @property (nonatomic, retain) NSMutableArray *molecules;
+@property (nonatomic, retain) NSMutableArray *decompressingfiles;
 
 
 @property (nonatomic, retain) SegmentsController     * segmentsController;

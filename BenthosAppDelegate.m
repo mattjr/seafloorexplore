@@ -19,7 +19,8 @@
 #import "ModelParseOperation.h"
 #import "VCTitleCase.h"
 #import "BenthosOpenGLESRenderer.h"
-
+#import "JSGCDDispatcher.h"
+#import "BackgroundProcessingFile.h"
 #define MOLECULES_DATABASE_VERSION 1
 
 @implementation BenthosAppDelegate
@@ -44,7 +45,10 @@ void uncaughtExceptionHandler(NSException *exception) {
 	}
 	window.backgroundColor = [UIColor blackColor];
 	molecules = [[NSMutableArray alloc] init];
-	rootViewController.molecules = molecules;
+    decompressingfiles = [[NSMutableArray alloc] init];
+
+
+
 	if ([BenthosAppDelegate isRunningOniPad])
 	{
 		UISplitViewController *newSplitViewController = [[UISplitViewController alloc] init];
@@ -62,7 +66,8 @@ void uncaughtExceptionHandler(NSException *exception) {
 		rootViewController = [[BenthosRootViewController alloc] init];
 		[window addSubview:rootViewController.view];
 	}
-	
+    rootViewController.molecules = molecules;
+    rootViewController.decompressingfiles = decompressingfiles;
 	
     [window makeKeyAndVisible];
 	[window layoutSubviews];	
@@ -351,6 +356,8 @@ void uncaughtExceptionHandler(NSException *exception) {
 }
 -(void)addNewModel:(NSString*)pname
 {
+    //NSLog(@"Model Adding Complete! %@\n",pname);
+
     // Now, check all the files on disk to see if any are missing from the database
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -369,11 +376,8 @@ void uncaughtExceptionHandler(NSException *exception) {
         Benthos *newMolecule = [[Benthos alloc] initWithModel:[filesystemModels objectAtIndex:0] database:database];
         if (newMolecule != nil)
         {
+            
             [molecules addObject:newMolecule];
-            if (rootViewController.tableViewController != nil)
-            {
-                [rootViewController.tableViewController.tableView reloadData];				
-            }					
         }
         [newMolecule release];		
     }
@@ -381,6 +385,24 @@ void uncaughtExceptionHandler(NSException *exception) {
         NSLog(@"Failed to Parse'%@'.", preloadedXMLPath);
         
     }
+    NSString *basename = [[[pname stringByDeletingLastPathComponent] lastPathComponent] stringByDeletingPathExtension];	
+    NSMutableArray *discardedItems = [NSMutableArray array];
+
+    
+    for(BackgroundProcessingFile *file in decompressingfiles){
+        if([basename isEqualToString:[file filenameWithoutExtension]]){
+            [discardedItems addObject:file];
+        }
+        
+    }
+    [decompressingfiles removeObjectsInArray:discardedItems];
+
+
+    if (rootViewController.tableViewController != nil)
+    {
+        [rootViewController.tableViewController.tableView reloadData];				
+    }					
+
 
 }
 
@@ -431,17 +453,54 @@ void uncaughtExceptionHandler(NSException *exception) {
             [direnum skipDescendents];
         NSString *basename = [[[pname stringByDeletingLastPathComponent] lastPathComponent] stringByDeletingPathExtension];	
         
-        if([[[pname pathExtension] lowercaseString] isEqualToString:@"tar"]){
-            
-            dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if([[[pname pathExtension] lowercaseString] isEqualToString:@"tar"] && ([moleculeFilenameLookupTable valueForKey:[pname stringByDeletingPathExtension]] == nil)){
+            //NSLog(@"Adding %@\n",[pname stringByDeletingPathExtension]);
+            NSString *installedTexPath = [documentsDirectory stringByAppendingPathComponent:[pname stringByDeletingPathExtension]];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:installedTexPath]){
+                NSLog(@"Warning removing incomplete folder %@\n",[pname stringByDeletingPathExtension]);
+                [BenthosAppDelegate removeModelFolder:[pname stringByDeletingPathExtension]];
+            }
+
+            NSString *filename = [pname stringByDeletingPathExtension]  ;
+          /*  NSDictionary*  userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        filename, @"filename",nil];
+            NSLog(@"Tar found %@\n",filename);
+
+            [filename release];
+
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"NewBGTask"
+             object:self userInfo:userInfo];
+*/
+            BackgroundProcessingFile *curProg = [[BackgroundProcessingFile alloc] initWithName:filename];
+            [decompressingfiles addObject:curProg];
+            [curProg release];
+
+            [[JSGCDDispatcher sharedDispatcher] dispatchOnSerialQueue:^{
+              
+                //  dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 NSString *fname = [pname stringByDeletingPathExtension];	
-                
+               // NSLog(@"Startup Unarchive Block Executed On %s %@", dispatch_queue_get_label(dispatch_get_current_queue()),fname);
+
                 NSError *error=nil;
                 if([BenthosAppDelegate processArchive:pname error:&error]){
+                    //NSLog(@"Startup Decompress Finished %@\n",pname);
                     NSString *pname=[NSString stringWithFormat:@"%@/m.xml", fname];
                     dispatch_async(dispatch_get_main_queue(), ^{ [self addNewModel: pname]; });
+                }else{
+                    NSLog(@"Fail to extract %@ %@ %@\n",[error localizedDescription],pname,installedTexPath);
+                    NSMutableArray *discardedItems = [NSMutableArray array];
+                    for(BackgroundProcessingFile *file in decompressingfiles){
+                        if([filename isEqualToString:[file filenameWithoutExtension]]){
+                            [discardedItems addObject:file];
+                        }
+                    }
+                    [decompressingfiles removeObjectsInArray:discardedItems];
+                    NSLog(@"Count %d removed %d \n",[decompressingfiles count],[discardedItems count]);
+
                 }
-            });
+            }];
+            
         }else if(([basename length] > 0) && ([moleculeFilenameLookupTable valueForKey:basename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"xml"])){
             [self addNewModel: pname]; 
             
@@ -844,7 +903,7 @@ void uncaughtExceptionHandler(NSException *exception) {
             [details setValue:@"ERROR Folder already exists \n" forKey:NSLocalizedDescriptionKey];
             // populate the error object with the details
             if (error != nil) 
-                *error = [[[NSError alloc ] initWithDomain:@"benthos" code:200 userInfo:details] autorelease];
+                *error = [[[NSError alloc ] initWithDomain:@"benthos" code:kErrFolderExists userInfo:details] autorelease];
             [[NSFileManager defaultManager] removeItemAtPath:installedTexPath error:error];
            
             return NO;
@@ -855,11 +914,46 @@ void uncaughtExceptionHandler(NSException *exception) {
         [details setValue:@"Not Tar File\n" forKey:NSLocalizedDescriptionKey];
         // populate the error object with the details
         if(error != nil)
-            *error = [[[NSError alloc ] initWithDomain:@"benthos" code:200 userInfo:details] autorelease];
+            *error = [[[NSError alloc ] initWithDomain:@"benthos" code:kErrTarCorrupt userInfo:details] autorelease];
         return NO;
     }
     
     return YES;
+}
++(BOOL) removeModelFolder:(NSString*)basename
+{
+    
+    if([basename length] == 0){
+        NSLog(@"Attempting to remove Empty model\n");
+        return NO;
+    }
+    // Remove the file from disk
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    CFUUIDRef newUniqueId = CFUUIDCreate(kCFAllocatorDefault);
+    CFStringRef newUniqueIdString = CFUUIDCreateString(kCFAllocatorDefault, newUniqueId);
+    NSString *tmpPath = [NSTemporaryDirectory() stringByAppendingPathComponent:(__bridge NSString *)newUniqueIdString];
+    CFRelease(newUniqueId);
+    CFRelease(newUniqueIdString);
+    NSError *error = nil;
+   // NSLog(@"Removing %@\n",basename);
+    BOOL ret=[[NSFileManager defaultManager] moveItemAtPath:[documentsDirectory stringByAppendingPathComponent:basename ]  toPath:tmpPath error:&error];
+    if(ret){
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+            NSError *error2 = nil;
+            
+            NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
+            if(![fileManager removeItemAtPath:tmpPath error:&error2])
+            {
+                NSLog(@"Failed to remove item: %@\n",[error2 localizedDescription]);		
+            }
+        });
+    }else{
+        NSLog(@"Failed to move item: %@\n",[error localizedDescription]);		
+
+    }
+    return ret;
+    
 }
 
 @end

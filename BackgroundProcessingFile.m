@@ -10,7 +10,7 @@
 
 @implementation BackgroundProcessingFile
 @synthesize filenameWithoutExtension;
-@synthesize progressView,downloadStatusText,spinningIndicator;
+@synthesize progressView,text,spinningIndicator;
 
 - (id)initWithName:(NSString *)name{
 	
@@ -18,11 +18,7 @@
 	{
         filenameWithoutExtension=[name retain];
         progressView = [[[UIProgressView alloc] initWithFrame:CGRectZero] retain];
-        downloadStatusText = [[[UILabel alloc] initWithFrame:CGRectZero] retain ];
-        downloadStatusText.textColor = [UIColor blackColor];
-        downloadStatusText.font = [UIFont boldSystemFontOfSize:16.0];
-        downloadStatusText.textAlignment = UITextAlignmentLeft;
-        downloadStatusText.text=[NSString stringWithFormat:@"Waiting to extract %@",filenameWithoutExtension];
+        text=[[[NSString alloc] initWithFormat:@"Waiting to extract %@",filenameWithoutExtension] retain];
         
         spinningIndicator = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray] retain];
     }
@@ -31,6 +27,7 @@
 }
 -(void) dealloc
 {
+    progressView.hidden=YES;
     [filenameWithoutExtension release];
     filenameWithoutExtension=nil;
     [progressView release];
@@ -38,8 +35,8 @@
     [spinningIndicator release];
     self.spinningIndicator = nil;
 
-    [downloadStatusText release];
-    self.downloadStatusText = nil;
+    [text release];
+    self.text = nil;
     
 	[super dealloc];
 }

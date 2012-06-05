@@ -15,13 +15,15 @@
 #import "BenthosAppDelegate.h"
 #import "ModelParseOperation.h"
 #import "Model.h"
+#import "BackgroundProcessingFile.h"
+#define kFolderListURL @"http://marine.acfr.usyd.edu.au/campaigns.xml"
 
 @interface BenthosSearchViewController ()
 - (void)startIconDownload:(Model *)model forIndexPath:(NSIndexPath *)indexPath;
 @end
 
 @implementation BenthosSearchViewController
-@synthesize modelData,parseQueue,listURL,molecules,imageDownloadsInProgress,downloadaleModelList;
+@synthesize decompressingfiles,modelData,parseQueue,listURL,molecules,imageDownloadsInProgress,downloadaleModelList;
 #pragma mark -
 #pragma mark Initialization and teardown
 
@@ -34,7 +36,7 @@
 		molecules=nil;
 		self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
-        listURL = [url retain];;//[[NSString alloc] initWithString:@"http://www-personal.acfr.usyd.edu.au/mattjr/benthos/"];
+        listURL = [url retain];
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moleculeFailedDownloading:) name:@"MoleculeFailedDownloading" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -438,6 +440,17 @@
                         }
                     }
                 }
+                for(BackgroundProcessingFile *file in decompressingfiles){
+                    if([filename isEqualToString:[file filenameWithoutExtension]]){
+                        if(alreadyInList){
+                            NSLog(@"Should not allready be in list and in models\n");
+                        }
+                        alreadyInList=YES;
+
+                    }
+                    
+                }
+
                 
                 
                 if (((isDownloading) && ([indexPath row] != indexOfDownloadingMolecule)) || alreadyInList)

@@ -16,6 +16,9 @@
 #import "BenthosLibraryTableCell.h"
 #import "NSFileManager+Tar.h"
 #import "BenthosGLViewController.h"
+#import "JSGCDDispatcher.h"
+#import "BackgroundProcessingFile.h"
+
 @implementation BenthosTableViewController
 
 #pragma mark -
@@ -55,7 +58,19 @@
 			self.navigationItem.leftBarButtonItem = modelButtonItem;
 			[modelButtonItem release];
 		}
-	}
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateUntarProgress:)
+                                                     name:@"UntarProgress"
+                                                   object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(addNewBGTask:)
+                                                     name:@"NewBGTask"
+                                                   object:nil];
+	
+
+    }
 	return self;
 }
 
@@ -85,6 +100,8 @@
 }
 - (void)dealloc 
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[tableTextColor release];
 	[molecules release];
 	[super dealloc];
@@ -102,6 +119,7 @@
 {
     BenthosFolderViewController *folderViewController = [[BenthosFolderViewController alloc] initWithStyle:UITableViewStylePlain];
     folderViewController.molecules = molecules;
+    folderViewController.decompressingfiles = decompressingfiles;
 
     [self.navigationController pushViewController:folderViewController animated:YES];
     [folderViewController release];
@@ -119,8 +137,92 @@
     }
 
 }
--(void)addMolAndShow:(Benthos *)newMolecule{
+-(void)addNewBGTask:(NSNotification *)note
+{
+
+    dispatch_async(dispatch_get_main_queue(), ^{
     
+    
+    if (note != nil){
+        NSDictionary *userDict = [note userInfo];
+        
+        NSString *basename =[[userDict objectForKey:@"filename"] stringByDeletingPathExtension];
+        BackgroundProcessingFile *curProg = [[BackgroundProcessingFile alloc] initWithName:basename];
+        NSLog(@"Added Progress %@\n",basename);
+        [decompressingfiles addObject:curProg];
+        [curProg release];
+        
+        
+        NSLog(@"Setup new %@\n",basename);
+        /*curProg.progressView.progress = 0.0;
+               
+        curProg.downloadStatusText.text = [NSString stringWithFormat:@"Waiting to Decompress"];*/
+        [self.tableView reloadData];
+        
+        
+    }
+    });
+
+}
+
+-(void)updateUntarProgress:(NSNotification *)note{
+    dispatch_async(dispatch_get_main_queue(), ^{
+ 
+        
+        if (note != nil){
+            NSDictionary *userDict = [note userInfo];
+            
+            float progress=[[userDict objectForKey:@"progress"] floatValue];
+            NSString *basename =[[userDict objectForKey:@"filename"] stringByDeletingPathExtension];
+            BackgroundProcessingFile *curProg=nil;
+            for(BackgroundProcessingFile *file in decompressingfiles){
+                if([basename isEqualToString:[file filenameWithoutExtension]]){
+                    curProg=file;
+                    break;
+                }
+                    
+            }
+            if(curProg == nil)
+            {
+                //NSLog(@"No valid file for %@\n",basename);
+                return;
+            }
+           /* if(curProg == nil){
+                curProg = [[BackgroundProcessingFile alloc] initWithName:basename];
+                NSLog(@"Added Progress %@\n",basename);
+                [decompressingfiles addObject:curProg];
+                [curProg release];
+            }*/
+                
+           //  NSLog(@"Progress %f %@\n",progress,basename);
+            curProg.progressView.progress = progress;
+            NSNumberFormatter* formatter = [[[NSNumberFormatter alloc] init] autorelease];
+            [formatter setMaximumFractionDigits:2];
+            [formatter setMinimumFractionDigits:2];
+            [formatter setMinimumIntegerDigits:1];
+            
+            [formatter setFormatWidth:3];
+            [formatter setPaddingCharacter:@" "];
+            
+          //  curProg.text = [NSString stringWithFormat:@"Extract %@: %@%%", basename,[formatter stringFromNumber: [NSNumber numberWithDouble: progress*100.0]]];
+            // NSLog(@"Progress %@ : %.2f%%\n",filename,progress*100.0);
+           // [self.tableView reloadData];
+
+            
+        }
+    });
+    
+}
+
+-(void)addMolAndShow:(Benthos *)newMolecule{
+    for(BackgroundProcessingFile *file in decompressingfiles){
+        if([[newMolecule filenameWithoutExtension] isEqualToString:[file filenameWithoutExtension]]){
+            [decompressingfiles removeObject:file];
+            break;
+        }
+        
+    }
+
     [molecules addObject:newMolecule];
     [newMolecule release];
     
@@ -153,10 +255,18 @@
         [self.navigationController popToViewController:self animated:YES];
         return;
     }
+    NSString *filename = [note object];
+    //NSLog(@"filename %@\n",filename);
+    if([filename length] ==0)
+    {
+        [self.navigationController popToViewController:self animated:YES];
+        return;
+    }
 
-     dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    [[JSGCDDispatcher sharedDispatcher] dispatchOnSerialQueue:^{
+        //NSLog(@"Unarchive Block Executed On %s", dispatch_queue_get_label(dispatch_get_current_queue()));
+    //dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     
-	NSString *filename = [note object];
 	NSError *error=nil;
          Benthos *newMolecule=nil;
 	if([BenthosAppDelegate processArchive:filename error:&error]){
@@ -222,10 +332,25 @@
          }
          else
          {
+             NSLog(@"Non Startup Decompress Finished %@\n",filename);
+
              dispatch_async(dispatch_get_main_queue(), ^{ [self addMolAndShow:newMolecule]; });
          }			
 
-     });
+     }];
+    
+    if([decompressingfiles count] >0){
+        NSLog(@"filename %@\n",filename);
+        NSString *basename =[filename stringByDeletingPathExtension];
+        BackgroundProcessingFile *curProg = [[BackgroundProcessingFile alloc] initWithName:basename];
+        [decompressingfiles addObject:curProg];
+        [curProg release];
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
+        [self.navigationController popToViewController:self animated:YES];
+        
+    }
+
 }
 
 #pragma mark -
@@ -270,8 +395,8 @@
 {
 	UITableViewCell *cell;
 	NSInteger index = [indexPath row];
-	
-        if ([BenthosAppDelegate isRunningOniPad])
+	//NSLog(@"Number of inprogress %d %x\n",[decompressingfiles count],(int)decompressingfiles);
+    if ([BenthosAppDelegate isRunningOniPad])
 		index++;
 	//printf("index %d %d \n",index,selectedIndex);
 	if (index == 0)
@@ -291,20 +416,29 @@
             {
                 cell.textLabel.textColor = [UIColor blackColor];
             }
-
+            
 		}		
 		
 		cell.textLabel.text = NSLocalizedStringFromTable(@"Download new Models", @"Localized", nil);
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		cell.textLabel.textColor = [UIColor blackColor];
-	}
-	else
-	{
-		cell = [tableView dequeueReusableCellWithIdentifier:@"Models"];
-		if (cell == nil) 
-		{
-			cell = [[[BenthosLibraryTableCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Models"] autorelease];
-
+	}else{
+        
+        NSString *typeString;
+        
+        if (index <= [molecules count]){
+            typeString=NSLocalizedStringFromTable(@"InProgress", @"Localized", nil);
+        }else{
+            typeString= @"Models";
+        }
+        
+        cell = [tableView dequeueReusableCellWithIdentifier:typeString];
+        if (cell == nil) 
+        {
+            cell = [[[BenthosLibraryTableCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:typeString] autorelease];
+            
+            
+            
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
             {
                 cell.backgroundColor = [UIColor blackColor];
@@ -319,8 +453,9 @@
             {
                 cell.textLabel.textColor = [UIColor blackColor];
             }
-		}
-		
+            
+        }
+        
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
         {
             if ((index - 1) == selectedIndex)
@@ -349,7 +484,7 @@
                     CGColorRef middleColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.0f].CGColor;
                     CGColorRef bottomColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.08f].CGColor;
                     glowGradient.colors = [NSArray arrayWithObjects:(id)(topColor), (id)(middleColor), (id)(bottomColor), nil];
-
+                    
                     [(BenthosLibraryTableCell *)cell setIsSelected:NO];
                 }
             }   
@@ -365,21 +500,74 @@
                 cell.textLabel.textColor = [UIColor blackColor];
             }
         }
-        if(molecules == nil || index-1 >= [molecules count] || [molecules objectAtIndex:(index-1)] == nil){
-            NSLog(@"Error trying to acess null molecule %d\n",[molecules count]);
-            return nil;
+        
+        
+        
+        if (index <= [molecules count])
+        {
+            if(molecules == nil || index-1 >= [molecules count] || [molecules objectAtIndex:(index-1)] == nil){
+                NSLog(@"Error trying to acess null molecule %d\n",[molecules count]);
+                return cell;
+            }
+            //      int l=[[molecules objectAtIndex:(index-1)] numberOfAtoms];
+            //printf("Fail Val 0x%x %d\n",(int)[molecules objectAtIndex:(index-1)], l);
+            //printf("%d\n",index-1);
+            //NSString *fileNameWithoutExtension = [[molecules objectAtIndex:(index-1)] filenameWithoutExtension];
+            cell.textLabel.text = [[molecules objectAtIndex:(index-1)] title];
+            
+            cell.detailTextLabel.text = [[molecules objectAtIndex:(index-1)] desc];
+            
+            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+        }else{
+            cell.userInteractionEnabled=NO;
+           /* cell = [tableView dequeueReusableCellWithIdentifier:NSLocalizedStringFromTable(@"InProgress", @"Localized", nil)];
+            if (cell == nil) 
+            {		
+                cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:NSLocalizedStringFromTable(@"InProgress", @"Localized", nil)] autorelease];
+            }
+            */
+            int idx= index-[molecules count] -1;
+            if(idx >= [decompressingfiles count]){
+                NSLog(@"Freak out %d %d %d\n",idx,[molecules count],[decompressingfiles count]);
+                return cell;
+            }
+            BackgroundProcessingFile * file=[decompressingfiles objectAtIndex:idx];
+            if(file == nil)
+            {
+                NSLog(@"Freakout %d\n",idx);
+            }
+            
+            //        cell.textLabel.text=file.downloadStatusText.text;
+            float widthMargin=0.05;
+            float heightMargin=0.75;
+            CGRect textframe = CGRectMake(CGRectGetMinX(cell.contentView.bounds)+widthMargin*CGRectGetWidth(cell.contentView.bounds),
+                                          0.0f,
+                                          CGRectGetWidth(cell.contentView.bounds)-((2*widthMargin)* CGRectGetWidth(cell.contentView.bounds)),
+                                          CGRectGetHeight(cell.contentView.bounds)*heightMargin);
+            CGRect progframe = CGRectMake(CGRectGetMinX(cell.contentView.bounds)+widthMargin*CGRectGetWidth(cell.contentView.bounds), 
+                                          CGRectGetHeight(cell.contentView.bounds)*heightMargin, CGRectGetWidth(cell.contentView.bounds)-((2*widthMargin)* CGRectGetWidth(cell.contentView.bounds)),
+                                          CGRectGetHeight(cell.contentView.bounds)*1.0-heightMargin);
+            
+            float buttonwidth=20.0f;
+            CGRect buttonframe = CGRectMake(CGRectGetWidth(cell.contentView.bounds) -buttonwidth-10.0, 8.0f, buttonwidth, buttonwidth);
+            
+            [file progressView].frame=progframe;
+            cell.textLabel.frame=textframe;
+            cell.textLabel.text=[file text];
+            [file spinningIndicator].frame=buttonframe;
+            [file spinningIndicator].hidden=YES;
+            
+            [cell.contentView addSubview:[file progressView]];
+            //[cell.contentView addSubview:[file downloadStatusText]];
+            [cell.contentView addSubview:[file spinningIndicator]];
+            
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            
+            
+            
         }
-  //      int l=[[molecules objectAtIndex:(index-1)] numberOfAtoms];
-        //printf("Fail Val 0x%x %d\n",(int)[molecules objectAtIndex:(index-1)], l);
-        //printf("%d\n",index-1);
-		//NSString *fileNameWithoutExtension = [[molecules objectAtIndex:(index-1)] filenameWithoutExtension];
-        cell.textLabel.text = [[molecules objectAtIndex:(index-1)] title];
-
-		cell.detailTextLabel.text = [[molecules objectAtIndex:(index-1)] desc];
-		
-		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-	}
-
+    }
+    
     return cell;
 }
 
@@ -387,11 +575,11 @@
 {
 	if ([BenthosAppDelegate isRunningOniPad])
 	{
-		return [molecules count];
+		return [molecules count]+ [decompressingfiles count];
 	}
 	else
 	{		
-		return ([molecules count] + 1);
+		return ([molecules count] + [decompressingfiles count]+ 1);
 	}
 }
 
@@ -440,9 +628,14 @@
 // Make sure that the "Download new molecules" item is not deletable
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
+    
 	if ([BenthosAppDelegate isRunningOniPad])
 	{
+        if([indexPath row] >= [molecules count])
+            return  UITableViewCellEditingStyleNone;
+        
 		return UITableViewCellEditingStyleDelete;
+        
 	}
 	else
 	{
@@ -450,7 +643,11 @@
 		{
 			return UITableViewCellEditingStyleNone;
 		}
-		else
+		else if(([indexPath row]-1) >= [molecules count])
+        {
+            return  UITableViewCellEditingStyleNone;
+            
+        }else
 		{
 			return UITableViewCellEditingStyleDelete;
 		}
@@ -470,6 +667,9 @@
 	{
 		return;
 	}
+    
+    if(index > [molecules count])
+        return;
     // If row is deleted, remove it from the list.
     if (editingStyle == UITableViewCellEditingStyleDelete) 
 	{
@@ -514,5 +714,6 @@
 @synthesize database;
 @synthesize molecules;
 @synthesize selectedIndex;
+@synthesize decompressingfiles;
 
 @end

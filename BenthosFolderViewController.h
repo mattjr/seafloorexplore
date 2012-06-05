@@ -18,16 +18,17 @@
 	NSURLConnection *searchResultRetrievalConnection, *nextResultsRetrievalConnection;
 	BOOL searchCancelled,  isRetrievingCompoundNames;
     
-    NSString *urlbasepath;
     NSMutableData *folderData;
     NSMutableArray *molecules;
     NSOperationQueue *parseQueue;
+    NSMutableArray *decompressingfiles;
 
     
 }
 @property (nonatomic, retain) NSMutableData *folderData;    // the data returned from the NSURLConnection
 @property (nonatomic, retain) NSOperationQueue *parseQueue;     // the queue that manages our NSOperation for parsing earthquake data
 @property(readwrite,retain) NSMutableArray *molecules;
+@property(readwrite,retain) NSMutableArray *decompressingfiles;
 
 
 // Performing search

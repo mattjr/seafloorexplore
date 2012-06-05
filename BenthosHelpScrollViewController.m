@@ -10,7 +10,7 @@
 #import "BenthosAppDelegate.h"
 #import "BenthosFolderViewController.h"
 @implementation BenthosHelpScrollViewController
-@synthesize scrollView,molecules;
+@synthesize decompressingfiles,scrollView,molecules;
 -(id) init
 {
     molecules=nil;
@@ -144,6 +144,7 @@
 {
     BenthosFolderViewController *folderViewController = [[BenthosFolderViewController alloc] initWithStyle:UITableViewStylePlain];
     folderViewController.molecules = molecules;
+    folderViewController.decompressingfiles = decompressingfiles;
 
     [self.navigationController pushViewController:folderViewController animated:YES];
     [folderViewController release];

@@ -36,6 +36,7 @@
 "Number of structures" = "Number of structures";
 "Current structure" = "Current structure";
 "Download" = "Download";
+"InProgress" ="InProgress";
 "Done" = "Done";
 "File already exists" = "File already exists";
 "Cancel download" = "Cancel download";

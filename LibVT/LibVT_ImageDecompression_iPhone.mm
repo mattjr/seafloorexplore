@@ -17,7 +17,7 @@
 
 #include "LibVT_Internal.h"
 #include "LibVT.h"
-
+#include <stdio.h>
 
 extern vtConfig c;
 
@@ -43,9 +43,12 @@ void * vtuDecompressImageFile(const char *imagePath, uint32_t *pic_size)
 
 	if (*pic_size == 0)
 		*pic_size = width;
-	else
-		assert((width == *pic_size) && (height == *pic_size));
-
+	else {
+        if(!((width == *pic_size) && (height == *pic_size))){
+            fprintf(stderr,"Something bad happend in vtuDecompressImageFile %d %d %d %d\n",(int)width , *pic_size, (int)height ,*pic_size);
+            //assert((width == *pic_size) && (height == *pic_size));
+        }
+    }
 
 	return data;
 }

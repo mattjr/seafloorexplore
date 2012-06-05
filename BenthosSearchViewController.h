@@ -28,6 +28,8 @@
     NSMutableData *modelData;
     NSURL *listURL;
     NSMutableArray *molecules;
+    NSMutableArray *decompressingfiles;
+
     NSMutableDictionary *imageDownloadsInProgress;  // the set of 
     NSOperationQueue *parseQueue;
 
@@ -39,6 +41,7 @@
 @property(readwrite,retain) NSMutableArray *molecules;
 @property (nonatomic, retain) NSMutableDictionary *imageDownloadsInProgress;
 @property(readwrite,retain) 	NSMutableArray *downloadaleModelList;
+@property(readwrite,retain) NSMutableArray *decompressingfiles;
 
 // Performing search
 - (void)processSearchResultsAppendingNewData:(BOOL)appendData;

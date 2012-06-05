@@ -31,6 +31,7 @@
 	// SQLite database of all molecules
 	sqlite3 *database;
 	NSMutableArray *molecules;
+    NSMutableArray *decompressingfiles;
 }
 
 @property (nonatomic, retain) UIWindow *window;
@@ -60,6 +61,11 @@
 - (void)saveMoleculeWithData:(NSData *)moleculeData toFilename:(NSString *)filename;
 -(void)addNewModel:(NSString*)pname;
 + (BOOL) processArchive:(NSString*)filename error:(NSError**)error;
++(BOOL) removeModelFolder:(NSString*)basename;
+
 void uncaughtExceptionHandler(NSException *exception);
+#define kErrFolderExists 200
+#define kErrTarCorrupt 201
+
 @end
 

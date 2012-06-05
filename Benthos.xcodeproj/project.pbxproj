@@ -28,6 +28,8 @@
 		7B909178152669BB007DC3AC /* models.sql in Resources */ = {isa = PBXBuildFile; fileRef = 7B909177152669BB007DC3AC /* models.sql */; };
 		7BB1DE03157C1A8E008699B1 /* IconDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB1DE02157C1A8E008699B1 /* IconDownloader.m */; };
 		7BB1DE05157C2005008699B1 /* Placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BB1DE04157C2005008699B1 /* Placeholder.png */; };
+		7BB1DE08157C2D4B008699B1 /* JSGCDDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB1DE07157C2D4B008699B1 /* JSGCDDispatcher.m */; };
+		7BB1DE0D157C7795008699B1 /* BackgroundProcessingFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB1DE0C157C7795008699B1 /* BackgroundProcessingFile.m */; };
 		7BC4E86E152C041000BF1B8F /* Paint@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4E86A152C041000BF1B8F /* Paint@2x.png */; };
 		7BC4E86F152C041000BF1B8F /* Paint.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4E86B152C041000BF1B8F /* Paint.png */; };
 		7BC4E870152C041000BF1B8F /* PaintOn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4E86C152C041000BF1B8F /* PaintOn@2x.png */; };
@@ -146,6 +148,10 @@
 		7BB1DE01157C1A8E008699B1 /* IconDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconDownloader.h; sourceTree = "<group>"; };
 		7BB1DE02157C1A8E008699B1 /* IconDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconDownloader.m; sourceTree = "<group>"; };
 		7BB1DE04157C2005008699B1 /* Placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Placeholder.png; sourceTree = "<group>"; };
+		7BB1DE06157C2D4B008699B1 /* JSGCDDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSGCDDispatcher.h; sourceTree = "<group>"; };
+		7BB1DE07157C2D4B008699B1 /* JSGCDDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSGCDDispatcher.m; sourceTree = "<group>"; };
+		7BB1DE0B157C7794008699B1 /* BackgroundProcessingFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundProcessingFile.h; sourceTree = "<group>"; };
+		7BB1DE0C157C7795008699B1 /* BackgroundProcessingFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackgroundProcessingFile.m; sourceTree = "<group>"; };
 		7BC4E86A152C041000BF1B8F /* Paint@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Paint@2x.png"; sourceTree = "<group>"; };
 		7BC4E86B152C041000BF1B8F /* Paint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Paint.png; sourceTree = "<group>"; };
 		7BC4E86C152C041000BF1B8F /* PaintOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PaintOn@2x.png"; sourceTree = "<group>"; };
@@ -255,9 +261,9 @@
 		BCC246AE112E3DB700710932 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = "Resources-iPad/French.lproj/BenthosDownloadView.xib"; sourceTree = "<group>"; };
 		BCC281280E1B1FCD00978ECA /* NSData+Gzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Gzip.h"; sourceTree = "<group>"; };
 		BCC281290E1B1FCD00978ECA /* NSData+Gzip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Gzip.m"; sourceTree = "<group>"; };
-		BCC286BD0E1D8F9300978ECA /* BenthosAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosAppDelegate.h; sourceTree = SOURCE_ROOT; };
-		BCC286BE0E1D8F9300978ECA /* BenthosAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosAppDelegate.m; sourceTree = SOURCE_ROOT; };
-		BCC286BF0E1D8F9300978ECA /* BenthosRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosRootViewController.h; sourceTree = SOURCE_ROOT; };
+		BCC286BD0E1D8F9300978ECA /* BenthosAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = BenthosAppDelegate.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		BCC286BE0E1D8F9300978ECA /* BenthosAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BenthosAppDelegate.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		BCC286BF0E1D8F9300978ECA /* BenthosRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = BenthosRootViewController.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		BCC286C00E1D8F9300978ECA /* BenthosRootViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BenthosRootViewController.mm; sourceTree = "<group>"; };
 		BCC286C30E1D8FB100978ECA /* BenthosGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosGLView.h; sourceTree = SOURCE_ROOT; };
 		BCC286C40E1D8FB100978ECA /* BenthosGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosGLView.m; sourceTree = SOURCE_ROOT; };
@@ -555,6 +561,8 @@
 				7BF6543C13977C10002FEB23 /* VirtualTexturingNode.mm */,
 				BCC281280E1B1FCD00978ECA /* NSData+Gzip.h */,
 				BCC281290E1B1FCD00978ECA /* NSData+Gzip.m */,
+				7BB1DE06157C2D4B008699B1 /* JSGCDDispatcher.h */,
+				7BB1DE07157C2D4B008699B1 /* JSGCDDispatcher.m */,
 			);
 			name = Benthos;
 			sourceTree = "<group>";
@@ -567,6 +575,8 @@
 				7B8586C6157B486A0002AA58 /* BenthosFolderViewController.h */,
 				7B8586C7157B486A0002AA58 /* BenthosFolderViewController.m */,
 				7B8586C8157B486A0002AA58 /* Folder.h */,
+				7BB1DE0B157C7794008699B1 /* BackgroundProcessingFile.h */,
+				7BB1DE0C157C7795008699B1 /* BackgroundProcessingFile.m */,
 				7B8586C9157B486A0002AA58 /* Folder.m */,
 				7B8586CA157B486A0002AA58 /* FolderParseOperation.m */,
 				7B8586CB157B486A0002AA58 /* FolderParseOperation.h */,
@@ -738,6 +748,8 @@
 				7B8586CF157B486A0002AA58 /* FolderParseOperation.m in Sources */,
 				7B8586D2157B4A790002AA58 /* ModelParseOperation.m in Sources */,
 				7BB1DE03157C1A8E008699B1 /* IconDownloader.m in Sources */,
+				7BB1DE08157C2D4B008699B1 /* JSGCDDispatcher.m in Sources */,
+				7BB1DE0D157C7795008699B1 /* BackgroundProcessingFile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

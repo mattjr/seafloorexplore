@@ -27,7 +27,11 @@
     MKMapView *mapView;
 	sqlite3 *database;
     BOOL firstView;
+    NSMutableArray *decompressingfiles;
+
 }
+@property(readwrite,retain) NSMutableArray *decompressingfiles;
+
 @property(nonatomic,retain) MKMapView *mapView;
 
 //@property(readwrite,retain)     MapAnnotation *selectedAnnotation;

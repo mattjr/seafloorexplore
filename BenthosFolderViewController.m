@@ -15,10 +15,10 @@
 #import "VCTitleCase.h"
 #import "BenthosAppDelegate.h"
 #import "FolderParseOperation.h"
-#define MAX_SEARCH_RESULT_CODES 10
+#define kFolderListURL @"http://marine.acfr.usyd.edu.au/campaigns.xml"
 
 @implementation BenthosFolderViewController
-@synthesize folderData,parseQueue,molecules;
+@synthesize decompressingfiles,folderData,parseQueue,molecules;
 #pragma mark -
 #pragma mark Initialization and teardown
 
@@ -30,7 +30,6 @@
 		molecules =nil;
 		self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
-        urlbasepath = [[NSString alloc] initWithString:@"http://www-personal.acfr.usyd.edu.au/mattjr/benthos/"];
 
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(addFolder:)
@@ -107,16 +106,13 @@
 	downloadaleFolderList = nil;
 	
 	    
-	NSString *searchURL = nil;
-    searchURL = [[NSString alloc] initWithString:[urlbasepath stringByAppendingString:@"campaigns.xml" ]] ;
     
 	
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 	
-	NSURLRequest *fileRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:searchURL]
+	NSURLRequest *fileRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:kFolderListURL]
 													cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData//NSURLRequestUseProtocolCachePolicy
 												timeoutInterval:60.0];
-	[searchURL release];
 	searchResultRetrievalConnection = [[NSURLConnection alloc] initWithRequest:fileRequest delegate:self];
 	
 	downloadedFileContents = [[NSMutableData data] retain];
@@ -344,6 +340,8 @@
 
         BenthosSearchViewController *searchViewController = [[BenthosSearchViewController alloc] initWithStyle:UITableViewStylePlain andURL:[selFolder weblink] andTitle:[selFolder title]];
         searchViewController.molecules=molecules;
+        searchViewController.decompressingfiles=decompressingfiles;
+
         [self.navigationController pushViewController:searchViewController animated:YES];
         [searchViewController release];	
 

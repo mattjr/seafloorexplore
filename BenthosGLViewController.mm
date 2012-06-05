@@ -250,6 +250,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 
 - (void)startOrStopAutorotation:(BOOL)setTo;
 {
+   // printf("Start stop with %d\n",setTo);
     isAutorotating= !setTo;
     
 	if (isAutorotating)
@@ -268,7 +269,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 //		[aDisplayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
         
 		self.displayLink = aDisplayLink;
-     //  printf("Autorating now\n");
+     // printf("Autorating now\n");
 
 		//[[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleRotationSelected" object:[NSNumber numberWithBool:YES]];
 	}
@@ -385,10 +386,10 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
     
     [self runOpenGLBenchmarks];
 #else
-    if (!isAutorotating)
-    {
+   // if (!isAutorotating)
+    //{
         [self startOrStopAutorotation:YES];	
-    }
+   // }
 #endif	
 }
 
