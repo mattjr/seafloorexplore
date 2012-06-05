@@ -16,7 +16,6 @@
 #import "ModelParseOperation.h"
 #import "Model.h"
 #import "BackgroundProcessingFile.h"
-#define kFolderListURL @"http://marine.acfr.usyd.edu.au/campaigns.xml"
 
 @interface BenthosSearchViewController ()
 - (void)startIconDownload:(Model *)model forIndexPath:(NSIndexPath *)indexPath;
