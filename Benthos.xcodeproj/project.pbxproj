@@ -252,7 +252,6 @@
 		BCB3A67E13553FD2000A286B /* BenthosOpenGLES20Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosOpenGLES20Renderer.h; sourceTree = "<group>"; };
 		BCB3A67F13553FD2000A286B /* BenthosOpenGLES20Renderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosOpenGLES20Renderer.m; sourceTree = "<group>"; };
 		BCC246AD112E3DB700710932 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = "Resources-iPad/English.lproj/BenthosDownloadView.xib"; sourceTree = "<group>"; };
-		BCC246AE112E3DB700710932 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = "Resources-iPad/French.lproj/BenthosDownloadView.xib"; sourceTree = "<group>"; };
 		BCC281280E1B1FCD00978ECA /* NSData+Gzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Gzip.h"; sourceTree = "<group>"; };
 		BCC281290E1B1FCD00978ECA /* NSData+Gzip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Gzip.m"; sourceTree = "<group>"; };
 		BCC286BD0E1D8F9300978ECA /* BenthosAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = BenthosAppDelegate.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -270,9 +269,7 @@
 		BCC286D50E1D909600978ECA /* Benthos_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Benthos_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		BCD12CF711308E1000737166 /* BenthosiPadRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosiPadRootViewController.h; sourceTree = "<group>"; };
 		BCD12CF811308E1000737166 /* BenthosiPadRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosiPadRootViewController.m; sourceTree = "<group>"; };
-		BCDC9F870EB3760300ADCFA5 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = French; path = French.lproj/Info.plist; sourceTree = "<group>"; };
 		BCDC9F9A0EB37B1E00ADCFA5 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localized.strings; sourceTree = "<group>"; };
-		BCDC9F9E0EB37B4100ADCFA5 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = French.lproj/Localized.strings; sourceTree = "<group>"; };
 		BCDFF5AD1154819A005C984C /* 57-download.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "57-download.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -748,7 +745,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				BCC246AD112E3DB700710932 /* English */,
-				BCC246AE112E3DB700710932 /* French */,
 			);
 			name = BenthosDownloadView.xib;
 			sourceTree = "<group>";
@@ -757,7 +753,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				8D1107310486CEB800E47090 /* English */,
-				BCDC9F870EB3760300ADCFA5 /* French */,
 			);
 			name = Info.plist;
 			sourceTree = "<group>";
@@ -766,7 +761,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				BCDC9F9A0EB37B1E00ADCFA5 /* English */,
-				BCDC9F9E0EB37B4100ADCFA5 /* French */,
 			);
 			name = Localized.strings;
 			sourceTree = "<group>";

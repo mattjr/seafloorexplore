@@ -8,17 +8,15 @@
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIconFile</key>
-	<string>BenthosIcon.png</string>
 	<key>CFBundleIconFiles</key>
 	<array>
-		<string>BenthosIcon@2x.png</string>
-		<string>BenthosIcon.png</string>
-		<string>BenthosIcon72.png</string>
-		<string>Default.png</string>
-		<string>Default.png</string>
-		<string>Default.png</string>
-		<string>Default@2x.png</string>
+	  <string>Icon.png</string>
+	  <string>Icon@2x.png</string>
+	  <string>Icon-72.png</string>
+	  <string>Icon-Small.png</string>
+	  <string>Icon-Small-50.png</string>
+	  <string>Icon-Small@2x.png</string>
+	  <string>Icon-72@2x.png</string>
 	</array>
 	<key>CFBundleIcons</key>
 	<dict>
@@ -26,13 +24,13 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
-				<string>BenthosIcon@2x.png</string>
-				<string>BenthosIcon.png</string>
-				<string>BenthosIcon72.png</string>
-				<string>Default.png</string>
-				<string>Default.png</string>
-				<string>Default.png</string>
-				<string>Default@2x.png</string>
+			  <string>Icon.png</string>
+			  <string>Icon@2x.png</string>
+			  <string>Icon-72.png</string>
+			  <string>Icon-Small.png</string>
+			  <string>Icon-Small-50.png</string>
+			  <string>Icon-Small@2x.png</string>
+			  <string>Icon-72@2x.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>
