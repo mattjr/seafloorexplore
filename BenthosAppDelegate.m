@@ -301,6 +301,13 @@ void uncaughtExceptionHandler(NSException *exception) {
 
 							// TODO: Report the file copying problem to the user or do something about it
 						}
+                    if (![[NSFileManager defaultManager] removeItemAtPath:preloadedPDBPath error:&error])
+                    {
+                        NSLog(@"Failed to untar preinstalled files  with error: '%@'.", [error localizedDescription]);
+
+                    }
+                    
+                      
 					//}
 				}
 				
