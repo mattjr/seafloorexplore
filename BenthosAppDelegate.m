@@ -248,7 +248,8 @@ void uncaughtExceptionHandler(NSException *exception) {
 	if ([self createEditableCopyOfDatabaseIfNeeded])
 	{
 		// The database needed to be recreated, so scan and copy over the default files
-		
+        [self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
+
 		[self connectToDatabase];
 		// Before anything else, move included PDB files to /Documents if the program hasn't been run before
 		// User might have intentionally deleted files, so don't recopy the files in that case
@@ -316,7 +317,9 @@ void uncaughtExceptionHandler(NSException *exception) {
 		
 		[self loadMissingMoleculesIntoDatabase];
 		
-		[[NSUserDefaults standardUserDefaults] synchronize];		
+		[[NSUserDefaults standardUserDefaults] synchronize];
+        [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:YES];
+
 	}
 	else
 	{
