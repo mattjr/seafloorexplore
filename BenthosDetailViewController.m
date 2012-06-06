@@ -12,17 +12,17 @@
 #import "Benthos.h"
 #import "BenthosAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
+#define IMAGE_SECTION 0
 
-#define DESCRIPTION_SECTION 0
-#define MAPS_SECTION 1
-#define STATISTICS_SECTION 2
+#define DESCRIPTION_SECTION 1
+#define MAPS_SECTION 2
 #define JOURNAL_SECTION 3
 #define SOURCE_SECTION 4
 #define SEQUENCE_SECTION 5
 
 @implementation BenthosDetailViewController
 @synthesize placemark = _placemark;
-
+@synthesize detailImage;
 
 - (id)initWithStyle:(UITableViewStyle)style andMolecule:(Benthos *)newMolecule;
 {
@@ -33,7 +33,7 @@
 		self.molecule = newMolecule;
 		//[newMolecule readMetadataFromDatabaseIfNecessary];
 		self.title = molecule.title;
-
+        self.detailImage=nil;
         
         _placemark = [[[CLPlacemark alloc]init] retain];
 
@@ -54,7 +54,7 @@
 		self.view.autoresizesSubviews = YES;
 		self.molecule = [[[Benthos alloc] initWithModel:newModel database:NULL] autorelease];
 		self.title = molecule.compound;
-        
+        self.detailImage=[[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:newModel.imageURL]] autorelease];
         
         _placemark = [[[CLPlacemark alloc]init] retain];
         
@@ -110,12 +110,17 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
 {
+    if((self.detailImage != nil))
+        return 3;
+    
     return 2;
 }
 
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
 {
+    if((self.detailImage == nil))
+        section++;
     switch (section) 
 	{
         case DESCRIPTION_SECTION:
@@ -140,25 +145,55 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
-	NSInteger rows = 0;
-	
-	switch (section) 
-	{
-		case DESCRIPTION_SECTION:
-		case MAPS_SECTION:
-		case SOURCE_SECTION:
-		case SEQUENCE_SECTION:
-			rows = 1;
-			break;
-        default:
-			break;
-	}
-	return rows;
+		return 1;
+}
+- (UITableViewCell *)cellForImageView
+{
+    
+    if (_imgCell)
+        return _imgCell;
+    
+    // if not cached, setup the map view...
+    CGFloat cellWidth = self.view.bounds.size.width - 20;
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        cellWidth = self.view.bounds.size.width - 20;
+    }
+    
+    CGRect frame = CGRectMake(0, 0, cellWidth, 240);
+    UIImageView * image = [[UIImageView alloc] initWithFrame:frame];
+    [image setImage:self.detailImage];
+    image.layer.masksToBounds = YES;
+    image.layer.cornerRadius = 10.0;
+    image.layer.borderWidth = 1.0;
+    image.layer.borderColor = [[UIColor grayColor] CGColor];
+    NSString * cellID = @"ImgCell";
+    UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID] autorelease];    
+    
+    [cell.contentView addSubview:image];
+    [image release];
+    
+    _imgCell = [cell retain];
+    return cell;
+    
+    
+    
+ 
+    return cell;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if (indexPath.section == MAPS_SECTION) 
+    int section =indexPath.section;
+    if(self.detailImage == nil){
+        section++;
+    }
+    if (section == IMAGE_SECTION) 
+        return [self cellForImageView];
+    
+    if (section == MAPS_SECTION) 
         return [self cellForMapView];
+
 
 	static NSString *MyIdentifier = @"MyIdentifier";
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier];
@@ -166,10 +201,10 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:MyIdentifier] autorelease];
         //cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:MyIdentifier] autorelease];
     }
-    if (indexPath.section == DESCRIPTION_SECTION)
+    if (section == DESCRIPTION_SECTION)
         cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:12.0];
     
-    cell.textLabel.text = [self textForIndexPath:indexPath];
+    cell.textLabel.text = [self textForIndexPath:section];
     cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     cell.textLabel.textAlignment = UITextAlignmentLeft;
     cell.textLabel.numberOfLines=0;
@@ -179,10 +214,10 @@
 	return cell;
 }
 
-- (UILabel *)createLabelForIndexPath:(NSIndexPath *)indexPath;
+- (UILabel *)createLabelForIndexPath:(int)row;
 {
 	NSString *text = nil;
-    switch (indexPath.section) 
+    switch (row) 
 	{
 		case DESCRIPTION_SECTION: // type -- should be selectable -> checkbox
 			text = molecule.title;
@@ -219,69 +254,17 @@
 	return [label autorelease];
 }
 
-//#define HEIGHTPERLINE 23.0
-//
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//	CGFloat result;
-//
-//	switch (indexPath.section) 
-//	{
-//		case DESCRIPTION_SECTION: // type -- should be selectable -> checkbox
-//			result = (float)[molecule.title length] * HEIGHTPERLINE;
-//			break;
-//		case AUTHOR_SECTION: // instructions
-//			result = (float)[molecule.author length] * HEIGHTPERLINE;
-//			break;
-//        case JOURNAL_SECTION:
-//		{
-//			switch (indexPath.row)
-//			{
-//				case 0: result = (float)[molecule.journalTitle length] * HEIGHTPERLINE; break;
-//				case 1: result = (float)[molecule.journalAuthor length] * HEIGHTPERLINE; break;
-//				case 2: result = (float)[molecule.journalReference length] * HEIGHTPERLINE; break;
-//			}
-//		}; break;
-//        case SOURCE_SECTION:
-//			result = (float)[molecule.source length] * HEIGHTPERLINE;
-//			break;
-//		case SEQUENCE_SECTION:
-//			result = (float)[molecule.sequence length] * HEIGHTPERLINE;
-//			break;
-//		default:
-//			result = 43.0;
-//			break;
-//	}
-//	
-//	return result;
-//}
 
-- (NSString *)textForIndexPath:(NSIndexPath *)indexPath;
+- (NSString *)textForIndexPath:(int)row;
 {
 	NSString *text;
-	switch (indexPath.section) 
+	switch (row) 
 	{
 		case DESCRIPTION_SECTION:
 			text = molecule.desc;;
 			break;
                 
-        /*case JOURNAL_SECTION:
-		{
-			switch (indexPath.row)
-			{
-				case 0: text = molecule.journalTitle; break;
-				case 1: text = molecule.journalAuthor; break;
-				case 2: text = molecule.journalReference; break;
-				default: text = @""; break;
-			}
-		}; break;
-        case SOURCE_SECTION:
-			text = molecule.source;
-			break;
-		case SEQUENCE_SECTION:
-			text = molecule.sequence;
-			break;*/
-		default:
+        default:
 			text = @"";
 			break;
 	}
@@ -292,20 +275,13 @@
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-	if (indexPath.section == STATISTICS_SECTION)
 		return nil;
 	
-	return indexPath;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	/*if (indexPath.section != STATISTICS_SECTION)
-	{
-		BenthosTextViewController *nextViewController = [[BenthosTextViewController alloc] initWithTitle:[self tableView:tableView titleForHeaderInSection:indexPath.section] andContent:[self textForIndexPath:indexPath]];
-		[self.navigationController pushViewController:nextViewController animated:YES];
-		[nextViewController release];
-	}*/
+
 	
 }
 
@@ -354,18 +330,27 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == MAPS_SECTION)
+    int section =indexPath.section;
+    if(self.detailImage == nil){
+        section++;
+    }
+    if (section == MAPS_SECTION)
     { 
         return 240.0f; // map height
     }
 
-    if (indexPath.section == DESCRIPTION_SECTION)
+    if (section == DESCRIPTION_SECTION)
     { 
-        CGSize bodySize = [[self textForIndexPath:indexPath] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0] 
+        CGSize bodySize = [[self textForIndexPath:section] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0] 
                            constrainedToSize:CGSizeMake(self.view.frame.size.width,CGFLOAT_MAX)];
         return bodySize.height+20.0f;
     
     }
+    
+    if (section == IMAGE_SECTION){
+            return 240.0;
+    }
+
     return [self.tableView rowHeight];
 }
 

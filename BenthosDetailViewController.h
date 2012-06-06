@@ -17,19 +17,23 @@
 {
 	Benthos *molecule;
     UITableViewCell *_mapCell;
+    UITableViewCell *_imgCell;
+
     CLPlacemark *_placemark;
+    UIImage *detailImage;
 
 	UILabel *nameLabel;	
 }
 @property (nonatomic, retain) CLPlacemark *placemark;
-
+@property (nonatomic, retain) UIImage *detailImage;
 @property (nonatomic, retain) Benthos *molecule;
 - (id)initWithStyle:(UITableViewStyle)style andMolecule:(Benthos *)newMolecule;
 - (id)initWithStyle:(UITableViewStyle)style andModel:(Model *)newModel;
 
-- (UILabel *)createLabelForIndexPath:(NSIndexPath *)indexPath;
-- (NSString *)textForIndexPath:(NSIndexPath *)indexPath;
+- (UILabel *)createLabelForIndexPath:(int)row;
+- (NSString *)textForIndexPath:(int)row;
 - (UITableViewCell *)cellForMapView;
+- (UITableViewCell *)cellForImageView;
 
 #pragma mark - MKAnnotation Protocol (for map pin)
 
