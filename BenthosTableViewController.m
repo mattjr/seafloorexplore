@@ -331,7 +331,7 @@
          }
          else
          {
-             NSLog(@"Non Startup Decompress Finished %@\n",filename);
+             //NSLog(@"Non Startup Decompress Finished %@\n",filename);
 
              dispatch_async(dispatch_get_main_queue(), ^{ [self addMolAndShow:newMolecule]; });
          }			
@@ -339,7 +339,7 @@
      }];
     
     if([decompressingfiles count] >0){
-        NSLog(@"filename %@\n",filename);
+        //NSLog(@"filename %@\n",filename);
         NSString *basename =[filename stringByDeletingPathExtension];
         BackgroundProcessingFile *curProg = [[BackgroundProcessingFile alloc] initWithName:basename];
         [decompressingfiles addObject:curProg];
@@ -392,6 +392,18 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
+    if([molecules count] == 0){
+        self.navigationItem.rightBarButtonItem = nil;
+
+        if([tableView isEditing]){
+            [tableView setEditing:NO animated:YES];
+            [self setEditing:NO];
+            [tableView reloadData];
+
+        }   
+    }else{
+        self.navigationItem.rightBarButtonItem= self.editButtonItem;
+    }
 	UITableViewCell *cell;
 	NSInteger index = [indexPath row];
 	//NSLog(@"Number of inprogress %d %x\n",[decompressingfiles count],(int)decompressingfiles);
@@ -510,9 +522,9 @@
             //printf("Fail Val 0x%x %d\n",(int)[molecules objectAtIndex:(index-1)], l);
             //printf("%d\n",index-1);
             //NSString *fileNameWithoutExtension = [[molecules objectAtIndex:(index-1)] filenameWithoutExtension];
-            cell.textLabel.text = [[molecules objectAtIndex:(index-1)] title];
+            cell.textLabel.text = [NSString stringWithString:[[molecules objectAtIndex:(index-1)] title]];
             
-            cell.detailTextLabel.text = [[molecules objectAtIndex:(index-1)] desc];
+            cell.detailTextLabel.text = [NSString stringWithString:[[molecules objectAtIndex:(index-1)] desc]];
             
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
