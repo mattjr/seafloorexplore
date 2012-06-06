@@ -196,6 +196,7 @@
                 
            //  NSLog(@"Progress %f %@\n",progress,basename);
             curProg.progressView.progress = progress;
+            curProg.progressView.hidden=NO;
             NSNumberFormatter* formatter = [[[NSNumberFormatter alloc] init] autorelease];
             [formatter setMaximumFractionDigits:2];
             [formatter setMinimumFractionDigits:2];
@@ -204,9 +205,7 @@
             [formatter setFormatWidth:3];
             [formatter setPaddingCharacter:@" "];
             
-            curProg.textLabel.text = [NSString stringWithFormat:@"Extract %@: %@%%", basename,[formatter stringFromNumber: [NSNumber numberWithDouble: progress*100.0]]];
-            // NSLog(@"Progress %@ : %.2f%%\n",filename,progress*100.0);
-           // [self.tableView reloadData];
+
 
             
         }
@@ -425,7 +424,6 @@
 	}else{
         
         NSString *typeString;
-        
         if (index <= [molecules count]){
             typeString=NSLocalizedStringFromTable(@"InProgress", @"Localized", nil);
         }else{
@@ -436,7 +434,6 @@
         if (cell == nil) 
         {
             cell = [[[BenthosLibraryTableCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:typeString] autorelease];
-            
             
             
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
@@ -518,8 +515,20 @@
             cell.detailTextLabel.text = [[molecules objectAtIndex:(index-1)] desc];
             
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *documentsDirectory = [paths objectAtIndex:0];
+
+            NSString *imgFilePath=[NSString stringWithFormat:@"%@/%@/m.jpg",
+                                   documentsDirectory,
+                                   [[molecules objectAtIndex:(index-1)] filenameWithoutExtension]];
+            if([[NSFileManager defaultManager] fileExistsAtPath:imgFilePath])
+                cell.imageView.image=[UIImage imageWithContentsOfFile:imgFilePath];
+            else 
+                cell.imageView.image=[UIImage imageNamed:@"Placeholder"];  
+            
         }else{
             cell.userInteractionEnabled=NO;
+            
            /* cell = [tableView dequeueReusableCellWithIdentifier:NSLocalizedStringFromTable(@"InProgress", @"Localized", nil)];
             if (cell == nil) 
             {		
@@ -538,32 +547,25 @@
             }
             
             //        cell.textLabel.text=file.downloadStatusText.text;
-            float widthMargin=0.05;
-            float heightMargin=0.75;
-            CGRect textframe = CGRectMake(CGRectGetMinX(cell.contentView.bounds)+widthMargin*CGRectGetWidth(cell.contentView.bounds),
+            float widthMargin=5.0f;
+            float heightSplit=0.75;
+
+           
+
+            CGRect textframe = CGRectMake(widthMargin,
                                           0.0f,
-                                          CGRectGetWidth(cell.contentView.bounds)-((2*widthMargin)* CGRectGetWidth(cell.contentView.bounds)),
-                                          CGRectGetHeight(cell.contentView.bounds)*heightMargin);
-            CGRect progframe = CGRectMake(CGRectGetMinX(cell.contentView.bounds)+widthMargin*CGRectGetWidth(cell.contentView.bounds), 
-                                          CGRectGetHeight(cell.contentView.bounds)*heightMargin, CGRectGetWidth(cell.contentView.bounds)-((2*widthMargin)* CGRectGetWidth(cell.contentView.bounds)),
-                                          CGRectGetHeight(cell.contentView.bounds)*1.0-heightMargin);
-            
-            float buttonwidth=20.0f;
-            CGRect buttonframe = CGRectMake(CGRectGetWidth(cell.contentView.bounds) -buttonwidth-10.0, 8.0f, buttonwidth, buttonwidth);
-            
+                                          CGRectGetWidth(cell.contentView.bounds)-(2.0*widthMargin),
+                                          CGRectGetHeight(cell.contentView.bounds)*heightSplit);
+            CGRect progframe = CGRectMake(widthMargin,
+                                          CGRectGetHeight(cell.contentView.bounds)*heightSplit,
+                                          CGRectGetWidth(cell.contentView.bounds)-(2.0*widthMargin),
+                                          CGRectGetHeight(cell.contentView.bounds)*(1.0-heightSplit));
+
             [file progressView].frame=progframe;
-            [file textLabel].frame=textframe;
-            [file textLabel].backgroundColor = cell.textLabel.backgroundColor;
-            [file textLabel].textColor = cell.textLabel.textColor;
-
-            [file spinningIndicator].frame=buttonframe;
-            [file spinningIndicator].hidden=YES;
-            
-            [cell.contentView addSubview:[file progressView]];
-            [cell.contentView addSubview:[file textLabel]];
-
-            //[cell.contentView addSubview:[file downloadStatusText]];
-            [cell.contentView addSubview:[file spinningIndicator]];
+            cell.textLabel.text=  [NSString stringWithFormat:@"Adding: %@",[file filenameWithoutExtension]];
+            [cell addSubview:[file progressView]];
+            cell.textLabel.font=[UIFont systemFontOfSize:12.0f];
+            cell.textLabel.frame=textframe;
             
             cell.accessoryType = UITableViewCellAccessoryNone;
             
