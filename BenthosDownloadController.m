@@ -13,7 +13,7 @@
 //#import "AFNetworking.h"
 @implementation BenthosDownloadController
 @synthesize progressView,downloadStatusText,cancelDownloadButton,spinningIndicator,isBackgrounded,downloadConnection,downloadingFileHandle;
-- (id)initWithModel:(Model *)model
+- (id)initWithDownloadedModel:(DownloadedModel *)model
 {
 	if ((self = [super init])) 
 	{

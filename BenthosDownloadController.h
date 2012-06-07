@@ -14,7 +14,7 @@ typedef enum { PUBCHEMSEARCH, PROTEINDATABANKSEARCH } BenthosSearchType;
 
 @interface BenthosDownloadController : NSObject
 {
-    Model *downloadingmodel;
+    DownloadedModel *downloadingmodel;
 	//NSMutableData *downloadedFileContents;
 	long long downloadProgress;
 
@@ -38,7 +38,7 @@ typedef enum { PUBCHEMSEARCH, PROTEINDATABANKSEARCH } BenthosSearchType;
 
 
 // Initialization and teardown
-- (id)initWithModel:(Model *)model;
+- (id)initWithDownloadedModel:(DownloadedModel *)model;
 NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *width);
 NSString* formatBytesNoUnit(double bytes, uint8_t flags,int exponent,int width);
 - (void)downloadNewModel;

@@ -199,7 +199,7 @@
             [glViewController stopRender];
              
         BenthosModel *tmp=[models objectAtIndex:newModelIndex];
-        [mapViewController setSelectedModel:tmp];
+        [mapViewController setSelectedModel:[tmp filenameWithoutExtension]];
 
         [glViewController startRender:tmp];
 		bufferedModel = [models objectAtIndex:newModelIndex];

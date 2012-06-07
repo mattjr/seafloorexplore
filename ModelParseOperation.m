@@ -62,7 +62,7 @@ NSString *kModelsMsgErrorKey = @"ModelsMsgErrorKey";
 
 
 @interface ModelParseOperation () <NSXMLParserDelegate>
-    @property (nonatomic, retain) Model *currentModelObject;
+    @property (nonatomic, retain) DownloadedModel *currentModelObject;
     @property (nonatomic, retain) NSMutableArray *currentParseBatch;
     @property (nonatomic, retain) NSMutableString *currentParsedCharacterData;
 @end
@@ -214,7 +214,7 @@ static NSString * const kIconURLElementName = @"icon";
         [parser abortParsing];
     }
     if ([elementName isEqualToString:kItemElementName]) {
-        Model *model = [[Model alloc] init];
+        DownloadedModel *model = [[DownloadedModel alloc] init];
         self.currentModelObject = model;
         [model release];
     } else if ([elementName isEqualToString:kTitleElementName] ||

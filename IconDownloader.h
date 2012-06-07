@@ -50,14 +50,14 @@
   
  */
 
-@class Model;
+@class DownloadedModel;
 @class RootViewController;
 
 @protocol IconDownloaderDelegate;
 
 @interface IconDownloader : NSObject
 {
-    Model *modelRecord;
+    DownloadedModel *modelRecord;
     NSIndexPath *indexPathInTableView;
     id <IconDownloaderDelegate> delegate;
     
@@ -65,7 +65,7 @@
     NSURLConnection *imageConnection;
 }
 
-@property (nonatomic, retain) Model *modelRecord;
+@property (nonatomic, retain) DownloadedModel *modelRecord;
 @property (nonatomic, retain) NSIndexPath *indexPathInTableView;
 @property (nonatomic, assign) id <IconDownloaderDelegate> delegate;
 

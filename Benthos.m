@@ -82,7 +82,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	stillCountingAtomsInFirstStructure = YES;
 	return self;
 }
-- (id)initWithModel:(Model *)newModel database:(sqlite3 *)newDatabase;
+- (id)initWithDownloadedModel:(DownloadedModel *)newModel database:(sqlite3 *)newDatabase;
 {
     if (![self init])
 		return nil;

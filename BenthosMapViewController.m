@@ -17,7 +17,7 @@
 #import "NSFileManager+Tar.h"
 
 @implementation BenthosMapViewController
-@synthesize mapView,    firstView,selectedModel,decompressingfiles;
+@synthesize mapView,   firstView,selectedModel,decompressingfiles;
 ;
 #pragma mark -
 #pragma mark Initialization and breakdown
@@ -28,7 +28,7 @@
 	{        
         models=mol_list;
         if([models count] && [models count] > indexOfInitialModel )
-            selectedModel=[models objectAtIndex:indexOfInitialModel];
+            selectedModel=[NSString stringWithString:[[models objectAtIndex:indexOfInitialModel] filenameWithoutExtension]];
         else {
             selectedModel=nil;
         }
@@ -116,7 +116,7 @@
         if(ann != nil){
             bool found=NO;
             for(BenthosModel * mol in models){
-                if(mol == ann.model){
+                if([[mol filenameWithoutExtension] isEqualToString:ann.filenameWithoutExtension]){
                     found=YES;
                     break;
                 }
@@ -132,7 +132,7 @@
     for(BenthosModel * mol in models){
         bool found=NO;
         for(MapAnnotation * ann in [mapView annotations]){
-            if(ann.model == mol){
+            if([[mol filenameWithoutExtension] isEqualToString:ann.filenameWithoutExtension]){
                 found=YES;
                 break;
             }
@@ -158,7 +158,7 @@
     [self performSelector:@selector(selectInitialAnnotation)
                withObject:nil afterDelay:0.5];    
 
-   
+
 }
 -(void)selectInitialAnnotation {
     
@@ -166,7 +166,8 @@
         if ([annotation isKindOfClass:[MapAnnotation class]])
         {
             MapAnnotation *ma = (MapAnnotation *)annotation;
-            if(selectedModel && ma.model ==selectedModel){
+            if(selectedModel && [[ma filenameWithoutExtension] isEqualToString:selectedModel ]){
+
                 [self.mapView selectAnnotation:annotation animated:YES];
                 
             }
@@ -211,10 +212,10 @@
     for(BenthosModel * mol in models){
         MapAnnotation *ann =[[[MapAnnotation alloc] initWithCoordinate:mol.coord withName:mol.title withModel:mol] autorelease];
         [mapView addAnnotation:ann];
-        if(mol ==selectedModel){
+       /* if(mol ==selectedModel){
             [mapView selectAnnotation:ann animated:YES];
             
-        }
+        }*/
         idx++;
     }
     
@@ -254,12 +255,13 @@
 {
     MapAnnotation *annotation = view.annotation;
     //NSString *temp = annotation.title;
-    if(selectedModel == annotation.model)
+    if(selectedModel && [selectedModel  isEqualToString:annotation.filenameWithoutExtension])
         return;
-    
-    if([models containsObject:annotation.model]){
-        selectedModel = annotation.model;
-        [self.delegate selectedModelDidChange:[models indexOfObject:selectedModel]];
+    for(BenthosModel * mol in models){
+        if([[mol filenameWithoutExtension] isEqualToString:annotation.filenameWithoutExtension]){
+            selectedModel = [NSString stringWithString:annotation.filenameWithoutExtension];
+            [self.delegate selectedModelDidChange:[models indexOfObject:mol]];
+        }
     }
 }
 
@@ -339,13 +341,19 @@
 
         return;
     }
-    if([models count] == 0 || ma == nil || ![models containsObject:ma.model])
+    if([models count] == 0 || ma == nil)
         return;
     // Display detail view for the protein
-    BenthosDetailViewController *detailViewController = [[BenthosDetailViewController alloc] initWithStyle:UITableViewStyleGrouped andBenthosModel: ma.model];
+    for(BenthosModel * mol in models){
+        if([[mol filenameWithoutExtension] isEqualToString:ma.filenameWithoutExtension]){
+
+            BenthosDetailViewController *detailViewController = [[BenthosDetailViewController alloc] initWithStyle:UITableViewStyleGrouped andBenthosModel: mol];
     
-    [self.navigationController pushViewController:detailViewController animated:YES];
-    [detailViewController release];
+            [self.navigationController pushViewController:detailViewController animated:YES];
+            [detailViewController release];
+            break;
+        }
+    }
 
     // the detail view does not want a toolbar so hide it
 ///    [self.navigationController setToolbarHidden:YES animated:NO];

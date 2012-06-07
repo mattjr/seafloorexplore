@@ -47,7 +47,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Model : NSObject {
+@interface DownloadedModel : NSObject {
 @private
     // Magnitude of the ModelMeta on the Richter scale.
     NSString *title;

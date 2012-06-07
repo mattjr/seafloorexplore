@@ -14,7 +14,7 @@
 @class GLProgram;
 @class Scene;
 @class Simulation;
-@class Model;
+@class DownloadedModel;
 @interface MyOpenGLES20Renderer : BenthosOpenGLESRenderer 
 {
    

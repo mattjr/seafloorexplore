@@ -383,7 +383,7 @@ void uncaughtExceptionHandler(NSException *exception) {
     if([filesystemModels count] >0){
         
         // Parse the PDB file into the database
-        BenthosModel *newModel = [[BenthosModel alloc] initWithModel:[filesystemModels objectAtIndex:0] database:database];
+        BenthosModel *newModel = [[BenthosModel alloc] initWithDownloadedModel:[filesystemModels objectAtIndex:0] database:database];
         if (newModel != nil)
         {
             

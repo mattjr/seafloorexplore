@@ -23,7 +23,7 @@ extern NSString *const kBenthosLoadingStartedNotification;
 extern NSString *const kBenthosLoadingUpdateNotification;
 extern NSString *const kBenthosLoadingEndedNotification;
 @class BenthosOpenGLESRenderer;
-@class Model;
+@class DownloadedModel;
 // TODO: Convert enum to elemental number
 typedef enum { CARBON, HYDROGEN, OXYGEN, NITROGEN, SULFUR, PHOSPHOROUS, IRON, UNKNOWN, SILICON, FLUORINE, CHLORINE, BROMINE, IODINE, CALCIUM, ZINC, CADMIUM, SODIUM, MAGNESIUM, NUM_ATOMTYPES } BenthosAtomType;
 typedef enum { BALLANDSTICK, SPACEFILLING, CYLINDRICAL, } BenthosVisualizationType;
@@ -80,7 +80,7 @@ typedef struct {
 @property (readwrite, retain) NSValue *previousTerminalAtomValue;
 @property (readwrite, nonatomic) BenthosVisualizationType currentVisualizationType;
 @property (readwrite) unsigned int numberOfStructureBeingDisplayed;
-- (id)initWithModel:(Model *)newModel database:(sqlite3 *)newDatabase;
+- (id)initWithDownloadedModel:(DownloadedModel *)newModel database:(sqlite3 *)newDatabase;
 
 - (id)initWithFilename:(NSString *)newFilename database:(sqlite3 *)newDatabase title:(NSString *)newTitle;
 - (id)initWithSQLStatement:(sqlite3_stmt *)modelRetrievalStatement database:(sqlite3 *)newDatabase;

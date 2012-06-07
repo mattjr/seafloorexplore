@@ -13,11 +13,11 @@
 	NSString *title;
 	NSString *subtitle;
 	CLLocationCoordinate2D coordinate;
-    BenthosModel *model;
+    NSString *filenameWithoutExtension;
 }
 
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
-@property (nonatomic,readonly) BenthosModel *model;
+@property (nonatomic,retain) NSString *filenameWithoutExtension;
 @property (nonatomic, copy) NSString *title; 
 @property (nonatomic, copy) NSString *subtitle;
 // Title and subtitle for use by selection UI.

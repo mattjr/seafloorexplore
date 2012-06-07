@@ -270,7 +270,7 @@
          BenthosModel *newModel=nil;
 	if([BenthosAppDelegate processArchive:filename error:&error]){
         
-         newModel=[[BenthosModel alloc] initWithModel:[[note userInfo] objectForKey:@"model"] database:self.database];
+         newModel=[[BenthosModel alloc] initWithDownloadedModel:[[note userInfo] objectForKey:@"model"] database:self.database];
                 
     }else{
          dispatch_async(dispatch_get_main_queue(), ^{ [self showError:error];               
@@ -635,7 +635,7 @@
 	else
 	{
 		// Display detail view for the protein
-		BenthosDetailViewController *detailViewController = [[BenthosDetailViewController alloc] initWithStyle:UITableViewStyleGrouped andModel: [models objectAtIndex:(index - 1)]];
+		BenthosDetailViewController *detailViewController = [[BenthosDetailViewController alloc] initWithStyle:UITableViewStyleGrouped andBenthosModel: [models objectAtIndex:(index - 1)]];
 		
 		[self.navigationController pushViewController:detailViewController animated:YES];
 		[detailViewController release];

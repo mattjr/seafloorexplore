@@ -18,7 +18,7 @@
 #import "BackgroundProcessingFile.h"
 
 @interface BenthosSearchViewController ()
-- (void)startIconDownload:(Model *)model forIndexPath:(NSIndexPath *)indexPath;
+- (void)startIconDownload:(DownloadedModel *)model forIndexPath:(NSIndexPath *)indexPath;
 @end
 
 @implementation BenthosSearchViewController
@@ -426,7 +426,7 @@
             }
             
             BOOL alreadyInList=NO;
-            Model *curModel=[downloadaleModelList objectAtIndex:[indexPath row]];
+            DownloadedModel *curModel=[downloadaleModelList objectAtIndex:[indexPath row]];
             if(curModel != nil){
                 
                 
@@ -555,9 +555,9 @@
 
         [self.tableView reloadData];
 
-		Model *selectedModel = [downloadaleModelList objectAtIndex:[indexPath row]];
+		DownloadedModel *selectedModel = [downloadaleModelList objectAtIndex:[indexPath row]];
 
-        downloadController = [[BenthosDownloadController alloc] initWithModel:selectedModel];
+        downloadController = [[BenthosDownloadController alloc] initWithDownloadedModel:selectedModel];
         
         [downloadController downloadNewModel];
         [self.navigationItem setHidesBackButton: YES animated: YES];
@@ -577,7 +577,7 @@
 	NSInteger index = [indexPath row];
 
 		// Display detail view for the protein
-		BenthosDetailViewController *detailViewController = [[BenthosDetailViewController alloc] initWithStyle:UITableViewStyleGrouped andModel: [downloadaleModelList objectAtIndex:(index)]];
+		BenthosDetailViewController *detailViewController = [[BenthosDetailViewController alloc] initWithStyle:UITableViewStyleGrouped andDownloadedModel: [downloadaleModelList objectAtIndex:(index)]];
 		[self.navigationController pushViewController:detailViewController animated:YES];
 		[detailViewController release];
 		
@@ -681,7 +681,7 @@
 }
 
 - (void)addModelsToList:(NSArray *)mod {
-    for (Model *item in mod) {
+    for (DownloadedModel *item in mod) {
         if(item.appVersion <= kMaxiumSupportedFileVersion)
         [downloadaleModelList addObject:item];
     }
@@ -710,7 +710,7 @@
 #pragma mark -
 #pragma mark Table cell image support
 
-- (void)startIconDownload:(Model *)Model forIndexPath:(NSIndexPath *)indexPath
+- (void)startIconDownload:(DownloadedModel *)Model forIndexPath:(NSIndexPath *)indexPath
 {
     IconDownloader *iconDownloader = [imageDownloadsInProgress objectForKey:indexPath];
     if (iconDownloader == nil) 
@@ -733,7 +733,7 @@
         NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
         for (NSIndexPath *indexPath in visiblePaths)
         {
-            Model *model = [self.downloadaleModelList objectAtIndex:indexPath.row];
+            DownloadedModel *model = [self.downloadaleModelList objectAtIndex:indexPath.row];
             
             if (!model.modelIcon) // avoid the app icon download if the app already has an icon
             {

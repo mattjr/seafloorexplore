@@ -51,7 +51,7 @@ extern NSString *kModelResultsKey;
 extern NSString *kModelsErrorNotif;
 extern NSString *kModelsMsgErrorKey;
 
-@class Model;
+@class DownloadedModel;
 
 @interface ModelParseOperation : NSOperation {
     NSData *ModelData;
@@ -60,7 +60,7 @@ extern NSString *kModelsMsgErrorKey;
     NSDateFormatter *dateFormatter;
     
     // these variables are used during parsing
-    Model *currentModelObject;
+    DownloadedModel *currentModelObject;
     NSMutableArray *currentParseBatch;
     NSMutableString *currentParsedCharacterData;
     

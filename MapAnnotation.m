@@ -8,9 +8,10 @@
 
 #import "MapAnnotation.h"
 
+#import "Benthos.h"
 @implementation MapAnnotation
 
-@synthesize coordinate, title, subtitle,model;
+@synthesize coordinate, title, subtitle,filenameWithoutExtension;
 
 - (id)initWithCoordinate:(CLLocationCoordinate2D) c {
     coordinate = c;
@@ -24,7 +25,7 @@
     if (self) {
         coordinate = c;
         title = name;
-        model = [mol retain];
+        filenameWithoutExtension = [NSString stringWithString:[mol filenameWithoutExtension]];
     }
     return self;
 }

@@ -28,7 +28,7 @@
 @property (nonatomic, retain) UIImage *detailImage;
 @property (nonatomic, retain) BenthosModel *model;
 - (id)initWithStyle:(UITableViewStyle)style andBenthosModel:(BenthosModel *)newModel;
-- (id)initWithStyle:(UITableViewStyle)style andModel:(Model *)newModel;
+- (id)initWithStyle:(UITableViewStyle)style andDownloadedModel:(DownloadedModel *)newModel;
 
 - (UILabel *)createLabelForIndexPath:(int)row;
 - (NSString *)textForIndexPath:(int)row;

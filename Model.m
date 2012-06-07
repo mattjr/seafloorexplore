@@ -47,7 +47,7 @@
 
 #import "Model.h"
 
-@implementation Model
+@implementation DownloadedModel
 
 @synthesize date;
 @synthesize weblink;

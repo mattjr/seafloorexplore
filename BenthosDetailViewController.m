@@ -46,13 +46,13 @@
 	return self;
 }
 
-- (id)initWithStyle:(UITableViewStyle)style andModel:(Model *)newModel;
+- (id)initWithStyle:(UITableViewStyle)style andDownloadedModel:(DownloadedModel *)newModel;
 {
 	if ((self = [super initWithStyle:style])) 
 	{
 		self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
-		self.model = [[[BenthosModel alloc] initWithModel:newModel database:NULL] autorelease];
+		self.model = [[[BenthosModel alloc] initWithDownloadedModel:newModel database:NULL] autorelease];
 		self.title = model.compound;
         self.detailImage=[[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:newModel.imageURL]] autorelease];
         

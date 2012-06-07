@@ -22,7 +22,7 @@
 {
 	NSMutableArray *models;
 	BenthosRootViewController *delegate;
-	BenthosModel *selectedModel;
+	NSString *selectedModel;
 	UIColor *tableTextColor;
     MKMapView *mapView;
 	sqlite3 *database;
@@ -37,7 +37,7 @@
 //@property(readwrite,retain)     MapAnnotation *selectedAnnotation;
 @property(nonatomic,assign)     BOOL firstView;
 
-@property(nonatomic,retain) BenthosModel *selectedModel;
+@property(nonatomic,copy) NSString *selectedModel;
 
 
 @property(readwrite,assign) BenthosRootViewController *delegate;
