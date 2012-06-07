@@ -1,12 +1,12 @@
 //
 //  BenthosMapViewController.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 6/30/2008.
 //
-//  This controller manages the root table of molecules that are stored on the device
+//  This controller manages the root table of models that are stored on the device
 
 #import "BenthosMapViewController.h"
 #import "BenthosRootViewController.h"
@@ -17,23 +17,23 @@
 #import "NSFileManager+Tar.h"
 
 @implementation BenthosMapViewController
-@synthesize mapView,    firstView,selectedMolecule,decompressingfiles;
+@synthesize mapView,    firstView,selectedModel,decompressingfiles;
 ;
 #pragma mark -
 #pragma mark Initialization and breakdown
 
-- (id)init:(NSInteger)indexOfInitialMolecule withMolecules:(NSMutableArray*) mol_list
+- (id)init:(NSInteger)indexOfInitialModel withModels:(NSMutableArray*) mol_list
 {
 	if ((self = [super init])) 
 	{        
-        molecules=mol_list;
-        if([molecules count] && [molecules count] > indexOfInitialMolecule )
-            selectedMolecule=[molecules objectAtIndex:indexOfInitialMolecule];
+        models=mol_list;
+        if([models count] && [models count] > indexOfInitialModel )
+            selectedModel=[models objectAtIndex:indexOfInitialModel];
         else {
-            selectedMolecule=nil;
+            selectedModel=nil;
         }
         firstView=NO;
-		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moleculeDidFinishDownloading:) name:@"MoleculeDidFinishDownloading" object:nil];
+		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelDidFinishDownloading:) name:@"ModelDidFinishDownloading" object:nil];
 
 		
 		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
@@ -48,7 +48,7 @@
 //			tableTextColor = [[UIColor whiteColor] retain];
 			self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
 
-			UIBarButtonItem *downloadButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(displayMoleculeDownloadView)];
+			UIBarButtonItem *downloadButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(displayModelDownloadView)];
 			self.navigationItem.leftBarButtonItem = downloadButtonItem;
 			[downloadButtonItem release];
 		}
@@ -101,31 +101,35 @@
 		self.MapView.backgroundColor = [UIColor whiteColor];
 	}	*/
     [self doAnnotation];
+    firstView=YES;
 
 
 }
--(void) viewDidAppear:(BOOL)animated {
-    
-    /* if(!firstView){
-     firstView=YES;
-     [self doAnnotation];
-     
-     }*/
+-(void)updatePins
+{
+    if(!firstView)
+        return;
+    BOOL anychanges=NO;
+    NSMutableArray *discardedItems = [NSMutableArray array];
+
     for(MapAnnotation * ann in [mapView annotations]){
         if(ann != nil){
             bool found=NO;
-            for(Benthos * mol in molecules){
+            for(BenthosModel * mol in models){
                 if(mol == ann.model){
                     found=YES;
                     break;
                 }
             }
             if(!found){
-                [mapView removeAnnotation:ann];
+               [ discardedItems addObject:ann];
+                anychanges=YES;
             }
         }
     }
-    for(Benthos * mol in molecules){
+    [mapView removeAnnotations:discardedItems];
+    
+    for(BenthosModel * mol in models){
         bool found=NO;
         for(MapAnnotation * ann in [mapView annotations]){
             if(ann.model == mol){
@@ -136,20 +140,34 @@
         if(!found){
             MapAnnotation *ann =[[[MapAnnotation alloc] initWithCoordinate:mol.coord withName:mol.title withModel:mol] autorelease];
             [mapView addAnnotation:ann];
-     //       if(mol ==selectedMolecule){
-       //         [mapView selectAnnotation:ann animated:YES];
-         //   }
+            anychanges=YES;
+            //       if(mol ==selectedModel){
+            //         [mapView selectAnnotation:ann animated:YES];
+            //   }
         }
     }
+    
+    if(anychanges)
+        [self recenterMap];
+
+}
+
+-(void) viewDidAppear:(BOOL)animated {
+    
+
+    [self performSelector:@selector(selectInitialAnnotation)
+               withObject:nil afterDelay:0.5];    
+
+   
+}
+-(void)selectInitialAnnotation {
     
     for (id <MKAnnotation> annotation in mapView.annotations){
         if ([annotation isKindOfClass:[MapAnnotation class]])
         {
             MapAnnotation *ma = (MapAnnotation *)annotation;
-            if(selectedMolecule && ma.model ==selectedMolecule){
-                [mapView deselectAnnotation:annotation animated:NO];
-                
-                [mapView selectAnnotation:annotation animated:YES];
+            if(selectedModel && ma.model ==selectedModel){
+                [self.mapView selectAnnotation:annotation animated:YES];
                 
             }
         }
@@ -157,6 +175,7 @@
         
     }
 }
+
 -(void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
 {
     [self performSelector:@selector(reSelectAnnotationIfNoneSelected:) 
@@ -168,22 +187,8 @@
     if (mapView.selectedAnnotations.count == 0 && [mapView.annotations count] != 0)
         [mapView selectAnnotation:annotation animated:NO];
 }
-
--(void) doAnnotation
+-(void) recenterMap
 {
-
-    
-    int idx=0;
-    for(Benthos * mol in molecules){
-        MapAnnotation *ann =[[[MapAnnotation alloc] initWithCoordinate:mol.coord withName:mol.title withModel:mol] autorelease];
-        [mapView addAnnotation:ann];
-        if(mol ==selectedMolecule){
-            [mapView selectAnnotation:ann animated:YES];
-            
-        }
-        idx++;
-    }
-    
     MKMapRect zoomRect = MKMapRectNull;
     for (id <MKAnnotation> annotation in mapView.annotations)
     {
@@ -195,14 +200,31 @@
             zoomRect = MKMapRectUnion(zoomRect, pointRect);
         }
     }
-
+    
     [mapView setVisibleMapRect:zoomRect animated:NO];
+}
+-(void) doAnnotation
+{
+
+    
+    int idx=0;
+    for(BenthosModel * mol in models){
+        MapAnnotation *ann =[[[MapAnnotation alloc] initWithCoordinate:mol.coord withName:mol.title withModel:mol] autorelease];
+        [mapView addAnnotation:ann];
+        if(mol ==selectedModel){
+            [mapView selectAnnotation:ann animated:YES];
+            
+        }
+        idx++;
+    }
+    
+    [self recenterMap];
 
 }
 - (void)dealloc 
 {
 	[tableTextColor release];
-	[molecules release];
+	[models release];
 	[super dealloc];
 }
 
@@ -214,10 +236,10 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleView" object:nil];
 }
 
-- (IBAction)displayMoleculeDownloadView;
+- (IBAction)displayModelDownloadView;
 {
     BenthosFolderViewController *folderViewController = [[BenthosFolderViewController alloc] initWithStyle:UITableViewStylePlain];
-    folderViewController.molecules = molecules;
+    folderViewController.models = models;
     folderViewController.decompressingfiles = decompressingfiles;
 
     [self.navigationController pushViewController:folderViewController animated:YES];
@@ -232,12 +254,12 @@
 {
     MapAnnotation *annotation = view.annotation;
     //NSString *temp = annotation.title;
-    if(selectedMolecule == annotation.model)
+    if(selectedModel == annotation.model)
         return;
     
-    if([molecules containsObject:annotation.model]){
-        selectedMolecule = annotation.model;
-        [self.delegate selectedMoleculeDidChange:[molecules indexOfObject:selectedMolecule]];
+    if([models containsObject:annotation.model]){
+        selectedModel = annotation.model;
+        [self.delegate selectedModelDidChange:[models indexOfObject:selectedModel]];
     }
 }
 
@@ -317,10 +339,10 @@
 
         return;
     }
-    if([molecules count] == 0 || ma == nil || ![molecules containsObject:ma.model])
+    if([models count] == 0 || ma == nil || ![models containsObject:ma.model])
         return;
     // Display detail view for the protein
-    BenthosDetailViewController *detailViewController = [[BenthosDetailViewController alloc] initWithStyle:UITableViewStyleGrouped andMolecule: ma.model];
+    BenthosDetailViewController *detailViewController = [[BenthosDetailViewController alloc] initWithStyle:UITableViewStyleGrouped andBenthosModel: ma.model];
     
     [self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
@@ -346,6 +368,6 @@
 
 @synthesize delegate;
 @synthesize database;
-@synthesize molecules;
+@synthesize models;
 
 @end

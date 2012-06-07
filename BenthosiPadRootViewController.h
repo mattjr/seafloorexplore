@@ -1,8 +1,8 @@
 //
 //  BenthosiPadRootViewController.h
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 2/20/2010.
 //
@@ -16,7 +16,7 @@
 	UIImage *unselectedRotationImage, *selectedRotationImage;
 	UIBarButtonItem *rotationBarButton, *spacerItem, *visualizationBarButton, *screenBarButton;
 	UIToolbar *mainToolbar;
-	UIPopoverController *downloadOptionsPopover, *moleculeTablePopover;
+	UIPopoverController *downloadOptionsPopover, *modelTablePopover;
 	
 	UIScreen *externalScreen;
 	
@@ -24,7 +24,7 @@
 }
 
 // Bar response methods
-//- (void)showMolecules:(id)sender;
+//- (void)showModels:(id)sender;
 - (void)showVisualizationModes:(id)sender;
 
 // External monitor support

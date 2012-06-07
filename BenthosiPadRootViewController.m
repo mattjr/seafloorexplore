@@ -1,8 +1,8 @@
     //
 //  BenthosiPadRootViewController.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 2/20/2010.
 //
@@ -143,12 +143,12 @@
 #pragma mark -
 #pragma mark Bar response methods
 
-/*- (void)showMolecules:(id)sender;
+/*- (void)showModels:(id)sender;
 {
-	moleculeListPopover = [[UIPopoverController alloc] initWithContentViewController:self.tableNavigationController];
+	modelListPopover = [[UIPopoverController alloc] initWithContentViewController:self.tableNavigationController];
 	[self.tableNavigationController setContentSizeForViewInPopover:CGSizeMake(320.0f, round(0.5f * self.view.bounds.size.height))];
-	[moleculeListPopover setDelegate:self];
-	[moleculeListPopover presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+	[modelListPopover setDelegate:self];
+	[modelListPopover presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }*/
 - (void)sendHome:(id)sender;
 {
@@ -163,8 +163,8 @@
 	[actionSheet showFromBarButtonItem:visualizationBarButton animated:YES];
 	glViewController.visualizationActionSheet = actionSheet;
 	
-	[moleculeTablePopover dismissPopoverAnimated:YES];
-	moleculeTablePopover = nil;
+	[modelTablePopover dismissPopoverAnimated:YES];
+	modelTablePopover = nil;
 	
 	[downloadOptionsPopover dismissPopoverAnimated:YES];
 	[downloadOptionsPopover release];
@@ -173,16 +173,16 @@
 
 
 #pragma mark -
-#pragma mark Passthroughs for managing molecules
+#pragma mark Passthroughs for managing models
 
-- (void)selectedMoleculeDidChange:(NSInteger)newMoleculeIndex;
+- (void)selectedModelDidChange:(NSInteger)newModelIndex;
 {
-	[super selectedMoleculeDidChange:newMoleculeIndex];
+	[super selectedModelDidChange:newModelIndex];
 	
-	glViewController.moleculeToDisplay = bufferedMolecule;
+	glViewController.modelToDisplay = bufferedModel;
 	
-	//[moleculeTablePopover dismissPopoverAnimated:YES];
-	// moleculeTablePopover = nil;
+	//[modelTablePopover dismissPopoverAnimated:YES];
+	// modelTablePopover = nil;
     [(MyOpenGLES20Renderer*)glViewController.openGLESRenderer setRemoveOnceRender:YES];
     [glViewController startOrStopAutorotation:YES];
 
@@ -300,15 +300,15 @@
 	[glViewController.visualizationActionSheet dismissWithClickedButtonIndex:2 animated:YES];
 	glViewController.visualizationActionSheet = nil;
 	[glViewController startOrStopAutorotation:NO];
-	moleculeTablePopover = pc;
-    moleculeTablePopover.delegate=self;
+	modelTablePopover = pc;
+    modelTablePopover.delegate=self;
 }
 
 - (void)splitViewController:(UISplitViewController*)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem*)barButtonItem forPopoverController:(UIPopoverController*)pc
 {		
 	[(UINavigationController *)aViewController navigationBar].barStyle = UIBarStyleBlackOpaque;
 
-//    barButtonItem.title = @"Molecules";
+//    barButtonItem.title = @"Models";
     NSMutableArray *items = [[mainToolbar items] mutableCopy];
     [items insertObject:barButtonItem atIndex:0];
     [mainToolbar setItems:items animated:YES];
@@ -335,9 +335,9 @@
 		[downloadOptionsPopover release];
 		downloadOptionsPopover = nil;
 	}
-	else if (popoverController == moleculeTablePopover)
+	else if (popoverController == modelTablePopover)
 	{
-		moleculeTablePopover = nil;
+		modelTablePopover = nil;
 
 	}
     

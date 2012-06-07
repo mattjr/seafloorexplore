@@ -1,21 +1,21 @@
 //
 //  BenthosDetailViewController.h
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 7/5/2008.
 //
-//  This controller manages the detail view of the molecule's properties, such as author, publication, etc.
+//  This controller manages the detail view of the model's properties, such as author, publication, etc.
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "Model.h"
-@class Benthos;
+@class BenthosModel;
 
 @interface BenthosDetailViewController : UITableViewController <MKAnnotation> 
 {
-	Benthos *molecule;
+	BenthosModel *model;
     UITableViewCell *_mapCell;
     UITableViewCell *_imgCell;
 
@@ -26,8 +26,8 @@
 }
 @property (nonatomic, retain) CLPlacemark *placemark;
 @property (nonatomic, retain) UIImage *detailImage;
-@property (nonatomic, retain) Benthos *molecule;
-- (id)initWithStyle:(UITableViewStyle)style andMolecule:(Benthos *)newMolecule;
+@property (nonatomic, retain) BenthosModel *model;
+- (id)initWithStyle:(UITableViewStyle)style andBenthosModel:(BenthosModel *)newModel;
 - (id)initWithStyle:(UITableViewStyle)style andModel:(Model *)newModel;
 
 - (UILabel *)createLabelForIndexPath:(int)row;

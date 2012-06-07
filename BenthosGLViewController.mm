@@ -1,12 +1,12 @@
  //
 //  BenthosGLViewController.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 6/30/2008.
 //
-//  A barebones controller for managing the OpenGL view of the molecule.  It's pretty sparse, as some of the methods in the view really belong here.
+//  A barebones controller for managing the OpenGL view of the model.  It's pretty sparse, as some of the methods in the view really belong here.
 
 #import "BenthosGLViewController.h"
 #import "BenthosGLView.h"
@@ -28,7 +28,7 @@
 {
 	if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) 
 	{
-		// Set up an observer that catches the molecule update notifications and shows and updates the rendering indicator
+		// Set up an observer that catches the model update notifications and shows and updates the rendering indicator
 		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 		[nc addObserver:self selector:@selector(showRenderingIndicator:) name:kBenthosRenderingStartedNotification object:nil];
 		[nc addObserver:self selector:@selector(updateRenderingIndicator:) name:kBenthosRenderingUpdateNotification object:nil];
@@ -62,7 +62,7 @@
 		
 		[[NSUserDefaults standardUserDefaults] setInteger:TEXTURED forKey:@"currentVisualizationMode"];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleFinishOfMoleculeRendering:) name:@"MoleculeRenderingEnded" object:nil];	
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleFinishOfModelRendering:) name:@"ModelRenderingEnded" object:nil];	
 		
 	}
 	return self;
@@ -222,7 +222,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
         [openGLESRenderer waitForLastFrameToFinishRendering];
 	}
 		
-	moleculeToDisplay.isBeingDisplayed = NO;
+	modelToDisplay.isBeingDisplayed = NO;
   
 
     
@@ -233,12 +233,12 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
     [sim setRenderMode: newVisualizationType];
     
     
-    //   moleculeToDisplay.currentVisualizationType = newVisualizationType;
+    //   modelToDisplay.currentVisualizationType = newVisualizationType;
     [[NSUserDefaults standardUserDefaults] setInteger:newVisualizationType forKey:@"currentVisualizationMode"];
-    moleculeToDisplay.isBeingDisplayed = YES;
+    modelToDisplay.isBeingDisplayed = YES;
 
     //[openGLESRenderer freeVertexBuffers];
-    [moleculeToDisplay performSelectorInBackground:@selector(renderMolecule:) withObject:openGLESRenderer];
+    [modelToDisplay performSelectorInBackground:@selector(renderModel:) withObject:openGLESRenderer];
     if(resetAR)
         [self startOrStopAutorotation:YES];
 
@@ -246,7 +246,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 
 
 #pragma mark -
-#pragma mark Autorotation of molecule
+#pragma mark Autorotation of model
 
 - (void)startOrStopAutorotation:(BOOL)setTo;
 {
@@ -292,13 +292,13 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
         [openGLESRenderer rotateModelFromScreenDisplacementInX:(30.0f * (displayLink.timestamp - previousTimestamp)) inY:0.0f];
 	}
     
-    [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];        
+    [openGLESRenderer renderFrameForModel:modelToDisplay];        
 	
 	previousTimestamp = displayLink.timestamp;
 }
 
 #pragma mark -
-#pragma mark OpenGL molecule rendering
+#pragma mark OpenGL model rendering
 -(void)sendHome{
    if(sim == nil)	{
 		return;
@@ -318,9 +318,9 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
    /* if ([openGLESRenderer isKindOfClass:[MyOpenGLES20Renderer class]])
         [(MyOpenGLES20Renderer*)openGLESRenderer reshapeScenes];
 
-	{*/    moleculeToDisplay.hasRendered=NO;
+	{*/    modelToDisplay.hasRendered=NO;
 
-      //  [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
+      //  [openGLESRenderer renderFrameForModel:modelToDisplay];
 	//}
    
 }
@@ -336,7 +336,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 	{
 		// Do something		
         [openGLESRenderer rotateModelFromScreenDisplacementInX:1.0f inY:0.0];
-        [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
+        [openGLESRenderer renderFrameForModel:modelToDisplay];
 	}
 	elapsedTime = CFAbsoluteTimeGetCurrent() - startTime;
 	// ElapsedTime contains seconds (or fractions thereof as decimals)
@@ -366,9 +366,9 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 }
 
 #pragma mark -
-#pragma mark Manage molecule rendering state
+#pragma mark Manage model rendering state
 
-- (void)handleFinishOfMoleculeRendering:(NSNotification *)note;
+- (void)handleFinishOfModelRendering:(NSNotification *)note;
 {
 	[openGLESRenderer clearScreen];
 	[NSThread sleepForTimeInterval:0.1];
@@ -586,7 +586,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 				twoFingersAreMoving = YES;
             	[sim orient: directionOfPanning];
 				//[openGLESRenderer translateModelByScreenDisplacementInX:directionOfPanning.x inY:directionOfPanning.y];
-                [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
+                [openGLESRenderer renderFrameForModel:modelToDisplay];
 			
 				previousDirectionOfPanning = CGPointZero;
 			}
@@ -614,7 +614,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 				
 				// Scale using pinch gesture
                // [openGLESRenderer scaleModelByFactor:(newTouchDistance / startingTouchDistance) / previousScale];
-              //  [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
+              //  [openGLESRenderer renderFrameForModel:modelToDisplay];
 
 //				[self _drawViewByRotatingAroundX:0.0 rotatingAroundY:0.0 scaling:(newTouchDistance / startingTouchDistance) / previousScale translationInX:directionOfPanning.x translationInY:directionOfPanning.y];
 				previousScale = (newTouchDistance / startingTouchDistance);
@@ -633,7 +633,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 		lastMovementPosition = currentMovementPosition;
 		//printf("%f %f %f %f\n",delta.x,delta.y,(float)self.view.frame.size.width,(float)self.view.frame.size.height);
 		[sim pan: lastMovementPosition];
-        [openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
+        [openGLESRenderer renderFrameForModel:modelToDisplay];
 				
 	}
 	
@@ -645,7 +645,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
     
 	/*if ([[scene simulator] respondsToSelector:@selector(isDoneMoving)] && !isAutorotating){
 		while(![(Simulation *)[scene simulator]isDoneMoving]&& count <10){
-			[openGLESRenderer renderFrameForMolecule:moleculeToDisplay];
+			[openGLESRenderer renderFrameForModel:modelToDisplay];
 			[openGLESRenderer waitForLastFrameToFinishRendering];
 			count++;	
 		}
@@ -673,7 +673,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
         [sim centeratPt:endPos];
         [sim setLogOnNextUpdate: kDoubleClick];
 
-		/*if (moleculeToDisplay.isDoneRendering == YES)
+		/*if (modelToDisplay.isDoneRendering == YES)
 		{
 			UIActionSheet *actionSheet = [self actionSheetForVisualizationState];
 			[actionSheet showInView:self.view];
@@ -715,7 +715,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 
 - (IBAction)switchToTableView;
 {
-	if (moleculeToDisplay != nil && moleculeToDisplay.isDoneRendering == NO)
+	if (modelToDisplay != nil && modelToDisplay.isDoneRendering == NO)
 	{
 		return;
 	}
@@ -774,11 +774,11 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 		[sim setRenderMode: newVisualizationType];
 			
 		
-     //   moleculeToDisplay.currentVisualizationType = newVisualizationType;
+     //   modelToDisplay.currentVisualizationType = newVisualizationType;
         [[NSUserDefaults standardUserDefaults] setInteger:newVisualizationType forKey:@"currentVisualizationMode"];
         
         [openGLESRenderer freeVertexBuffers];
-        [moleculeToDisplay performSelectorInBackground:@selector(renderMolecule:) withObject:openGLESRenderer];
+        [modelToDisplay performSelectorInBackground:@selector(renderModel:) withObject:openGLESRenderer];
     }
     
 	visualizationActionSheet = nil;
@@ -802,12 +802,12 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 #pragma mark Accessors
 
 @synthesize visualizationActionSheet;
-@synthesize moleculeToDisplay;
+@synthesize modelToDisplay;
 @synthesize displayLink,openGLESRenderer;
 
-- (void)setMoleculeToDisplay:(Benthos *)newMolecule;
+- (void)setModelToDisplay:(BenthosModel *)newModel;
 {
-	if (moleculeToDisplay == newMolecule)
+	if (modelToDisplay == newModel)
 	{
 		return;
 	}
@@ -820,31 +820,31 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 	
 //	[NSThread sleepForTimeInterval:0.2];
 	
-	moleculeToDisplay.isBeingDisplayed = NO;
-    if (!moleculeToDisplay.isRenderingCancelled)
+	modelToDisplay.isBeingDisplayed = NO;
+    if (!modelToDisplay.isRenderingCancelled)
     {
         [openGLESRenderer freeVertexBuffers];
     }
     
-	[moleculeToDisplay release];
-	moleculeToDisplay = [newMolecule retain];
+	[modelToDisplay release];
+	modelToDisplay = [newModel retain];
     if ([openGLESRenderer isKindOfClass:[BenthosOpenGLES20Renderer class]])
     {
-        [moleculeToDisplay switchToDefaultVisualizationMode];
+        [modelToDisplay switchToDefaultVisualizationMode];
         
     }
     else
     {
-    //    moleculeToDisplay.currentVisualizationType = [[NSUserDefaults standardUserDefaults] integerForKey:@"currentVisualizationMode"];
+    //    modelToDisplay.currentVisualizationType = [[NSUserDefaults standardUserDefaults] integerForKey:@"currentVisualizationMode"];
     }
 	
 	GLVisualizationType renderMode = [sim getRenderMode];
 
 	[[NSUserDefaults standardUserDefaults] setInteger:renderMode forKey:@"currentVisualizationMode"];
     
-	moleculeToDisplay.isBeingDisplayed = YES;
+	modelToDisplay.isBeingDisplayed = YES;
     
-    [moleculeToDisplay performSelectorInBackground:@selector(renderMolecule:) withObject:openGLESRenderer];
+    [modelToDisplay performSelectorInBackground:@selector(renderModel:) withObject:openGLESRenderer];
     
 	instantObjectScale = 1.0f;
 	instantXRotation = 1.0f;
@@ -870,7 +870,7 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 
 }
 
-- (void)startRender:(Benthos*)mol;
+- (void)startRender:(BenthosModel*)mol;
 {
    // printf("Starting scene ready\n");
     if ([openGLESRenderer isKindOfClass:[MyOpenGLES20Renderer class]])

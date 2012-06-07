@@ -1,6 +1,6 @@
 //
 //  BenthosOpenGLESRenderer.m
-//  Molecules
+//  Models
 //
 //  Created by Brad Larson on 4/12/2011.
 //  Copyright 2011 Sunset Lake Software LLC. All rights reserved.
@@ -8,9 +8,9 @@
 
 #import "BenthosOpenGLESRenderer.h"
 
-NSString *const kBenthosShadowCalculationStartedNotification = @"MoleculeShadowCalculationStarted";
-NSString *const kBenthosShadowCalculationUpdateNotification = @"MoleculeShadowCalculationUpdate";
-NSString *const kBenthosShadowCalculationEndedNotification = @"MoleculeShadowCalculationEnded";
+NSString *const kBenthosShadowCalculationStartedNotification = @"ModelShadowCalculationStarted";
+NSString *const kBenthosShadowCalculationUpdateNotification = @"ModelShadowCalculationUpdate";
+NSString *const kBenthosShadowCalculationEndedNotification = @"ModelShadowCalculationEnded";
 
 @implementation BenthosOpenGLESRenderer
 
@@ -29,7 +29,7 @@ NSString *const kBenthosShadowCalculationEndedNotification = @"MoleculeShadowCal
     isSceneReady = NO;
     
     // Set up the initial model view matrix for the rendering
-    isFirstDrawingOfMolecule = YES;
+    isFirstDrawingOfModel = YES;
     isFrameRenderingFinished = YES;
     totalNumberOfVertices = 0;
 	totalNumberOfTriangles = 0;
@@ -239,7 +239,7 @@ NSString *const kBenthosShadowCalculationEndedNotification = @"MoleculeShadowCal
 	[self convertMatrix:currentModelViewMatrix to3DTransform:&currentCalculatedMatrix];   
     currentModelScaleFactor = 1.0;
     
-    isFirstDrawingOfMolecule = YES;
+    isFirstDrawingOfModel = YES;
 }
 
 #pragma mark -
@@ -282,13 +282,13 @@ NSString *const kBenthosShadowCalculationEndedNotification = @"MoleculeShadowCal
 #pragma mark -
 #pragma mark Actual OpenGL rendering
 
-- (void)renderFrameForMolecule:(Benthos *)molecule;
+- (void)renderFrameForModel:(BenthosModel *)model;
 {
     NSAssert(NO, @"Method not overridden");
 }
 
 #pragma mark -
-#pragma mark Molecule 3-D geometry generation
+#pragma mark Model 3-D geometry generation
 
 - (void)configureBasedOnNumberOfAtoms:(unsigned int)numberOfAtoms numberOfBonds:(unsigned int)numberOfBonds;
 {
@@ -365,7 +365,7 @@ NSString *const kBenthosShadowCalculationEndedNotification = @"MoleculeShadowCal
     NSAssert(NO, @"Method not overridden");
 }
 
-- (void)bindVertexBuffersForMolecule;
+- (void)bindVertexBuffersForModel;
 {
     dispatch_async(openGLESContextQueue, ^{
         [EAGLContext setCurrentContext:context];
@@ -435,7 +435,7 @@ NSString *const kBenthosShadowCalculationEndedNotification = @"MoleculeShadowCal
     });    
 }
 
-- (void)drawMolecule;
+- (void)drawModel;
 {
     NSAssert(NO, @"Method not overridden");
 }
@@ -478,7 +478,7 @@ NSString *const kBenthosShadowCalculationEndedNotification = @"MoleculeShadowCal
     });
 }
 
-- (void)initiateMoleculeRendering;
+- (void)initiateModelRendering;
 {
     for (unsigned int currentAtomTypeIndex = 0; currentAtomTypeIndex < NUM_ATOMTYPES; currentAtomTypeIndex++)
     {
@@ -495,7 +495,7 @@ NSString *const kBenthosShadowCalculationEndedNotification = @"MoleculeShadowCal
     currentBondVBO = 0;
 }
 
-- (void)terminateMoleculeRendering;
+- (void)terminateModelRendering;
 {
     // Release all the NSData arrays that were partially generated
     for (unsigned int currentVBOIndex = 0; currentVBOIndex < NUM_ATOMTYPES; currentVBOIndex++)
@@ -526,7 +526,7 @@ NSString *const kBenthosShadowCalculationEndedNotification = @"MoleculeShadowCal
     }    
 }
 
-- (void)cancelMoleculeRendering;
+- (void)cancelModelRendering;
 {
     isRenderingCancelled = YES;    
 }
@@ -543,7 +543,7 @@ NSString *const kBenthosShadowCalculationEndedNotification = @"MoleculeShadowCal
 @synthesize context;
 @synthesize isFrameRenderingFinished, isSceneReady;
 @synthesize totalNumberOfVertices, totalNumberOfTriangles;
-@synthesize atomRadiusScaleFactor, bondRadiusScaleFactor, overallMoleculeScaleFactor;
+@synthesize atomRadiusScaleFactor, bondRadiusScaleFactor, overallModelScaleFactor;
 @synthesize openGLESContextQueue;
 
 @end

@@ -1,12 +1,12 @@
 //
 //  Benthos.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 6/26/2008.
 //
-//  This is the model class for the molecule object.  It parses a PDB file, generates a vertex buffer object, and renders that object to the screen
+//  This is the model class for the model object.  It parses a PDB file, generates a vertex buffer object, and renders that object to the screen
 
 #import "Benthos.h"
 // Filetypes
@@ -15,34 +15,34 @@
 #import "BenthosOpenGLES20Renderer.h"
 #import "Model.h"
 #import "BenthosAppDelegate.h"
-NSString *const kBenthosRenderingStartedNotification = @"MoleculeRenderingStarted";
-NSString *const kBenthosRenderingUpdateNotification = @"MoleculeRenderingUpdate";
-NSString *const kBenthosRenderingEndedNotification = @"MoleculeRenderingEnded";
+NSString *const kBenthosRenderingStartedNotification = @"ModelRenderingStarted";
+NSString *const kBenthosRenderingUpdateNotification = @"ModelRenderingUpdate";
+NSString *const kBenthosRenderingEndedNotification = @"ModelRenderingEnded";
 
 NSString *const kBenthosLoadingStartedNotification = @"FileLoadingStarted" ;
 NSString *const kBenthosLoadingUpdateNotification = @"FileLoadingUpdate";
 NSString *const kBenthosLoadingEndedNotification = @"FileLoadingEnded";
 #define BOND_LENGTH_LIMIT 3.0f
 
-static sqlite3_stmt *insertMoleculeSQLStatement = nil;
+static sqlite3_stmt *insertModelSQLStatement = nil;
 static sqlite3_stmt *insertMetadataSQLStatement = nil;
 static sqlite3_stmt *insertAtomSQLStatement = nil;
 static sqlite3_stmt *insertBondSQLStatement = nil;
 
-static sqlite3_stmt *updateMoleculeSQLStatement = nil;
+static sqlite3_stmt *updateModelSQLStatement = nil;
 
-static sqlite3_stmt *retrieveMoleculeSQLStatement = nil;
+static sqlite3_stmt *retrieveModelSQLStatement = nil;
 static sqlite3_stmt *retrieveMetadataSQLStatement = nil;
 static sqlite3_stmt *retrieveAtomSQLStatement = nil;
 static sqlite3_stmt *retrieveBondSQLStatement = nil;
 
-static sqlite3_stmt *deleteMoleculeSQLStatement = nil;
+static sqlite3_stmt *deleteModelSQLStatement = nil;
 static sqlite3_stmt *deleteMetadataSQLStatement = nil;
 static sqlite3_stmt *deleteAtomSQLStatement = nil;
 static sqlite3_stmt *deleteBondSQLStatement = nil;
 
 
-@implementation Benthos
+@implementation BenthosModel
 
 #pragma mark -
 #pragma mark Initialization and deallocation
@@ -107,19 +107,19 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 
     title=[[newModel title] retain];
     if(database){
-    if (insertMoleculeSQLStatement == nil) 
+    if (insertModelSQLStatement == nil) 
 	{
         static char *sql = "INSERT INTO models (filename) VALUES(?)";
-        if (sqlite3_prepare_v2(database, sql, -1, &insertMoleculeSQLStatement, NULL) != SQLITE_OK) 
+        if (sqlite3_prepare_v2(database, sql, -1, &insertModelSQLStatement, NULL) != SQLITE_OK) 
 		{
             NSAssert1(0,NSLocalizedStringFromTable(@"Error: failed to prepare statement with message '%s'.", @"Localized", nil), sqlite3_errmsg(database));
         }
     }
 	// Bind the query variables.
-	sqlite3_bind_text(insertMoleculeSQLStatement, 1, [filename UTF8String], -1, SQLITE_TRANSIENT);
-    int success = sqlite3_step(insertMoleculeSQLStatement);
+	sqlite3_bind_text(insertModelSQLStatement, 1, [filename UTF8String], -1, SQLITE_TRANSIENT);
+    int success = sqlite3_step(insertModelSQLStatement);
     // Because we want to reuse the statement, we "reset" it instead of "finalizing" it.
-    sqlite3_reset(insertMoleculeSQLStatement);
+    sqlite3_reset(insertModelSQLStatement);
     if (success != SQLITE_ERROR) 
 	{
         // SQLite provides a method which retrieves the value of the most recently auto-generated primary key sequence
@@ -129,11 +129,11 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
     }
 
     // Wrap all SQLite write operations in a BEGIN, COMMIT block to make writing one operation
-	[Benthos beginTransactionWithDatabase:database];
+	[BenthosModel beginTransactionWithDatabase:database];
 
-	[self writeMoleculeDataToDatabase];
+	[self writeModelDataToDatabase];
 
-    [Benthos endTransactionWithDatabase:database];
+    [BenthosModel endTransactionWithDatabase:database];
     }
     
 	return self;
@@ -159,19 +159,19 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
     }
     //NSLog(@"AA %@ %@\n",title,filename);
 
-	if (insertMoleculeSQLStatement == nil) 
+	if (insertModelSQLStatement == nil) 
 	{
         static char *sql = "INSERT INTO models (filename) VALUES(?)";
-        if (sqlite3_prepare_v2(database, sql, -1, &insertMoleculeSQLStatement, NULL) != SQLITE_OK) 
+        if (sqlite3_prepare_v2(database, sql, -1, &insertModelSQLStatement, NULL) != SQLITE_OK) 
 		{
             NSAssert1(0,NSLocalizedStringFromTable(@"Error: failed to prepare statement with message '%s'.", @"Localized", nil), sqlite3_errmsg(database));
         }
     }
 	// Bind the query variables.
-	sqlite3_bind_text(insertMoleculeSQLStatement, 1, [filename UTF8String], -1, SQLITE_TRANSIENT);
-    int success = sqlite3_step(insertMoleculeSQLStatement);
+	sqlite3_bind_text(insertModelSQLStatement, 1, [filename UTF8String], -1, SQLITE_TRANSIENT);
+    int success = sqlite3_step(insertModelSQLStatement);
     // Because we want to reuse the statement, we "reset" it instead of "finalizing" it.
-    sqlite3_reset(insertMoleculeSQLStatement);
+    sqlite3_reset(insertModelSQLStatement);
     if (success != SQLITE_ERROR) 
 	{
         // SQLite provides a method which retrieves the value of the most recently auto-generated primary key sequence
@@ -200,29 +200,29 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	return self;
 }
 
-- (id)initWithSQLStatement:(sqlite3_stmt *)moleculeRetrievalStatement database:(sqlite3 *)newDatabase;
+- (id)initWithSQLStatement:(sqlite3_stmt *)modelRetrievalStatement database:(sqlite3 *)newDatabase;
 {
 	if (![self init])
 		return nil;
 
 	database = newDatabase;
 	
-	// Retrieve molecule information from the line of the SELECT statement
+	// Retrieve model information from the line of the SELECT statement
 	//(id,filename,title,compound,format,atom_count,structure_count, centerofmass_x,centerofmass_y,centerofmass_z,minimumposition_x,minimumposition_y,minimumposition_z,maximumposition_x,maximumposition_y,maximumposition_z)
 //    const char *sql = "UPDATE models SET title=?, desc=?, filename=?, folder=?, weblink=?, lat=?, lon=?, ver=? WHERE id=?";
 
-	databaseKey = sqlite3_column_int(moleculeRetrievalStatement, 0);
-	char *stringResult = (char *)sqlite3_column_text(moleculeRetrievalStatement, 1);
+	databaseKey = sqlite3_column_int(modelRetrievalStatement, 0);
+	char *stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 1);
 	NSString *sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
 	title = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
 
-	stringResult = (char *)sqlite3_column_text(moleculeRetrievalStatement, 2);
+	stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 2);
 	sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
 	desc = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
     
     
     
-    stringResult = (char *)sqlite3_column_text(moleculeRetrievalStatement, 3);
+    stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 3);
 	sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
 	filename = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
 	
@@ -232,29 +232,29 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	else
 		filenameWithoutExtension = [[filename substringToIndex:rangeUntilFirstPeriod.location] retain];
 	
-    stringResult = (char *)sqlite3_column_text(moleculeRetrievalStatement, 4);
+    stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 4);
 	sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
 	folder = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
     
-    stringResult = (char *)sqlite3_column_text(moleculeRetrievalStatement, 5);
+    stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 5);
 	sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
 	weblink = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
     
-    coord.latitude=sqlite3_column_double(moleculeRetrievalStatement, 6);
-    coord.longitude=sqlite3_column_double(moleculeRetrievalStatement, 7);
-    //double version=sqlite3_column_double(moleculeRetrievalStatement, 8);
+    coord.latitude=sqlite3_column_double(modelRetrievalStatement, 6);
+    coord.longitude=sqlite3_column_double(modelRetrievalStatement, 7);
+    //double version=sqlite3_column_double(modelRetrievalStatement, 8);
 
     //NSLog(@"%f %f %@ %@ %@ %@ %@ %f\n",coord.latitude,coord.longitude,weblink,folder,filenameWithoutExtension,title,desc,version);
 		
 	return self;
 }
 
-- (void)deleteMolecule;
+- (void)deleteModel;
 {
    /* [self performSelectorOnMainThread:@selector(showStatusIndicator)
                            withObject:self
                         waitUntilDone:YES];*/
-	[self deleteMoleculeDataFromDatabase];
+	[self deleteModelDataFromDatabase];
     [BenthosAppDelegate removeModelFolder:self.filenameWithoutExtension];
 
 }
@@ -336,26 +336,26 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 
 + (void)finalizeStatements;
 {
-	if (insertMoleculeSQLStatement) sqlite3_finalize(insertMoleculeSQLStatement);
-	insertMoleculeSQLStatement = nil;
+	if (insertModelSQLStatement) sqlite3_finalize(insertModelSQLStatement);
+	insertModelSQLStatement = nil;
 	if (insertMetadataSQLStatement) sqlite3_finalize(insertMetadataSQLStatement);
 	insertMetadataSQLStatement = nil;
 	if (insertAtomSQLStatement) sqlite3_finalize(insertAtomSQLStatement);
 	insertAtomSQLStatement = nil;
 	if (insertBondSQLStatement) sqlite3_finalize(insertBondSQLStatement);
 	insertBondSQLStatement = nil;
-	if (updateMoleculeSQLStatement) sqlite3_finalize(updateMoleculeSQLStatement);
-	updateMoleculeSQLStatement = nil;
-	if (retrieveMoleculeSQLStatement) sqlite3_finalize(retrieveMoleculeSQLStatement);
-	retrieveMoleculeSQLStatement = nil;
+	if (updateModelSQLStatement) sqlite3_finalize(updateModelSQLStatement);
+	updateModelSQLStatement = nil;
+	if (retrieveModelSQLStatement) sqlite3_finalize(retrieveModelSQLStatement);
+	retrieveModelSQLStatement = nil;
 	if (retrieveMetadataSQLStatement) sqlite3_finalize(retrieveMetadataSQLStatement);
 	retrieveMetadataSQLStatement = nil;
 	if (retrieveAtomSQLStatement) sqlite3_finalize(retrieveAtomSQLStatement);
 	retrieveAtomSQLStatement = nil;
 	if (retrieveBondSQLStatement) sqlite3_finalize(retrieveBondSQLStatement);
 	retrieveBondSQLStatement = nil;
-	if (deleteMoleculeSQLStatement) sqlite3_finalize(deleteMoleculeSQLStatement);
-	deleteMoleculeSQLStatement = nil;
+	if (deleteModelSQLStatement) sqlite3_finalize(deleteModelSQLStatement);
+	deleteModelSQLStatement = nil;
 	if (deleteMetadataSQLStatement) sqlite3_finalize(deleteMetadataSQLStatement);
 	deleteMetadataSQLStatement = nil;
 	if (deleteAtomSQLStatement) sqlite3_finalize(deleteAtomSQLStatement);
@@ -365,33 +365,33 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 }
 
 // Write this after all parsing is complete
-- (void)writeMoleculeDataToDatabase;
+- (void)writeModelDataToDatabase;
 {
-	if (updateMoleculeSQLStatement == nil) 
+	if (updateModelSQLStatement == nil) 
 	{
-		//const char *sql = "UPDATE molecules SET title=?, compound=?, format=?, atom_count=?, bond_count=?, structure_count=?, centerofmass_x=?, centerofmass_y=?, centerofmass_z=?, minimumposition_x=?, minimumposition_y=?, minimumposition_z=?, maximumposition_x=?, maximumposition_y=?, maximumposition_z=? WHERE id=?";
+		//const char *sql = "UPDATE models SET title=?, compound=?, format=?, atom_count=?, bond_count=?, structure_count=?, centerofmass_x=?, centerofmass_y=?, centerofmass_z=?, minimumposition_x=?, minimumposition_y=?, minimumposition_z=?, maximumposition_x=?, maximumposition_y=?, maximumposition_z=? WHERE id=?";
         const char *sql = "UPDATE models SET title=?, desc=?, filename=?, folder=?, weblink=?, lat=?, lon=?, ver=? WHERE id=?";
 
-        if (sqlite3_prepare_v2(database, sql, -1, &updateMoleculeSQLStatement, NULL) != SQLITE_OK) 
+        if (sqlite3_prepare_v2(database, sql, -1, &updateModelSQLStatement, NULL) != SQLITE_OK) 
 			NSAssert1(0, NSLocalizedStringFromTable(@"Error: failed to prepare statement with message '%s'.", @"Localized", nil), sqlite3_errmsg(database));
 	}
 	// Bind the query variables.
-	sqlite3_bind_text(updateMoleculeSQLStatement, 1, [[title stringByReplacingOccurrencesOfString:@"'" withString:@"''"] UTF8String], -1, SQLITE_TRANSIENT);
-	sqlite3_bind_text(updateMoleculeSQLStatement, 2, [[desc stringByReplacingOccurrencesOfString:@"'" withString:@"''"] UTF8String], -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(updateMoleculeSQLStatement, 3, [[filename stringByReplacingOccurrencesOfString:@"'" withString:@"''"] UTF8String], -1, SQLITE_TRANSIENT);
-	sqlite3_bind_text(updateMoleculeSQLStatement, 4, [[folder stringByReplacingOccurrencesOfString:@"'" withString:@"''"] UTF8String], -1, SQLITE_TRANSIENT);
-	sqlite3_bind_text(updateMoleculeSQLStatement, 5, [[weblink stringByReplacingOccurrencesOfString:@"'" withString:@"''"] UTF8String], -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(updateModelSQLStatement, 1, [[title stringByReplacingOccurrencesOfString:@"'" withString:@"''"] UTF8String], -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(updateModelSQLStatement, 2, [[desc stringByReplacingOccurrencesOfString:@"'" withString:@"''"] UTF8String], -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(updateModelSQLStatement, 3, [[filename stringByReplacingOccurrencesOfString:@"'" withString:@"''"] UTF8String], -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(updateModelSQLStatement, 4, [[folder stringByReplacingOccurrencesOfString:@"'" withString:@"''"] UTF8String], -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(updateModelSQLStatement, 5, [[weblink stringByReplacingOccurrencesOfString:@"'" withString:@"''"] UTF8String], -1, SQLITE_TRANSIENT);
 
-    sqlite3_bind_double(updateMoleculeSQLStatement, 6, (double)coord.latitude);
-    sqlite3_bind_double(updateMoleculeSQLStatement, 7, (double)coord.longitude);
-    sqlite3_bind_double(updateMoleculeSQLStatement, 8, (double)0);
+    sqlite3_bind_double(updateModelSQLStatement, 6, (double)coord.latitude);
+    sqlite3_bind_double(updateModelSQLStatement, 7, (double)coord.longitude);
+    sqlite3_bind_double(updateModelSQLStatement, 8, (double)0);
 
-	sqlite3_bind_int(updateMoleculeSQLStatement, 9, databaseKey);
+	sqlite3_bind_int(updateModelSQLStatement, 9, databaseKey);
 
 	// Execute the query.
-	int success = sqlite3_step(updateMoleculeSQLStatement);
+	int success = sqlite3_step(updateModelSQLStatement);
 	// Reset the query for the next use.
-	sqlite3_reset(updateMoleculeSQLStatement);
+	sqlite3_reset(updateModelSQLStatement);
 	// Handle errors.
 	if (success != SQLITE_DONE) 
 		NSAssert1(0, NSLocalizedStringFromTable(@"Error: failed to dehydrate with message '%s'.", @"Localized", nil), sqlite3_errmsg(database));	
@@ -401,7 +401,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 {
 	if (insertMetadataSQLStatement == nil) 
 	{
-        static char *sql = "INSERT INTO metadata (molecule,type,value) VALUES(?,?,?)";
+        static char *sql = "INSERT INTO metadata (model,type,value) VALUES(?,?,?)";
         if (sqlite3_prepare_v2(database, sql, -1, &insertMetadataSQLStatement, NULL) != SQLITE_OK) 
 		{
             NSAssert1(0,NSLocalizedStringFromTable(@"Error: failed to prepare statement with message '%s'.", @"Localized", nil), sqlite3_errmsg(database));
@@ -422,7 +422,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 {
 	if (insertAtomSQLStatement == nil) 
 	{
-        static char *sql = "INSERT INTO atoms (molecule,residue,structure,element,x,y,z) VALUES(?,?,?,?,?,?,?)";
+        static char *sql = "INSERT INTO atoms (model,residue,structure,element,x,y,z) VALUES(?,?,?,?,?,?,?)";
         if (sqlite3_prepare_v2(database, sql, -1, &insertAtomSQLStatement, NULL) != SQLITE_OK) 
 		{
             NSAssert1(0,NSLocalizedStringFromTable(@"Error: failed to prepare statement with message '%s'.", @"Localized", nil), sqlite3_errmsg(database));
@@ -472,7 +472,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	
 	if (insertBondSQLStatement == nil) 
 	{
-        static char *sql = "INSERT INTO bonds (molecule,residue,structure,bond_type,start_x,start_y,start_z,end_x,end_y,end_z) VALUES(?,?,?,?,?,?,?,?,?,?)";
+        static char *sql = "INSERT INTO bonds (model,residue,structure,bond_type,start_x,start_y,start_z,end_x,end_y,end_z) VALUES(?,?,?,?,?,?,?,?,?,?)";
         if (sqlite3_prepare_v2(database, sql, -1, &insertBondSQLStatement, NULL) != SQLITE_OK) 
 		{
             NSAssert1(0, NSLocalizedStringFromTable(@"Error: failed to prepare statement with message '%s'.", @"Localized", nil), sqlite3_errmsg(database));
@@ -508,7 +508,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	
 	if (retrieveMetadataSQLStatement == nil) 
 	{
-		const char *sql = "SELECT * FROM metadata WHERE molecule=?";
+		const char *sql = "SELECT * FROM metadata WHERE model=?";
 		if (sqlite3_prepare_v2(database, sql, -1, &retrieveMetadataSQLStatement, NULL) != SQLITE_OK) 
 		{
             NSAssert1(0,NSLocalizedStringFromTable(@"Error: failed to prepare statement with message '%s'.", @"Localized", nil), sqlite3_errmsg(database));
@@ -520,19 +520,19 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 
 	while (sqlite3_step(retrieveMetadataSQLStatement) == SQLITE_ROW) 
 	{
-		//id, molecule,type,value
+		//id, model,type,value
 		BenthosMetadataType metadataType = sqlite3_column_int(retrieveMetadataSQLStatement, 2);
         char *stringResult = (char *)sqlite3_column_text(retrieveMetadataSQLStatement, 3);
 		NSString *sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
 		
 		switch (metadataType)
 		{
-			case MOLECULESOURCE:  
+			case MODELSOURCE:  
 			{
 				[source release];
 				source = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
 			}; break;
-			case MOLECULEAUTHOR:  
+			case MODELAUTHOR:  
 			{
 				[author release];
 				author = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
@@ -552,7 +552,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 				[journalReference release];
 				journalReference = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
 			}; break;
-			case MOLECULESEQUENCE:  
+			case MODELSEQUENCE:  
 			{
 				[sequence release];
 				sequence = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
@@ -565,22 +565,22 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
     isPopulatedFromDatabase = YES;
 }
 
-- (void)deleteMoleculeDataFromDatabase;
+- (void)deleteModelDataFromDatabase;
 {
-	// Delete the molecule from the SQLite database
-	if (deleteMoleculeSQLStatement == nil) 
+	// Delete the model from the SQLite database
+	if (deleteModelSQLStatement == nil) 
 	{
 		const char *sql = "DELETE FROM models WHERE id=?";
-		if (sqlite3_prepare_v2(database, sql, -1, &deleteMoleculeSQLStatement, NULL) != SQLITE_OK) 
+		if (sqlite3_prepare_v2(database, sql, -1, &deleteModelSQLStatement, NULL) != SQLITE_OK) 
 			NSAssert1(0, NSLocalizedStringFromTable(@"Error: failed to prepare statement with message '%s'.", @"Localized", nil), sqlite3_errmsg(database));
 	}
-	sqlite3_bind_int(deleteMoleculeSQLStatement, 1, databaseKey);
-	int success = sqlite3_step(deleteMoleculeSQLStatement);
-	sqlite3_reset(deleteMoleculeSQLStatement);
+	sqlite3_bind_int(deleteModelSQLStatement, 1, databaseKey);
+	int success = sqlite3_step(deleteModelSQLStatement);
+	sqlite3_reset(deleteModelSQLStatement);
 	if (success != SQLITE_DONE) 
 		NSAssert1(0,NSLocalizedStringFromTable(@"Error: failed to dehydrate with message '%s'.", @"Localized", nil), sqlite3_errmsg(database));	
 
-	// Delete the metadata associated with the molecule from the SQLite database	
+	// Delete the metadata associated with the model from the SQLite database	
 	if (deleteMetadataSQLStatement == nil) 
 	{
 		const char *sql = "DELETE FROM metadata WHERE model=?";
@@ -597,7 +597,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 
 - (NSInteger)countAtomsForFirstStructure;
 {
-    const char *sql = "SELECT COUNT(*) FROM atoms WHERE molecule=? AND structure=?";
+    const char *sql = "SELECT COUNT(*) FROM atoms WHERE model=? AND structure=?";
 	sqlite3_stmt *atomCountingStatement;
 
     unsigned int totalAtomCount = 0;
@@ -622,7 +622,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 
 - (NSInteger)countBondsForFirstStructure;
 {
-    const char *sql = "SELECT COUNT(*) FROM bonds WHERE molecule=? AND structure=?";
+    const char *sql = "SELECT COUNT(*) FROM bonds WHERE model=? AND structure=?";
 	sqlite3_stmt *bondCountingStatement;
     
     unsigned int totalBondCount = 0;
@@ -682,7 +682,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 }
 
 
-- (BOOL)renderMolecule:(BenthosOpenGLESRenderer *)openGLESRenderer;
+- (BOOL)renderModel:(BenthosOpenGLESRenderer *)openGLESRenderer;
 {
     currentRenderer = openGLESRenderer;
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -690,9 +690,9 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	isDoneRendering = NO;
 	[self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
     
-    [openGLESRenderer initiateMoleculeRendering];
+    [openGLESRenderer initiateModelRendering];
     
-    openGLESRenderer.overallMoleculeScaleFactor = scaleAdjustmentForX;
+    openGLESRenderer.overallModelScaleFactor = scaleAdjustmentForX;
 
 	currentFeatureBeingRendered = 0;
     /*
@@ -732,11 +732,11 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	
 	if (!isRenderingCancelled)
 	{
-        [openGLESRenderer bindVertexBuffersForMolecule];
+        [openGLESRenderer bindVertexBuffersForModel];
 //        }
 //        else
 //        {
-//            [openGLESRenderer performSelectorOnMainThread:@selector(bindVertexBuffersForMolecule) withObject:nil waitUntilDone:YES];   
+//            [openGLESRenderer performSelectorOnMainThread:@selector(bindVertexBuffersForModel) withObject:nil waitUntilDone:YES];   
 //        }		
 	}
 	else
@@ -744,7 +744,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
         isBeingDisplayed = NO;
         isRenderingCancelled = NO;
         
-        [openGLESRenderer terminateMoleculeRendering];
+        [openGLESRenderer terminateModelRendering];
 	}
 	
     
@@ -766,8 +766,8 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
     
 	if (retrieveAtomSQLStatement == nil) 
 	{
-		const char *sql = "SELECT residue,structure,element,x,y,z FROM atoms WHERE molecule=? AND structure=?";
-        //		const char *sql = "SELECT * FROM atoms WHERE molecule=?";
+		const char *sql = "SELECT residue,structure,element,x,y,z FROM atoms WHERE model=? AND structure=?";
+        //		const char *sql = "SELECT * FROM atoms WHERE model=?";
 		if (sqlite3_prepare_v2(database, sql, -1, &retrieveAtomSQLStatement, NULL) != SQLITE_OK) 
 		{
             NSAssert1(0, NSLocalizedStringFromTable(@"Error: failed to prepare statement with message '%s'.", @"Localized", nil), sqlite3_errmsg(database));
@@ -780,7 +780,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	
 	while ((sqlite3_step(retrieveAtomSQLStatement) == SQLITE_ROW) && !isRenderingCancelled)
 	{
-		//(id,molecule,residue,structure,element,x,y,z);"
+		//(id,model,residue,structure,element,x,y,z);"
 		if ( (currentFeatureBeingRendered % 100) == 0)
         {
 			[self performSelectorOnMainThread:@selector(updateStatusIndicator) withObject:nil waitUntilDone:NO];
@@ -845,7 +845,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 		if (!isDoneRendering)
 		{
 			self.isRenderingCancelled = YES;
-            [currentRenderer cancelMoleculeRendering];
+            [currentRenderer cancelModelRendering];
 			[NSThread sleepForTimeInterval:1.0];
 		}
         hasRendered=NO;

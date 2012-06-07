@@ -10,17 +10,17 @@
 #import "BenthosAppDelegate.h"
 #import "BenthosFolderViewController.h"
 @implementation BenthosHelpScrollViewController
-@synthesize decompressingfiles,scrollView,molecules;
+@synthesize decompressingfiles,scrollView,models;
 -(id) init
 {
-    molecules=nil;
+    models=nil;
     if ([BenthosAppDelegate isRunningOniPad])
     {
         //			self.MapView.backgroundColor = [UIColor blackColor];
         //			tableTextColor = [[UIColor whiteColor] retain];
         self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
         
-        UIBarButtonItem *downloadButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(displayMoleculeDownloadView)];
+        UIBarButtonItem *downloadButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(displayModelDownloadView)];
         self.navigationItem.leftBarButtonItem = downloadButtonItem;
         [downloadButtonItem release];
     }
@@ -140,10 +140,10 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleView" object:nil];
 }
 
-- (IBAction)displayMoleculeDownloadView;
+- (IBAction)displayModelDownloadView;
 {
     BenthosFolderViewController *folderViewController = [[BenthosFolderViewController alloc] initWithStyle:UITableViewStylePlain];
-    folderViewController.molecules = molecules;
+    folderViewController.models = models;
     folderViewController.decompressingfiles = decompressingfiles;
 
     [self.navigationController pushViewController:folderViewController animated:YES];
@@ -158,7 +158,7 @@
 }
 
 - (void)dealloc {
-    [molecules release];
+    [models release];
     [scrollView release];
     [super dealloc];
 }

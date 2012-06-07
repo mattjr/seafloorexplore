@@ -1,18 +1,18 @@
 //
 //  BenthosGLViewController.h
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 6/30/2008.
 //
-//  A controller for managing the OpenGL view of the molecule.
+//  A controller for managing the OpenGL view of the model.
 
 #import <UIKit/UIKit.h>
 #import <OpenGLES/ES1/gl.h>
 #import <QuartzCore/QuartzCore.h>
 
-@class Benthos;
+@class BenthosModel;
 @class BenthosOpenGLESRenderer;
 @class Scene;
 @class Simulation;
@@ -28,7 +28,7 @@
     Simulation *sim;
     Scene *scene;
 
-	Benthos *moleculeToDisplay;
+	BenthosModel *modelToDisplay;
 	BOOL isAutorotating;
 	CADisplayLink *displayLink;
 	CFTimeInterval previousTimestamp;
@@ -45,7 +45,7 @@
 }
 
 @property (readwrite, retain, nonatomic) UIActionSheet *visualizationActionSheet;
-@property (readwrite, retain, nonatomic) Benthos *moleculeToDisplay;
+@property (readwrite, retain, nonatomic) BenthosModel *modelToDisplay;
 @property (readwrite, retain, nonatomic) CADisplayLink *displayLink;
 @property (readwrite, retain, nonatomic) BenthosOpenGLESRenderer *openGLESRenderer;
 
@@ -59,20 +59,20 @@
 - (void)switchVisType:(id)sender;
 //- (void)reloadBackgroundDownloadedModels:(NSNotification *)note;
 -(void)sendHome;
-// Autorotation of molecule
+// Autorotation of model
 - (void)startOrStopAutorotation:(BOOL)setTo;
 - (void)handleAutorotationTimer;
 - (void)stopAutorotate:(NSNotification *)note;
 
-// OpenGL molecule rendering
+// OpenGL model rendering
 - (void)resizeView;
 - (void)runOpenGLBenchmarks;
 - (void)updateSizeOfGLView:(NSNotification *)note;
 - (void)stopRender;
-- (void)startRender:(Benthos*)mol;
+- (void)startRender:(BenthosModel*)mol;
 
-// Manage molecule rendering state
-- (void)handleFinishOfMoleculeRendering:(NSNotification *)note;
+// Manage model rendering state
+- (void)handleFinishOfModelRendering:(NSNotification *)note;
 - (UIActionSheet *)actionSheetForVisualizationState;
 
 // Touch handling

@@ -30,7 +30,7 @@ typedef enum {
 	NSMutableArray *meshes;
     CATransform3D currentCalculatedMatrix;
 	BOOL isAutorotating;
-	BOOL isFirstDrawingOfMolecule, isFrameRenderingFinished;
+	BOOL isFirstDrawingOfModel, isFrameRenderingFinished;
 	//CADisplayLink *displayLink;
 	CFTimeInterval previousTimestamp;
 	BOOL shouldResizeDisplay;

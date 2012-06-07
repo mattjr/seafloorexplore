@@ -1,12 +1,12 @@
 //
 //  BenthosDetailViewController.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 7/5/2008.
 //
-//  This controller manages the detail view of the molecule's properties, such as author, publication, etc.
+//  This controller manages the detail view of the model's properties, such as author, publication, etc.
 
 #import "BenthosDetailViewController.h"
 #import "Benthos.h"
@@ -24,15 +24,15 @@
 @synthesize placemark = _placemark;
 @synthesize detailImage;
 
-- (id)initWithStyle:(UITableViewStyle)style andMolecule:(Benthos *)newMolecule;
+- (id)initWithStyle:(UITableViewStyle)style andBenthosModel:(BenthosModel *)newModel;
 {
 	if ((self = [super initWithStyle:style])) 
 	{
 		self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
-		self.molecule = newMolecule;
-		//[newMolecule readMetadataFromDatabaseIfNecessary];
-		self.title = molecule.title;
+		self.model = newModel;
+		//[newModel readMetadataFromDatabaseIfNecessary];
+		self.title = model.title;
         self.detailImage=nil;
         
         _placemark = [[[CLPlacemark alloc]init] retain];
@@ -52,8 +52,8 @@
 	{
 		self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
-		self.molecule = [[[Benthos alloc] initWithModel:newModel database:NULL] autorelease];
-		self.title = molecule.compound;
+		self.model = [[[BenthosModel alloc] initWithModel:newModel database:NULL] autorelease];
+		self.title = model.compound;
         self.detailImage=[[[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:newModel.imageURL]] autorelease];
         
         _placemark = [[[CLPlacemark alloc]init] retain];
@@ -220,22 +220,22 @@
     switch (row) 
 	{
 		case DESCRIPTION_SECTION: // type -- should be selectable -> checkbox
-			text = molecule.title;
+			text = model.title;
 			break;
        /* case JOURNAL_SECTION:
 		{
 			switch (indexPath.row)
 			{
-				case 0: text = molecule.journalTitle; break;
-				case 1: text = molecule.journalAuthor; break;
-				case 2: text = molecule.journalReference; break;
+				case 0: text = model.journalTitle; break;
+				case 1: text = model.journalAuthor; break;
+				case 2: text = model.journalReference; break;
 			}
 		}; break;
         case SOURCE_SECTION:
-			text = molecule.source;
+			text = model.source;
 			break;
 		case SEQUENCE_SECTION:
-			text = molecule.sequence;
+			text = model.sequence;
 			break;*/
 		default:
 			break;
@@ -261,7 +261,7 @@
 	switch (row) 
 	{
 		case DESCRIPTION_SECTION:
-			text = molecule.desc;;
+			text = model.desc;;
 			break;
                 
         default:
@@ -305,7 +305,7 @@
     CGRect frame = CGRectMake(0, 0, cellWidth, 240);
     MKMapView *map = [[MKMapView alloc] initWithFrame:frame];
     MKCoordinateSpan Span = MKCoordinateSpanMake(5, 5);
-    MKCoordinateRegion region =  MKCoordinateRegionMake(self.molecule.coord, Span);
+    MKCoordinateRegion region =  MKCoordinateRegionMake(self.model.coord, Span);
 
     [map setRegion:region];
     
@@ -361,15 +361,15 @@
 - (CLLocationCoordinate2D)coordinate
 {
    
-    return self.molecule.coord;
+    return self.model.coord;
 }
 
 - (NSString *)title
 {
-    return [molecule title];
+    return [model title];
 }
 
-@synthesize molecule;
+@synthesize model;
 
 @end
 

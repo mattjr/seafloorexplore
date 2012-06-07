@@ -1,9 +1,9 @@
 
 //
 //  BenthosOpenGLES20Renderer.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 4/12/2011.
 //
@@ -284,7 +284,7 @@ extern vtConfig c;
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kBenthosLoadingEndedNotification object:nil ];
 }
--(void)startupVT:(Benthos *)mol
+-(void)startupVT:(BenthosModel *)mol
 {
     NSDictionary *dictionary = 
     [NSDictionary dictionaryWithObjectsAndKeys:mol.filenameWithoutExtension, 
@@ -319,7 +319,7 @@ extern vtConfig c;
             [mol setHasRendered:NO];
             [scene reshape:[NSArray arrayWithObjects:[NSNumber numberWithInt:backingWidth], [NSNumber numberWithInt:backingHeight], nil]];
 
-         //   [self renderFrameForMolecule:mol];
+         //   [self renderFrameForModel:mol];
 
 
         }else{
@@ -388,12 +388,12 @@ extern vtConfig c;
 
 #pragma mark -
 #pragma mark Actual OpenGL rendering
-- (void)bindVertexBuffersForMolecule;
+- (void)bindVertexBuffersForModel;
 {
   //  printf("Finished loading!\n");    
 //    isSceneReady = YES;
 }
-- (void)renderFrameForMolecule:(Benthos *)molecule;
+- (void)renderFrameForModel:(BenthosModel *)model;
 {
     if (!isSceneReady)
     {
@@ -412,13 +412,13 @@ extern vtConfig c;
     }
     
     dispatch_async(openGLESContextQueue, ^{
-        if (![molecule hasRendered])
+        if (![model hasRendered])
         {
             
           //  [scene reshape:[NSArray arrayWithObjects:[NSNumber numberWithInt:backingWidth], [NSNumber numberWithInt:backingHeight], nil]];
             [EAGLContext setCurrentContext:context];
             
-            [molecule setHasRendered:YES];
+            [model setHasRendered:YES];
             // printf("Setup render\n");
             //    [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:NO];
             [self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];

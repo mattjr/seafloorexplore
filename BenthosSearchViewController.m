@@ -1,8 +1,8 @@
 //
 //  BenthosSearchViewController.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 7/22/2008.
 //
@@ -22,7 +22,7 @@
 @end
 
 @implementation BenthosSearchViewController
-@synthesize decompressingfiles,modelData,parseQueue,listURL,molecules,imageDownloadsInProgress,downloadaleModelList;
+@synthesize decompressingfiles,modelData,parseQueue,listURL,models,imageDownloadsInProgress,downloadaleModelList;
 #pragma mark -
 #pragma mark Initialization and teardown
 
@@ -32,12 +32,12 @@
 	if ((self = [super initWithStyle:style])) 
 	{
 		// Initialize the search bar and title
-		molecules=nil;
+		models=nil;
 		self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
         listURL = [url retain];
 
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moleculeFailedDownloading:) name:@"MoleculeFailedDownloading" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelFailedDownloading:) name:@"ModelFailedDownloading" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(addModels:)
                                                      name:kAddModelsNotif
@@ -108,7 +108,7 @@
 
 - (void)dealloc 
 {
-    [molecules release];
+    [models release];
     
     [downloadController release];
     downloadController = nil;
@@ -326,7 +326,7 @@
 			cell.accessoryType = UITableViewCellAccessoryNone;
 		}
 	}
-    else if ((isDownloading) && ([indexPath row] == indexOfDownloadingMolecule))
+    else if ((isDownloading) && ([indexPath row] == indexOfDownloadingModel))
     {
         cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadInProgress"];
 		if (cell == nil) 
@@ -431,8 +431,8 @@
                 
                 
                 NSString *filename = [[[curModel filename] lastPathComponent] stringByDeletingPathExtension];	
-                if(molecules != nil){
-                    for(Benthos *model in molecules){
+                if(models != nil){
+                    for(BenthosModel *model in models){
                         if([[[model filename] stringByDeletingPathExtension] isEqualToString:filename]){
                             alreadyInList=YES;
                             break;
@@ -452,9 +452,9 @@
 
                 
                 
-                if (((isDownloading) && ([indexPath row] != indexOfDownloadingMolecule)) || alreadyInList)
+                if (((isDownloading) && ([indexPath row] != indexOfDownloadingModel)) || alreadyInList)
                 {
-                    if((isDownloading) && ([indexPath row] != indexOfDownloadingMolecule)){
+                    if((isDownloading) && ([indexPath row] != indexOfDownloadingModel)){
                         cell.textLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1.0];
                         cell.detailTextLabel.textColor = [UIColor colorWithWhite:0.2 alpha:1.0];                 
                     }else{
@@ -511,7 +511,7 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-    if ((isDownloading) && ([indexPath row] != indexOfDownloadingMolecule))
+    if ((isDownloading) && ([indexPath row] != indexOfDownloadingModel))
     {
         cell.backgroundColor = [UIColor colorWithWhite:0.4 alpha:1.0];
     }
@@ -548,7 +548,7 @@
 	}
 	else*/
 	{
-        indexOfDownloadingMolecule = indexPath.row;
+        indexOfDownloadingModel = indexPath.row;
         isDownloading = YES;
         self.tableView.backgroundColor = [UIColor colorWithWhite:0.4 alpha:1.0];
         self.tableView.separatorColor = [UIColor colorWithWhite:0.4 alpha:1.0];
@@ -559,7 +559,7 @@
 
         downloadController = [[BenthosDownloadController alloc] initWithModel:selectedModel];
         
-        [downloadController downloadNewMolecule];
+        [downloadController downloadNewModel];
         [self.navigationItem setHidesBackButton: YES animated: YES];
         self.tableView.allowsSelection = NO;
 
@@ -680,8 +680,8 @@
         }
 }
 
-- (void)addModelsToList:(NSArray *)models {
-    for (Model *item in models) {
+- (void)addModelsToList:(NSArray *)mod {
+    for (Model *item in mod) {
         if(item.appVersion <= kMaxiumSupportedFileVersion)
         [downloadaleModelList addObject:item];
     }
@@ -690,8 +690,8 @@
 }
 #pragma mark -
 #pragma mark Accessors
-- (void)moleculeFailedDownloading:(NSNotification *)note;{
-    indexOfDownloadingMolecule = -1;
+- (void)modelFailedDownloading:(NSNotification *)note;{
+    indexOfDownloadingModel = -1;
     isDownloading = NO;
     if(!self.tableView){
         NSLog(@"Null tableview\n");

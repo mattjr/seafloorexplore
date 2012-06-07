@@ -1,8 +1,8 @@
 //
 //  BenthosSearchViewController.h
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 7/22/2008.
 //
@@ -19,7 +19,7 @@
 	NSMutableData *downloadedFileContents;
 	NSURLConnection *searchResultRetrievalConnection;
 	BOOL searchCancelled, isDownloading, isRetrievingCompoundNames;
-    NSInteger indexOfDownloadingMolecule;
+    NSInteger indexOfDownloadingModel;
     
     BenthosDownloadController *downloadController;
     NSMutableString *currentXMLElementString;
@@ -27,7 +27,7 @@
    //NSString *urlbasepath;
     NSMutableData *modelData;
     NSURL *listURL;
-    NSMutableArray *molecules;
+    NSMutableArray *models;
     NSMutableArray *decompressingfiles;
 
     NSMutableDictionary *imageDownloadsInProgress;  // the set of 
@@ -38,7 +38,7 @@
 @property (nonatomic, retain) NSMutableData *modelData;    // the data returned from the NSURLConnection
 @property (nonatomic, retain) NSOperationQueue *parseQueue;     // the queue that manages our NSOperation for parsing earthquake data
 @property (nonatomic, retain) NSURL *listURL;     
-@property(readwrite,retain) NSMutableArray *molecules;
+@property(readwrite,retain) NSMutableArray *models;
 @property (nonatomic, retain) NSMutableDictionary *imageDownloadsInProgress;
 @property(readwrite,retain) 	NSMutableArray *downloadaleModelList;
 @property(readwrite,retain) NSMutableArray *decompressingfiles;
@@ -47,8 +47,8 @@
 - (void)processSearchResultsAppendingNewData:(BOOL)appendData;
 - (void)processHTMLResults;
 - (void)addModels:(NSNotification *)notif ;
-- (void)moleculeFailedDownloading:(NSNotification *)note;
-- (void)addModelsToList:(NSArray *)models ;
+- (void)modelFailedDownloading:(NSNotification *)note;
+- (void)addModelsToList:(NSArray *)mod ;
 - (id)initWithStyle:(UITableViewStyle)style andURL:(NSURL*)url andTitle:(NSString*)title;
 
 - (void)appImageDidLoad:(NSIndexPath *)indexPath;

@@ -1,8 +1,8 @@
 //
 //  BenthosFolderViewController.h
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 7/22/2008.
 //
@@ -19,7 +19,7 @@
 	BOOL searchCancelled,  isRetrievingCompoundNames;
     
     NSMutableData *folderData;
-    NSMutableArray *molecules;
+    NSMutableArray *models;
     NSOperationQueue *parseQueue;
     NSMutableArray *decompressingfiles;
 
@@ -27,7 +27,7 @@
 }
 @property (nonatomic, retain) NSMutableData *folderData;    // the data returned from the NSURLConnection
 @property (nonatomic, retain) NSOperationQueue *parseQueue;     // the queue that manages our NSOperation for parsing earthquake data
-@property(readwrite,retain) NSMutableArray *molecules;
+@property(readwrite,retain) NSMutableArray *models;
 @property(readwrite,retain) NSMutableArray *decompressingfiles;
 
 

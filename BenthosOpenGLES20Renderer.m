@@ -1,8 +1,8 @@
 //
 //  BenthosOpenGLES20Renderer.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 4/12/2011.
 //
@@ -868,7 +868,7 @@
 #pragma mark -
 #pragma mark Actual OpenGL rendering
 
-- (void)renderFrameForMolecule:(Benthos *)molecule;
+- (void)renderFrameForModel:(BenthosModel *)model;
 {
     if (!isSceneReady)
     {
@@ -930,7 +930,7 @@
 }
 
 #pragma mark -
-#pragma mark Molecule 3-D geometry generation
+#pragma mark Model 3-D geometry generation
 
 - (void)configureBasedOnNumberOfAtoms:(unsigned int)numberOfAtoms numberOfBonds:(unsigned int)numberOfBonds;
 {
@@ -1179,10 +1179,10 @@
     }
 }
 
-- (void)bindVertexBuffersForMolecule;
+- (void)bindVertexBuffersForModel;
 {
-//    [super performSelectorOnMainThread:@selector( bindVertexBuffersForMolecule) withObject:nil waitUntilDone:YES];
-    [super bindVertexBuffersForMolecule];
+//    [super performSelectorOnMainThread:@selector( bindVertexBuffersForModel) withObject:nil waitUntilDone:YES];
+    [super bindVertexBuffersForModel];
     [self prepareAmbientOcclusionMap];
     
    // isSceneReady = YES;
@@ -1202,7 +1202,7 @@
     glUniformMatrix3fv(sphereDepthModelViewMatrix, 1, 0, depthModelViewMatrix);
     glUniform3fv(sphereDepthTranslation, 1, modelTranslation);
     
-    float sphereScaleFactor = overallMoleculeScaleFactor * scaleFactor * atomRadiusScaleFactor;
+    float sphereScaleFactor = overallModelScaleFactor * scaleFactor * atomRadiusScaleFactor;
     GLsizei atomVBOStride = sizeof(GLfloat) * 3 + sizeof(GLfloat) * 2 + sizeof(GLfloat) * 2;
     
     for (unsigned int currentAtomType = 0; currentAtomType < NUM_ATOMTYPES; currentAtomType++)
@@ -1231,7 +1231,7 @@
         // Draw the cylinders    
         [cylinderDepthProgram use];
         
-        float cylinderScaleFactor = overallMoleculeScaleFactor * scaleFactor * bondRadiusScaleFactor;
+        float cylinderScaleFactor = overallModelScaleFactor * scaleFactor * bondRadiusScaleFactor;
         GLsizei bondVBOStride = sizeof(GLfloat) * 3 + sizeof(GLfloat) * 3 + sizeof(GLfloat) * 2 + sizeof(GLfloat) * 2;
         GLfloat bondRadius = 1.0;
         
@@ -1293,7 +1293,7 @@
     glUniform1f(sphereRaytracingTexturePatchWidth, (normalizedAOTexturePatchWidth - 2.0 / (GLfloat)AMBIENTOCCLUSIONTEXTUREWIDTH) * 0.5);
     glUniform3fv(sphereRaytracingTranslation, 1, modelTranslation);
 
-    float sphereScaleFactor = overallMoleculeScaleFactor * scaleFactor * atomRadiusScaleFactor;
+    float sphereScaleFactor = overallModelScaleFactor * scaleFactor * atomRadiusScaleFactor;
     GLsizei atomVBOStride = sizeof(GLfloat) * 3 + sizeof(GLfloat) * 2 + sizeof(GLfloat) * 2;
     
     for (unsigned int currentAtomType = 0; currentAtomType < NUM_ATOMTYPES; currentAtomType++)
@@ -1329,7 +1329,7 @@
         glUniform1i(cylinderRaytracingAOTexture, 1);
         glUniform1f(cylinderRaytracingTexturePatchWidth, normalizedAOTexturePatchWidth - 0.5 / (GLfloat)AMBIENTOCCLUSIONTEXTUREWIDTH);
         
-        float cylinderScaleFactor = overallMoleculeScaleFactor * scaleFactor * bondRadiusScaleFactor;
+        float cylinderScaleFactor = overallModelScaleFactor * scaleFactor * bondRadiusScaleFactor;
         GLsizei bondVBOStride = sizeof(GLfloat) * 3 + sizeof(GLfloat) * 3 + sizeof(GLfloat) * 2 + sizeof(GLfloat) * 2;
         GLfloat bondRadius = 1.0;
         
@@ -1368,7 +1368,7 @@
 
     glBlendEquation(GL_FUNC_ADD);
 
-    float sphereScaleFactor = overallMoleculeScaleFactor * currentModelScaleFactor * atomRadiusScaleFactor;
+    float sphereScaleFactor = overallModelScaleFactor * currentModelScaleFactor * atomRadiusScaleFactor;
     GLsizei atomVBOStride = sizeof(GLfloat) * 3 + sizeof(GLfloat) * 2 + sizeof(GLfloat) * 2;
 
     // Draw the spheres
@@ -1412,7 +1412,7 @@
 
     glUniform1i(cylinderAmbientOcclusionDepthTexture, 0);
     
-    float cylinderScaleFactor = overallMoleculeScaleFactor * currentModelScaleFactor * bondRadiusScaleFactor;
+    float cylinderScaleFactor = overallModelScaleFactor * currentModelScaleFactor * bondRadiusScaleFactor;
     GLsizei bondVBOStride = sizeof(GLfloat) * 3 + sizeof(GLfloat) * 3 + sizeof(GLfloat) * 2 + sizeof(GLfloat) * 2;
 	GLfloat bondRadius = 1.0;
     

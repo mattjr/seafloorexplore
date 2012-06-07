@@ -1,18 +1,18 @@
 //
 //  BenthosRootViewController.h
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 6/30/2008.
 //
-//  This controller manages a root view into which the 3D view and the molecule table selection views and animated for the neat flipping effect
+//  This controller manages a root view into which the 3D view and the model table selection views and animated for the neat flipping effect
 
 #import <UIKit/UIKit.h>
 #import <sqlite3.h>
 #import "SegmentsController.h"
 @class BenthosGLViewController;
-@class Benthos;
+@class BenthosModel;
 @class BenthosTableViewController;
 @class BenthosMapViewController;
 @class BenthosHelpScrollViewController;
@@ -28,8 +28,8 @@
 
     SegmentsController     * segmentsController;
     UISegmentedControl     * segmentedControl;
-	Benthos *bufferedMolecule, *previousMolecule;
-	NSMutableArray *molecules;
+	BenthosModel *bufferedModel, *previousModel;
+	NSMutableArray *models;
     NSMutableArray *decompressingfiles;
 	
 	BOOL toggleViewDisabled;
@@ -42,7 +42,7 @@
 @property (nonatomic, readonly) UINavigationController *tableNavigationController;
 @property (nonatomic, readonly) BenthosTableViewController *tableViewController;
 @property (nonatomic, assign) sqlite3 *database;
-@property (nonatomic, retain) NSMutableArray *molecules;
+@property (nonatomic, retain) NSMutableArray *models;
 @property (nonatomic, retain) NSMutableArray *decompressingfiles;
 
 
@@ -51,12 +51,12 @@
 // Manage the switching of views
 - (void)toggleView:(NSNotification *)note;
 
-// Passthroughs for managing molecules
-- (void)loadInitialMolecule;
-- (void)selectedMoleculeDidChange:(NSInteger)newMoleculeIndex;
-- (void)cancelMoleculeLoading;
-- (void)updateListOfMolecules;
-- (void)customURLSelectedForMoleculeDownload:(NSNotification *)note;
+// Passthroughs for managing models
+- (void)loadInitialModel;
+- (void)selectedModelDidChange:(NSInteger)newModelIndex;
+- (void)cancelModelLoading;
+- (void)updateListOfModels;
+- (void)customURLSelectedForModelDownload:(NSNotification *)note;
 - (NSArray *)segmentViewControllers;
 - (void)firstUserExperience;
 

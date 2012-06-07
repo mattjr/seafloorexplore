@@ -1,8 +1,8 @@
 //
 //  BenthosOpenGLES20Renderer.h
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 4/12/2011.
 //
@@ -90,7 +90,7 @@
 - (void)switchToAOLookupFramebuffer;
 - (void)generateSphereDepthMapTexture;
 
-// Molecule 3-D geometry generation
+// Model 3-D geometry generation
 - (void)addTextureCoordinate:(GLfloat *)newTextureCoordinate forAtomType:(BenthosAtomType)atomType;
 - (void)addAmbientOcclusionTextureOffset:(GLfloat *)ambientOcclusionOffset forAtomType:(BenthosAtomType)atomType;
 - (void)addBondDirection:(GLfloat *)newDirection;

@@ -1,8 +1,8 @@
 //
 //  BenthosAppDelegate.h
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 5/18/2008.
 //
@@ -23,14 +23,14 @@
 	UIViewController *splitViewController;
 	NSURLConnection *downloadConnection;
 	NSMutableData *downloadedFileContents;
-	NSString *nameOfDownloadedMolecule;
+	NSString *nameOfDownloadedModel;
 	BOOL downloadCancelled;
 	NSLock *initialDatabaseLoadLock;
-	BOOL isGzipCompressionUsedOnDownload, isHandlingCustomURLMoleculeDownload;
+	BOOL isGzipCompressionUsedOnDownload, isHandlingCustomURLModelDownload;
 //	UIBackgroundTaskIdentifier bgTask;
-	// SQLite database of all molecules
+	// SQLite database of all models
 	sqlite3 *database;
-	NSMutableArray *molecules;
+	NSMutableArray *models;
     NSMutableArray *decompressingfiles;
 }
 
@@ -45,9 +45,9 @@
 - (BOOL)createEditableCopyOfDatabaseIfNeeded; 
 - (void)connectToDatabase;
 - (void)disconnectFromDatabase;
-- (void)loadAllMoleculesFromDatabase;
-- (void)loadInitialMoleculesFromDisk;
-- (void)loadMissingMoleculesIntoDatabase;
+- (void)loadAllModelsFromDatabase;
+- (void)loadInitialModelsFromDisk;
+- (void)loadMissingModelsIntoDatabase;
 
 // Status update methods
 - (void)showStatusIndicator;
@@ -55,10 +55,10 @@
 - (void)updateStatusIndicator;
 - (void)hideStatusIndicator;
 
-// Custom molecule download methods
+// Custom model download methods
 - (BOOL)handleCustomURLScheme:(NSURL *)url;
 - (void)downloadCompleted;
-- (void)saveMoleculeWithData:(NSData *)moleculeData toFilename:(NSString *)filename;
+- (void)saveModelWithData:(NSData *)modelData toFilename:(NSString *)filename;
 -(void)addNewModel:(NSString*)pname;
 + (BOOL) processArchive:(NSString*)filename error:(NSError**)error;
 +(BOOL) removeModelFolder:(NSString*)basename;

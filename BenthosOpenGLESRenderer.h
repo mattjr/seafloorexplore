@@ -2,7 +2,7 @@
 #define GLSLRENDER_H
 //
 //  BenthosOpenGLESRenderer.h
-//  Molecules
+//  Models
 //
 //  Created by Brad Larson on 4/12/2011.
 //  Copyright 2011 Sunset Lake Software LLC. All rights reserved.
@@ -65,9 +65,9 @@ static const BenthosAtomProperties atomProperties[NUM_ATOMTYPES] = {
 	GLint backingHeight;
 	
     CATransform3D currentCalculatedMatrix;
-	BOOL isFirstDrawingOfMolecule, isFrameRenderingFinished, isSceneReady, isRenderingCancelled;
+	BOOL isFirstDrawingOfModel, isFrameRenderingFinished, isSceneReady, isRenderingCancelled;
 
-    float atomRadiusScaleFactor, bondRadiusScaleFactor, overallMoleculeScaleFactor;
+    float atomRadiusScaleFactor, bondRadiusScaleFactor, overallModelScaleFactor;
     float currentModelScaleFactor;
     
 	EAGLContext *context;   
@@ -96,7 +96,7 @@ static const BenthosAtomProperties atomProperties[NUM_ATOMTYPES] = {
 @property(readwrite, retain, nonatomic) EAGLContext *context;
 @property(readwrite) BOOL isFrameRenderingFinished, isSceneReady;
 @property(readonly) NSInteger totalNumberOfVertices, totalNumberOfTriangles;
-@property(readwrite, nonatomic) float atomRadiusScaleFactor, bondRadiusScaleFactor, overallMoleculeScaleFactor;
+@property(readwrite, nonatomic) float atomRadiusScaleFactor, bondRadiusScaleFactor, overallModelScaleFactor;
 @property(readonly) dispatch_queue_t openGLESContextQueue;
 
 // Initialization and teardown
@@ -126,9 +126,9 @@ static const BenthosAtomProperties atomProperties[NUM_ATOMTYPES] = {
 - (void)presentRenderBuffer;
 
 // Actual OpenGL rendering
-- (void)renderFrameForMolecule:(Benthos *)molecule;
+- (void)renderFrameForModel:(BenthosModel *)model;
 
-// Molecule 3-D geometry generation
+// Model 3-D geometry generation
 - (void)configureBasedOnNumberOfAtoms:(unsigned int)numberOfAtoms numberOfBonds:(unsigned int)numberOfBonds;
 - (void)addVertex:(GLfloat *)newVertex forAtomType:(BenthosAtomType)atomType;
 - (void)addIndex:(GLushort *)newIndex forAtomType:(BenthosAtomType)atomType;
@@ -140,12 +140,12 @@ static const BenthosAtomProperties atomProperties[NUM_ATOMTYPES] = {
 - (void)addBondToVertexBuffersWithStartPoint:(Benthos3DPoint)startPoint endPoint:(Benthos3DPoint)endPoint bondColor:(GLubyte *)bondColor bondType:(BenthosBondType)bondType;
 
 // OpenGL drawing routines
-- (void)bindVertexBuffersForMolecule;
-- (void)drawMolecule;
+- (void)bindVertexBuffersForModel;
+- (void)drawModel;
 - (void)freeVertexBuffers;
-- (void)initiateMoleculeRendering;
-- (void)terminateMoleculeRendering;
-- (void)cancelMoleculeRendering;
+- (void)initiateModelRendering;
+- (void)terminateModelRendering;
+- (void)cancelModelRendering;
 - (void)waitForLastFrameToFinishRendering;
 
 @end

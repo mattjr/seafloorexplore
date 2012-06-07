@@ -1,12 +1,12 @@
 //
 //  BenthosDownloadViewController.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 7/2/2008.
 //
-//  This controller manages the pop-up modal view for downloading new molecules from the Protein Data Bank
+//  This controller manages the pop-up modal view for downloading new models from the Protein Data Bank
 
 #import "BenthosDownloadController.h"
 #import "BenthosAppDelegate.h"
@@ -154,7 +154,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 #pragma mark -
 #pragma mark Protein downloading
 
-- (void)downloadNewMolecule;
+- (void)downloadNewModel;
 {
 	// Check if you already have a protein by that name
 	// TODO: Put this check in the init method to grey out download button
@@ -180,11 +180,11 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
 		[alert show];
 		[alert release];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelDidFinishDownloading" object:nil];
 		return;
 	}
 	
-	if (![self downloadMolecule])
+	if (![self downloadModel])
 	{
         NSString *errorMessage = nil;
         
@@ -203,14 +203,14 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
 		[alert show];
 		[alert release];
-        [FlurryAnalytics logError:@"MoleculeFailedDownloading" message:errorMessage exception:nil];
+        [FlurryAnalytics logError:@"ModelFailedDownloading" message:errorMessage exception:nil];
 
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelDidFinishDownloading" object:nil];
 		return;
 	}
 }
 
-- (BOOL)downloadMolecule;
+- (BOOL)downloadModel;
 {
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 
@@ -329,7 +329,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     [downloadConnection cancel];
     [self downloadCompleted];
     downloadCancelled = NO;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelFailedDownloading" object:nil];
 
 }
 
@@ -357,10 +357,10 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 												   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
 	[alert show];
 	[alert release];
-    [FlurryAnalytics logError:@"MoleculeFailedDownloading" message:errorMessage exception:nil];
+    [FlurryAnalytics logError:@"ModelFailedDownloading" message:errorMessage exception:nil];
 
 	[self downloadCompleted];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelFailedDownloading" object:nil];
 
 }
 
@@ -375,7 +375,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
         [downloadConnection cancel];
 		[self downloadCompleted];
 		downloadCancelled = NO;
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelFailedDownloading" object:nil];
 		return;
 	}
 	//[downloadedFileContents appendData:data];
@@ -462,7 +462,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
             [alert release];		
             [connection cancel];
             [self downloadCompleted];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelFailedDownloading" object:nil];
             
             return;
         }
@@ -516,16 +516,16 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
         [alert show];
 		[alert release];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelFailedDownloading" object:nil];
 
 		// TODO: Do some error handling here
 		return;
 	}
 	*/
-	// Notify about the addition of the new molecule
+	// Notify about the addition of the new model
     /*if (searchType == PROTEINDATABANKSEARCH)
     {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:filename];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelDidFinishDownloading" object:filename];
     }
     else
     {*/
@@ -544,7 +544,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
         [alert show];
 		[alert release];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelFailedDownloading" object:nil];
         
 		// TODO: Do some error handling here
 		return;
@@ -596,7 +596,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 }
 -(void) sendDownloadFinishedMsg:(NSString*)filename {
 
-       [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeDidFinishDownloading" object:filename userInfo:[NSDictionary dictionaryWithObject:downloadingmodel  forKey:@"model"]];  
+       [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelDidFinishDownloading" object:filename userInfo:[NSDictionary dictionaryWithObject:downloadingmodel  forKey:@"model"]];  
 }
 #pragma mark -
 #pragma mark Accessors

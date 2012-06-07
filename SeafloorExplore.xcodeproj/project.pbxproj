@@ -116,7 +116,7 @@
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		1D6058910D05DD3D006BFB54 /* Benthos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Benthos.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6058910D05DD3D006BFB54 /* SeafloorExplore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeafloorExplore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		28FD14FF0DC6FC520079059D /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		28FD15070DC6FC5B0079059D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -130,7 +130,7 @@
 		7B48CB9415226A14008FA151 /* NSArray+PerformSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+PerformSelector.h"; sourceTree = "<group>"; };
 		7B48CB9515226A14008FA151 /* NSArray+PerformSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+PerformSelector.m"; sourceTree = "<group>"; };
 		7B48CBA3152271FA008FA151 /* BenthosMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosMapViewController.h; sourceTree = "<group>"; };
-		7B48CBA4152271FA008FA151 /* BenthosMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosMapViewController.m; sourceTree = "<group>"; };
+		7B48CBA4152271FA008FA151 /* BenthosMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BenthosMapViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		7B48CBA6152279A0008FA151 /* MapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotation.h; sourceTree = "<group>"; };
 		7B48CBA7152279A1008FA151 /* MapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotation.m; sourceTree = "<group>"; };
 		7B48CBB11522C187008FA151 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
@@ -237,8 +237,8 @@
 		BC2795B81162500A006DE4C8 /* Default-Landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape.png"; sourceTree = "<group>"; };
 		BC2795B91162500A006DE4C8 /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait.png"; sourceTree = "<group>"; };
 		BC2795BC11625065006DE4C8 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		BC37E7C80E14779E00E11F4F /* Benthos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Benthos.h; sourceTree = "<group>"; };
-		BC37E7C90E14779E00E11F4F /* Benthos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Benthos.m; sourceTree = "<group>"; };
+		BC37E7C80E14779E00E11F4F /* Benthos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Benthos.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		BC37E7C90E14779E00E11F4F /* Benthos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Benthos.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BC4E97C10E69F736006CD291 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		BC4FB6650E4E875900B316CD /* VCTitleCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VCTitleCase.h; sourceTree = "<group>"; };
 		BC4FB6660E4E875900B316CD /* VCTitleCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VCTitleCase.m; sourceTree = "<group>"; };
@@ -253,9 +253,9 @@
 		BCB3A67813553F9D000A286B /* BenthosOpenGLESRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosOpenGLESRenderer.h; sourceTree = "<group>"; };
 		BCB3A67913553F9D000A286B /* BenthosOpenGLESRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosOpenGLESRenderer.m; sourceTree = "<group>"; };
 		BCB3A67B13553FC0000A286B /* BenthosOpenGLES11Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosOpenGLES11Renderer.h; sourceTree = "<group>"; };
-		BCB3A67C13553FC1000A286B /* BenthosOpenGLES11Renderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosOpenGLES11Renderer.m; sourceTree = "<group>"; };
+		BCB3A67C13553FC1000A286B /* BenthosOpenGLES11Renderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BenthosOpenGLES11Renderer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BCB3A67E13553FD2000A286B /* BenthosOpenGLES20Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosOpenGLES20Renderer.h; sourceTree = "<group>"; };
-		BCB3A67F13553FD2000A286B /* BenthosOpenGLES20Renderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosOpenGLES20Renderer.m; sourceTree = "<group>"; };
+		BCB3A67F13553FD2000A286B /* BenthosOpenGLES20Renderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BenthosOpenGLES20Renderer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BCC281280E1B1FCD00978ECA /* NSData+Gzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Gzip.h"; sourceTree = "<group>"; };
 		BCC281290E1B1FCD00978ECA /* NSData+Gzip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Gzip.m"; sourceTree = "<group>"; };
 		BCC286BD0E1D8F9300978ECA /* BenthosAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = BenthosAppDelegate.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -270,7 +270,7 @@
 		BCC286CD0E1D905400978ECA /* BenthosDownloadController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosDownloadController.m; sourceTree = "<group>"; };
 		BCC286CF0E1D905400978ECA /* BenthosTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosTableViewController.h; sourceTree = SOURCE_ROOT; };
 		BCC286D00E1D905400978ECA /* BenthosTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosTableViewController.m; sourceTree = SOURCE_ROOT; };
-		BCC286D50E1D909600978ECA /* Benthos_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Benthos_Prefix.pch; sourceTree = SOURCE_ROOT; };
+		BCC286D50E1D909600978ECA /* SeafloorExplore_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SeafloorExplore_Prefix.pch; path = Users/mattjr/svn/ipadviewer/SeafloorExplore_Prefix.pch; sourceTree = SDKROOT; };
 		BCD12CF711308E1000737166 /* BenthosiPadRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosiPadRootViewController.h; sourceTree = "<group>"; };
 		BCD12CF811308E1000737166 /* BenthosiPadRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosiPadRootViewController.m; sourceTree = "<group>"; };
 		BCDC9F9A0EB37B1E00ADCFA5 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localized.strings; sourceTree = "<group>"; };
@@ -300,7 +300,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D6058910D05DD3D006BFB54 /* Benthos.app */,
+				1D6058910D05DD3D006BFB54 /* SeafloorExplore.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -335,7 +335,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				BCC286D50E1D909600978ECA /* Benthos_Prefix.pch */,
+				BCC286D50E1D909600978ECA /* SeafloorExplore_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
 			name = "Other Sources";
@@ -580,9 +580,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1D6058900D05DD3D006BFB54 /* Benthos */ = {
+		1D6058900D05DD3D006BFB54 /* SeafloorExplore */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Benthos" */;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "SeafloorExplore" */;
 			buildPhases = (
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
@@ -592,9 +592,9 @@
 			);
 			dependencies = (
 			);
-			name = Benthos;
+			name = SeafloorExplore;
 			productName = PortaMol;
-			productReference = 1D6058910D05DD3D006BFB54 /* Benthos.app */;
+			productReference = 1D6058910D05DD3D006BFB54 /* SeafloorExplore.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -606,7 +606,7 @@
 				LastUpgradeCheck = 0410;
 				ORGANIZATIONNAME = "Sunset Lake Software LLC";
 			};
-			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Benthos" */;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "SeafloorExplore" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -620,7 +620,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1D6058900D05DD3D006BFB54 /* Benthos */,
+				1D6058900D05DD3D006BFB54 /* SeafloorExplore */,
 			);
 		};
 /* End PBXProject section */
@@ -765,22 +765,21 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos3.0]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Benthos_Prefix.pch;
+				GCC_PREFIX_HEADER = SeafloorExplore_Prefix.pch;
 				INFOPLIST_FILE = English.lproj/Info.plist;
+				INSTALL_PATH = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/FlurryAnalytics\"",
 				);
-				PRODUCT_NAME = Benthos;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos3.0]" = "";
+				PRODUCT_NAME = SeafloorExplore;
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -790,24 +789,25 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Benthos_Prefix.pch;
+				GCC_PREFIX_HEADER = SeafloorExplore_Prefix.pch;
 				GCC_THUMB_SUPPORT = YES;
 				"GCC_THUMB_SUPPORT[arch=armv6]" = NO;
 				"GCC_THUMB_SUPPORT[arch=armv7]" = YES;
 				INFOPLIST_FILE = English.lproj/Info.plist;
+				INSTALL_PATH = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/FlurryAnalytics\"",
 				);
-				PRODUCT_NAME = Benthos;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PRODUCT_NAME = SeafloorExplore;
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -816,8 +816,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Matthew Johnson-Roberson (X64W2433ZB)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = YES;
@@ -832,10 +832,11 @@
 					Utilities,
 				);
 				OTHER_LDFLAGS = "-lz";
-				PROVISIONING_PROFILE = "B6A79C4A-34B8-4110-9BCC-3B4B5D70525E";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "";
 			};
 			name = Distribution;
@@ -845,25 +846,26 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos3.0]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Benthos_Prefix.pch;
+				GCC_PREFIX_HEADER = SeafloorExplore_Prefix.pch;
 				"GCC_THUMB_SUPPORT[arch=armv6]" = NO;
 				"GCC_THUMB_SUPPORT[arch=armv7]" = YES;
 				INFOPLIST_FILE = English.lproj/Info.plist;
+				INSTALL_PATH = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/FlurryAnalytics\"",
 				);
-				PRODUCT_NAME = Benthos;
+				PRODUCT_NAME = SeafloorExplore;
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos3.0]" = "";
+				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Distribution;
@@ -872,7 +874,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Matthew Johnson-Roberson (X64W2433ZB)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
@@ -888,10 +890,11 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lz";
-				PROVISIONING_PROFILE = "B6A79C4A-34B8-4110-9BCC-3B4B5D70525E";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "";
 			};
 			name = Debug;
@@ -900,8 +903,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Matthew Johnson-Roberson (X64W2433ZB)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos2.0]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = YES;
@@ -916,10 +919,11 @@
 					Utilities,
 				);
 				OTHER_LDFLAGS = "-lz";
-				PROVISIONING_PROFILE = "B6A79C4A-34B8-4110-9BCC-3B4B5D70525E";
-				"PROVISIONING_PROFILE[sdk=iphoneos2.0]" = "";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "";
 			};
 			name = Release;
@@ -927,7 +931,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Benthos" */ = {
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "SeafloorExplore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
@@ -937,7 +941,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Benthos" */ = {
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "SeafloorExplore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,

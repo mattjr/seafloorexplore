@@ -11,14 +11,14 @@
 "Failed to open database with message '%s'." = "Failed to open database with message '%s'.";
 "Initializing database..." = "Initializing database...";
 "Downloading..." = "Downloading...";
-"Downloading molecule..." = "Downloading molecule...";
+"Downloading model..." = "Downloading model...";
 "Error in downloaded file" = "Error in downloaded file";
 "The model file is either corrupted or not of a supported format" = "The model file is either corrupted or not of a supported format";
 "Connection failed" = "Connection failed";
 "Could not connect to the Protein Data Bank" = "Could not connect to the Protein Data Bank";
 "Could not find file" = "Could not find file";
 "No such file exists on the server: %@" = "No such file exists on the server: %@";
-"Molecule location" = "Molecule location";
+"Model location" = "Model location";
 "Error in loading custom location" = "Error in loading custom location";
 "The address could not be reached" = "The address could not be reached";
 "Online Data Source" = "Online Data Source";
@@ -52,7 +52,7 @@
 "Ball-and-stick" = "Ball-and-stick";
 "Visualization mode" = "Visualization mode";
 "Rendering..." = "Rendering...";
-"Download new molecules" = "Download new molecules";
+"Download new models" = "Download new models";
 "Protein Data Bank" = "Protein Data Bank";
 "Retrieving titles..." = "Retrieving titles...";
 "Searching..." = "Searching...";

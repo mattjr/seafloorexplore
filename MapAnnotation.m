@@ -19,7 +19,7 @@
     return self;
 }
 
--(id)initWithCoordinate:(CLLocationCoordinate2D)c withName:(NSString*)name withModel:(Benthos*)mol {
+-(id)initWithCoordinate:(CLLocationCoordinate2D)c withName:(NSString*)name withModel:(BenthosModel*)mol {
     self = [super init];
     if (self) {
         coordinate = c;

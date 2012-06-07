@@ -1,12 +1,12 @@
 //
 //  BenthosTableViewController.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 6/30/2008.
 //
-//  This controller manages the root table of molecules that are stored on the device
+//  This controller manages the root table of models that are stored on the device
 
 #import "BenthosTableViewController.h"
 #import "BenthosRootViewController.h"
@@ -24,16 +24,16 @@
 #pragma mark -
 #pragma mark Initialization and breakdown
 
-- (id)initWithStyle:(UITableViewStyle)style initialSelectedMoleculeIndex:(NSInteger)initialSelectedMoleculeIndex;
+- (id)initWithStyle:(UITableViewStyle)style initialSelectedModelIndex:(NSInteger)initialSelectedModelIndex;
 {
 	if ((self = [super initWithStyle:style])) 
 	{        
         self.title = NSLocalizedStringFromTable(@"Models", @"Localized", nil);
-		selectedIndex = initialSelectedMoleculeIndex;
+		selectedIndex = initialSelectedModelIndex;
         
         self.navigationItem.rightBarButtonItem = self.editButtonItem;
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moleculeDidFinishDownloading:) name:@"MoleculeDidFinishDownloading" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelDidFinishDownloading:) name:@"ModelDidFinishDownloading" object:nil];
 
 		
 		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
@@ -47,7 +47,7 @@
 //			tableTextColor = [[UIColor whiteColor] retain];
 			self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
 
-			UIBarButtonItem *downloadButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(displayMoleculeDownloadView)];
+			UIBarButtonItem *downloadButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(displayModelDownloadView)];
 			self.navigationItem.leftBarButtonItem = downloadButtonItem;
 			[downloadButtonItem release];
 		}
@@ -103,7 +103,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[tableTextColor release];
-	[molecules release];
+	[models release];
 	[super dealloc];
 }
 
@@ -115,10 +115,10 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleView" object:nil];
 }
 
-- (IBAction)displayMoleculeDownloadView;
+- (IBAction)displayModelDownloadView;
 {
     BenthosFolderViewController *folderViewController = [[BenthosFolderViewController alloc] initWithStyle:UITableViewStylePlain];
-    folderViewController.molecules = molecules;
+    folderViewController.models = models;
     folderViewController.decompressingfiles = decompressingfiles;
 
     [self.navigationController pushViewController:folderViewController animated:YES];
@@ -213,41 +213,41 @@
     
 }
 
--(void)addMolAndShow:(Benthos *)newMolecule{
+-(void)addMolAndShow:(BenthosModel *)newModel{
     for(BackgroundProcessingFile *file in decompressingfiles){
-        if([[newMolecule filenameWithoutExtension] isEqualToString:[file filenameWithoutExtension]]){
+        if([[newModel filenameWithoutExtension] isEqualToString:[file filenameWithoutExtension]]){
             [decompressingfiles removeObject:file];
             break;
         }
         
     }
 
-    [molecules addObject:newMolecule];
-    [newMolecule release];
+    [models addObject:newModel];
+    [newModel release];
     
     if(    UIApplicationStateActive== [[UIApplication sharedApplication] applicationState]){
         
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
         {
-            selectedIndex = ([molecules count] - 1);
+            selectedIndex = ([models count] - 1);
             
-            [self.delegate selectedMoleculeDidChange:selectedIndex];            
+            [self.delegate selectedModelDidChange:selectedIndex];            
         }else{
             
-            if ([molecules count] == 1)
+            if ([models count] == 1)
             {
-                [self.delegate selectedMoleculeDidChange:0];
+                [self.delegate selectedModelDidChange:0];
             }
         }
     }
     [self.tableView reloadData];
-    //		[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:([molecules count] - 1) inSection:0]] withRowAnimation:UITableViewRowAnimationBottom];		
+    //		[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:([models count] - 1) inSection:0]] withRowAnimation:UITableViewRowAnimationBottom];		
 
     [self.navigationController popToViewController:self animated:YES];
 
 }
 
-- (void)moleculeDidFinishDownloading:(NSNotification *)note;
+- (void)modelDidFinishDownloading:(NSNotification *)note;
 {
     if ([note object] == nil)
     {
@@ -267,17 +267,17 @@
     //dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     
 	NSError *error=nil;
-         Benthos *newMolecule=nil;
+         BenthosModel *newModel=nil;
 	if([BenthosAppDelegate processArchive:filename error:&error]){
         
-         newMolecule=[[Benthos alloc] initWithModel:[[note userInfo] objectForKey:@"model"] database:self.database];
+         newModel=[[BenthosModel alloc] initWithModel:[[note userInfo] objectForKey:@"model"] database:self.database];
                 
     }else{
          dispatch_async(dispatch_get_main_queue(), ^{ [self showError:error];               
-             [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];});
+             [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelFailedDownloading" object:nil];});
  
     }
-         if (newMolecule == nil)
+         if (newModel == nil)
          {
              NSMutableDictionary* details = [NSMutableDictionary dictionary];
              [details setValue:NSLocalizedStringFromTable(@"Error in downloaded file", @"Localized", nil) forKey:NSLocalizedDescriptionKey];
@@ -321,7 +321,7 @@
                  // populate the error object with the details
                  error = [NSError errorWithDomain:@"benthos" code:200 userInfo:details];*/
                  dispatch_async(dispatch_get_main_queue(), ^{ [self showError:error];
-                     [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
+                     [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelFailedDownloading" object:nil];
                  });
              }
              NSLog(@"Removing corrupt folder %@\n",folder );
@@ -333,7 +333,7 @@
          {
              //NSLog(@"Non Startup Decompress Finished %@\n",filename);
 
-             dispatch_async(dispatch_get_main_queue(), ^{ [self addMolAndShow:newMolecule]; });
+             dispatch_async(dispatch_get_main_queue(), ^{ [self addMolAndShow:newModel]; });
          }			
 
      }];
@@ -345,7 +345,7 @@
         [decompressingfiles addObject:curProg];
         [curProg release];
 
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoleculeFailedDownloading" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelFailedDownloading" object:nil];
         [self.navigationController popToViewController:self animated:YES];
         
     }
@@ -392,7 +392,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-    if([molecules count] == 0){
+    if([models count] == 0){
         self.navigationItem.rightBarButtonItem = nil;
 
         if([tableView isEditing]){
@@ -436,7 +436,7 @@
 	}else{
         
         NSString *typeString;
-        if (index <= [molecules count]){
+        if (index <= [models count]){
             typeString=NSLocalizedStringFromTable(@"InProgress", @"Localized", nil);
         }else{
             typeString= @"Models";
@@ -512,19 +512,19 @@
         
         
         
-        if (index <= [molecules count])
+        if (index <= [models count])
         {
-            if(molecules == nil || index-1 >= [molecules count] || [molecules objectAtIndex:(index-1)] == nil){
-                NSLog(@"Error trying to acess null molecule %d\n",[molecules count]);
+            if(models == nil || index-1 >= [models count] || [models objectAtIndex:(index-1)] == nil){
+                NSLog(@"Error trying to acess null model %d\n",[models count]);
                 return cell;
             }
-            //      int l=[[molecules objectAtIndex:(index-1)] numberOfAtoms];
-            //printf("Fail Val 0x%x %d\n",(int)[molecules objectAtIndex:(index-1)], l);
+            //      int l=[[models objectAtIndex:(index-1)] numberOfAtoms];
+            //printf("Fail Val 0x%x %d\n",(int)[models objectAtIndex:(index-1)], l);
             //printf("%d\n",index-1);
-            //NSString *fileNameWithoutExtension = [[molecules objectAtIndex:(index-1)] filenameWithoutExtension];
-            cell.textLabel.text = [NSString stringWithString:[[molecules objectAtIndex:(index-1)] title]];
+            //NSString *fileNameWithoutExtension = [[models objectAtIndex:(index-1)] filenameWithoutExtension];
+            cell.textLabel.text = [NSString stringWithString:[[models objectAtIndex:(index-1)] title]];
             
-            cell.detailTextLabel.text = [NSString stringWithString:[[molecules objectAtIndex:(index-1)] desc]];
+            cell.detailTextLabel.text = [NSString stringWithString:[[models objectAtIndex:(index-1)] desc]];
             
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -532,7 +532,7 @@
 
             NSString *imgFilePath=[NSString stringWithFormat:@"%@/%@/m.jpg",
                                    documentsDirectory,
-                                   [[molecules objectAtIndex:(index-1)] filenameWithoutExtension]];
+                                   [[models objectAtIndex:(index-1)] filenameWithoutExtension]];
             if([[NSFileManager defaultManager] fileExistsAtPath:imgFilePath])
                 cell.imageView.image=[UIImage imageWithContentsOfFile:imgFilePath];
             else 
@@ -547,9 +547,9 @@
                 cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:NSLocalizedStringFromTable(@"InProgress", @"Localized", nil)] autorelease];
             }
             */
-            int idx= index-[molecules count] -1;
+            int idx= index-[models count] -1;
             if(idx >= [decompressingfiles count]){
-                NSLog(@"Freak out %d %d %d\n",idx,[molecules count],[decompressingfiles count]);
+                NSLog(@"Freak out %d %d %d\n",idx,[models count],[decompressingfiles count]);
                 return cell;
             }
             BackgroundProcessingFile * file=[decompressingfiles objectAtIndex:idx];
@@ -593,11 +593,11 @@
 {
 	if ([BenthosAppDelegate isRunningOniPad])
 	{
-		return [molecules count]+ [decompressingfiles count];
+		return [models count]+ [decompressingfiles count];
 	}
 	else
 	{		
-		return ([molecules count] + [decompressingfiles count]+ 1);
+		return ([models count] + [decompressingfiles count]+ 1);
 	}
 }
 
@@ -612,13 +612,13 @@
 	
 	if (index == 0)
 	{
-		[self displayMoleculeDownloadView];
+		[self displayModelDownloadView];
 	}
 	else
 	{
 		selectedIndex = (index - 1);
 		
-		[self.delegate selectedMoleculeDidChange:(index - 1)];
+		[self.delegate selectedModelDidChange:(index - 1)];
 		[tableView deselectRowAtIndexPath:indexPath animated:NO];
 		[tableView reloadData];
 	}
@@ -631,11 +631,11 @@
 		index++;
 	
 	if (index == 0)
-		[self displayMoleculeDownloadView];
+		[self displayModelDownloadView];
 	else
 	{
 		// Display detail view for the protein
-		BenthosDetailViewController *detailViewController = [[BenthosDetailViewController alloc] initWithStyle:UITableViewStyleGrouped andMolecule: [molecules objectAtIndex:(index - 1)]];
+		BenthosDetailViewController *detailViewController = [[BenthosDetailViewController alloc] initWithStyle:UITableViewStyleGrouped andModel: [models objectAtIndex:(index - 1)]];
 		
 		[self.navigationController pushViewController:detailViewController animated:YES];
 		[detailViewController release];
@@ -643,13 +643,13 @@
 	}
 }
 
-// Make sure that the "Download new molecules" item is not deletable
+// Make sure that the "Download new models" item is not deletable
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
     
 	if ([BenthosAppDelegate isRunningOniPad])
 	{
-        if([indexPath row] >= [molecules count])
+        if([indexPath row] >= [models count])
             return  UITableViewCellEditingStyleNone;
         
 		return UITableViewCellEditingStyleDelete;
@@ -661,7 +661,7 @@
 		{
 			return UITableViewCellEditingStyleNone;
 		}
-		else if(([indexPath row]-1) >= [molecules count])
+		else if(([indexPath row]-1) >= [models count])
         {
             return  UITableViewCellEditingStyleNone;
             
@@ -681,29 +681,29 @@
 		index++;
 	}
 	
-	if (index == 0) // Can't delete the Download new molecules item
+	if (index == 0) // Can't delete the Download new models item
 	{
 		return;
 	}
     
-    if(index > [molecules count])
+    if(index > [models count])
         return;
     // If row is deleted, remove it from the list.
     if (editingStyle == UITableViewCellEditingStyleDelete) 
 	{
-        //[mapViewController removeModel:[molecules objectAtIndex:(index - 1)]];
-		[[molecules objectAtIndex:(index - 1)] deleteMolecule];
-		[molecules removeObjectAtIndex:(index - 1)];
+        //[mapViewController removeModel:[models objectAtIndex:(index - 1)]];
+		[[models objectAtIndex:(index - 1)] deleteModel];
+		[models removeObjectAtIndex:(index - 1)];
 		if ( (index - 1) == selectedIndex )
 		{
-			if ([molecules count] < 1)
+			if ([models count] < 1)
 			{
-				[self.delegate selectedMoleculeDidChange:0];
+				[self.delegate selectedModelDidChange:0];
 			}
 			else
 			{
 				selectedIndex = 0;
-				[self.delegate selectedMoleculeDidChange:0];
+				[self.delegate selectedModelDidChange:0];
 			}
 		}
 		else if ( (index - 1) < selectedIndex )
@@ -730,7 +730,7 @@
 
 @synthesize delegate;
 @synthesize database;
-@synthesize molecules;
+@synthesize models;
 @synthesize selectedIndex;
 @synthesize decompressingfiles;
 

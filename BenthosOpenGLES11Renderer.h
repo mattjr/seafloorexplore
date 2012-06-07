@@ -1,8 +1,8 @@
 //
 //  BenthosOpenGLES11Renderer.h
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 4/12/2011.
 //
@@ -14,7 +14,7 @@
 {
 }
 
-// Molecule 3-D geometry generation
+// Model 3-D geometry generation
 - (void)addNormal:(GLfloat *)newNormal forAtomType:(BenthosAtomType)atomType;
 - (void)addBondNormal:(GLfloat *)newNormal;
 

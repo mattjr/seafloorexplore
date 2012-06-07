@@ -6,7 +6,7 @@
 //
 
 #import "SegmentsController.h"
-
+#import "BenthosMapViewController.h"
 @interface SegmentsController ()
 @property (nonatomic, retain, readwrite) NSArray                * viewControllers;
 @property (nonatomic, retain, readwrite) UINavigationController * navigationController;
@@ -30,6 +30,9 @@
     UIViewController * incomingViewController = [self.viewControllers objectAtIndex:index];
     
     NSArray * theViewControllers = [NSArray arrayWithObject:incomingViewController];
+    if([incomingViewController isKindOfClass:[BenthosMapViewController class]]){
+        [(BenthosMapViewController*)incomingViewController updatePins];
+    }
     [self.navigationController setViewControllers:theViewControllers animated:NO];
     
     incomingViewController.navigationItem.titleView = aSegmentedControl;

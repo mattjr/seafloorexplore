@@ -1,8 +1,8 @@
 //
 //  BenthosOpenGLES11Renderer.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 4/12/2011.
 //
@@ -242,7 +242,7 @@ void normalize(GLfloat *v)
 #pragma mark -
 #pragma mark Actual OpenGL rendering
 
-- (void)renderFrameForMolecule:(Benthos *)molecule;
+- (void)renderFrameForModel:(BenthosModel *)model;
 {
     if (dispatch_semaphore_wait(frameRenderingSemaphore, DISPATCH_TIME_NOW) != 0)
     {
@@ -256,7 +256,7 @@ void normalize(GLfloat *v)
         
         [self startDrawingFrame];
         
-        if (isFirstDrawingOfMolecule)
+        if (isFirstDrawingOfModel)
         {
             [self configureProjection];
         }
@@ -266,13 +266,13 @@ void normalize(GLfloat *v)
         glMatrixMode(GL_MODELVIEW);
         
         // Reset rotation system
-        if (isFirstDrawingOfMolecule)
+        if (isFirstDrawingOfModel)
         {
             glLoadIdentity();
             glMultMatrixf(currentModelViewMatrix);
             [self configureLighting];
             
-            isFirstDrawingOfMolecule = NO;
+            isFirstDrawingOfModel = NO;
         }
 		
         // Set the new matrix that has been calculated from the Core Animation transform
@@ -284,9 +284,9 @@ void normalize(GLfloat *v)
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        if (molecule.isDoneRendering)
+        if (model.isDoneRendering)
         {
-            [self drawMolecule];
+            [self drawModel];
         }
         
         [self presentRenderBuffer];
@@ -300,7 +300,7 @@ void normalize(GLfloat *v)
 }
 
 #pragma mark -
-#pragma mark Molecule 3-D geometry generation
+#pragma mark Model 3-D geometry generation
 
 - (void)addVertex:(GLfloat *)newVertex forAtomType:(BenthosAtomType)atomType;
 {
@@ -387,7 +387,7 @@ void normalize(GLfloat *v)
 
 - (void)addAtomToVertexBuffers:(BenthosAtomType)atomType atPoint:(Benthos3DPoint)newPoint;
 {
-    float radiusScaleFactor = overallMoleculeScaleFactor * atomRadiusScaleFactor;
+    float radiusScaleFactor = overallModelScaleFactor * atomRadiusScaleFactor;
 	GLfloat newVertex[3];
 	GLfloat atomRadius = 0.4f;
     
@@ -431,7 +431,7 @@ void normalize(GLfloat *v)
 
 - (void)addBondToVertexBuffersWithStartPoint:(Benthos3DPoint)startPoint endPoint:(Benthos3DPoint)endPoint bondColor:(GLubyte *)bondColor bondType:(BenthosBondType)bondType;
 {
-    float radiusScaleFactor = overallMoleculeScaleFactor * bondRadiusScaleFactor;
+    float radiusScaleFactor = overallModelScaleFactor * bondRadiusScaleFactor;
 
     if (currentBondVBO >= MAX_BOND_VBOS)
     {
@@ -525,14 +525,14 @@ void normalize(GLfloat *v)
 #pragma mark -
 #pragma mark OpenGL drawing routines
 
-- (void)bindVertexBuffersForMolecule;
+- (void)bindVertexBuffersForModel;
 {
-    [super bindVertexBuffersForMolecule];
+    [super bindVertexBuffersForModel];
     
     isSceneReady = YES;
 }
 
-- (void)drawMolecule;
+- (void)drawModel;
 {
     // Draw all atoms first, binned based on their type
     for (unsigned int currentAtomType = 0; currentAtomType < NUM_ATOMTYPES; currentAtomType++)

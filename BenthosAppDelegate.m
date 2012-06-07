@@ -1,8 +1,8 @@
 //
 //  BenthossAppDelegate.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 5/18/2008.
 //
@@ -21,7 +21,7 @@
 #import "BenthosOpenGLESRenderer.h"
 #import "JSGCDDispatcher.h"
 #import "BackgroundProcessingFile.h"
-#define MOLECULES_DATABASE_VERSION 1
+#define MODELS_DATABASE_VERSION 1
 
 @implementation BenthosAppDelegate
 
@@ -44,7 +44,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 		return NO;
 	}
 	window.backgroundColor = [UIColor blackColor];
-	molecules = [[NSMutableArray alloc] init];
+	models = [[NSMutableArray alloc] init];
     decompressingfiles = [[NSMutableArray alloc] init];
 
 
@@ -66,14 +66,14 @@ void uncaughtExceptionHandler(NSException *exception) {
 		rootViewController = [[BenthosRootViewController alloc] init];
 		[window addSubview:rootViewController.view];
 	}
-    rootViewController.molecules = molecules;
+    rootViewController.models = models;
     rootViewController.decompressingfiles = decompressingfiles;
 	
     [window makeKeyAndVisible];
 	[window layoutSubviews];	
 	
 	// Start the initialization of the database, if necessary
-	isHandlingCustomURLMoleculeDownload = NO;
+	isHandlingCustomURLModelDownload = NO;
 	downloadedFileContents = nil;
 	initialDatabaseLoadLock = [[NSLock alloc] init];
     //networkQueue = [[[NSOperationQueue alloc] init] autorelease];
@@ -84,12 +84,12 @@ void uncaughtExceptionHandler(NSException *exception) {
 	
 	if (url != nil)
 	{
-		isHandlingCustomURLMoleculeDownload = YES;		
+		isHandlingCustomURLModelDownload = YES;		
 	}
     [self showStatusIndicator];
   //  [self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
-  //  [self loadInitialMoleculesFromDisk];
-    [self performSelectorInBackground:@selector(loadInitialMoleculesFromDisk) withObject:nil];	
+  //  [self loadInitialModelsFromDisk];
+    [self performSelectorInBackground:@selector(loadInitialModelsFromDisk) withObject:nil];	
    // [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:YES];
     [self hideStatusIndicator];
 	return YES;
@@ -101,7 +101,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 	
 	if (url != nil)
 	{
-		isHandlingCustomURLMoleculeDownload = YES;		
+		isHandlingCustomURLModelDownload = YES;		
 	}
 	
 	// Deal with case where you are in the table view
@@ -113,7 +113,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 		}
 	}
 	
-	// Handle the Molecules custom URL scheme
+	// Handle the Models custom URL scheme
 	[self handleCustomURLScheme:url];
 	
 	return YES;
@@ -123,7 +123,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 {
 	[splitViewController release];
 	[initialDatabaseLoadLock release];
-	[molecules release];
+	[models release];
 	[rootViewController release];
 	[window release];
 	[super dealloc];
@@ -228,7 +228,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 {
 // TODO: Maybe write out all database entries to disk
 	//	[books makeObjectsPerformSelector:@selector(dehydrate)];
-	[Benthos finalizeStatements];
+	[BenthosModel finalizeStatements];
     // Close the database.
     if (sqlite3_close(database) != SQLITE_OK) 
 	{
@@ -238,12 +238,12 @@ void uncaughtExceptionHandler(NSException *exception) {
 	database = nil;
 }
 
-- (void)loadInitialMoleculesFromDisk;
+- (void)loadInitialModelsFromDisk;
 {
 	[initialDatabaseLoadLock lock];
 
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	rootViewController.molecules = nil;
+	rootViewController.models = nil;
 
 	if ([self createEditableCopyOfDatabaseIfNeeded])
 	{
@@ -315,7 +315,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 			}
 		}
 		
-		[self loadMissingMoleculesIntoDatabase];
+		[self loadMissingModelsIntoDatabase];
 		
 		[[NSUserDefaults standardUserDefaults] synchronize];
         [self performSelectorOnMainThread:@selector(hideStatusIndicator) withObject:nil waitUntilDone:YES];
@@ -323,15 +323,15 @@ void uncaughtExceptionHandler(NSException *exception) {
 	}
 	else
 	{
-		// The MySQL database has been created, so load molecules from the database
+		// The MySQL database has been created, so load models from the database
 		[self connectToDatabase];
 		// TODO: Check to make sure that the proper version of the database is installed
-		[self loadAllMoleculesFromDatabase];
-		[self loadMissingMoleculesIntoDatabase];		
+		[self loadAllModelsFromDatabase];
+		[self loadMissingModelsIntoDatabase];		
 	}
 	
 	rootViewController.database = database;
-	rootViewController.molecules = molecules;
+	rootViewController.models = models;
 	[initialDatabaseLoadLock unlock];
 
 	if ([BenthosAppDelegate isRunningOniPad])
@@ -339,30 +339,30 @@ void uncaughtExceptionHandler(NSException *exception) {
 		[[rootViewController.tableViewController tableView] performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
 	}
 	
-	if (!isHandlingCustomURLMoleculeDownload)
-		[rootViewController loadInitialMolecule];
+	if (!isHandlingCustomURLModelDownload)
+		[rootViewController loadInitialModel];
 
 	[pool release];
 }
 
-- (void)loadAllMoleculesFromDatabase;
+- (void)loadAllModelsFromDatabase;
 {
 	const char *sql = "SELECT * FROM models";
-	sqlite3_stmt *moleculeLoadingStatement;
+	sqlite3_stmt *modelLoadingStatement;
 
-	if (sqlite3_prepare_v2(database, sql, -1, &moleculeLoadingStatement, NULL) == SQLITE_OK) 
+	if (sqlite3_prepare_v2(database, sql, -1, &modelLoadingStatement, NULL) == SQLITE_OK) 
 	{
-		while (sqlite3_step(moleculeLoadingStatement) == SQLITE_ROW) 
+		while (sqlite3_step(modelLoadingStatement) == SQLITE_ROW) 
 		{
-			Benthos *newMolecule = [[Benthos alloc] initWithSQLStatement:moleculeLoadingStatement database:database];
-			if (newMolecule != nil)
-				[molecules addObject:newMolecule];
+			BenthosModel *newModel = [[BenthosModel alloc] initWithSQLStatement:modelLoadingStatement database:database];
+			if (newModel != nil)
+				[models addObject:newModel];
 				
-			[newMolecule release];
+			[newModel release];
 		}
 	}
 	// "Finalize" the statement - releases the resources associated with the statement.
-	sqlite3_finalize(moleculeLoadingStatement);	
+	sqlite3_finalize(modelLoadingStatement);	
 }
 -(void)addNewModel:(NSString*)pname
 {
@@ -383,13 +383,13 @@ void uncaughtExceptionHandler(NSException *exception) {
     if([filesystemModels count] >0){
         
         // Parse the PDB file into the database
-        Benthos *newMolecule = [[Benthos alloc] initWithModel:[filesystemModels objectAtIndex:0] database:database];
-        if (newMolecule != nil)
+        BenthosModel *newModel = [[BenthosModel alloc] initWithModel:[filesystemModels objectAtIndex:0] database:database];
+        if (newModel != nil)
         {
             
-            [molecules addObject:newMolecule];
+            [models addObject:newModel];
         }
-        [newMolecule release];		
+        [newModel release];		
     }
     else{
         NSLog(@"Failed to Parse'%@'.", preloadedXMLPath);
@@ -415,25 +415,25 @@ void uncaughtExceptionHandler(NSException *exception) {
 
 }
 
-- (void)loadMissingMoleculesIntoDatabase;
+- (void)loadMissingModelsIntoDatabase;
 {
-	// First, load all molecule names from the database
-	NSMutableDictionary *moleculeFilenameLookupTable = [[NSMutableDictionary alloc] init];
+	// First, load all model names from the database
+	NSMutableDictionary *modelFilenameLookupTable = [[NSMutableDictionary alloc] init];
 	
 	const char *sql = "SELECT * FROM models";
-	sqlite3_stmt *moleculeLoadingStatement;
+	sqlite3_stmt *modelLoadingStatement;
 	
-	if (sqlite3_prepare_v2(database, sql, -1, &moleculeLoadingStatement, NULL) == SQLITE_OK) 
+	if (sqlite3_prepare_v2(database, sql, -1, &modelLoadingStatement, NULL) == SQLITE_OK) 
 	{
-		while (sqlite3_step(moleculeLoadingStatement) == SQLITE_ROW) 
+		while (sqlite3_step(modelLoadingStatement) == SQLITE_ROW) 
 		{
-			char *stringResult = (char *)sqlite3_column_text(moleculeLoadingStatement, 3);
+			char *stringResult = (char *)sqlite3_column_text(modelLoadingStatement, 3);
 			NSString *sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
 			NSString *basename = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] stringByDeletingPathExtension];
-			[moleculeFilenameLookupTable setValue:[NSNumber numberWithBool:YES] forKey:basename];
+			[modelFilenameLookupTable setValue:[NSNumber numberWithBool:YES] forKey:basename];
 		}
 	}
-	sqlite3_finalize(moleculeLoadingStatement);	
+	sqlite3_finalize(modelLoadingStatement);	
 	
 	// Now, check all the files on disk to see if any are missing from the database
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -462,7 +462,7 @@ void uncaughtExceptionHandler(NSException *exception) {
             [direnum skipDescendents];
         NSString *basename = [[[pname stringByDeletingLastPathComponent] lastPathComponent] stringByDeletingPathExtension];	
         
-        if([[[pname pathExtension] lowercaseString] isEqualToString:@"tar"] && ([moleculeFilenameLookupTable valueForKey:[pname stringByDeletingPathExtension]] == nil)){
+        if([[[pname pathExtension] lowercaseString] isEqualToString:@"tar"] && ([modelFilenameLookupTable valueForKey:[pname stringByDeletingPathExtension]] == nil)){
             //NSLog(@"Adding %@\n",[pname stringByDeletingPathExtension]);
             NSString *installedTexPath = [documentsDirectory stringByAppendingPathComponent:[pname stringByDeletingPathExtension]];
             if ([[NSFileManager defaultManager] fileExistsAtPath:installedTexPath]){
@@ -515,7 +515,7 @@ void uncaughtExceptionHandler(NSException *exception) {
                 }
             }];
             
-        }else if(([basename length] > 0) && ([moleculeFilenameLookupTable valueForKey:basename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"xml"])){
+        }else if(([basename length] > 0) && ([modelFilenameLookupTable valueForKey:basename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"xml"])){
             [self addNewModel: pname]; 
             
         }
@@ -523,7 +523,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 		
 	}
 	
-	[moleculeFilenameLookupTable release];
+	[modelFilenameLookupTable release];
 }
 
 #pragma mark -
@@ -536,7 +536,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 
 - (void)showDownloadIndicator;
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"FileLoadingStarted" object:NSLocalizedStringFromTable(@"Downloading molecule...", @"Localized", nil)];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"FileLoadingStarted" object:NSLocalizedStringFromTable(@"Downloading model...", @"Localized", nil)];
 }
 
 - (void)updateStatusIndicator;
@@ -570,7 +570,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 {
 	if (database != nil)
 	{
-		[rootViewController cancelMoleculeLoading];
+		[rootViewController cancelModelLoading];
 		[self disconnectFromDatabase];
 	}
 }
@@ -584,23 +584,23 @@ void uncaughtExceptionHandler(NSException *exception) {
 	}*/
   //  bgTask = UIBackgroundTaskInvalid; 
  //   [rootViewController.glViewController showScanningIndicator:nil];
-   //[rootViewController.glViewController.moleculeToDisplay showStatusIndicator];
+   //[rootViewController.glViewController.modelToDisplay showStatusIndicator];
 
     /*dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]; 
-    [self loadMissingMoleculesIntoDatabase];
+    [self loadMissingModelsIntoDatabase];
     [pool drain];
     });*/
  
   //  [self performSelectorOnMainThread:@selector(splashFade) withObject:nil waitUntilDone:YES];
     //[self splashFade];
-  //  [self performSelectorInBackground:@selector(loadMissingMoleculesIntoDatabase) withObject:nil];
-	//[self loadMissingMoleculesIntoDatabase];
+  //  [self performSelectorInBackground:@selector(loadMissingModelsIntoDatabase) withObject:nil];
+	//[self loadMissingModelsIntoDatabase];
  //  [rootViewController.glViewController hideScanningIndicator:nil];
     rootViewController.glViewController.openGLESRenderer.isSceneReady=YES;
     [rootViewController.glViewController startOrStopAutorotation:YES];
 
-   // [rootViewController.glViewController.moleculeToDisplay hideStatusIndicator];
+   // [rootViewController.glViewController.modelToDisplay hideStatusIndicator];
 
 }
 
@@ -609,7 +609,7 @@ void uncaughtExceptionHandler(NSException *exception) {
     [rootViewController.glViewController startOrStopAutorotation:NO];
     rootViewController.glViewController.openGLESRenderer.isSceneReady=NO;
     [rootViewController.glViewController.openGLESRenderer waitForLastFrameToFinishRendering];
-	[rootViewController cancelMoleculeLoading];
+	[rootViewController cancelModelLoading];
 
     
    /* if ([[NSOperationQueue sharedOperationQueue] operationCount]>0) { 
@@ -635,18 +635,18 @@ void uncaughtExceptionHandler(NSException *exception) {
 
 
 #pragma mark -
-#pragma mark Custom molecule download methods
+#pragma mark Custom model download methods
 
 - (BOOL)handleCustomURLScheme:(NSURL *)url;
 {
 	if (url != nil)
 	{
-		isHandlingCustomURLMoleculeDownload = YES;
+		isHandlingCustomURLModelDownload = YES;
 		[NSThread sleepForTimeInterval:0.5]; // Wait for database to load
 		
 		NSString *pathComponentForCustomURL = [[url host] stringByAppendingString:[url path]];
 		NSString *locationOfRemotePDBFile = [NSString stringWithFormat:@"http://%@", pathComponentForCustomURL];
-		nameOfDownloadedMolecule = [[pathComponentForCustomURL lastPathComponent] retain];
+		nameOfDownloadedModel = [[pathComponentForCustomURL lastPathComponent] retain];
 		
 		// Check to make sure that the file has not already been downloaded, if so, just switch to it
 		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -654,15 +654,15 @@ void uncaughtExceptionHandler(NSException *exception) {
 		
 		[initialDatabaseLoadLock lock];
 
-		if ([[NSFileManager defaultManager] fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:nameOfDownloadedMolecule]])
+		if ([[NSFileManager defaultManager] fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:nameOfDownloadedModel]])
 		{
 			
-			NSInteger indexForMoleculeMatchingThisName = 0, currentIndex = 0;
-			for (Benthos *currentMolecule in molecules)
+			NSInteger indexForModelMatchingThisName = 0, currentIndex = 0;
+			for (BenthosModel *currentModel in models)
 			{
-				if ([[currentMolecule filename] isEqualToString:nameOfDownloadedMolecule])
+				if ([[currentModel filename] isEqualToString:nameOfDownloadedModel])
 				{
-					indexForMoleculeMatchingThisName = currentIndex;
+					indexForModelMatchingThisName = currentIndex;
 					break;
 				}
 				currentIndex++;
@@ -670,30 +670,30 @@ void uncaughtExceptionHandler(NSException *exception) {
 			
 			if (rootViewController.tableViewController == nil)
 			{
-				[rootViewController selectedMoleculeDidChange:indexForMoleculeMatchingThisName];
+				[rootViewController selectedModelDidChange:indexForModelMatchingThisName];
 			}
 			else
 			{
 				if ([BenthosAppDelegate isRunningOniPad])
 				{
-					[rootViewController.tableViewController tableView:rootViewController.tableViewController.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:indexForMoleculeMatchingThisName inSection:0]];
+					[rootViewController.tableViewController tableView:rootViewController.tableViewController.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:indexForModelMatchingThisName inSection:0]];
 				}
 				else
 				{
-					[rootViewController.tableViewController tableView:rootViewController.tableViewController.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:(indexForMoleculeMatchingThisName + 1) inSection:0]];
+					[rootViewController.tableViewController tableView:rootViewController.tableViewController.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:(indexForModelMatchingThisName + 1) inSection:0]];
 				}					
 			}
-			[rootViewController loadInitialMolecule];
+			[rootViewController loadInitialModel];
 			
-			[nameOfDownloadedMolecule release];
-			nameOfDownloadedMolecule = nil;
+			[nameOfDownloadedModel release];
+			nameOfDownloadedModel = nil;
 			[initialDatabaseLoadLock unlock];
 			return YES;
 		}
 		[initialDatabaseLoadLock unlock];
 
 		
-		[rootViewController cancelMoleculeLoading];
+		[rootViewController cancelModelLoading];
 		
 		[NSThread sleepForTimeInterval:0.1]; // Wait for cancel action to take place
 		
@@ -701,14 +701,14 @@ void uncaughtExceptionHandler(NSException *exception) {
 		if ([url isFileURL])
 		{
 
-			[nameOfDownloadedMolecule release];
-			nameOfDownloadedMolecule = nil;
+			[nameOfDownloadedModel release];
+			nameOfDownloadedModel = nil;
 		}
 		else
 		{
 			downloadCancelled = NO;
 			
-			// Start download of new molecule
+			// Start download of new model
 			[self showDownloadIndicator];
 			
 			
@@ -741,15 +741,15 @@ void uncaughtExceptionHandler(NSException *exception) {
 	[downloadedFileContents release];
 	downloadedFileContents = nil;
 	[self hideStatusIndicator];
-	[nameOfDownloadedMolecule release];
-	nameOfDownloadedMolecule = nil;
+	[nameOfDownloadedModel release];
+	nameOfDownloadedModel = nil;
 }
 
-- (void)saveMoleculeWithData:(NSData *)moleculeData toFilename:(NSString *)filename;
+- (void)saveModelWithData:(NSData *)modelData toFilename:(NSString *)filename;
 {
 	[initialDatabaseLoadLock lock];
 
-	if (moleculeData != nil)
+	if (modelData != nil)
 	{
 		// Add the new protein to the list by gunzipping the data and pulling out the title
 		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -759,12 +759,12 @@ void uncaughtExceptionHandler(NSException *exception) {
 		BOOL writeStatus;
 		if (isGzipCompressionUsedOnDownload)
 		{
-			writeStatus = [moleculeData writeToFile:[documentsDirectory stringByAppendingPathComponent:filename] options:NSAtomicWrite error:&error];
-//			writeStatus = [[moleculeData gzipDeflate] writeToFile:[documentsDirectory stringByAppendingPathComponent:filename] options:NSAtomicWrite error:&error];			
+			writeStatus = [modelData writeToFile:[documentsDirectory stringByAppendingPathComponent:filename] options:NSAtomicWrite error:&error];
+//			writeStatus = [[modelData gzipDeflate] writeToFile:[documentsDirectory stringByAppendingPathComponent:filename] options:NSAtomicWrite error:&error];			
 //			NSLog(@"Decompressing");
 		}
 		else
-			writeStatus = [moleculeData writeToFile:[documentsDirectory stringByAppendingPathComponent:filename] options:NSAtomicWrite error:&error];
+			writeStatus = [modelData writeToFile:[documentsDirectory stringByAppendingPathComponent:filename] options:NSAtomicWrite error:&error];
 
 		if (!writeStatus)
 		{
@@ -772,8 +772,8 @@ void uncaughtExceptionHandler(NSException *exception) {
 			return;
 		}
 		
-		Benthos *newMolecule = [[Benthos alloc] initWithFilename:filename database:database title:filename];
-		if (newMolecule == nil)
+		BenthosModel *newModel = [[BenthosModel alloc] initWithFilename:filename database:database title:filename];
+		if (newModel == nil)
 		{
 			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Error in downloaded file", @"Localized", nil) message:NSLocalizedStringFromTable(@"The model file is either corrupted or not of a supported format", @"Localized", nil)
 														   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles:nil, nil];
@@ -797,12 +797,12 @@ void uncaughtExceptionHandler(NSException *exception) {
 		}
 		else
 		{			
-			[molecules addObject:newMolecule];
-			[newMolecule release];
+			[models addObject:newModel];
+			[newModel release];
 			
-			[rootViewController updateListOfMolecules];
-			[rootViewController selectedMoleculeDidChange:([molecules count] - 1)];
-			[rootViewController loadInitialMolecule];
+			[rootViewController updateListOfModels];
+			[rootViewController selectedModelDidChange:([models count] - 1)];
+			[rootViewController loadInitialModel];
 
 		}			
 	}	
@@ -856,7 +856,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 	// Stop the spinning wheel and start the status bar for download
 	if ([response textEncodingName] != nil)
 	{
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not find file", @"Localized", nil) message:[NSString stringWithFormat:NSLocalizedStringFromTable(@"No such file exists on the server: %@", @"Localized", nil), nameOfDownloadedMolecule]
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not find file", @"Localized", nil) message:[NSString stringWithFormat:NSLocalizedStringFromTable(@"No such file exists on the server: %@", @"Localized", nil), nameOfDownloadedModel]
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
 		[alert show];
 		[alert release];		
@@ -875,7 +875,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 //	[alert release];
 	
 	// Close off the file and write it to disk
-	[self saveMoleculeWithData:downloadedFileContents toFilename:nameOfDownloadedMolecule];
+	[self saveModelWithData:downloadedFileContents toFilename:nameOfDownloadedModel];
 	
 	[self downloadCompleted];	
 }

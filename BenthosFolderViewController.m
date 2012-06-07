@@ -1,8 +1,8 @@
 //
 //  BenthosFolderViewController.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 7/22/2008.
 //
@@ -18,7 +18,7 @@
 #define kFolderListURL @"http://marine.acfr.usyd.edu.au/campaigns.xml"
 
 @implementation BenthosFolderViewController
-@synthesize decompressingfiles,folderData,parseQueue,molecules;
+@synthesize decompressingfiles,folderData,parseQueue,models;
 #pragma mark -
 #pragma mark Initialization and teardown
 
@@ -27,7 +27,7 @@
 	if ((self = [super initWithStyle:style])) 
 	{
 		// Initialize the search bar and title
-		molecules =nil;
+		models =nil;
 		self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
 
@@ -87,7 +87,7 @@
 - (void)dealloc 
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kAddFoldersNotif object:nil];
-    [molecules release];
+    [models release];
 
 	[searchResultRetrievalConnection release];
 	[downloadaleFolderList release];
@@ -339,7 +339,7 @@
 		Folder *selFolder = [downloadaleFolderList objectAtIndex:[indexPath row]];
 
         BenthosSearchViewController *searchViewController = [[BenthosSearchViewController alloc] initWithStyle:UITableViewStylePlain andURL:[selFolder weblink] andTitle:[selFolder title]];
-        searchViewController.molecules=molecules;
+        searchViewController.models=models;
         searchViewController.decompressingfiles=decompressingfiles;
 
         [self.navigationController pushViewController:searchViewController animated:YES];

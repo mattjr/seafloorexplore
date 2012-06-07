@@ -1,8 +1,8 @@
 //
 //  BenthosOpenGLES20Renderer.h
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 4/12/2011.
 //
@@ -14,7 +14,7 @@
 @class GLProgram;
 @class Scene;
 @class Simulation;
-@class Molecule;
+@class Model;
 @interface MyOpenGLES20Renderer : BenthosOpenGLESRenderer 
 {
    
@@ -36,7 +36,7 @@
 - (BOOL)createFramebuffer:(GLuint *)framebufferPointer size:(CGSize)bufferSize renderBuffer:(GLuint *)renderbufferPointer depthBuffer:(GLuint *)depthbufferPointer texture:(GLuint *)backingTexturePointer layer:(CAEAGLLayer *)layer;
 - (void)switchToDisplayFramebuffer;
 - (void)shutdownVT;
--(void)startupVT:(Benthos *)molecule;
+-(void)startupVT:(BenthosModel *)model;
 - (void)showStatusIndicator;
 - (void)hideStatusIndicator;
 - (void)reshapeScenes;

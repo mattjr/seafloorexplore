@@ -1,8 +1,8 @@
 //
 //  BenthosLibraryTableCell.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 4/30/2011.
 //

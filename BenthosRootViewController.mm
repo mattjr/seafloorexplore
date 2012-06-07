@@ -1,12 +1,12 @@
 //
 //  BenthosRootViewController.m
-//  Molecules
+//  Models
 //
-//  The source code for Molecules is available under a BSD license.  See License.txt for details.
+//  The source code for Models is available under a BSD license.  See License.txt for details.
 //
 //  Created by Brad Larson on 6/30/2008.
 //
-//  This controller manages a root view into which the 3D view and the molecule table selection views and animated for the neat flipping effect
+//  This controller manages a root view into which the 3D view and the model table selection views and animated for the neat flipping effect
 
 #import "BenthosAppDelegate.h"
 #import "BenthosRootViewController.h"
@@ -32,7 +32,7 @@
 	{
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleView:) name:@"ToggleView" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleRotationButton:) name:@"ToggleRotationSelected" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(customURLSelectedForMoleculeDownload:) name:@"CustomURLForMoleculeSelected" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(customURLSelectedForModelDownload:) name:@"CustomURLForModelSelected" object:nil];
     }
    
     return self;
@@ -103,7 +103,7 @@
 
 - (void)toggleView:(NSNotification *)note;
 {	
-	if (molecules == nil)
+	if (models == nil)
 		return;
 	
 	UIView *tableView = self.tableNavigationController.view;
@@ -115,7 +115,7 @@
 	
 	if ([glView superview] != nil) 
 	{
-		[self cancelMoleculeLoading];
+		[self cancelModelLoading];
 		[tableNavigationController viewWillAppear:YES];
 		[glViewController viewWillDisappear:YES];
 		[glView removeFromSuperview];
@@ -134,13 +134,13 @@
 		
 		[tableNavigationController viewDidDisappear:YES];
 		[glViewController viewDidAppear:YES];
-		if (bufferedMolecule != previousMolecule)
+		if (bufferedModel != previousModel)
 		{
-			previousMolecule = bufferedMolecule;
-			glViewController.moleculeToDisplay = bufferedMolecule;
+			previousModel = bufferedModel;
+			glViewController.modelToDisplay = bufferedModel;
 		}
 		else
-			previousMolecule.isBeingDisplayed = YES;
+			previousModel.isBeingDisplayed = YES;
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
         
 	}
@@ -148,45 +148,45 @@
 }
 
 #pragma mark -
-#pragma mark Passthroughs for managing molecules
+#pragma mark Passthroughs for managing models
 
-- (void)loadInitialMolecule;
+- (void)loadInitialModel;
 {
-	NSInteger indexOfInitialMolecule = [[NSUserDefaults standardUserDefaults] integerForKey:@"indexOfLastSelectedMolecule"];
-	if (indexOfInitialMolecule >= [molecules count])
+	NSInteger indexOfInitialModel = [[NSUserDefaults standardUserDefaults] integerForKey:@"indexOfLastSelectedModel"];
+	if (indexOfInitialModel >= [models count])
 	{
-		indexOfInitialMolecule = 0;
+		indexOfInitialModel = 0;
 	}
 	
-	if ([molecules count] > 0)
+	if ([models count] > 0)
 	{
-		glViewController.moleculeToDisplay = [molecules objectAtIndex:indexOfInitialMolecule];
+		glViewController.modelToDisplay = [models objectAtIndex:indexOfInitialModel];
 
-        [glViewController startRender:glViewController.moleculeToDisplay];
+        [glViewController startRender:glViewController.modelToDisplay];
         [glViewController startOrStopAutorotation:YES];
 
 	}
  
 		
 }
-- (void)selectedMoleculeDidChange:(NSInteger)newMoleculeIndex;
+- (void)selectedModelDidChange:(NSInteger)newModelIndex;
 {
 
-	if (newMoleculeIndex >= [molecules count])
+	if (newModelIndex >= [models count])
 	{
-		newMoleculeIndex = 0;		
+		newModelIndex = 0;		
 	}
 
-	[[NSUserDefaults standardUserDefaults] setInteger:newMoleculeIndex forKey:@"indexOfLastSelectedMolecule"];
+	[[NSUserDefaults standardUserDefaults] setInteger:newModelIndex forKey:@"indexOfLastSelectedModel"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
-	tableViewController.selectedIndex = newMoleculeIndex;
+	tableViewController.selectedIndex = newModelIndex;
 	// Defer sending the change message to the OpenGL view until the view is loaded, to make sure that rendering occurs only then
-	if ([molecules count] == 0)
+	if ([models count] == 0)
 	{
-        [mapViewController setSelectedMolecule:nil];
+        [mapViewController setSelectedModel:nil];
 
-		bufferedMolecule = nil;
+		bufferedModel = nil;
      //   NSLog(@"No Render Situation\n");
         [glViewController stopRender];
 
@@ -195,14 +195,14 @@
 	else
 	{
 
-      //  if(bufferedMolecule != nil)
+      //  if(bufferedModel != nil)
             [glViewController stopRender];
              
-        Benthos *tmp=[molecules objectAtIndex:newMoleculeIndex];
-        [mapViewController setSelectedMolecule:tmp];
+        BenthosModel *tmp=[models objectAtIndex:newModelIndex];
+        [mapViewController setSelectedModel:tmp];
 
         [glViewController startRender:tmp];
-		bufferedMolecule = [molecules objectAtIndex:newMoleculeIndex];
+		bufferedModel = [models objectAtIndex:newModelIndex];
 	}
 }
 /*- (void)loadModel:(NSString *)name{
@@ -246,16 +246,16 @@
 {
 }
 
-- (void)cancelMoleculeLoading;
+- (void)cancelModelLoading;
 {
-	if (!glViewController.moleculeToDisplay.isDoneRendering)
+	if (!glViewController.modelToDisplay.isDoneRendering)
 	{
-		glViewController.moleculeToDisplay.isRenderingCancelled = YES;
+		glViewController.modelToDisplay.isRenderingCancelled = YES;
 		[NSThread sleepForTimeInterval:0.1];
 	}
 }
 
-- (void)updateListOfMolecules;
+- (void)updateListOfModels;
 {
 	UITableView *tableView = (UITableView *)tableViewController.view;
 	[tableView reloadData];
@@ -284,24 +284,24 @@
     });
 }
 
-- (void)customURLSelectedForMoleculeDownload:(NSNotification *)note;
+- (void)customURLSelectedForModelDownload:(NSNotification *)note;
 {
-	NSURL *customURLForMoleculeDownload = [note object];
+	NSURL *customURLForModelDownload = [note object];
 	
-	bufferedMolecule = nil;
+	bufferedModel = nil;
 	
 	if (![BenthosAppDelegate isRunningOniPad])
 	{
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleView" object:nil];
 	}
-	//molecules://www.sunsetlakesoftware.com/sites/default/files/xenonPump.pdb
+	//models://www.sunsetlakesoftware.com/sites/default/files/xenonPump.pdb
 	//html://www.sunsetlakesoftware.com/sites/default/files/xenonPump.pdb
 	
-	NSString *pathComponentForCustomURL = [[customURLForMoleculeDownload host] stringByAppendingString:[customURLForMoleculeDownload path]];
-	NSString *customMoleculeHandlingURL = [NSString stringWithFormat:@"molecules://%@", pathComponentForCustomURL];
+	NSString *pathComponentForCustomURL = [[customURLForModelDownload host] stringByAppendingString:[customURLForModelDownload path]];
+	NSString *customModelHandlingURL = [NSString stringWithFormat:@"models://%@", pathComponentForCustomURL];
 
-//	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:customMoleculeHandlingURL]];
-	[(BenthosAppDelegate *)[[UIApplication sharedApplication] delegate] handleCustomURLScheme:[NSURL URLWithString:customMoleculeHandlingURL]];
+//	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:customModelHandlingURL]];
+	[(BenthosAppDelegate *)[[UIApplication sharedApplication] delegate] handleCustomURLScheme:[NSURL URLWithString:customModelHandlingURL]];
 }
 
 #pragma mark -
@@ -311,7 +311,7 @@
 @synthesize tableViewController;
 @synthesize glViewController;
 @synthesize database;
-@synthesize molecules;
+@synthesize models;
 @synthesize segmentsController, segmentedControl;
 @synthesize decompressingfiles;
 
@@ -321,30 +321,30 @@
 	tableViewController.database = database;
 }
 
-- (void)setMolecules:(NSMutableArray *)newValue;
+- (void)setModels:(NSMutableArray *)newValue;
 {
-	if (molecules == newValue)
+	if (models == newValue)
 	{
 		return;
 	}
 	
-	[molecules release];
-	molecules = [newValue retain];
-	tableViewController.molecules = molecules;
-    mapViewController.molecules = molecules;
-    helpviewController.molecules = molecules;
+	[models release];
+	models = [newValue retain];
+	tableViewController.models = models;
+    mapViewController.models = models;
+    helpviewController.models = models;
 
-	NSInteger indexOfInitialMolecule = [[NSUserDefaults standardUserDefaults] integerForKey:@"indexOfLastSelectedMolecule"];
-	if (indexOfInitialMolecule >= [molecules count])
+	NSInteger indexOfInitialModel = [[NSUserDefaults standardUserDefaults] integerForKey:@"indexOfLastSelectedModel"];
+	if (indexOfInitialModel >= [models count])
 	{
-		indexOfInitialMolecule = 0;
-        mapViewController.selectedMolecule = nil;
+		indexOfInitialModel = 0;
+        mapViewController.selectedModel = nil;
 
 	}else {
-        mapViewController.selectedMolecule = [molecules objectAtIndex:indexOfInitialMolecule];
+        mapViewController.selectedModel = [models objectAtIndex:indexOfInitialModel];
     }
 	
-	tableViewController.selectedIndex = indexOfInitialMolecule;
+	tableViewController.selectedIndex = indexOfInitialModel;
 
 }
 
@@ -369,7 +369,7 @@
 
 	if (tableNavigationController == nil)
 	{
-		bufferedMolecule = nil;
+		bufferedModel = nil;
 		tableNavigationController = [[UINavigationController alloc] init];
       
 
@@ -378,12 +378,12 @@
 			tableNavigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
 		}
 
-		NSInteger indexOfInitialMolecule = [[NSUserDefaults standardUserDefaults] integerForKey:@"indexOfLastSelectedMolecule"];
-		if (indexOfInitialMolecule >= [molecules count])
-			indexOfInitialMolecule = 0;
-		tableViewController = [[BenthosTableViewController alloc] initWithStyle:UITableViewStylePlain initialSelectedMoleculeIndex:indexOfInitialMolecule];
+		NSInteger indexOfInitialModel = [[NSUserDefaults standardUserDefaults] integerForKey:@"indexOfLastSelectedModel"];
+		if (indexOfInitialModel >= [models count])
+			indexOfInitialModel = 0;
+		tableViewController = [[BenthosTableViewController alloc] initWithStyle:UITableViewStylePlain initialSelectedModelIndex:indexOfInitialModel];
         
-        mapViewController = [[BenthosMapViewController alloc] init:indexOfInitialMolecule withMolecules:molecules];
+        mapViewController = [[BenthosMapViewController alloc] init:indexOfInitialModel withModels:models];
         mapViewController.database = database;
         mapViewController.title=@"Map";
         
@@ -391,8 +391,8 @@
         helpviewController.title=@"Help";
 
 		tableViewController.database = database;
-		tableViewController.molecules = molecules;
-        mapViewController.molecules = molecules;
+		tableViewController.models = models;
+        mapViewController.models = models;
         tableViewController.decompressingfiles= decompressingfiles;
         helpviewController.decompressingfiles= decompressingfiles;
 
