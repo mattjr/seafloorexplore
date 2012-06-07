@@ -330,6 +330,8 @@ extern vtConfig c;
 			[alert show];
 			[alert release];	
             isSceneReady=NO;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"FileLoadingEnded" object:nil];
+
 
         }
         [sim release];
