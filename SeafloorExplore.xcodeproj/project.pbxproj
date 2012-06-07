@@ -763,14 +763,14 @@
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = SeafloorExplore_Prefix.pch;
 				INFOPLIST_FILE = English.lproj/Info.plist;
-				INSTALL_PATH = "";
+				INSTALL_PATH = /Applications;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -779,17 +779,20 @@
 				);
 				PRODUCT_NAME = SeafloorExplore;
 				PROVISIONING_PROFILE = "";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR} /Users/mattjr/svn/ipadviewer";
 			};
 			name = Debug;
 		};
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -798,7 +801,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = NO;
 				"GCC_THUMB_SUPPORT[arch=armv7]" = YES;
 				INFOPLIST_FILE = English.lproj/Info.plist;
-				INSTALL_PATH = "";
+				INSTALL_PATH = /Applications;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -807,8 +810,11 @@
 				);
 				PRODUCT_NAME = SeafloorExplore;
 				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR} /Users/mattjr/svn/ipadviewer";
 			};
 			name = Release;
 		};
@@ -831,12 +837,13 @@
 					include,
 					Utilities,
 				);
+				"INSTALL_PATH[sdk=*]" = "$(LOCAL_APPS_DIR)";
 				OTHER_LDFLAGS = "-lz";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				WARNING_CFLAGS = "";
 			};
 			name = Distribution;
@@ -844,9 +851,9 @@
 		BC78D1AD0E1FDC0600BD9B0B /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
@@ -855,7 +862,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = NO;
 				"GCC_THUMB_SUPPORT[arch=armv7]" = YES;
 				INFOPLIST_FILE = English.lproj/Info.plist;
-				INSTALL_PATH = "";
+				INSTALL_PATH = /Applications;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -865,8 +872,10 @@
 				PRODUCT_NAME = SeafloorExplore;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR} /Users/mattjr/svn/ipadviewer";
 			};
 			name = Distribution;
 		};
@@ -888,13 +897,14 @@
 					include,
 					Utilities,
 				);
+				"INSTALL_PATH[sdk=*]" = "$(LOCAL_APPS_DIR)";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lz";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				WARNING_CFLAGS = "";
 			};
 			name = Debug;
@@ -918,12 +928,13 @@
 					include,
 					Utilities,
 				);
+				"INSTALL_PATH[sdk=*]" = "$(LOCAL_APPS_DIR)";
 				OTHER_LDFLAGS = "-lz";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				WARNING_CFLAGS = "";
 			};
 			name = Release;
