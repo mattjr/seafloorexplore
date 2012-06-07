@@ -338,10 +338,13 @@
 	if (indexOfInitialModel >= [models count])
 	{
 		indexOfInitialModel = 0;
-        mapViewController.selectedModel = nil;
-
+        if([models count] == 0){
+            mapViewController.selectedModel = nil;
+        }else {
+            [NSString stringWithString:[[models objectAtIndex:indexOfInitialModel] filenameWithoutExtension]];
+        }
 	}else {
-        mapViewController.selectedModel = [models objectAtIndex:indexOfInitialModel];
+        mapViewController.selectedModel = [NSString stringWithString:[[models objectAtIndex:indexOfInitialModel] filenameWithoutExtension]];
     }
 	
 	tableViewController.selectedIndex = indexOfInitialModel;
