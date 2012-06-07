@@ -3,7 +3,7 @@
 //  Models
 //
 //  Created by Brad Larson on 4/12/2011.
-//  Copyright 2011 Sunset Lake Software LLC. All rights reserved.
+//  Copyright 2011 SeafloorExplore Development. All rights reserved.
 //
 
 #import "BenthosOpenGLESRenderer.h"

@@ -3,7 +3,7 @@
 //  Benthos
 //
 //  Created by Matthew Johnson-Roberson on 6/4/12.
-//  Copyright (c) 2012 Sunset Lake Software LLC. All rights reserved.
+//  Copyright (c) 2012 SeafloorExplore Development. All rights reserved.
 //
 
 #import "BackgroundProcessingFile.h"

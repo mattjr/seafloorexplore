@@ -125,14 +125,14 @@
 		7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+Tar.m"; sourceTree = SOURCE_ROOT; };
 		7B056F05150AC85A00621766 /* chamber3.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = chamber3.tar; sourceTree = "<group>"; };
 		7B4772D8151D8E5200727C6C /* redx.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redx.png; sourceTree = "<group>"; };
-		7B48CB8C15219999008FA151 /* SegmentsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentsController.h; sourceTree = "<group>"; };
+		7B48CB8C15219999008FA151 /* SegmentsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SegmentsController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		7B48CB8D15219999008FA151 /* SegmentsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentsController.m; sourceTree = "<group>"; };
 		7B48CB9415226A14008FA151 /* NSArray+PerformSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+PerformSelector.h"; sourceTree = "<group>"; };
 		7B48CB9515226A14008FA151 /* NSArray+PerformSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+PerformSelector.m"; sourceTree = "<group>"; };
 		7B48CBA3152271FA008FA151 /* BenthosMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosMapViewController.h; sourceTree = "<group>"; };
 		7B48CBA4152271FA008FA151 /* BenthosMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BenthosMapViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		7B48CBA6152279A0008FA151 /* MapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotation.h; sourceTree = "<group>"; };
-		7B48CBA7152279A1008FA151 /* MapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotation.m; sourceTree = "<group>"; };
+		7B48CBA6152279A0008FA151 /* MapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = MapAnnotation.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		7B48CBA7152279A1008FA151 /* MapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MapAnnotation.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		7B48CBB11522C187008FA151 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
 		7B48CBB21522C188008FA151 /* Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Model.m; sourceTree = "<group>"; };
 		7B61FB0213991399006E50B3 /* renderVT.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = renderVT.frag; path = LibVT/renderVT.frag; sourceTree = "<group>"; };
@@ -151,8 +151,8 @@
 		7BB1DE04157C2005008699B1 /* Placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Placeholder.png; sourceTree = "<group>"; };
 		7BB1DE06157C2D4B008699B1 /* JSGCDDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSGCDDispatcher.h; sourceTree = "<group>"; };
 		7BB1DE07157C2D4B008699B1 /* JSGCDDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSGCDDispatcher.m; sourceTree = "<group>"; };
-		7BB1DE0B157C7794008699B1 /* BackgroundProcessingFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundProcessingFile.h; sourceTree = "<group>"; };
-		7BB1DE0C157C7795008699B1 /* BackgroundProcessingFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackgroundProcessingFile.m; sourceTree = "<group>"; };
+		7BB1DE0B157C7794008699B1 /* BackgroundProcessingFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = BackgroundProcessingFile.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		7BB1DE0C157C7795008699B1 /* BackgroundProcessingFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BackgroundProcessingFile.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		7BC4E86A152C041000BF1B8F /* Paint@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Paint@2x.png"; sourceTree = "<group>"; };
 		7BC4E86B152C041000BF1B8F /* Paint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Paint.png; sourceTree = "<group>"; };
 		7BC4E86C152C041000BF1B8F /* PaintOn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PaintOn@2x.png"; sourceTree = "<group>"; };
@@ -164,8 +164,8 @@
 		7BCBD12B1520B537009DC170 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		7BCBD12D1520B550009DC170 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		7BD40039152A55ED003922C2 /* NSOperationQueue+SharedQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSOperationQueue+SharedQueue.h"; sourceTree = "<group>"; };
-		7BDA0AFD156AF939002C0F31 /* BenthosHelpScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosHelpScrollViewController.h; sourceTree = "<group>"; };
-		7BDA0AFE156AF939002C0F31 /* BenthosHelpScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosHelpScrollViewController.m; sourceTree = "<group>"; };
+		7BDA0AFD156AF939002C0F31 /* BenthosHelpScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = BenthosHelpScrollViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		7BDA0AFE156AF939002C0F31 /* BenthosHelpScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BenthosHelpScrollViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		7BDA0B00156B0461002C0F31 /* double-tap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "double-tap.png"; sourceTree = "<group>"; };
 		7BDA0B01156B0461002C0F31 /* drag-flick.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drag-flick.png"; sourceTree = "<group>"; };
 		7BDA0B02156B0461002C0F31 /* finger-drag-down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "finger-drag-down.png"; sourceTree = "<group>"; };
@@ -250,8 +250,8 @@
 		BC5BB8BC0E204DC20001DFD0 /* BenthosDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosDetailViewController.m; sourceTree = "<group>"; };
 		BC67B8BE137C4B7A0075A361 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		BC835183117545C600B478D5 /* 69-display.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "69-display.png"; sourceTree = "<group>"; };
-		BCB3A67813553F9D000A286B /* BenthosOpenGLESRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosOpenGLESRenderer.h; sourceTree = "<group>"; };
-		BCB3A67913553F9D000A286B /* BenthosOpenGLESRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosOpenGLESRenderer.m; sourceTree = "<group>"; };
+		BCB3A67813553F9D000A286B /* BenthosOpenGLESRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = BenthosOpenGLESRenderer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		BCB3A67913553F9D000A286B /* BenthosOpenGLESRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BenthosOpenGLESRenderer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BCB3A67B13553FC0000A286B /* BenthosOpenGLES11Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosOpenGLES11Renderer.h; sourceTree = "<group>"; };
 		BCB3A67C13553FC1000A286B /* BenthosOpenGLES11Renderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BenthosOpenGLES11Renderer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BCB3A67E13553FD2000A286B /* BenthosOpenGLES20Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosOpenGLES20Renderer.h; sourceTree = "<group>"; };
@@ -261,7 +261,7 @@
 		BCC286BD0E1D8F9300978ECA /* BenthosAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = BenthosAppDelegate.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		BCC286BE0E1D8F9300978ECA /* BenthosAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BenthosAppDelegate.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BCC286BF0E1D8F9300978ECA /* BenthosRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = BenthosRootViewController.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		BCC286C00E1D8F9300978ECA /* BenthosRootViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BenthosRootViewController.mm; sourceTree = "<group>"; };
+		BCC286C00E1D8F9300978ECA /* BenthosRootViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = BenthosRootViewController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		BCC286C30E1D8FB100978ECA /* BenthosGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosGLView.h; sourceTree = SOURCE_ROOT; };
 		BCC286C40E1D8FB100978ECA /* BenthosGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BenthosGLView.m; sourceTree = SOURCE_ROOT; };
 		BCC286C60E1D8FB100978ECA /* BenthosGLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BenthosGLViewController.h; sourceTree = SOURCE_ROOT; };
@@ -604,7 +604,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0410;
-				ORGANIZATIONNAME = "Sunset Lake Software LLC";
+				ORGANIZATIONNAME = "";
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "SeafloorExplore" */;
 			compatibilityVersion = "Xcode 3.2";
