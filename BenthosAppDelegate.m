@@ -35,7 +35,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions   
 {	
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
-    [FlurryAnalytics startSession:@"JG3NFXX5AU3T8PGFPQRU"];
+    [FlurryAnalytics startSession:@"6VB3L2AH89FJ6D1XLZC4"];
 	//Initialize the application window
 	window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	if (!window) 
