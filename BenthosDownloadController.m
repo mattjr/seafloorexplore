@@ -571,11 +571,12 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 	//downloadStatusText.text = NSLocalizedStringFromTable(@"Decompressing...", @"Localized", nil);
 
     //printf("Download complete\n");
-    if(![self isBackgrounded])
+    /*if(![self isBackgrounded])
         [self performSelector:@selector(sendDownloadFinishedMsg:) withObject:filename afterDelay:0.3];
     else 
         [self performSelector:@selector(sendDownloadFinishedMsg:) withObject:nil afterDelay:0.3];
-
+*/
+         [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelDidFinishDownloading" object:filename userInfo:[NSDictionary dictionaryWithObject:downloadingmodel  forKey:@"model"]];
   
    /// else {
       // [self performSelector:@selector(sendDownloadFinishedMsg:) withObject:nil afterDelay:0.3];
