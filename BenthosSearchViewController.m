@@ -144,7 +144,7 @@
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 	
 	NSURLRequest *fileRequest=[NSURLRequest requestWithURL:[self listURL]
-													cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData//NSURLRequestUseProtocolCachePolicy
+													cachePolicy:NSURLRequestUseProtocolCachePolicy
 												timeoutInterval:60.0];
 	searchResultRetrievalConnection = [[NSURLConnection alloc] initWithRequest:fileRequest delegate:self];
 	

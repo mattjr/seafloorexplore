@@ -291,6 +291,8 @@
              NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
              NSString *documentsDirectory = [paths objectAtIndex:0];
              
+             NSArray *libpaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+             NSString *libraryDirectory = [libpaths objectAtIndex:0];
              error = nil;
              if(        [[NSFileManager defaultManager]  fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:filename]]){
 
@@ -310,9 +312,9 @@
              }
              error = nil;
              NSString *folder=[filename stringByDeletingPathExtension];
-             if(        [[NSFileManager defaultManager]  fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:folder]]){
+             if(        [[NSFileManager defaultManager]  fileExistsAtPath:[libraryDirectory stringByAppendingPathComponent:folder]]){
 
-             if (![[NSFileManager defaultManager] removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:folder] error:&error])
+             if (![[NSFileManager defaultManager] removeItemAtPath:[libraryDirectory stringByAppendingPathComponent:folder] error:&error])
              {
                  /*NSMutableDictionary* details = [NSMutableDictionary dictionary];
                  [details setValue:NSLocalizedStringFromTable(@"Could not delete file", @"Localized", nil) forKey:NSLocalizedDescriptionKey];
@@ -527,11 +529,11 @@
             cell.detailTextLabel.text = [NSString stringWithString:[[models objectAtIndex:(index-1)] desc]];
             
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            NSString *documentsDirectory = [paths objectAtIndex:0];
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+            NSString *libraryDirectory = [paths objectAtIndex:0];
 
             NSString *imgFilePath=[NSString stringWithFormat:@"%@/%@/m.jpg",
-                                   documentsDirectory,
+                                   libraryDirectory,
                                    [[models objectAtIndex:(index-1)] filenameWithoutExtension]];
             if([[NSFileManager defaultManager] fileExistsAtPath:imgFilePath])
                 cell.imageView.image=[UIImage imageWithContentsOfFile:imgFilePath];

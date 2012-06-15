@@ -56,7 +56,7 @@
 - (void)selectedModelDidChange:(NSInteger)newModelIndex;
 - (void)cancelModelLoading;
 - (void)updateListOfModels;
-- (void)customURLSelectedForModelDownload:(NSNotification *)note;
+//- (void)customURLSelectedForModelDownload:(NSNotification *)note;
 - (NSArray *)segmentViewControllers;
 - (void)firstUserExperience;
 

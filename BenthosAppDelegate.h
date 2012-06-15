@@ -56,12 +56,13 @@
 - (void)hideStatusIndicator;
 
 // Custom model download methods
-- (BOOL)handleCustomURLScheme:(NSURL *)url;
+//- (BOOL)handleCustomURLScheme:(NSURL *)url;
 - (void)downloadCompleted;
-- (void)saveModelWithData:(NSData *)modelData toFilename:(NSString *)filename;
+//- (void)saveModelWithData:(NSData *)modelData toFilename:(NSString *)filename;
 -(void)addNewModel:(NSString*)pname;
 + (BOOL) processArchive:(NSString*)filename error:(NSError**)error;
 +(BOOL) removeModelFolder:(NSString*)basename;
++ (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 
 void uncaughtExceptionHandler(NSException *exception);
 #define kErrFolderExists 200

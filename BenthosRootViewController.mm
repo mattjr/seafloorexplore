@@ -32,7 +32,7 @@
 	{
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleView:) name:@"ToggleView" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleRotationButton:) name:@"ToggleRotationSelected" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(customURLSelectedForModelDownload:) name:@"CustomURLForModelSelected" object:nil];
+		/*[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(customURLSelectedForModelDownload:) name:@"CustomURLForModelSelected" object:nil];*/
     }
    
     return self;
@@ -284,7 +284,7 @@
     });
 }
 
-- (void)customURLSelectedForModelDownload:(NSNotification *)note;
+/*- (void)customURLSelectedForModelDownload:(NSNotification *)note;
 {
 	NSURL *customURLForModelDownload = [note object];
 	
@@ -302,7 +302,7 @@
 
 //	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:customModelHandlingURL]];
 	[(BenthosAppDelegate *)[[UIApplication sharedApplication] delegate] handleCustomURLScheme:[NSURL URLWithString:customModelHandlingURL]];
-}
+}*/
 
 #pragma mark -
 #pragma mark Accessors

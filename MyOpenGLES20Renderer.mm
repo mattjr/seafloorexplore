@@ -292,15 +292,15 @@ extern vtConfig c;
      nil];
     [FlurryAnalytics logEvent:@"VIEWMODEL" withParameters:dictionary timed:YES];
 
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory =[paths objectAtIndex:0];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+    NSString *libraryDirectory = [paths objectAtIndex:0];
     
   //  NSLog(@"Startt VT %@\n",name);
     //if(documentsDirectory != nil)
     //  printf("NIL %s\n",[documentsDirectory UTF8String]);
    // [self performSelectorOnMainThread:@selector(showStatusIndicator) withObject:nil waitUntilDone:NO];
 
-    NSString *fullpath=[documentsDirectory stringByAppendingPathComponent:[[mol filename] stringByDeletingPathExtension]];
+    NSString *fullpath=[libraryDirectory stringByAppendingPathComponent:[[mol filename] stringByDeletingPathExtension]];
     dispatch_sync(openGLESContextQueue, ^{
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 

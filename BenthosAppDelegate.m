@@ -21,6 +21,8 @@
 #import "BenthosOpenGLESRenderer.h"
 #import "JSGCDDispatcher.h"
 #import "BackgroundProcessingFile.h"
+#include <sys/xattr.h>
+
 #define MODELS_DATABASE_VERSION 1
 
 @implementation BenthosAppDelegate
@@ -96,7 +98,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 }
 
 
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+/*- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
 	
 	if (url != nil)
@@ -118,7 +120,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 	
 	return YES;
 }
-
+*/
 - (void)dealloc 
 {
 	[splitViewController release];
@@ -255,8 +257,8 @@ void uncaughtExceptionHandler(NSException *exception) {
 		// User might have intentionally deleted files, so don't recopy the files in that case
 	//	NSError *error = nil;
 		// Grab the /Documents directory path
-		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-		NSString *documentsDirectory = [paths objectAtIndex:0];
+		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+		NSString *libDirectory = [paths objectAtIndex:0];
 		
 		NSFileManager *fileManager = [NSFileManager defaultManager];
 		// Iterate through all files sitting in the application's Resources directory
@@ -271,7 +273,9 @@ void uncaughtExceptionHandler(NSException *exception) {
 				//NSString *installedPDBPath = [documentsDirectory stringByAppendingPathComponent:pname];
 				
 			//	NSString *preloadedTexPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:[pname stringByDeletingPathExtension]];
-				NSString *installedTexPath = [documentsDirectory stringByAppendingPathComponent:[pname stringByDeletingPathExtension]];
+				NSString *installedTexPath = [libDirectory stringByAppendingPathComponent:[pname stringByDeletingPathExtension]];
+                if(installedTexPath == nil || [installedTexPath length] == 0 )
+                    continue;
 				if (![fileManager fileExistsAtPath:installedTexPath])
 				{
                    // NSLog(@"Processing '%@' to '%@'\n",preloadedPDBPath,installedTexPath);
@@ -290,7 +294,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 						[[NSFileManager defaultManager]	copyItemAtPath:preloadedTexPath toPath:installedTexPath error:&error];*/
                    // NSData* tarData = [NSData dataWithContentsOfFile:preloadedPDBPath];
                     NSError *error=nil;
-                    [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:documentsDirectory withTarPath:preloadedPDBPath error:&error];
+                    [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:libDirectory withTarPath:preloadedPDBPath error:&error];
                     
 						if (error != nil)
 						{
@@ -302,6 +306,9 @@ void uncaughtExceptionHandler(NSException *exception) {
 
 							// TODO: Report the file copying problem to the user or do something about it
 						}
+                        NSURL *installedURL = [NSURL fileURLWithPath:installedTexPath];
+
+                        [BenthosAppDelegate addSkipBackupAttributeToItemAtURL:installedURL];
                       
 					//}
 				}
@@ -363,10 +370,11 @@ void uncaughtExceptionHandler(NSException *exception) {
     //NSLog(@"Model Adding Complete! %@\n",pname);
 
     // Now, check all the files on disk to see if any are missing from the database
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+    NSString *libDirectory = [paths objectAtIndex:0];
 
-    NSString *preloadedXMLPath = [documentsDirectory stringByAppendingPathComponent:pname];
+
+    NSString *preloadedXMLPath = [libDirectory stringByAppendingPathComponent:pname];
     NSMutableData* xmlData = [NSMutableData dataWithContentsOfFile:preloadedXMLPath];
     ModelParseOperation *parseOperation = [[ModelParseOperation alloc] initWithData:xmlData];
     NSMutableArray *filesystemModels = [NSMutableArray array];
@@ -430,8 +438,11 @@ void uncaughtExceptionHandler(NSException *exception) {
 	sqlite3_finalize(modelLoadingStatement);	
 	
 	// Now, check all the files on disk to see if any are missing from the database
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *documentsDirectory = [paths objectAtIndex:0];
+	NSArray *libpaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+	NSString *libDirectory = [libpaths objectAtIndex:0];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
 	
 	NSDirectoryEnumerator *direnum = [[NSFileManager defaultManager]
 									  enumeratorAtPath:documentsDirectory];
@@ -458,7 +469,7 @@ void uncaughtExceptionHandler(NSException *exception) {
         
         if([[[pname pathExtension] lowercaseString] isEqualToString:@"tar"] && ([modelFilenameLookupTable valueForKey:[pname stringByDeletingPathExtension]] == nil)){
             //NSLog(@"Adding %@\n",[pname stringByDeletingPathExtension]);
-            NSString *installedTexPath = [documentsDirectory stringByAppendingPathComponent:[pname stringByDeletingPathExtension]];
+            NSString *installedTexPath = [libDirectory stringByAppendingPathComponent:[pname stringByDeletingPathExtension]];
             if ([[NSFileManager defaultManager] fileExistsAtPath:installedTexPath]){
                 NSLog(@"Warning removing incomplete folder %@\n",[pname stringByDeletingPathExtension]);
                 [BenthosAppDelegate removeModelFolder:[pname stringByDeletingPathExtension]];
@@ -591,6 +602,9 @@ void uncaughtExceptionHandler(NSException *exception) {
   //  [self performSelectorInBackground:@selector(loadMissingModelsIntoDatabase) withObject:nil];
 	//[self loadMissingModelsIntoDatabase];
  //  [rootViewController.glViewController hideScanningIndicator:nil];
+    
+    [self loadMissingModelsIntoDatabase];
+
     rootViewController.glViewController.openGLESRenderer.isSceneReady=YES;
     [rootViewController.glViewController startOrStopAutorotation:YES];
 
@@ -627,7 +641,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 //	[self disconnectFromDatabase];
 }
 
-
+/*
 #pragma mark -
 #pragma mark Custom model download methods
 
@@ -723,7 +737,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 		}
 	}	
 	return YES;
-}
+}*/
 
 - (void)downloadCompleted;
 {
@@ -738,7 +752,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 	[nameOfDownloadedModel release];
 	nameOfDownloadedModel = nil;
 }
-
+/*
 - (void)saveModelWithData:(NSData *)modelData toFilename:(NSString *)filename;
 {
 	[initialDatabaseLoadLock lock];
@@ -858,8 +872,8 @@ void uncaughtExceptionHandler(NSException *exception) {
 		[self downloadCompleted];
 		return;
 	}
-}
-
+}*/
+/*
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection;
 {	
 	
@@ -872,11 +886,15 @@ void uncaughtExceptionHandler(NSException *exception) {
 	[self saveModelWithData:downloadedFileContents toFilename:nameOfDownloadedModel];
 	
 	[self downloadCompleted];	
-}
+}*/
 + (BOOL) processArchive:(NSString*)filename error:(NSError**)error {
     //NSLog(@"Processing Archive %@\n",filename);
     // Add the new protein to the list by gunzipping the data and pulling out the title
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSArray* libraryPaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+
+    NSString *libraryDirectory = [libraryPaths objectAtIndex:0];
+
     NSString *documentsDirectory = [paths objectAtIndex:0];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -887,10 +905,13 @@ void uncaughtExceptionHandler(NSException *exception) {
     {
         NSString *archivePath = [documentsDirectory stringByAppendingPathComponent:filename ];
         
-        NSString *installedTexPath = [documentsDirectory stringByAppendingPathComponent:[filename stringByDeletingPathExtension]];
+        NSString *installedTexPath = [libraryDirectory stringByAppendingPathComponent:[filename stringByDeletingPathExtension]];
         if (![fileManager fileExistsAtPath:installedTexPath])
         {
-            [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:documentsDirectory withTarPath:archivePath error:error];
+            [[NSFileManager defaultManager] createFilesAndDirectoriesAtPath:libraryDirectory withTarPath:archivePath error:error];
+            
+            NSURL *installedURL = [NSURL fileURLWithPath:installedTexPath];
+            [BenthosAppDelegate addSkipBackupAttributeToItemAtURL:installedURL];
             //Sucess delete tar
             //   NSLog(@"Deleting %@\n",archivePath);                
             if (![[NSFileManager defaultManager] removeItemAtPath:archivePath error:error])
@@ -936,8 +957,8 @@ void uncaughtExceptionHandler(NSException *exception) {
         return NO;
     }
     // Remove the file from disk
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+    NSString *libraryDirectory = [paths objectAtIndex:0];
     CFUUIDRef newUniqueId = CFUUIDCreate(kCFAllocatorDefault);
     CFStringRef newUniqueIdString = CFUUIDCreateString(kCFAllocatorDefault, newUniqueId);
     NSString *tmpPath = [NSTemporaryDirectory() stringByAppendingPathComponent:(__bridge NSString *)newUniqueIdString];
@@ -945,7 +966,7 @@ void uncaughtExceptionHandler(NSException *exception) {
     CFRelease(newUniqueIdString);
     NSError *error = nil;
    // NSLog(@"Removing %@\n",basename);
-    BOOL ret=[[NSFileManager defaultManager] moveItemAtPath:[documentsDirectory stringByAppendingPathComponent:basename ]  toPath:tmpPath error:&error];
+    BOOL ret=[[NSFileManager defaultManager] moveItemAtPath:[libraryDirectory stringByAppendingPathComponent:basename ]  toPath:tmpPath error:&error];
     if(ret){
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
             NSError *error2 = nil;
@@ -962,6 +983,21 @@ void uncaughtExceptionHandler(NSException *exception) {
     }
     return ret;
     
+}
+
++ (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
+{
+    if(![[NSFileManager defaultManager] fileExistsAtPath: [URL path]]){
+        NSLog(@"No file exists at %@\n",[URL path] );
+        return NO;
+    }
+    const char* filePath = [[URL path] fileSystemRepresentation];
+    
+    const char* attrName = "com.apple.MobileBackup";
+    u_int8_t attrValue = 1;
+    
+    int result = setxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
+    return result == 0;
 }
 
 @end

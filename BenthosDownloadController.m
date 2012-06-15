@@ -158,8 +158,9 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 {
 	// Check if you already have a protein by that name
 	// TODO: Put this check in the init method to grey out download button
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *documentsDirectory = [paths objectAtIndex:0];
+
+    NSArray *libpaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+    NSString *libraryDirectory = [libpaths objectAtIndex:0];
 
     //NSString *fileExtension = @"";
   /*  if (searchType == PROTEINDATABANKSEARCH)
@@ -174,7 +175,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 
     NSString *filename = [[[downloadingmodel filename] lastPathComponent] stringByDeletingPathExtension];	
     NSString *xmlpath=[NSString stringWithFormat: @"%@/m.xml",filename,filename];
-	if ([[NSFileManager defaultManager] fileExistsAtPath:[documentsDirectory stringByAppendingPathComponent:xmlpath]])
+	if ([[NSFileManager defaultManager] fileExistsAtPath:[libraryDirectory stringByAppendingPathComponent:xmlpath]])
 	{
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"File already exists", @"Localized", nil) message:NSLocalizedStringFromTable(@"This model has already been downloaded", @"Localized", nil)
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
@@ -254,6 +255,8 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
             downloadedBytes = [fileDictionary fileSize];
     } else {
         [fm createFileAtPath:pathtmp contents:nil attributes:nil];
+        NSURL *installedURL = [NSURL fileURLWithPath:pathtmp];
+        [BenthosAppDelegate addSkipBackupAttributeToItemAtURL:installedURL];
     }
     if (downloadedBytes > 0) {
      //   NSLog(@"Resuming %d\n",downloadedBytes);
@@ -550,6 +553,8 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 		return;
     }
   
+    NSURL *pathURL = [NSURL fileURLWithPath:path];
+    [BenthosAppDelegate addSkipBackupAttributeToItemAtURL:pathURL];
     
     
     NSString *filename = [downloadingmodel filename];
