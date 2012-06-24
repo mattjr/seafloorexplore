@@ -102,6 +102,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
     //    NSLog(@"SQL %@ %@\n",title,filename);
     
     desc=[[newModel desc] retain];
+    folder = [[newModel folder] retain];
     coord.longitude=newModel.longitude;
     coord.latitude=newModel.latitude;
 
@@ -139,14 +140,15 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	return self;
 
 }
-
-- (id)initWithFilename:(NSString *)newFilename database:(sqlite3 *)newDatabase title:(NSString *)newTitle;
+/*
+- (id)initWithFilename:(NSString *)newFilename database:(sqlite3 *)newDatabase title:(NSString *)newTitle folder:(NSString *)newFolder;
 {
 	if (![self init])
 		return nil;
 	database = newDatabase;
 	filename = [newFilename copy];
     title = [newTitle copy];
+    folder =[newFolder copy];
 	
 	NSRange rangeUntilFirstPeriod = [filename rangeOfString:@"."];
 	if (rangeUntilFirstPeriod.location == NSNotFound)
@@ -182,23 +184,9 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	
 	//NSError *error = nil;
     numberOfAtoms = -999;
-    /*if ([[[filename pathExtension] lowercaseString] isEqualToString:@"sdf"])
-    {
-        if (![self readFromSDFFileToDatabase:&error])
-        {
-            return nil;
-        }
-    }
-    else
-    {
-        if (![self readFromPDBFileToDatabase:&error])
-        {
-            return nil;
-        }
-    }*/
-	
+    	
 	return self;
-}
+}*/
 
 - (id)initWithSQLStatement:(sqlite3_stmt *)modelRetrievalStatement database:(sqlite3 *)newDatabase;
 {
@@ -816,7 +804,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 #pragma mark Accessors
 
 @synthesize centerOfMassInX, centerOfMassInY, centerOfMassInZ;
-@synthesize filename, filenameWithoutExtension, title, keywords, journalAuthor, journalTitle, journalReference, sequence, compound, source, author,desc;
+@synthesize filename, filenameWithoutExtension, title, keywords, journalAuthor, journalTitle, journalReference, sequence, compound, source, author,desc,folder;
 @synthesize isBeingDisplayed, isDoneRendering, isRenderingCancelled;
 @synthesize hasRendered;
 @synthesize numberOfAtoms, numberOfStructures;

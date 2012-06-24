@@ -67,6 +67,6 @@
 void uncaughtExceptionHandler(NSException *exception);
 #define kErrFolderExists 200
 #define kErrTarCorrupt 201
-
+#define kMapStartSize 1000000
 @end
 

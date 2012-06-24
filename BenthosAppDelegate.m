@@ -411,8 +411,13 @@ void uncaughtExceptionHandler(NSException *exception) {
 
     if (rootViewController.tableViewController != nil)
     {
-        [rootViewController.tableViewController.tableView reloadData];				
-    }					
+        [rootViewController.tableViewController.tableView reloadData];		
+        if([models count] == 1)
+            [rootViewController selectedModelDidChange:([models count] - 1)];
+    }
+    
+   
+
 
 
 }
@@ -443,86 +448,124 @@ void uncaughtExceptionHandler(NSException *exception) {
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-	
-	NSDirectoryEnumerator *direnum = [[NSFileManager defaultManager]
-									  enumeratorAtPath:documentsDirectory];
-	NSString *pname;
-	while ((pname = [direnum nextObject]))
-	{
-        /*	NSString *lastPathComponent = [pname lastPathComponent];
-         if (![lastPathComponent isEqualToString:pname])
-         {
-         NSError *error = nil;
-         // The file has been passed in using a subdirectory, so move it into the flattened /Documents directory
-         [[NSFileManager defaultManager]	moveItemAtPath:[documentsDirectory stringByAppendingPathComponent:pname] toPath:[documentsDirectory stringByAppendingPathComponent:lastPathComponent] error:&error];
-         [[NSFileManager defaultManager] removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:[pname stringByDeletingLastPathComponent]] error:&error];
-         pname = lastPathComponent;
-         }
-         */	     
-        NSDictionary *pathAttrs = [direnum fileAttributes];
-        NSUInteger level = [direnum level];
-        
-        BOOL isDir = [[pathAttrs objectForKey:NSFileType] isEqual:NSFileTypeDirectory];
-        if(isDir && level == 2)
-            [direnum skipDescendents];
-        NSString *basename = [[[pname stringByDeletingLastPathComponent] lastPathComponent] stringByDeletingPathExtension];	
-        
-        if([[[pname pathExtension] lowercaseString] isEqualToString:@"tar"] && ([modelFilenameLookupTable valueForKey:[pname stringByDeletingPathExtension]] == nil)){
-            //NSLog(@"Adding %@\n",[pname stringByDeletingPathExtension]);
-            NSString *installedTexPath = [libDirectory stringByAppendingPathComponent:[pname stringByDeletingPathExtension]];
-            if ([[NSFileManager defaultManager] fileExistsAtPath:installedTexPath]){
-                NSLog(@"Warning removing incomplete folder %@\n",[pname stringByDeletingPathExtension]);
-                [BenthosAppDelegate removeModelFolder:[pname stringByDeletingPathExtension]];
-            }
 
+    {
+        NSDirectoryEnumerator *direnum = [[NSFileManager defaultManager]
+                                          enumeratorAtPath:libDirectory];
+        NSString *pname;
+        while ((pname = [direnum nextObject]))
+        {
+            
+            NSDictionary *pathAttrs = [direnum fileAttributes];
+            NSUInteger level = [direnum level];
+            
+            BOOL isDir = [[pathAttrs objectForKey:NSFileType] isEqual:NSFileTypeDirectory];
+            if(isDir && level == 2)
+                [direnum skipDescendents];
+            NSString *basename = [[[pname stringByDeletingLastPathComponent] lastPathComponent] stringByDeletingPathExtension];	
             NSString *filename = [pname stringByDeletingPathExtension]  ;
-          /*  NSDictionary*  userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        filename, @"filename",nil];
-            NSLog(@"Tar found %@\n",filename);
 
-            [filename release];
-
-            [[NSNotificationCenter defaultCenter]
-             postNotificationName:@"NewBGTask"
-             object:self userInfo:userInfo];
-*/
-            BackgroundProcessingFile *curProg = [[BackgroundProcessingFile alloc] initWithName:filename];
-            [decompressingfiles addObject:curProg];
-            [curProg release];
-
-            [[JSGCDDispatcher sharedDispatcher] dispatchOnSerialQueue:^{
-              
-                //  dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                NSString *fname = [pname stringByDeletingPathExtension];	
-               // NSLog(@"Startup Unarchive Block Executed On %s %@", dispatch_queue_get_label(dispatch_get_current_queue()),fname);
-
-                NSError *error=nil;
-                if([BenthosAppDelegate processArchive:pname error:&error]){
-                    //NSLog(@"Startup Decompress Finished %@\n",pname);
-                    NSString *pname=[NSString stringWithFormat:@"%@/m.xml", fname];
-                    dispatch_async(dispatch_get_main_queue(), ^{ [self addNewModel: pname]; });
-                }else{
-                    NSLog(@"Fail to extract %@ %@ %@\n",[error localizedDescription],pname,installedTexPath);
-                    NSMutableArray *discardedItems = [NSMutableArray array];
-                    for(BackgroundProcessingFile *file in decompressingfiles){
-                        if([filename isEqualToString:[file filenameWithoutExtension]]){
-                            [discardedItems addObject:file];
-                        }
-                    }
-                    [decompressingfiles removeObjectsInArray:discardedItems];
-
-                    dispatch_async(dispatch_get_main_queue(), ^{  if (rootViewController.tableViewController != nil)
-                    {
-                        [rootViewController.tableViewController.tableView reloadData];				
-                    }	
-                   });
-
+            BOOL alreadyProcessing=NO;
+           
+            for(BackgroundProcessingFile *file in decompressingfiles){
+                if([filename isEqualToString:[file filenameWithoutExtension]]){
+                    alreadyProcessing=YES;
                 }
-            }];
+            }
+            if(alreadyProcessing)
+                continue;
+
+            if(([basename length] > 0) && ([modelFilenameLookupTable valueForKey:basename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"xml"])){
+                [self addNewModel: pname]; 
+                
+            }
             
-        }else if(([basename length] > 0) && ([modelFilenameLookupTable valueForKey:basename] == nil) && ([[[pname pathExtension] lowercaseString] isEqualToString:@"xml"])){
-            [self addNewModel: pname]; 
+        }
+    }
+    
+    {
+
+        NSDirectoryEnumerator *direnum = [[NSFileManager defaultManager]
+                                          enumeratorAtPath:documentsDirectory];
+        NSString *pname;
+        while ((pname = [direnum nextObject]))
+        {
+      
+            NSDictionary *pathAttrs = [direnum fileAttributes];
+            NSUInteger level = [direnum level];
             
+            BOOL isDir = [[pathAttrs objectForKey:NSFileType] isEqual:NSFileTypeDirectory];
+            if(isDir && level == 2)
+                [direnum skipDescendents];
+            
+            if([[[pname pathExtension] lowercaseString] isEqualToString:@"tar"] && ([modelFilenameLookupTable valueForKey:[pname stringByDeletingPathExtension]] == nil)){
+                NSString *filename = [pname stringByDeletingPathExtension]  ;
+                BOOL alreadyProcessing=NO;
+                for(BackgroundProcessingFile *file in decompressingfiles){
+                    if([filename isEqualToString:[file filenameWithoutExtension]]){
+                        alreadyProcessing=YES;
+                    }
+                }
+                if(alreadyProcessing)
+                    continue;
+
+                //NSLog(@"Adding %@\n",[pname stringByDeletingPathExtension]);
+                NSString *installedTexPath = [libDirectory stringByAppendingPathComponent:[pname stringByDeletingPathExtension]];
+                if ([[NSFileManager defaultManager] fileExistsAtPath:installedTexPath]){
+                    NSLog(@"Warning removing incomplete folder %@\n",[pname stringByDeletingPathExtension]);
+                    [BenthosAppDelegate removeModelFolder:[pname stringByDeletingPathExtension]];
+                }
+                
+                /*  NSDictionary*  userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                 filename, @"filename",nil];
+                 NSLog(@"Tar found %@\n",filename);
+                 
+                 [filename release];
+                 
+                 [[NSNotificationCenter defaultCenter]
+                 postNotificationName:@"NewBGTask"
+                 object:self userInfo:userInfo];
+                 */
+                BackgroundProcessingFile *curProg = [[BackgroundProcessingFile alloc] initWithName:filename];
+                [decompressingfiles addObject:curProg];
+                [curProg release];
+                dispatch_async(dispatch_get_main_queue(), ^{  if (rootViewController.tableViewController != nil)
+                {
+                    [rootViewController.tableViewController.tableView reloadData];				
+                }	
+                });
+
+                [[JSGCDDispatcher sharedDispatcher] dispatchOnSerialQueue:^{
+                    
+                    //  dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    NSString *fname = [pname stringByDeletingPathExtension];	
+                    // NSLog(@"Startup Unarchive Block Executed On %s %@", dispatch_queue_get_label(dispatch_get_current_queue()),fname);
+                    
+                    NSError *error=nil;
+                    if([BenthosAppDelegate processArchive:pname error:&error]){
+                        //NSLog(@"Startup Decompress Finished %@\n",pname);
+                        NSString *pname=[NSString stringWithFormat:@"%@/m.xml", fname];
+                        dispatch_async(dispatch_get_main_queue(), ^{ [self addNewModel: pname]; });
+                    }else{
+                        NSLog(@"Fail to extract %@ %@ %@\n",[error localizedDescription],pname,installedTexPath);
+                        NSMutableArray *discardedItems = [NSMutableArray array];
+                        for(BackgroundProcessingFile *file in decompressingfiles){
+                            if([filename isEqualToString:[file filenameWithoutExtension]]){
+                                [discardedItems addObject:file];
+                            }
+                        }
+                        [decompressingfiles removeObjectsInArray:discardedItems];
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{  if (rootViewController.tableViewController != nil)
+                        {
+                            [rootViewController.tableViewController.tableView reloadData];				
+                        }	
+                        });
+                        
+                    }
+                }];
+                
+            }
         }
         
 		

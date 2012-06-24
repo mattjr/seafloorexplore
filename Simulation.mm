@@ -787,7 +787,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     [FlurryAnalytics endTimedEvent:@"MOVEMENT_EVENT" withParameters:nil];
 
     NSDictionary *dictionary = 
-    [NSDictionary dictionaryWithObjectsAndKeys:basename,
+    [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithString:basename],
      @"mesh",
      [movementStrings objectAtIndex:type],
      @"movement",

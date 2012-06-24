@@ -70,7 +70,7 @@ typedef struct {
 }
 
 @property (readonly) float centerOfMassInX, centerOfMassInY, centerOfMassInZ;
-@property (readonly) NSString *filename, *filenameWithoutExtension, *title, *keywords, *journalAuthor, *journalTitle, *journalReference, *sequence, *compound, *source, *author,*desc;
+@property (readonly) NSString *filename, *filenameWithoutExtension, *title, *keywords, *journalAuthor, *journalTitle, *journalReference, *sequence, *compound, *source, *author,*desc,*folder;
 @property (readonly) CLLocationCoordinate2D coord;
 @property (readwrite, nonatomic) BOOL isBeingDisplayed, isRenderingCancelled;
 @property (readwrite, nonatomic) BOOL hasRendered;
@@ -82,7 +82,7 @@ typedef struct {
 @property (readwrite) unsigned int numberOfStructureBeingDisplayed;
 - (id)initWithDownloadedModel:(DownloadedModel *)newModel database:(sqlite3 *)newDatabase;
 
-- (id)initWithFilename:(NSString *)newFilename database:(sqlite3 *)newDatabase title:(NSString *)newTitle;
+//- (id)initWithFilename:(NSString *)newFilename database:(sqlite3 *)newDatabase title:(NSString *)newTitle folder:(NSString *)newFolder;
 - (id)initWithSQLStatement:(sqlite3_stmt *)modelRetrievalStatement database:(sqlite3 *)newDatabase;
 - (void)deleteModel;
 

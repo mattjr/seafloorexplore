@@ -15,8 +15,8 @@
 #define IMAGE_SECTION 0
 
 #define DESCRIPTION_SECTION 1
-#define MAPS_SECTION 2
-#define JOURNAL_SECTION 3
+#define MAPS_SECTION 3
+#define LINK_SECTION 2
 #define SOURCE_SECTION 4
 #define SEQUENCE_SECTION 5
 
@@ -50,7 +50,7 @@
 {
 	if ((self = [super initWithStyle:style])) 
 	{
-		self.view.frame = [[UIScreen mainScreen] applicationFrame];
+		//self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
 		self.model = [[[BenthosModel alloc] initWithDownloadedModel:newModel database:NULL] autorelease];
 		self.title = model.compound;
@@ -80,7 +80,9 @@
 - (void)viewDidLoad 
 {
 //	UILabel *label= [[UILabel alloc] initWithFrame:CGRectZero];
+    self.editing = NO;
 	[super viewDidLoad];
+    
 }
 
 
@@ -111,9 +113,9 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
 {
     if((self.detailImage != nil))
-        return 3;
+        return 3+1;
     
-    return 2;
+    return 3;
 }
 
 
@@ -125,6 +127,10 @@
 	{
         case DESCRIPTION_SECTION:
             return NSLocalizedStringFromTable(@"Description", @"Localized", nil);
+            
+        case LINK_SECTION:
+            return @"Link";
+
     //    case MAPS_SECTION:
       //      return NSLocalizedStringFromTable(@"Map", @"Localized", nil);
             /*
@@ -201,16 +207,21 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:MyIdentifier] autorelease];
         //cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:MyIdentifier] autorelease];
     }
-    if (section == DESCRIPTION_SECTION)
+    if (section == DESCRIPTION_SECTION || section == LINK_SECTION)
         cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:12.0];
     
+    if(section == LINK_SECTION)
+        cell.textLabel.textColor = [UIColor blueColor];
+    else {
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+    }
     cell.textLabel.text = [self textForIndexPath:section];
     cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     cell.textLabel.textAlignment = UITextAlignmentLeft;
     cell.textLabel.numberOfLines=0;
     [cell.textLabel sizeToFit];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
+  
 	return cell;
 }
 
@@ -263,7 +274,9 @@
 		case DESCRIPTION_SECTION:
 			text = model.desc;;
 			break;
-                
+        case LINK_SECTION:
+            text=model.folder;
+            break;
         default:
 			text = @"";
 			break;
@@ -275,14 +288,23 @@
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-		return nil;
-	
+    int section =indexPath.section;
+    if(self.detailImage == nil){
+        section++;
+    }
+    if (section == LINK_SECTION){
+        NSURL *url = [NSURL URLWithString:[self textForIndexPath:section]];
+        if (![[UIApplication sharedApplication] openURL:url]) {
+            NSLog(@"%@%@", @"Failed to open url:", [url description]);
+        }
+    }
+        
+	return nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-
-	
+   	
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -303,29 +325,45 @@
     }
     
     CGRect frame = CGRectMake(0, 0, cellWidth, 240);
-    MKMapView *map = [[MKMapView alloc] initWithFrame:frame];
-    MKCoordinateSpan Span = MKCoordinateSpanMake(5, 5);
+    MKMapView *mapView = [[MKMapView alloc] initWithFrame:frame];
+    MKCoordinateSpan Span = MKCoordinateSpanMake(25, 25);
     MKCoordinateRegion region =  MKCoordinateRegionMake(self.model.coord, Span);
 
-    [map setRegion:region];
+    [mapView setRegion:region];
     
-    map.layer.masksToBounds = YES;
-    map.layer.cornerRadius = 10.0;
-    map.mapType = MKMapTypeStandard;
-    [map setScrollEnabled:NO];
-    [map setZoomEnabled:NO];
+    mapView.layer.masksToBounds = YES;
+    mapView.layer.cornerRadius = 10.0;
+    mapView.mapType = MKMapTypeSatellite;
+    [mapView setScrollEnabled:NO];
+    [mapView setZoomEnabled:NO];
 
     // add a pin using self as the object implementing the MKAnnotation protocol
-    [map addAnnotation:self];
+    [mapView addAnnotation:self];
     
     NSString * cellID = @"Cell";
     UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellID] autorelease];    
     
-    [cell.contentView addSubview:map];
-    [map release];
-    
+    [cell.contentView addSubview:mapView];
+    self._mapView=mapView;
+    [mapView release];
+    self._mapView.delegate=self;
     _mapCell = [cell retain];
     return cell;
+}
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation{
+    MKPinAnnotationView *pin = (MKPinAnnotationView *) [self._mapView dequeueReusableAnnotationViewWithIdentifier: @"pinView"];
+    if (pin == nil)
+    {
+        pin = [[[MKPinAnnotationView alloc] initWithAnnotation: annotation reuseIdentifier: @"pinView"] autorelease];
+    }
+    else
+    {
+        pin.annotation = annotation;
+    }
+    pin.pinColor = MKPinAnnotationColorRed;
+    pin.animatesDrop = YES;
+    pin.enabled=NO;
+    return pin;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -343,10 +381,17 @@
     { 
         CGSize bodySize = [[self textForIndexPath:section] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0] 
                            constrainedToSize:CGSizeMake(self.view.frame.size.width,CGFLOAT_MAX)];
-        return bodySize.height+20.0f;
+        return bodySize.height+30.0f;
     
     }
     
+    if (section == LINK_SECTION)
+    { 
+        CGSize bodySize = [[self textForIndexPath:section] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0] 
+                                                      constrainedToSize:CGSizeMake(self.view.frame.size.width,CGFLOAT_MAX)];
+        return bodySize.height+20.0f;
+        
+    }
     if (section == IMAGE_SECTION){
             return 240.0;
     }
@@ -369,7 +414,7 @@
     return [model title];
 }
 
-@synthesize model;
+@synthesize model,_mapView;
 
 @end
 

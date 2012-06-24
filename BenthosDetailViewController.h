@@ -13,17 +13,19 @@
 #import "Model.h"
 @class BenthosModel;
 
-@interface BenthosDetailViewController : UITableViewController <MKAnnotation> 
+@interface BenthosDetailViewController : UITableViewController <MKAnnotation,MKMapViewDelegate> 
 {
 	BenthosModel *model;
     UITableViewCell *_mapCell;
     UITableViewCell *_imgCell;
-
+    MKMapView *_mapView;
     CLPlacemark *_placemark;
     UIImage *detailImage;
 
 	UILabel *nameLabel;	
 }
+@property (nonatomic, retain)     MKMapView *_mapView;
+
 @property (nonatomic, retain) CLPlacemark *placemark;
 @property (nonatomic, retain) UIImage *detailImage;
 @property (nonatomic, retain) BenthosModel *model;

@@ -37,7 +37,7 @@
 //@property(readwrite,retain)     MapAnnotation *selectedAnnotation;
 @property(nonatomic,assign)     BOOL firstView;
 
-@property(nonatomic,copy) NSString *selectedModel;
+@property(nonatomic,retain) NSString *selectedModel;
 
 
 @property(readwrite,assign) BenthosRootViewController *delegate;

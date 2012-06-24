@@ -24,8 +24,8 @@
     self = [super init];
     if (self) {
         coordinate = c;
-        title = name;
-        filenameWithoutExtension = [NSString stringWithString:[mol filenameWithoutExtension]];
+        title = [[NSString alloc] initWithString:name];
+        filenameWithoutExtension = [[NSString alloc] initWithString:[mol filenameWithoutExtension]];
     }
     return self;
 }
@@ -42,7 +42,8 @@
 }
 
 - (void)dealloc{
-	[title release];
+	[filenameWithoutExtension release];
+    [title release];
 	[subtitle release];
 	[super dealloc];
 }

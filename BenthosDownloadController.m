@@ -560,7 +560,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     NSString *filename = [downloadingmodel filename];
 
     NSDictionary *dictionary = 
-    [NSDictionary dictionaryWithObjectsAndKeys:filename, 
+    [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithString:filename], 
      @"downloadmodel", 
      nil];
     [FlurryAnalytics logEvent:@"DOWNLOADMODEL" withParameters:dictionary];

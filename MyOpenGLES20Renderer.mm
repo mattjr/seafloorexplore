@@ -287,7 +287,7 @@ extern vtConfig c;
 -(void)startupVT:(BenthosModel *)mol
 {
     NSDictionary *dictionary = 
-    [NSDictionary dictionaryWithObjectsAndKeys:mol.filenameWithoutExtension, 
+    [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithString:mol.filenameWithoutExtension], 
      @"currentmodel", 
      nil];
     [FlurryAnalytics logEvent:@"VIEWMODEL" withParameters:dictionary timed:YES];

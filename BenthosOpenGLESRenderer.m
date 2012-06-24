@@ -41,7 +41,7 @@ NSString *const kBenthosShadowCalculationEndedNotification = @"ModelShadowCalcul
     
     [self convertMatrix:currentModelViewMatrix to3DTransform:&currentCalculatedMatrix];
 
-    openGLESContextQueue = dispatch_queue_create("com.sunsetlakesoftware.openGLESContextQueue", NULL);;
+    openGLESContextQueue = dispatch_queue_create("com.seafloorexplore.openGLESContextQueue", NULL);;
     frameRenderingSemaphore = dispatch_semaphore_create(1);
 
 //    [self clearScreen];		

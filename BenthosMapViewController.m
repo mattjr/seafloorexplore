@@ -111,9 +111,9 @@
         return;
     BOOL anychanges=NO;
     NSMutableArray *discardedItems = [NSMutableArray array];
-
     for(MapAnnotation * ann in [mapView annotations]){
         if(ann != nil){
+          
             bool found=NO;
             for(BenthosModel * mol in models){
                 if([[mol filenameWithoutExtension] isEqualToString:ann.filenameWithoutExtension]){
@@ -146,9 +146,12 @@
             //   }
         }
     }
-    
-    if(anychanges)
+    if(anychanges){
         [self recenterMap];
+        [[self mapView ] setNeedsDisplay];
+        [[self view ] setNeedsDisplay];
+
+    }
 
 }
 
@@ -194,7 +197,7 @@
     for (id <MKAnnotation> annotation in mapView.annotations)
     {
         MKMapPoint annotationPoint = MKMapPointForCoordinate(annotation.coordinate);
-        MKMapRect pointRect = MKMapRectMake(annotationPoint.x, annotationPoint.y, 0, 0);
+        MKMapRect pointRect = MKMapRectMake(annotationPoint.x, annotationPoint.y, kMapStartSize, kMapStartSize);
         if (MKMapRectIsNull(zoomRect)) {
             zoomRect = pointRect;
         } else {

@@ -198,10 +198,11 @@
       //  if(bufferedModel != nil)
             [glViewController stopRender];
              
-        BenthosModel *tmp=[models objectAtIndex:newModelIndex];
-        [mapViewController setSelectedModel:[tmp filenameWithoutExtension]];
+        BenthosModel *tmp=[[models objectAtIndex:newModelIndex] retain];
+        [mapViewController setSelectedModel:[NSString stringWithString:[tmp filenameWithoutExtension]]];
 
         [glViewController startRender:tmp];
+        [tmp release];
 		bufferedModel = [models objectAtIndex:newModelIndex];
 	}
 }
@@ -294,8 +295,7 @@
 	{
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"ToggleView" object:nil];
 	}
-	//models://www.sunsetlakesoftware.com/sites/default/files/xenonPump.pdb
-	//html://www.sunsetlakesoftware.com/sites/default/files/xenonPump.pdb
+	
 	
 	NSString *pathComponentForCustomURL = [[customURLForModelDownload host] stringByAppendingString:[customURLForModelDownload path]];
 	NSString *customModelHandlingURL = [NSString stringWithFormat:@"models://%@", pathComponentForCustomURL];
