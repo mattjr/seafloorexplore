@@ -41,9 +41,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    CGRect bounds;
-    if ([BenthosAppDelegate isRunningOniPad]){
+    [self.view setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
+
+   CGRect bounds=self.view.frame;
+  /*  if ([BenthosAppDelegate isRunningOniPad]){
         
         bounds  = CGRectMake(0, 
                              0,
@@ -51,9 +52,9 @@
                              self.view.bounds.size.height);
     }else{
         bounds=[[UIScreen mainScreen] bounds];
-    }
+    }*/
     
-    scrollView =  [[UIScrollView alloc] initWithFrame:bounds];
+    scrollView =   [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];//[[UIScrollView alloc] initWithFrame:self.view.frame];
     [scrollView setScrollEnabled:NO];
 
     [scrollView setMaximumZoomScale:1.0f];

@@ -30,7 +30,7 @@
 	{        
         self.title = NSLocalizedStringFromTable(@"Models", @"Localized", nil);
 		selectedIndex = initialSelectedModelIndex;
-        
+
         self.navigationItem.rightBarButtonItem = self.editButtonItem;
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelDidFinishDownloading:) name:@"ModelDidFinishDownloading" object:nil];
@@ -77,6 +77,7 @@
 - (void)viewDidLoad;
 {
 	[super viewDidLoad];
+    [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleWidth];
 
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 	{

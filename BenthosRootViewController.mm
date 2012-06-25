@@ -66,13 +66,16 @@
 
     
 	BenthosGLViewController *viewController = [[BenthosGLViewController alloc] initWithNibName:nil bundle:nil];
+    viewController.view.autoresizesSubviews=YES;
+    viewController.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight;
 	self.glViewController = viewController;
 	[viewController release];
 	
 	[self.view addSubview:glViewController.view];
 	
 	UIButton *infoButton = [[UIButton buttonWithType:UIButtonTypeInfoLight] retain];
-	infoButton.frame = CGRectMake(320.0f - 70.0f, 460.0f - 70.0f, 70.0f, 70.0f);
+    infoButton.frame = CGRectMake(mainScreenFrame.size.width - 70.0f, mainScreenFrame.size.height - 70.0f, 70.0f, 70.0f);
+    infoButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin;
 	[infoButton addTarget:glViewController action:@selector(switchToTableView) forControlEvents:(UIControlEventTouchUpInside | UIControlEventTouchUpOutside)];
 	[glViewController.view addSubview:infoButton];
 	[infoButton release];
@@ -95,7 +98,8 @@
 	
 	rotationButton.showsTouchWhenHighlighted = YES;
 	[rotationButton addTarget:glViewController action:@selector(switchVisType:) forControlEvents:UIControlEventTouchUpInside];
-	rotationButton.frame = CGRectMake(0.0f, 460.0f - 70.0f, 70.0f, 70.0f);
+    rotationButton.frame = CGRectMake(0.0f, mainScreenFrame.size.height - 70.0f, 70.0f, 70.0f);
+    rotationButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin;
 	rotationButton.clipsToBounds = NO;
     rotationButton.selected=NO;
 	[glViewController.view addSubview:rotationButton];
@@ -119,10 +123,13 @@
 		[tableNavigationController viewWillAppear:YES];
 		[glViewController viewWillDisappear:YES];
 		[glView removeFromSuperview];
+        [tableView setFrame: [self.view bounds]];
+        [self.tableViewController.view setFrame: [[UIScreen mainScreen] bounds]];
 		[self.view addSubview:tableView];
 		[glViewController viewDidDisappear:YES];
 		[tableNavigationController viewDidAppear:YES];
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+
 	} 
 	else 
 	{
@@ -130,6 +137,7 @@
 		[glViewController viewWillAppear:YES];
 		[tableNavigationController viewWillDisappear:YES];
 		[tableView removeFromSuperview];
+        [glViewController.view setFrame: [self.view bounds]];
 		[self.view addSubview:glView];
 		
 		[tableNavigationController viewDidDisappear:YES];
@@ -142,7 +150,6 @@
 		else
 			previousModel.isBeingDisplayed = YES;
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
-        
 	}
 	[UIView commitAnimations];
 }
@@ -406,8 +413,9 @@
 		
 		// Need to correct the view rectangle of the navigation view to correct for the status bar gap
 		UIView *tableView = tableNavigationController.view;
+        CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
 		CGRect tableFrame = tableView.frame;
-		tableFrame.origin.y -= 20;
+		tableFrame.origin.y -= statusBarFrame.size.height;
 		tableView.frame = tableFrame;
         // Need to correct the view rectangle of the navigation view to correct for the status bar gap
 		UIView *mapView = mapViewController.view;

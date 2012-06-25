@@ -28,7 +28,7 @@
 {
 	if ((self = [super initWithStyle:style])) 
 	{
-		self.view.frame = [[UIScreen mainScreen] applicationFrame];
+	//	self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
 		self.model = newModel;
 		//[newModel readMetadataFromDatabaseIfNecessary];

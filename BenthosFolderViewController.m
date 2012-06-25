@@ -28,7 +28,7 @@
 	{
 		// Initialize the search bar and title
 		models =nil;
-		self.view.frame = [[UIScreen mainScreen] applicationFrame];
+		//self.view.frame = [[UIScreen mainScreen] applicationFrame];
 		self.view.autoresizesSubviews = YES;
 
         [[NSNotificationCenter defaultCenter] addObserver:self
