@@ -9,6 +9,8 @@
 #import "BenthosHelpScrollViewController.h"
 #import "BenthosAppDelegate.h"
 #import "BenthosFolderViewController.h"
+#import "LRLinkableLabel.h"
+
 @implementation BenthosHelpScrollViewController
 @synthesize decompressingfiles,scrollView,models;
 -(id) init
@@ -55,7 +57,7 @@
     }
     
     scrollView =  [[UIScrollView alloc] initWithFrame:bounds];
-    [scrollView setScrollEnabled:NO];
+    [scrollView setScrollEnabled:YES];
 
     [scrollView setMaximumZoomScale:1.0f];
     [scrollView setMinimumZoomScale:1.0f];
@@ -69,26 +71,26 @@
                                                         @"Tilt the model",
                                                         @"Center and zoom the model on the tapped point",
                                                         nil]; 
-
-    UILabel *title=[[UILabel alloc]initWithFrame:CGRectMake(5, 5 ,0,0 )];
+    int y=5;
+        
+    UILabel *title=[[UILabel alloc]initWithFrame:CGRectMake(5, y ,0,0 )];
     title.text=@"Interaction Help";
     [title setFont:[UIFont boldSystemFontOfSize:18]];
 
     [title sizeToFit];
-    int y=5;
 
     y+=title.frame.size.height;
     [scrollView addSubview:title];
     [title  release];
     y+=5;
-
+    float targetRatio= 0.2;
     for(int i=0;i<[imgArray count];i++)
     {
         
         UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[imgArray objectAtIndex:i]]];
         CGRect frame = tempImageView.frame;
         frame.origin.y=y;
-        float ratio=(0.25)/(frame.size.width /bounds.size.width );
+        float ratio=(targetRatio)/(frame.size.width /bounds.size.width );
         frame.size.width*=ratio;
         frame.size.height*=ratio;
         
@@ -123,7 +125,69 @@
         [tempImageView release];
     }
 
+    CGFloat labelPadding = 5.0;
     
+    UILabel *about=[[UILabel alloc]initWithFrame:CGRectMake(5, y ,0,0 )];
+    about.text=@"About";
+    [about setFont:[UIFont boldSystemFontOfSize:18]];
+    
+    [about sizeToFit];
+    
+    y+=about.frame.size.height;
+    [scrollView addSubview:about];
+    [about  release];
+    
+    NSArray *aboutTxt= [NSArray arrayWithObjects:@"Written by Matthew Johnson-Roberson find out more about my work http://bit.ly/mattjr",
+                        @"Thanks to the support of the Australian Centre of Field Robotics (ACFR) http://marine.acfr.usyd.edu.au where you can learn more about ongoing marine robotic research.",@"Built using the generous open source contributions of Molecules (Sunset Lake Software) and LibVT (Julian Mayer).",@"Financial support from the ACFR and Australian Research Council.",nil];
+    
+    for(NSString *txtVal in aboutTxt){
+        CGSize bodySize = [txtVal sizeWithFont:[UIFont fontWithName:@"Helvetica" size:10.0] 
+                             constrainedToSize:CGSizeMake(self.view.frame.size.width-2*labelPadding,CGFLOAT_MAX) lineBreakMode:UILineBreakModeTailTruncation];
+        LRLinkableLabel *label = [[LRLinkableLabel alloc] initWithFrame:CGRectMake(labelPadding,y+labelPadding,bodySize.width,bodySize.height)];
+        
+        label.text =txtVal;
+        
+        label.font=[UIFont fontWithName:@"Helvetica" size:10.0];
+        label.autoresizingMask = (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight);
+        label.tag = 1;
+        label.linkColor=[UIColor blueColor];
+        label.delegate = self;
+        
+        [label sizeToFit];
+        [scrollView addSubview:label];
+        [label release];
+        
+        y+=label.frame.size.height+5;
+    }
+    
+    UIImageView *acfrIV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"acfr"]];
+    CGRect frame = acfrIV.frame;
+    frame.origin.y=y;
+    float ratio=(0.4)/(frame.size.width /bounds.size.width );
+    frame.size.width*=ratio;
+    frame.size.height*=ratio;
+    frame.origin.x+=20.0f;
+    
+    acfrIV.frame = frame;
+    [scrollView addSubview:acfrIV];
+    [acfrIV release];
+    
+    UIImageView *arcIV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arc"]];
+    frame = arcIV.frame;
+    frame.origin.y=y;
+    ratio=(0.4)/(frame.size.width /bounds.size.width );
+    frame.size.width*=ratio;
+    frame.size.height*=ratio;
+    frame.origin.x += acfrIV.frame.size.width + 20.0f +acfrIV.frame.origin.x ;
+    
+    arcIV.frame = frame;
+    [scrollView addSubview:arcIV];
+    [arcIV release];
+    
+    y+=arcIV.frame.size.height;
+    
+
+    y+=80.0f;
     scrollView.backgroundColor = [UIColor whiteColor];
     
     [scrollView setContentSize:CGSizeMake(bounds.size.width, y)];
@@ -134,6 +198,9 @@
 
     [self.view addSubview:scrollView];
 
+}
+- (void) linkableLabel:(LRLinkableLabel *)label clickedButton:(UIButton *)button forURL:(NSURL *)url {
+    [[UIApplication sharedApplication] openURL:url];
 }
 
 - (IBAction)switchBackToGLView;

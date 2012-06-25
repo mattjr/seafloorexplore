@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class LRLinkableLabel;
 @interface BenthosHelpScrollViewController : UIViewController <UIScrollViewDelegate>{
     UIScrollView* scrollView;
     NSMutableArray *models;
@@ -18,7 +18,7 @@
 @property (nonatomic, retain) IBOutlet UIScrollView* scrollView;
 @property(readwrite,retain) NSMutableArray *models;
 @property(readwrite,retain) NSMutableArray *decompressingfiles;
-
+- (void) linkableLabel:(LRLinkableLabel *)label clickedButton:(UIButton *)button forURL:(NSURL *)url;
 - (IBAction)displayModelDownloadView;
 - (IBAction)switchBackToGLView;
 @end
