@@ -333,7 +333,7 @@
     
     mapView.layer.masksToBounds = YES;
     mapView.layer.cornerRadius = 10.0;
-    mapView.mapType = MKMapTypeSatellite;
+    mapView.mapType = MKMapTypeHybrid;
     [mapView setScrollEnabled:NO];
     [mapView setZoomEnabled:NO];
 
