@@ -138,16 +138,16 @@
     [about  release];
     
     NSArray *aboutTxt= [NSArray arrayWithObjects:@"Written by Matthew Johnson-Roberson find out more about my work http://bit.ly/mattjr",
-                        @"Thanks to the support of the Australian Centre of Field Robotics (ACFR) http://marine.acfr.usyd.edu.au where you can learn more about ongoing marine robotics research.",@"Built using the generous open source contributions of Molecules (Sunset Lake Software) and LibVT (Julian Mayer).",@"Financial support from the ACFR and the Australian Research Council.        ",nil];
+                        @"Thanks to the support of the Australian Centre of Field Robotics (ACFR) http://marine.acfr.usyd.edu.au where you can learn more about ongoing marine robotics research.",@"Built with help from the generous open source contributions of Molecules (Sunset Lake Software) and LibVT (Julian Mayer).",@"Financial support from the ACFR and the Australian Research Council.        ",nil];
     
     for(NSString *txtVal in aboutTxt){
-        CGSize bodySize = [txtVal sizeWithFont:[UIFont fontWithName:@"Helvetica" size:10.0] 
+        CGSize bodySize = [txtVal sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0] 
                              constrainedToSize:CGSizeMake(self.view.frame.size.width-2*labelPadding,CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
         LRLinkableLabel *label = [[LRLinkableLabel alloc] initWithFrame:CGRectMake(labelPadding,y+labelPadding,bodySize.width,bodySize.height)];
         
         label.text =txtVal;
         
-        label.font=[UIFont fontWithName:@"Helvetica" size:10.0];
+        label.font=[UIFont fontWithName:@"Helvetica" size:12.0];
         label.autoresizingMask = (UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight);
         label.tag = 1;
         label.linkColor=[UIColor blueColor];
