@@ -88,11 +88,8 @@ void normalize(GLfloat *v)
 
 - (id)initWithContext:(EAGLContext *)newContext;
 {
-	if (![super initWithContext:newContext])
-    {
-		return nil;
-    }
-    
+	self = [super initWithContext:newContext];
+        
     return self;
 }
 

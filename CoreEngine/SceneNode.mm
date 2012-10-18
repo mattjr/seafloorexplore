@@ -44,7 +44,7 @@ You should have received a copy of the GNU Lesser General Public License along w
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"<%@ 0x%08x>\n position: %f %f %f\n rotation: %f %f %f \n children:%@", [self class], self, position[0], position[1], position[2], rotation[0], rotation[1], rotation[2], [children description]];
+	return [NSString stringWithFormat:@"<%@ 0x%08x>\n position: %f %f %f\n rotation: %f %f %f \n children:%@", [self class], (unsigned int)self, position[0], position[1], position[2], rotation[0], rotation[1], rotation[2], [children description]];
 }
 
 - (void)transform

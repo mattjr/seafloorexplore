@@ -350,10 +350,10 @@ void vtPrepare(const GLuint readbackShader, const GLuint renderVTShader)
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, c.virtTexDimensionPages, c.virtTexDimensionPages, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL); // {GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV} doesn't seem to be faster
 
-		uint32_t **mipcalcTables = (uint32_t **) malloc(sizeof(uint32_t *) * c.mipChainLength);
+		uint32_t **mipcalcTables = (uint32_t **) malloc((sizeof(uint32_t *) * c.mipChainLength) + /*to remove spiurious warning*/1);
 		for (uint8_t i = 0; i < c.mipChainLength; i++)
 		{
-			mipcalcTables[i] = (uint32_t *) malloc(4 * (c.virtTexDimensionPages >> i) * (c.virtTexDimensionPages >> i));
+			mipcalcTables[i] = (uint32_t *) malloc((4 * (c.virtTexDimensionPages >> i) * (c.virtTexDimensionPages >> i))+/*to remove spiurious warning*/1 );
 
 			for (uint16_t x = 0; x < (c.virtTexDimensionPages >> i); x++)
 			{

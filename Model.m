@@ -55,8 +55,11 @@
 @synthesize longitude,title,desc,filename,folder,fileSize,appVersion,imageURL,modelIcon;
 
 -(id) init {
-    [super init];
-    appVersion=0.0;
+    self = [super init];
+    
+    if(self){
+        appVersion=0.0;
+    }
     return self;
 }
 - (void)dealloc {

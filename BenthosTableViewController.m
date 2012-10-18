@@ -624,6 +624,8 @@
 		[self.delegate selectedModelDidChange:(index - 1)];
 		[tableView deselectRowAtIndexPath:indexPath animated:NO];
 		[tableView reloadData];
+        if (![BenthosAppDelegate isRunningOniPad])
+            [self switchBackToGLView];
 	}
 }
 

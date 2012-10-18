@@ -61,12 +61,15 @@ void uncaughtExceptionHandler(NSException *exception) {
 		newSplitViewController.viewControllers = [NSArray arrayWithObjects:rootViewController.tableNavigationController, rootViewController, nil];
 		newSplitViewController.delegate = (BenthosiPadRootViewController *)rootViewController;
 		splitViewController = newSplitViewController;
-		[window addSubview:splitViewController.view];
+		//[window addSubview:splitViewController.view];
+        [self.window setRootViewController:splitViewController];
 	}
 	else
 	{
 		rootViewController = [[BenthosRootViewController alloc] init];
-		[window addSubview:rootViewController.view];
+		//[window addSubview:rootViewController.view];
+        [self.window setRootViewController:rootViewController];
+
 	}
     rootViewController.models = models;
     rootViewController.decompressingfiles = decompressingfiles;
@@ -1004,7 +1007,7 @@ void uncaughtExceptionHandler(NSException *exception) {
     NSString *libraryDirectory = [paths objectAtIndex:0];
     CFUUIDRef newUniqueId = CFUUIDCreate(kCFAllocatorDefault);
     CFStringRef newUniqueIdString = CFUUIDCreateString(kCFAllocatorDefault, newUniqueId);
-    NSString *tmpPath = [NSTemporaryDirectory() stringByAppendingPathComponent:(__bridge NSString *)newUniqueIdString];
+    NSString *tmpPath = [NSTemporaryDirectory() stringByAppendingPathComponent:( NSString *)newUniqueIdString];
     CFRelease(newUniqueId);
     CFRelease(newUniqueIdString);
     NSError *error = nil;

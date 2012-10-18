@@ -606,8 +606,8 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 			{
 				if(!pinchGestureUnderway)
                     [sim zoomstart];
-				float speedModifier=1.0;
-                vector3f movement = vector3f(1,  speedModifier *(newTouchDistance / startingTouchDistance), 1);
+				//float speedModifier=1.0;
+              //  vector3f movement = vector3f(1,  speedModifier *(newTouchDistance / startingTouchDistance), 1);
 
 				zoomVal=  (newTouchDistance / startingTouchDistance) / previousScale;
                 [sim zoomcont:zoomVal];

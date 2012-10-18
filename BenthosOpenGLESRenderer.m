@@ -19,33 +19,31 @@ NSString *const kBenthosShadowCalculationEndedNotification = @"ModelShadowCalcul
 
 - (id)initWithContext:(EAGLContext *)newContext;
 {
-	if (![super init])
-    {
-		return nil;
+	self = [super init];
+    
+    if (self) {
+        self.context = newContext;
+        
+        isSceneReady = NO;
+        
+        // Set up the initial model view matrix for the rendering
+        isFirstDrawingOfModel = YES;
+        isFrameRenderingFinished = YES;
+        totalNumberOfVertices = 0;
+        totalNumberOfTriangles = 0;
+        currentModelScaleFactor = 1.0;
+        
+        GLfloat currentModelViewMatrix[16]  = {0.402560,0.094840,0.910469,0.000000, 0.913984,-0.096835,-0.394028,0.000000, 0.050796,0.990772,-0.125664,0.000000, 0.000000,0.000000,0.000000,1.000000};
+        
+        //		GLfloat currentModelViewMatrix[16]  = {1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0};
+        
+        [self convertMatrix:currentModelViewMatrix to3DTransform:&currentCalculatedMatrix];
+        
+        openGLESContextQueue = dispatch_queue_create("com.seafloorexplore.openGLESContextQueue", NULL);;
+        frameRenderingSemaphore = dispatch_semaphore_create(1);
+        
+        //    [self clearScreen];
     }
-
-    self.context = newContext;
-    
-    isSceneReady = NO;
-    
-    // Set up the initial model view matrix for the rendering
-    isFirstDrawingOfModel = YES;
-    isFrameRenderingFinished = YES;
-    totalNumberOfVertices = 0;
-	totalNumberOfTriangles = 0;
-    currentModelScaleFactor = 1.0;
-
-    GLfloat currentModelViewMatrix[16]  = {0.402560,0.094840,0.910469,0.000000, 0.913984,-0.096835,-0.394028,0.000000, 0.050796,0.990772,-0.125664,0.000000, 0.000000,0.000000,0.000000,1.000000};
-    
-    //		GLfloat currentModelViewMatrix[16]  = {1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0};
-    
-    [self convertMatrix:currentModelViewMatrix to3DTransform:&currentCalculatedMatrix];
-
-    openGLESContextQueue = dispatch_queue_create("com.seafloorexplore.openGLESContextQueue", NULL);;
-    frameRenderingSemaphore = dispatch_semaphore_create(1);
-
-//    [self clearScreen];		
-
     return self;
 }
 

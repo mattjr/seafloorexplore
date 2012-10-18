@@ -23,24 +23,22 @@
 
 - (id)initWithContext:(EAGLContext *)newContext;
 {
-	if (![super initWithContext:newContext])
-    {
-		return nil;
+	self = [super initWithContext:newContext];
+   
+    if(self){
+        //  0.312757, 0.248372, 0.916785
+        // 0.0, -0.7071, 0.7071
+        
+        currentViewportSize = CGSizeZero;
+        
+        lightDirection[0] = 0.312757;
+        lightDirection[1] = 0.248372;
+        lightDirection[2] = 0.916785;
+        
+        /* [self initializeDepthShaders];
+         [self initializeAmbientOcclusionShaders];
+         [self initializeRaytracingShaders];*/
     }
-
-   //  0.312757, 0.248372, 0.916785
-    // 0.0, -0.7071, 0.7071
-    
-    currentViewportSize = CGSizeZero;
-    
-    lightDirection[0] = 0.312757;
-	lightDirection[1] = 0.248372;
-	lightDirection[2] = 0.916785;
-
-   /* [self initializeDepthShaders];
-    [self initializeAmbientOcclusionShaders];
-    [self initializeRaytracingShaders];*/
-
     return self;
 }
 

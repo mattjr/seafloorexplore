@@ -7,7 +7,7 @@
 
 GLuint LoadShaders(NSString *shadername, NSString *preprocessorDefines)
 {
-#define LOAD_SHADER(shaderString, shader_string, shader, shader_compiled, GL_SHADER)\
+#define LOAD_SHADER(log,shaderString, shader_string, shader, shader_compiled, GL_SHADER)\
 if ((shaderString))																	\
 {																					\
 if (preprocessorDefines)															\
@@ -21,13 +21,15 @@ GLint infoLogLength;																\
 glGetShaderiv((shader), GL_INFO_LOG_LENGTH, &infoLogLength);						\
 if (infoLogLength > 0)																\
 {																					\
-infoLog = (char *) malloc((infoLogLength + 1) * sizeof(char));						\
-glGetShaderInfoLog ((shader), infoLogLength, NULL, infoLog);						\
-NSLog(@"Warning: shader log: %s\n", infoLog);										\
+log = (char *) malloc((infoLogLength + 1) * sizeof(char));						\
+glGetShaderInfoLog ((shader), infoLogLength, NULL, log);						\
+NSLog(@"Warning: shader log: %s\n", log);										\
 }																					\
 }
 
-	char * infoLog = 0;
+	char * infoLogV = 0;
+    char * infoLogF = 0;
+
 	NSString *vertexString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:shadername ofType:@"vert"] encoding:NSUTF8StringEncoding error:NULL];
 	NSString *fragmentString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:shadername ofType:@"frag"] encoding:NSUTF8StringEncoding error:NULL];
 	GLuint vertex_shader = 0, fragment_shader = 0, program_object;
@@ -38,11 +40,11 @@ NSLog(@"Warning: shader log: %s\n", infoLog);										\
 
 	if (preprocessorDefines == nil) preprocessorDefines = openglESSupport;
 	else preprocessorDefines = [openglESSupport stringByAppendingString:preprocessorDefines];
-	LOAD_SHADER(vertexString, vertex_string, vertex_shader, vertex_compiled, GL_VERTEX_SHADER)
-	LOAD_SHADER(fragmentString, fragment_string, fragment_shader, fragment_compiled, GL_FRAGMENT_SHADER)
+	LOAD_SHADER(infoLogV,vertexString, vertex_string, vertex_shader, vertex_compiled, GL_VERTEX_SHADER)
+	LOAD_SHADER(infoLogF,fragmentString, fragment_string, fragment_shader, fragment_compiled, GL_FRAGMENT_SHADER)
 
 	if (!vertex_compiled || !fragment_compiled)
-		fatal("Error: couldn't compile shaders: \n%s\nVERTEX SHADER:\n%s\n\nFRAGMENT SHADER:\n%s\n", infoLog, [vertexString UTF8String], [fragmentString UTF8String]); // should do cleanup if we don't wanna panic here
+		fatal("Error: couldn't compile shaders: \n%s\n%s\nVERTEX SHADER:\n%s\n\nFRAGMENT SHADER:\n%s\n", infoLogV, infoLogF,[vertexString UTF8String], [fragmentString UTF8String]); // should do cleanup if we don't wanna panic here
 
 
 	program_object = glCreateProgram();
@@ -68,6 +70,11 @@ NSLog(@"Warning: shader log: %s\n", infoLog);										\
 
 		fatal("Error: couldn't link shaders:\n%s\n%s\n%s\n", infoLog, [vertexString UTF8String], [fragmentString UTF8String]);
 	}
+    
+    if(infoLogV)
+        free(infoLogV);
+    if(infoLogF)
+        free(infoLogF);
 	return program_object;
 }
 #endif
@@ -95,7 +102,8 @@ GLuint LoadShadersNoLink(NSString *shadername, NSString *preprocessorDefines)
 {
     
     
-	char * infoLog = 0;
+    char * infoLogV = 0;
+    char * infoLogF = 0;
 	NSString *vertexString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:shadername ofType:@"vert"] encoding:NSUTF8StringEncoding error:NULL];
 	NSString *fragmentString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:shadername ofType:@"frag"] encoding:NSUTF8StringEncoding error:NULL];
 	GLuint vertex_shader = 0, fragment_shader = 0, program_object;
@@ -106,11 +114,11 @@ GLuint LoadShadersNoLink(NSString *shadername, NSString *preprocessorDefines)
     
 	if (preprocessorDefines == nil) preprocessorDefines = openglESSupport;
 	else preprocessorDefines = [openglESSupport stringByAppendingString:preprocessorDefines];
-	LOAD_SHADER(vertexString, vertex_string, vertex_shader, vertex_compiled, GL_VERTEX_SHADER)
-	LOAD_SHADER(fragmentString, fragment_string, fragment_shader, fragment_compiled, GL_FRAGMENT_SHADER)
+	LOAD_SHADER(infoLogV,vertexString, vertex_string, vertex_shader, vertex_compiled, GL_VERTEX_SHADER)
+	LOAD_SHADER(infoLogF,fragmentString, fragment_string, fragment_shader, fragment_compiled, GL_FRAGMENT_SHADER)
     
 	if (!vertex_compiled || !fragment_compiled)
-		fatal("Error: couldn't compile shaders: \n%s\nVERTEX SHADER:\n%s\n\nFRAGMENT SHADER:\n%s\n", infoLog, [vertexString UTF8String], [fragmentString UTF8String]); // should do cleanup if we don't wanna panic here
+		fatal("Error: couldn't compile shaders: \n%s\n%s\nVERTEX SHADER:\n%s\n\nFRAGMENT SHADER:\n%s\n", infoLogV,infoLogF, [vertexString UTF8String], [fragmentString UTF8String]); // should do cleanup if we don't wanna panic here
     
     
 	program_object = glCreateProgram();
@@ -124,6 +132,12 @@ GLuint LoadShadersNoLink(NSString *shadername, NSString *preprocessorDefines)
 		glAttachShader(program_object, fragment_shader);
 		glDeleteShader(fragment_shader);
 	}
+    
+    if(infoLogV)
+        free(infoLogV);
+    if(infoLogF)
+        free(infoLogF);
+    
     return program_object;
 }
 GLuint LinkShader(GLuint program_object){

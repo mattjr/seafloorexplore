@@ -21,6 +21,7 @@
 		7B48CBA5152271FA008FA151 /* BenthosMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBA4152271FA008FA151 /* BenthosMapViewController.m */; };
 		7B48CBA8152279A1008FA151 /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBA7152279A1008FA151 /* MapAnnotation.m */; };
 		7B48CBB51522C188008FA151 /* Model.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBB21522C188008FA151 /* Model.m */; };
+		7B6F3297162F733F00AB12CA /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B6F3296162F733F00AB12CA /* Default-568h@2x.png */; };
 		7B83A5CD159857BD00A5DE5C /* LRLinkableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B83A5CC159857BD00A5DE5C /* LRLinkableLabel.m */; };
 		7B83A5CF1598646C00A5DE5C /* acfr.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B83A5CE1598646C00A5DE5C /* acfr.png */; };
 		7B83A5D1159865F600A5DE5C /* arc.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B83A5D0159865F600A5DE5C /* arc.png */; };
@@ -139,6 +140,7 @@
 		7B48CBB11522C187008FA151 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
 		7B48CBB21522C188008FA151 /* Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Model.m; sourceTree = "<group>"; };
 		7B61FB0213991399006E50B3 /* renderVT.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = renderVT.frag; path = LibVT/renderVT.frag; sourceTree = "<group>"; };
+		7B6F3296162F733F00AB12CA /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		7B83A5CB159857BD00A5DE5C /* LRLinkableLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LRLinkableLabel.h; sourceTree = SOURCE_ROOT; };
 		7B83A5CC159857BD00A5DE5C /* LRLinkableLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LRLinkableLabel.m; sourceTree = SOURCE_ROOT; };
 		7B83A5CE1598646C00A5DE5C /* acfr.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = acfr.png; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				7B6F3296162F733F00AB12CA /* Default-568h@2x.png */,
 				BC67B8BE137C4B7A0075A361 /* Default@2x.png */,
 				BC2795BC11625065006DE4C8 /* Default.png */,
 				BC2795B81162500A006DE4C8 /* Default-Landscape.png */,
@@ -685,6 +688,7 @@
 				7B9A0FC2157F8D6500905353 /* geebanks_16_15m_out.tar in Resources */,
 				7B83A5CF1598646C00A5DE5C /* acfr.png in Resources */,
 				7B83A5D1159865F600A5DE5C /* arc.png in Resources */,
+				7B6F3297162F733F00AB12CA /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -66,7 +66,7 @@ float positions[60 * 60][6];
         basename = [[name lastPathComponent ] copy];
         NSString *dataName = [NSString stringWithFormat:@"%@/vtex",name] ;
         
-        NSString *numMeshesFile = [NSString stringWithFormat:@"%@/cnt",name,basename] ;
+        NSString *numMeshesFile = [NSString stringWithFormat:@"%@/cnt",name] ;
 
         //NSLog(@"%@\n",dataName);
         meshes = [[NSMutableArray alloc] init]; 

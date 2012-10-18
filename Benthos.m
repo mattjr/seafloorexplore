@@ -49,92 +49,98 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 
 - (id)init;
 {
-	if (![super init])
-		return nil;
-	
-	numberOfStructures = 1;
-	numberOfStructureBeingDisplayed = 1;
-	
-	filename = nil;
-	filenameWithoutExtension = nil;
-	title = nil;
-	keywords = nil;
-	sequence = nil;
-	compound = nil;
-	source = nil;
-	journalTitle = nil;
-	journalAuthor = nil;
-	journalReference = nil;
-	author = nil;
-	
-	isBeingDisplayed = NO;
-	isRenderingCancelled = NO;
-	
-	previousTerminalAtomValue = nil;
-	reverseChainDirection = NO;
-	currentVisualizationType = BALLANDSTICK;
-	
-	isPopulatedFromDatabase = NO;
-	databaseKey = 0;
-    numberOfAtoms = 187;
-	isDoneRendering = NO;
-    hasRendered=NO;
-	stillCountingAtomsInFirstStructure = YES;
+	self = [super init];
+    
+    if (self) {
+        
+        numberOfStructures = 1;
+        numberOfStructureBeingDisplayed = 1;
+        
+        filename = nil;
+        filenameWithoutExtension = nil;
+        title = nil;
+        keywords = nil;
+        sequence = nil;
+        compound = nil;
+        source = nil;
+        journalTitle = nil;
+        journalAuthor = nil;
+        journalReference = nil;
+        author = nil;
+        
+        isBeingDisplayed = NO;
+        isRenderingCancelled = NO;
+        
+        previousTerminalAtomValue = nil;
+        reverseChainDirection = NO;
+        currentVisualizationType = BALLANDSTICK;
+        
+        isPopulatedFromDatabase = NO;
+        databaseKey = 0;
+        numberOfAtoms = 187;
+        isDoneRendering = NO;
+        hasRendered=NO;
+        stillCountingAtomsInFirstStructure = YES;
+    }
+    
 	return self;
 }
 - (id)initWithDownloadedModel:(DownloadedModel *)newModel database:(sqlite3 *)newDatabase;
 {
-    if (![self init])
-		return nil;
+    self = [self init];
     
-    database = newDatabase;
-
-	
-	filename = [[newModel filename] retain];
-	
-	NSRange rangeUntilFirstPeriod = [filename rangeOfString:@"."];
-	if (rangeUntilFirstPeriod.location == NSNotFound)
-		filenameWithoutExtension = [[newModel filename] retain];
-	else
-		filenameWithoutExtension = [[filename substringToIndex:rangeUntilFirstPeriod.location] retain];
-	
-	//compound = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
-    //    NSLog(@"SQL %@ %@\n",title,filename);
-    
-    desc=[[newModel desc] retain];
-    folder = [[newModel folder] retain];
-    coord.longitude=newModel.longitude;
-    coord.latitude=newModel.latitude;
-
-    title=[[newModel title] retain];
-    if(database){
-    if (insertModelSQLStatement == nil) 
-	{
-        static char *sql = "INSERT INTO models (filename) VALUES(?)";
-        if (sqlite3_prepare_v2(database, sql, -1, &insertModelSQLStatement, NULL) != SQLITE_OK) 
-		{
-            NSAssert1(0,NSLocalizedStringFromTable(@"Error: failed to prepare statement with message '%s'.", @"Localized", nil), sqlite3_errmsg(database));
+    if (self) {
+        
+        database = newDatabase;
+        
+        
+        filename = [[newModel filename] retain];
+        
+        NSRange rangeUntilFirstPeriod = [filename rangeOfString:@"."];
+        if (rangeUntilFirstPeriod.location == NSNotFound)
+            filenameWithoutExtension = [[newModel filename] retain];
+        else
+            filenameWithoutExtension = [[filename substringToIndex:rangeUntilFirstPeriod.location] retain];
+        
+        //compound = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
+        //    NSLog(@"SQL %@ %@\n",title,filename);
+        
+        desc=[[newModel desc] retain];
+        folder = [[newModel folder] retain];
+        coord.longitude=newModel.longitude;
+        coord.latitude=newModel.latitude;
+        
+        title=[[newModel title] retain];
+        if(database){
+            if (insertModelSQLStatement == nil)
+            {
+                static char *sql = "INSERT INTO models (filename) VALUES(?)";
+                if (sqlite3_prepare_v2(database, sql, -1, &insertModelSQLStatement, NULL) != SQLITE_OK)
+                {
+                    NSAssert1(0,NSLocalizedStringFromTable(@"Error: failed to prepare statement with message '%s'.", @"Localized", nil), sqlite3_errmsg(database));
+                }
+            }
+            // Bind the query variables.
+            sqlite3_bind_text(insertModelSQLStatement, 1, [filename UTF8String], -1, SQLITE_TRANSIENT);
+            int success = sqlite3_step(insertModelSQLStatement);
+            // Because we want to reuse the statement, we "reset" it instead of "finalizing" it.
+            sqlite3_reset(insertModelSQLStatement);
+            if (success != SQLITE_ERROR)
+            {
+                // SQLite provides a method which retrieves the value of the most recently auto-generated primary key sequence
+                // in the database. To access this functionality, the table should have a column declared of type
+                // "INTEGER PRIMARY KEY"
+                databaseKey = sqlite3_last_insert_rowid(database);
+            }
+            
+            // Wrap all SQLite write operations in a BEGIN, COMMIT block to make writing one operation
+            [BenthosModel beginTransactionWithDatabase:database];
+            
+            [self writeModelDataToDatabase];
+            
+            [BenthosModel endTransactionWithDatabase:database];
         }
-    }
-	// Bind the query variables.
-	sqlite3_bind_text(insertModelSQLStatement, 1, [filename UTF8String], -1, SQLITE_TRANSIENT);
-    int success = sqlite3_step(insertModelSQLStatement);
-    // Because we want to reuse the statement, we "reset" it instead of "finalizing" it.
-    sqlite3_reset(insertModelSQLStatement);
-    if (success != SQLITE_ERROR) 
-	{
-        // SQLite provides a method which retrieves the value of the most recently auto-generated primary key sequence
-        // in the database. To access this functionality, the table should have a column declared of type 
-        // "INTEGER PRIMARY KEY"
-        databaseKey = sqlite3_last_insert_rowid(database);
-    }
-
-    // Wrap all SQLite write operations in a BEGIN, COMMIT block to make writing one operation
-	[BenthosModel beginTransactionWithDatabase:database];
-
-	[self writeModelDataToDatabase];
-
-    [BenthosModel endTransactionWithDatabase:database];
+        
     }
     
 	return self;
@@ -190,50 +196,50 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 
 - (id)initWithSQLStatement:(sqlite3_stmt *)modelRetrievalStatement database:(sqlite3 *)newDatabase;
 {
-	if (![self init])
-		return nil;
-
-	database = newDatabase;
-	
-	// Retrieve model information from the line of the SELECT statement
-	//(id,filename,title,compound,format,atom_count,structure_count, centerofmass_x,centerofmass_y,centerofmass_z,minimumposition_x,minimumposition_y,minimumposition_z,maximumposition_x,maximumposition_y,maximumposition_z)
-//    const char *sql = "UPDATE models SET title=?, desc=?, filename=?, folder=?, weblink=?, lat=?, lon=?, ver=? WHERE id=?";
-
-	databaseKey = sqlite3_column_int(modelRetrievalStatement, 0);
-	char *stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 1);
-	NSString *sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
-	title = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
-
-	stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 2);
-	sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
-	desc = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
+	self = [self init];
     
-    
-    
-    stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 3);
-	sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
-	filename = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
-	
-	NSRange rangeUntilFirstPeriod = [filename rangeOfString:@"."];
-	if (rangeUntilFirstPeriod.location == NSNotFound)
-		filenameWithoutExtension = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
-	else
-		filenameWithoutExtension = [[filename substringToIndex:rangeUntilFirstPeriod.location] retain];
-	
-    stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 4);
-	sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
-	folder = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
-    
-    stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 5);
-	sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
-	weblink = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
-    
-    coord.latitude=sqlite3_column_double(modelRetrievalStatement, 6);
-    coord.longitude=sqlite3_column_double(modelRetrievalStatement, 7);
-    //double version=sqlite3_column_double(modelRetrievalStatement, 8);
-
-    //NSLog(@"%f %f %@ %@ %@ %@ %@ %f\n",coord.latitude,coord.longitude,weblink,folder,filenameWithoutExtension,title,desc,version);
-		
+    if (self) {
+        database = newDatabase;
+        
+        // Retrieve model information from the line of the SELECT statement
+        //(id,filename,title,compound,format,atom_count,structure_count, centerofmass_x,centerofmass_y,centerofmass_z,minimumposition_x,minimumposition_y,minimumposition_z,maximumposition_x,maximumposition_y,maximumposition_z)
+        //    const char *sql = "UPDATE models SET title=?, desc=?, filename=?, folder=?, weblink=?, lat=?, lon=?, ver=? WHERE id=?";
+        
+        databaseKey = sqlite3_column_int(modelRetrievalStatement, 0);
+        char *stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 1);
+        NSString *sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
+        title = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
+        
+        stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 2);
+        sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
+        desc = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
+        
+        
+        
+        stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 3);
+        sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
+        filename = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
+        
+        NSRange rangeUntilFirstPeriod = [filename rangeOfString:@"."];
+        if (rangeUntilFirstPeriod.location == NSNotFound)
+            filenameWithoutExtension = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
+        else
+            filenameWithoutExtension = [[filename substringToIndex:rangeUntilFirstPeriod.location] retain];
+        
+        stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 4);
+        sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
+        folder = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
+        
+        stringResult = (char *)sqlite3_column_text(modelRetrievalStatement, 5);
+        sqlString =  (stringResult) ? [NSString stringWithUTF8String:stringResult]  : @"";
+        weblink = [[sqlString stringByReplacingOccurrencesOfString:@"''" withString:@"'"] retain];
+        
+        coord.latitude=sqlite3_column_double(modelRetrievalStatement, 6);
+        coord.longitude=sqlite3_column_double(modelRetrievalStatement, 7);
+        //double version=sqlite3_column_double(modelRetrievalStatement, 8);
+        
+        //NSLog(@"%f %f %@ %@ %@ %@ %@ %f\n",coord.latitude,coord.longitude,weblink,folder,filenameWithoutExtension,title,desc,version);
+    }
 	return self;
 }
 

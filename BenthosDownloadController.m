@@ -174,7 +174,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     cancelDownloadButton.hidden = NO;
 
     NSString *filename = [[[downloadingmodel filename] lastPathComponent] stringByDeletingPathExtension];	
-    NSString *xmlpath=[NSString stringWithFormat: @"%@/m.xml",filename,filename];
+    NSString *xmlpath=[NSString stringWithFormat: @"%@/m.xml",filename];
 	if ([[NSFileManager defaultManager] fileExistsAtPath:[libraryDirectory stringByAppendingPathComponent:xmlpath]])
 	{
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"File already exists", @"Localized", nil) message:NSLocalizedStringFromTable(@"This model has already been downloaded", @"Localized", nil)

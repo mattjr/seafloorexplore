@@ -29,11 +29,11 @@ You should have received a copy of the GNU Lesser General Public License along w
 @property (assign, nonatomic) float fov;
 @property (assign, nonatomic) float nearPlane;
 @property (assign, nonatomic) float farPlane;
-@property (assign, readonly) matrix44f_c projectionMatrix;
-@property (assign, readonly) matrix44f_c viewMatrix;
-@property (assign, readonly) matrix44f_c viewMatrixNoRotate;
-@property (assign, readonly) cml::vector4i viewport;
-@property (assign, readonly) matrix44f_c viewportMatrix; 
+@property (assign, readonly,nonatomic) matrix44f_c projectionMatrix;
+@property (assign, readonly,nonatomic) matrix44f_c viewMatrix;
+@property (assign, readonly,nonatomic) matrix44f_c viewMatrixNoRotate;
+@property (assign, readonly,nonatomic) cml::vector4i viewport;
+@property (assign, readonly,nonatomic) matrix44f_c viewportMatrix;
 
 
 

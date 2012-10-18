@@ -15,24 +15,27 @@
 @synthesize decompressingfiles,scrollView,models;
 -(id) init
 {
-    models=nil;
-    if ([BenthosAppDelegate isRunningOniPad])
-    {
-        //			self.MapView.backgroundColor = [UIColor blackColor];
-        //			tableTextColor = [[UIColor whiteColor] retain];
-        self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
-        
-        UIBarButtonItem *downloadButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(displayModelDownloadView)];
-        self.navigationItem.leftBarButtonItem = downloadButtonItem;
-        [downloadButtonItem release];
-    }
-    else
-    {
-        //			tableTextColor = [[UIColor blackColor] retain];
-        UIBarButtonItem *modelButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTable(@"3D Model", @"Localized", nil) style:UIBarButtonItemStylePlain target:self action:@selector(switchBackToGLView)];
-        self.navigationItem.leftBarButtonItem = modelButtonItem;
-        [modelButtonItem release];
-        
+    self = [super init];
+    if(self){
+        models=nil;
+        if ([BenthosAppDelegate isRunningOniPad])
+        {
+            //			self.MapView.backgroundColor = [UIColor blackColor];
+            //			tableTextColor = [[UIColor whiteColor] retain];
+            self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
+            
+            UIBarButtonItem *downloadButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(displayModelDownloadView)];
+            self.navigationItem.leftBarButtonItem = downloadButtonItem;
+            [downloadButtonItem release];
+        }
+        else
+        {
+            //			tableTextColor = [[UIColor blackColor] retain];
+            UIBarButtonItem *modelButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTable(@"3D Model", @"Localized", nil) style:UIBarButtonItemStylePlain target:self action:@selector(switchBackToGLView)];
+            self.navigationItem.leftBarButtonItem = modelButtonItem;
+            [modelButtonItem release];
+            
+        }
     }
 	return self;
 

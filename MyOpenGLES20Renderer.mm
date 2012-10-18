@@ -30,15 +30,15 @@ extern vtConfig c;
 
 - (id)initWithContext:(EAGLContext *)newContext;
 {
-	if (![super initWithContext:newContext])
-    {
-		return nil;
+	self = [super initWithContext:newContext];
+    
+    if(self){
+        currentViewportSize = CGSizeZero;
+        [EAGLContext setCurrentContext:context];
+        removeOnceRender=NO;
+        //scene = [Scene sharedScene];
     }
-
-    currentViewportSize = CGSizeZero;
-   	[EAGLContext setCurrentContext:context];
-    removeOnceRender=NO;
-	//scene = [Scene sharedScene];
+    
     return self;
 }
 
