@@ -30,15 +30,14 @@ extern vtConfig c;
 
 - (id)initWithContext:(EAGLContext *)newContext;
 {
-	self = [super initWithContext:newContext];
-    
+    self = [super initWithContext:newContext];
+	
     if(self){
         currentViewportSize = CGSizeZero;
         [EAGLContext setCurrentContext:context];
         removeOnceRender=NO;
         //scene = [Scene sharedScene];
     }
-    
     return self;
 }
 
@@ -320,16 +319,19 @@ extern vtConfig c;
             [scene reshape:[NSArray arrayWithObjects:[NSNumber numberWithInt:backingWidth], [NSNumber numberWithInt:backingHeight], nil]];
 
          //   [self renderFrameForModel:mol];
-
-
+            
+            
         }else{
-            NSError *error=nil;
-
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not create simulation files missing", @"Localized", nil) message:[error localizedDescription]
-														   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
-			[alert show];
-			[alert release];	
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSError *error=nil;
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedStringFromTable(@"Could not create simulation files missing", @"Localized", nil) message:[error localizedDescription]
+                                                               delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
+                [alert show];
+                [alert release];
+            });
             isSceneReady=NO;
+                
             [[NSNotificationCenter defaultCenter] postNotificationName:@"FileLoadingEnded" object:nil];
 
 
