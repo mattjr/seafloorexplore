@@ -798,11 +798,10 @@
 				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = English.lproj/Info.plist;
 				INSTALL_PATH = /Applications;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/FlurryAnalytics\"",
 					"\"$(SRCROOT)/Flurry\"",
 				);
 				PRODUCT_NAME = SeafloorExplore;
@@ -834,11 +833,10 @@
 				"GCC_THUMB_SUPPORT[arch=armv7]" = YES;
 				INFOPLIST_FILE = English.lproj/Info.plist;
 				INSTALL_PATH = /Applications;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/FlurryAnalytics\"",
 					"\"$(SRCROOT)/Flurry\"",
 				);
 				PRODUCT_NAME = SeafloorExplore;
@@ -902,11 +900,10 @@
 				"GCC_THUMB_SUPPORT[arch=armv7]" = YES;
 				INFOPLIST_FILE = English.lproj/Info.plist;
 				INSTALL_PATH = /Applications;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/FlurryAnalytics\"",
 					"\"$(SRCROOT)/Flurry\"",
 				);
 				PRODUCT_NAME = SeafloorExplore;
