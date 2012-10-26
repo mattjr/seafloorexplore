@@ -204,7 +204,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 													   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
 		[alert show];
 		[alert release];
-        [FlurryAnalytics logError:@"ModelFailedDownloading" message:errorMessage exception:nil];
+        [Flurry logError:@"ModelFailedDownloading" message:errorMessage exception:nil];
 
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelDidFinishDownloading" object:nil];
 		return;
@@ -360,7 +360,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
 												   delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"OK", @"Localized", nil) otherButtonTitles: nil, nil];
 	[alert show];
 	[alert release];
-    [FlurryAnalytics logError:@"ModelFailedDownloading" message:errorMessage exception:nil];
+    [Flurry logError:@"ModelFailedDownloading" message:errorMessage exception:nil];
 
 	[self downloadCompleted];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ModelFailedDownloading" object:nil];
@@ -563,7 +563,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithString:filename], 
      @"downloadmodel", 
      nil];
-    [FlurryAnalytics logEvent:@"DOWNLOADMODEL" withParameters:dictionary];
+    [Flurry logEvent:@"DOWNLOADMODEL" withParameters:dictionary];
 
     //progressView.hidden = YES;
     progressView.progress = 0.0f;

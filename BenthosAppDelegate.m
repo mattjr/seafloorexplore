@@ -32,12 +32,12 @@
 #pragma mark -
 #pragma mark Initialization / teardown
 void uncaughtExceptionHandler(NSException *exception) {
-    [FlurryAnalytics logError:@"Uncaught" message:@"Crash!" exception:exception];
+    [Flurry logError:@"Uncaught" message:@"Crash!" exception:exception];
 }
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions   
 {	
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
-    [FlurryAnalytics startSession:@"6VB3L2AH89FJ6D1XLZC4"];
+    [Flurry startSession:@"6VB3L2AH89FJ6D1XLZC4"];
 	//Initialize the application window
 	window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	if (!window) 

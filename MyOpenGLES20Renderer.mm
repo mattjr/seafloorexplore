@@ -9,7 +9,7 @@
 //
 
 #import "MyOpenGLES20Renderer.h"
-#import "FlurryAnalytics.h"
+#import "Flurry.h"
 
 #import "GLProgram.h"
 #include "Simulation.h"
@@ -232,7 +232,7 @@ extern vtConfig c;
 -(void)shutdownVT;
 {
 
-    [FlurryAnalytics endTimedEvent:@"VIEWMODEL" withParameters:nil];
+    [Flurry endTimedEvent:@"VIEWMODEL" withParameters:nil];
     dispatch_sync(openGLESContextQueue, ^{
         isSceneReady=NO;
         [EAGLContext setCurrentContext:context];
@@ -289,7 +289,7 @@ extern vtConfig c;
     [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithString:mol.filenameWithoutExtension], 
      @"currentmodel", 
      nil];
-    [FlurryAnalytics logEvent:@"VIEWMODEL" withParameters:dictionary timed:YES];
+    [Flurry logEvent:@"VIEWMODEL" withParameters:dictionary timed:YES];
 
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
     NSString *libraryDirectory = [paths objectAtIndex:0];

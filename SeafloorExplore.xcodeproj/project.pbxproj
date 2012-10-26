@@ -31,6 +31,8 @@
 		7B8586D2157B4A790002AA58 /* ModelParseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B8586D0157B4A790002AA58 /* ModelParseOperation.m */; };
 		7B909178152669BB007DC3AC /* models.sql in Resources */ = {isa = PBXBuildFile; fileRef = 7B909177152669BB007DC3AC /* models.sql */; };
 		7B9A0FC2157F8D6500905353 /* geebanks_16_15m_out.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7B9A0FC1157F8D6500905353 /* geebanks_16_15m_out.tar */; };
+		7B9DC541163B4FAF00A53B6E /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B9DC540163B4FAF00A53B6E /* libFlurry.a */; };
+		7B9DC543163B507E00A53B6E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B9DC542163B507E00A53B6E /* SystemConfiguration.framework */; };
 		7BB1DE03157C1A8E008699B1 /* IconDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB1DE02157C1A8E008699B1 /* IconDownloader.m */; };
 		7BB1DE05157C2005008699B1 /* Placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BB1DE04157C2005008699B1 /* Placeholder.png */; };
 		7BB1DE08157C2D4B008699B1 /* JSGCDDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB1DE07157C2D4B008699B1 /* JSGCDDispatcher.m */; };
@@ -50,7 +52,6 @@
 		7BDA0B05156B0461002C0F31 /* drag-flick.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BDA0B01156B0461002C0F31 /* drag-flick.png */; };
 		7BDA0B06156B0461002C0F31 /* finger-drag-down.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BDA0B02156B0461002C0F31 /* finger-drag-down.png */; };
 		7BDA0B07156B0461002C0F31 /* spread.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BDA0B03156B0461002C0F31 /* spread.png */; };
-		7BE04E091564B4BF004E59F9 /* libFlurryAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BE04E081564B4BF004E59F9 /* libFlurryAnalytics.a */; };
 		7BE0EEAC157DF4A200C23BA8 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = BC2795BC11625065006DE4C8 /* Default.png */; };
 		7BE0EEAD157DF4A800C23BA8 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC67B8BE137C4B7A0075A361 /* Default@2x.png */; };
 		7BE606491398E0480072A1C5 /* pass.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7BE606281398DEA80072A1C5 /* pass.frag */; };
@@ -155,6 +156,9 @@
 		7B8586D1157B4A790002AA58 /* ModelParseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelParseOperation.h; sourceTree = "<group>"; };
 		7B909177152669BB007DC3AC /* models.sql */ = {isa = PBXFileReference; lastKnownFileType = file; path = models.sql; sourceTree = "<group>"; };
 		7B9A0FC1157F8D6500905353 /* geebanks_16_15m_out.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = geebanks_16_15m_out.tar; sourceTree = "<group>"; };
+		7B9DC53F163B4FAF00A53B6E /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		7B9DC540163B4FAF00A53B6E /* libFlurry.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry.a; sourceTree = "<group>"; };
+		7B9DC542163B507E00A53B6E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		7BB1DE01157C1A8E008699B1 /* IconDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconDownloader.h; sourceTree = "<group>"; };
 		7BB1DE02157C1A8E008699B1 /* IconDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconDownloader.m; sourceTree = "<group>"; };
 		7BB1DE04157C2005008699B1 /* Placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Placeholder.png; sourceTree = "<group>"; };
@@ -179,8 +183,6 @@
 		7BDA0B01156B0461002C0F31 /* drag-flick.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drag-flick.png"; sourceTree = "<group>"; };
 		7BDA0B02156B0461002C0F31 /* finger-drag-down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "finger-drag-down.png"; sourceTree = "<group>"; };
 		7BDA0B03156B0461002C0F31 /* spread.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spread.png; sourceTree = "<group>"; };
-		7BE04E071564B4BF004E59F9 /* FlurryAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAnalytics.h; sourceTree = "<group>"; };
-		7BE04E081564B4BF004E59F9 /* libFlurryAnalytics.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurryAnalytics.a; sourceTree = "<group>"; };
 		7BE606281398DEA80072A1C5 /* pass.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = pass.frag; path = LibVT/pass.frag; sourceTree = "<group>"; };
 		7BE606291398DEA80072A1C5 /* pass.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = pass.vert; path = LibVT/pass.vert; sourceTree = "<group>"; };
 		7BE7F379157EA86E004A6613 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
@@ -291,6 +293,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B9DC543163B507E00A53B6E /* SystemConfiguration.framework in Frameworks */,
 				7BCBD12E1520B550009DC170 /* CoreLocation.framework in Frameworks */,
 				7BCBD12C1520B537009DC170 /* MapKit.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
@@ -299,7 +302,7 @@
 				28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */,
 				28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */,
 				BC4E97C20E69F736006CD291 /* libsqlite3.dylib in Frameworks */,
-				7BE04E091564B4BF004E59F9 /* libFlurryAnalytics.a in Frameworks */,
+				7B9DC541163B4FAF00A53B6E /* libFlurry.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,7 +335,7 @@
 				7BF64D55139770AD002FEB23 /* CoreEngine */,
 				BC5BB99E0E207ED10001DFD0 /* Benthos Details View  */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
-				7BE04E061564B4BF004E59F9 /* FlurryAnalytics */,
+				7B9DC53E163B4FAF00A53B6E /* Flurry */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -404,6 +407,7 @@
 			isa = PBXGroup;
 			children = (
 				BC4E97C10E69F736006CD291 /* libsqlite3.dylib */,
+				7B9DC542163B507E00A53B6E /* SystemConfiguration.framework */,
 				7BCBD12D1520B550009DC170 /* CoreLocation.framework */,
 				7BCBD12B1520B537009DC170 /* MapKit.framework */,
 				28FD15070DC6FC5B0079059D /* QuartzCore.framework */,
@@ -415,13 +419,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		7BE04E061564B4BF004E59F9 /* FlurryAnalytics */ = {
+		7B9DC53E163B4FAF00A53B6E /* Flurry */ = {
 			isa = PBXGroup;
 			children = (
-				7BE04E071564B4BF004E59F9 /* FlurryAnalytics.h */,
-				7BE04E081564B4BF004E59F9 /* libFlurryAnalytics.a */,
+				7B9DC53F163B4FAF00A53B6E /* Flurry.h */,
+				7B9DC540163B4FAF00A53B6E /* libFlurry.a */,
 			);
-			path = FlurryAnalytics;
+			path = Flurry;
 			sourceTree = "<group>";
 		};
 		7BF64D55139770AD002FEB23 /* CoreEngine */ = {
@@ -784,7 +788,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = (
 					armv6,
-					armv7,
+					"$(ARCHS_STANDARD_32_BIT)",
 				);
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -799,6 +803,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/FlurryAnalytics\"",
+					"\"$(SRCROOT)/Flurry\"",
 				);
 				PRODUCT_NAME = SeafloorExplore;
 				PROVISIONING_PROFILE = "";
@@ -815,7 +820,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = (
 					armv6,
-					armv7,
+					"$(ARCHS_STANDARD_32_BIT)",
 				);
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
@@ -834,6 +839,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/FlurryAnalytics\"",
+					"\"$(SRCROOT)/Flurry\"",
 				);
 				PRODUCT_NAME = SeafloorExplore;
 				PROVISIONING_PROFILE = "";
@@ -865,6 +871,7 @@
 					Utilities,
 				);
 				"INSTALL_PATH[sdk=*]" = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-lz";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -881,7 +888,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = (
 					armv6,
-					armv7,
+					"$(ARCHS_STANDARD_32_BIT)",
 				);
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
@@ -900,6 +907,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/FlurryAnalytics\"",
+					"\"$(SRCROOT)/Flurry\"",
 				);
 				PRODUCT_NAME = SeafloorExplore;
 				PROVISIONING_PROFILE = "";
@@ -930,6 +938,7 @@
 					Utilities,
 				);
 				"INSTALL_PATH[sdk=*]" = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lz";
 				PROVISIONING_PROFILE = "";
@@ -961,6 +970,7 @@
 					Utilities,
 				);
 				"INSTALL_PATH[sdk=*]" = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-lz";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";

@@ -10,7 +10,7 @@
  */
 
 #import "Simulation.h"
-#import "FlurryAnalytics.h"
+#import "Flurry.h"
 #include "LibVT.h"
 #include "LibVT_Internal.h"
 float positions[60 * 60][6];
@@ -784,7 +784,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
         printf("Logging Click\n");
 
 */
-    [FlurryAnalytics endTimedEvent:@"MOVEMENT_EVENT" withParameters:nil];
+    [Flurry endTimedEvent:@"MOVEMENT_EVENT" withParameters:nil];
 
     NSDictionary *dictionary = 
     [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithString:basename],
@@ -806,7 +806,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
      [NSNumber numberWithDouble:_targetHeading], 
      @"heading",
      nil];
-    [FlurryAnalytics logEvent:@"MOVEMENT_EVENT" withParameters:dictionary timed:YES];
+    [Flurry logEvent:@"MOVEMENT_EVENT" withParameters:dictionary timed:YES];
        
 }
 

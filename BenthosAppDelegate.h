@@ -11,7 +11,7 @@
 #import <UIKit/UIKit.h>
 #import <sqlite3.h>
 //#import "NSOperationQueue+SharedQueue.h"
-#import "FlurryAnalytics.h"
+#import "Flurry.h"
 #define kMaxiumSupportedFileVersion 1.0
 @class BenthosRootViewController;
 
