@@ -48,6 +48,8 @@ extern vtConfig c;
     
    	
 	[super dealloc];
+    [EAGLContext setCurrentContext:nil];
+
 }
 
 #pragma mark -
@@ -271,7 +273,10 @@ extern vtConfig c;
         //printf("Scene %d\n",[scene retainCount]);
         [scene release];
         scene =nil;
-    });     
+        //NSLog(@"Shutdown\n");
+        [EAGLContext setCurrentContext:nil];
+
+    });
 
 }
 - (void)showStatusIndicator;
@@ -399,6 +404,8 @@ extern vtConfig c;
 {
     if (!isSceneReady)
     {
+        [EAGLContext setCurrentContext:nil];
+
         return;
      }
 	
@@ -410,6 +417,8 @@ extern vtConfig c;
     
     if (dispatch_semaphore_wait(frameRenderingSemaphore, DISPATCH_TIME_NOW) != 0)
     {
+        [EAGLContext setCurrentContext:nil];
+
         return;
     }
     
