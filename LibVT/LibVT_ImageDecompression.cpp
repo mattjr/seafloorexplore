@@ -17,7 +17,7 @@
 
 #include "LibVT_Internal.h"
 #include "LibVT.h"
-
+void * _vtuDecompressMac(CGImageSourceRef imageSourceRef, uint32_t *pic_size, const char *imagePath);
 extern vtConfig c;
 
 #if IMAGE_DECOMPRESSION_LIBRARY == DecompressionMac
@@ -29,17 +29,18 @@ void * _vtuDecompressMac(CGImageSourceRef imageSourceRef, uint32_t *pic_size, co
 
 	size_t width = CGImageGetWidth(imageRef);
 	size_t height = CGImageGetHeight(imageRef);
-	CGRect rect = {{0, 0}, {width, height}};
+	CGRect rect = CGRectMake(0, 0, width, height);
 
 	void *image_data = calloc(width * 4, height);
+    CGColorSpaceRef colorSpa = CGColorSpaceCreateDeviceRGB();
 
-	CGContextRef bitmapContext = CGBitmapContextCreate(image_data, width, height, 8, width * 4, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Host );
+	CGContextRef bitmapContext = CGBitmapContextCreate(image_data, width, height, 8, width * 4, colorSpa, kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Host );
 	CGContextTranslateCTM (bitmapContext, 0, height);
 	CGContextScaleCTM (bitmapContext, 1.0, -1.0);
 
 	CGContextDrawImage(bitmapContext, rect, imageRef);
 
-#ifndef RENDER_INFO_TO_PAGES
+#ifdef RENDER_INFO_TO_PAGES
 	CGContextSetLineWidth(bitmapContext, (*pic_size - c.pageBorder)/50.0);
 	CGContextBeginPath(bitmapContext);
 	CGContextMoveToPoint(bitmapContext, 0, 0);
@@ -61,11 +62,14 @@ void * _vtuDecompressMac(CGImageSourceRef imageSourceRef, uint32_t *pic_size, co
 #endif
 
 	CGContextRelease(bitmapContext);
+    CFRelease(colorSpa);
+
 	CGImageRelease(imageRef);
-	CFRelease(imageSourceRef);
+    if(imageSourceRef)
+        CFRelease(imageSourceRef);
 
 	if (*pic_size == 0)
-		*pic_size = width;
+		*pic_size = (int)width;
 	else
 		assert((width == *pic_size) && (height == *pic_size));
 
@@ -77,8 +81,10 @@ void * vtuDecompressImageBuffer(const void *file_data, uint32_t file_size, uint3
 {
 	CGDataProviderRef dataprov = CGDataProviderCreateWithData(NULL, file_data, file_size, NULL);
 	CGImageSourceRef imageSourceRef = CGImageSourceCreateWithDataProvider(dataprov, NULL);
-
-	return _vtuDecompressMac(imageSourceRef, pic_size, NULL);
+    
+    void *ptr=_vtuDecompressMac(imageSourceRef, pic_size, NULL);
+    CGDataProviderRelease(dataprov);
+    return ptr;
 }
 
 void * vtuDecompressImageFile(const char *imagePath, uint32_t *pic_size)

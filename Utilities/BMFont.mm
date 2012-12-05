@@ -14,7 +14,7 @@
 
 #import "Core3D.h"
 #import "BMFont.h"
-#include <OpenGLES/ES1/gl.h>
+//#include <OpenGLES/ES1/gl.h>
 
 GLubyte indices[BMMAXSTRINGLENGTH*6];
 

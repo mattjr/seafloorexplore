@@ -1,6 +1,8 @@
 #import "Utilities.h"
-#include <OpenGLES/ES2/gl.h>
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 
+#include <OpenGLES/ES2/gl.h>
+#endif
 #if 1//ndef GL_OES_VERSION_1_0
 // Based on Apple sample code:
 // http://developer.apple.com/samplecode/GLSLShowpiece/listing6.html
@@ -178,7 +180,7 @@ GLuint LoadTexture(NSString *imagePath, GLint minFilter, GLint magFilter, GLint 
 	GLuint texName;
 	size_t width = CGImageGetWidth(imageRef);
 	size_t height = CGImageGetHeight(imageRef);
-	CGRect rect = {{0, 0}, {width, height}};
+	CGRect rect = CGRectMake(0, 0, width, height);
 	void *data = calloc(width * 4, height);
     CGColorSpaceRef colorSpa = CGColorSpaceCreateDeviceRGB();
 #ifndef TARGET_OS_IPHONE // does CGColorSpaceCreateDeviceRGB() really leak?
@@ -196,7 +198,7 @@ GLuint LoadTexture(NSString *imagePath, GLint minFilter, GLint magFilter, GLint 
 
 #ifndef TARGET_OS_IPHONE
 	glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, width);
+	glPixelStorei(GL_UNPACK_ROW_LENGTH,(int) width);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 #endif
 
@@ -216,7 +218,7 @@ GLuint LoadTexture(NSString *imagePath, GLint minFilter, GLint magFilter, GLint 
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisontropy);
 
 
-	glTexImage2D(GL_TEXTURE_2D, 0, globalSettings.disableTextureCompression ? GL_RGBA : GL_COMPRESSED_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, globalSettings.disableTextureCompression ? GL_RGBA : GL_COMPRESSED_RGBA,(int) width, (int)height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, data);
 	glPopClientAttrib();
 	CGImageRelease(imageRef);
 	CFRelease(imageSourceRef);

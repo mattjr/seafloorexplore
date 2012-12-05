@@ -45,7 +45,7 @@ typedef enum {
     double _zoomStartDist;
     double       _distance;
     vector4f _unprojected_orig;
-	UIInterfaceOrientation interfaceOrientation;
+	//UIInterfaceOrientation interfaceOrientation;
 
     //void Pan(float x,float y);
 //    void Zoom(float percent);
@@ -87,10 +87,11 @@ typedef enum {
 
 
 -(void) centeratPt: (CGPoint) pt;
-- (void)mouseDragged:(vector2f)delta withFlags:(uint32_t)flags;
+- (void)mouseDragged:(CGPoint)pos withFlags:(uint32_t)flags;
 - (void)scrollWheel:(float)delta;
 - (void)dealloc;
 - (void)clearObjs;
+
 
 - (void)update;
 - (void)render;
@@ -121,6 +122,7 @@ typedef enum {
 -(vector3f) maxbb;
 - (CC3Plane)centeredPlane;
 -(BOOL) intersectOctreeNodeWithRay:(int)nodeNumber withRay:(CC3Ray)ray inter:(float *)pt;
+matrix44f_c CATransform3DSetField(CATransform3D transform );
 
 -(BOOL)anyTrianlgesInFrustum:(const GLfloat [6][4])frustum;
 -(vector4f)pickPt:(Camera *)cam pick:(CGPoint)pt;

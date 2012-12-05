@@ -44,12 +44,12 @@ namespace date_time {
     unsigned long week = (juliantoday + day - julianbegin + 4)/7;
     
     if ((week >= 1) && (week <= 52)) {
-      return week;
+      return (int)week;
     }
     
     if (week == 53) {
       if(day==6 ||(day == 5 && is_leap_year(ymd.year))) {
-        return week; //under these circumstances week == 53.
+        return (int)week; //under these circumstances week == 53.
       } else {
         return 1; //monday - wednesday is in week 1 of next year
       }
@@ -60,10 +60,10 @@ namespace date_time {
       juliantoday = julian_day_number(ymd);
       day = (julianbegin + 3) % 7;
       week = (juliantoday + day - julianbegin + 4)/7;
-      return week;
+      return (int)week;
     }
     
-    return week;  //not reachable -- well except if day == 5 and is_leap_year != true
+    return (int)week;  //not reachable -- well except if day == 5 and is_leap_year != true
     
   }
   

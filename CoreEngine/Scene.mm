@@ -62,8 +62,10 @@ Settings globalSettings;
 
 		globalSettings.shadowFiltering = (shadowFilteringEnum) [[NSUserDefaults standardUserDefaults] integerForKey:@"shadowFiltering"];
 		globalSettings.shadowMode = (shadowModeEnum) [[NSUserDefaults standardUserDefaults] integerForKey:@"shadowMode"];
+        unsigned int time_ui = (unsigned int)( time(NULL) );
 
-		std::srand(time(NULL));
+		std::srand( time_ui );
+
 #ifdef WIN32
 		init_opengl_function_pointers();
 #endif

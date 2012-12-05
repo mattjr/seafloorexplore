@@ -10,7 +10,10 @@
  */
 
 #import "Simulation.h"
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+
 #import "Flurry.h"
+#endif
 #include "LibVT.h"
 #include "LibVT_Internal.h"
 float positions[60 * 60][6];
@@ -49,7 +52,7 @@ float positions[60 * 60][6];
 
 		//globalSettings.disableTextureCompression = YES;
 
-		interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+		//interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
 
 #ifndef TARGET_OS_IPHONE
 //		Light *light = [[[Light alloc] init] autorelease];
@@ -326,6 +329,18 @@ float positions[60 * 60][6];
 	double eps = 0.1;
 	return (fabs(_center[0]-_targetCenter[0])<eps &&fabs(_center[1]-_targetCenter[1])<eps &&fabs(_center[2]-_targetCenter[2])<eps &&fabs(_targetTilt-_tilt) < eps && fabs(_targetHeading- _heading)<eps);	
 }
+matrix44f_c CATransform3DSetField(CATransform3D transform )
+{
+    matrix44f_c mat;
+
+        mat.set(transform.m11 , transform.m21,transform.m31,transform.m41,
+                transform.m12 , transform.m22,transform.m32,transform.m42,
+                transform.m13 , transform.m23,transform.m33,transform.m43,
+                transform.m14 , transform.m24,transform.m34,transform.m44);
+
+                
+    return mat;
+}
 
 - (void)render
 {
@@ -341,6 +356,7 @@ float positions[60 * 60][6];
        //    interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
 	
 headingMat= CATransform3DMakeRotation(_heading * M_PI / 180.0,0,0,1);
+   
 // if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
  //tiltMat=CATransform3DMakeRotation(-_tilt * M_PI / 180.0,1,0,0);
  //else if(interfaceOrientation == UIInterfaceOrientationPortrait)
@@ -364,24 +380,27 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 			case 's':
                 pt.x=0;
                 pt.y=-_panKeyDist;
-                [self pan: pt];
+                //[self pan: pt];
+                _targetCenter[0]+=_panKeyDist*30;
 
                 break;
 			case 'w':
                 pt.x=0;
                 pt.y=_panKeyDist;
-                [self pan: pt];
+               // [self pan: pt];
+                _targetCenter[0]-=_panKeyDist*30;
 
 				break;
 			case 'a':
                 pt.x=_panKeyDist;
                 pt.y=0;
-                [self pan: pt];
+                _targetCenter[1]+=_panKeyDist*30;//[self pan: pt];
 				break;
 			case 'd':
                 pt.x=-_panKeyDist;
                 pt.y=0;
-                [self pan: pt];
+                _targetCenter[1]-=_panKeyDist*30;
+               // [self pan: pt];
 				break;
             case 'q':
                 [self zoomval: 0.1];
@@ -414,9 +433,8 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 		npos = vector3f(npos[0], intersectionPoint[1] + DIST, npos[2]);
 	}
      */
-    matrix44f_c data;
-    memcpy(data.data(),&_invMat.m11,sizeof(float)*16);
-   // [self printMatrix:data.data()];
+    matrix44f_c data=CATransform3DSetField(_invMat);
+   // memcpy(data.data(),&_invMat.m11,sizeof(float)*16);
 	[[scene camera] load:data];
    // [self printMatrix:[[scene camera] modelViewMatrix].data()];
    // printf("%d %d\n",[self isDoneMoving] , goneOutOfFrame);
@@ -467,8 +485,8 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     
     GLfloat test_frustum[6][4];
     
-    matrix44f_c data;
-    memcpy(data.data(),&(viewtest.m11),sizeof(float)*16);
+    matrix44f_c data=CATransform3DSetField(viewtest);
+    //memcpy(data.data(),&(viewtest.m11),sizeof(float)*16);
 
     extract_frustum_planes(data,[[scene camera] projectionMatrix], test_frustum, cml::z_clip_neg_one, false);
     
@@ -481,7 +499,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
        // printf("Still in\n");
     }
 }
-- (void)mouseDragged:(vector2f)delta withFlags:(uint32_t)flags
+- (void)mouseDragged:(CGPoint)pos withFlags:(uint32_t)flags
 {
 	/*vector3f rot = [[scene camera] rotation];
 
@@ -490,20 +508,43 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 
 	 [[scene camera] setRotation:rot];*/
 //    [self pan: delta[0] / 2000.0 andY:delta[1] / 2000.0 ];
+    [self pan:pos];
 
 }
 
 #if !TARGET_OS_IPHONE && !defined(linux)
+/*- (void)mouseUp:(CGPoint)pt
+{
+    [self pancont:pt];
+
+    //	speedModifier = 1.0;
+}
+- (void)mouseDown:(CGPoint)pt
+{
+    //lastMovementPosition = [self convertPoint:p fromView:nil];
+    
+    [self pancont:pt];
+	//speedModifier = 1.0;
+}
 - (void)rightMouseUp:(NSEvent *)event
 {
-	speedModifier = 1.0;
+//	speedModifier = 1.0;
 }
+- (void)rightMouseDown:(NSEvent *)event
+{
+    CGPoint p = [event locationInWindow];
+    //lastMovementPosition = [self convertPoint:p fromView:nil];
+
+    [self pancont:p];
+
+	//speedModifier = 1.0;
+}*/
 #endif
 
 - (void)scrollWheel:(float)delta
 {
  //   float val=delta/10.0;
- //   [self zoom: val];
+    [self zoomval: delta];
 
 }
 - (void)apply3DTransformD:(CATransform3D *)transform3D toPoint:(double *)sourcePoint result:(double *)resultingPoint;
@@ -553,7 +594,13 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     //printf("Win %f %f %f\n",winx,winy,winz);
     // Create x
     float x,y,z;
-    CGFloat scale = [[UIScreen mainScreen] scale];
+    
+    CGFloat scale;
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+    scale = [[UIScreen mainScreen] scale];
+#else
+    scale=1.0;
+#endif
     CGPoint glPoint=pt;
     glPoint.x*=scale;
     glPoint.y*=scale;
@@ -603,8 +650,8 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     centerScreenWorld.x=(globalInfo.width/2)/scale;
     centerScreenWorld.y=(globalInfo.height/2)/scale;
    // printf("%f %f %f %f\n",pt.x,pt.y,centerScreenWorld.x,centerScreenWorld.y);
-    matrix44f_c data;
-    memcpy(data.data(),&newModel.m11,sizeof(float)*16);
+    matrix44f_c data=CATransform3DSetField(newModel);
+   // memcpy(data.data(),&newModel.m11,sizeof(float)*16);
 
     CC3Ray ray=[[scene camera] unprojectPoint: centerScreenWorld withModelView:data];
     float intersectionPoint[4];
@@ -759,7 +806,10 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 }
 -(void) pancont: (CGPoint) pt
 {
+   // printf("%f %f\n",pt.x,pt.y);
+
     [self panstart: pt];
+    
     //_lastPt=pt;    
     
 }
@@ -784,6 +834,8 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
         printf("Logging Click\n");
 
 */
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+
     [Flurry endTimedEvent:@"MOVEMENT_EVENT" withParameters:nil];
 
     NSDictionary *dictionary = 
@@ -807,7 +859,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
      @"heading",
      nil];
     [Flurry logEvent:@"MOVEMENT_EVENT" withParameters:dictionary timed:YES];
-       
+#endif
 }
 
 - (void)resetCamera

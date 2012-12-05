@@ -68,12 +68,12 @@ vec3 rainbowColorMap(float hue) {
 
 void main(void)
 {
-	highp vec3 N= normalize(screennorm);
-    highp vec3 L = normalize(vec3(1,  2.5,  -1));
-    highp vec3 E = vec3(0, 0, 1);
-    highp vec3 H = normalize(L + E);
+	 vec3 N= normalize(screennorm);
+     vec3 L = normalize(vec3(1,  2.5,  -1));
+     vec3 E = vec3(0, 0, 1);
+     vec3 H = normalize(L + E);
    // float Shininess=64.0;
-    highp float df = max(0.0, dot(N, L));
+     float df = max(0.0, dot(N, L));
    // highp float sf = max(0.0, dot(N, H));
    // sf = pow(sf, Shininess);
 	vec3 AmbientMaterial = vec3(0.05, 0.05, 0.05);
@@ -82,7 +82,7 @@ void main(void)
 	
 	//vec3 Diffuse = vec3(zheight/4.0, 0.00, 0.00);
 	//vec3 SpecularMaterial = vec3(0.5, 0.5, 0.5);
-    lowp vec3 color = AmbientMaterial + df * Diffuse; //+ sf * SpecularMaterial;
+     vec3 color = AmbientMaterial + df * Diffuse; //+ sf * SpecularMaterial;
 
 		gl_FragColor	= vec4(color,1);
 }

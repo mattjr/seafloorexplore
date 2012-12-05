@@ -17,6 +17,7 @@ You should have received a copy of the GNU Lesser General Public License along w
 #include "LibVT_Internal.h"
 
 #import "CollideableMesh.h"
+#include <cml/mathlib/picking.h>
 @implementation Camera
 
 @synthesize fov, nearPlane, farPlane, projectionMatrix, viewMatrix,viewMatrixNoRotate,viewport,viewportMatrix;
@@ -274,7 +275,12 @@ vector4f CC3RayIntersectionWithPlane(CC3Ray ray, CC3Plane plane) {
 	// CC_CONTENT_SCALE_FACTOR = 2.0 if Retina display active, or 1.0 otherwise.
     //printf("%f %f\n",cc2Point.x,cc2Point.y);
 	CGPoint glPoint = cc2Point;//ccpMult(cc2Point, CC_CONTENT_SCALE_FACTOR());
-    CGFloat scale = [[UIScreen mainScreen] scale];
+    CGFloat scale;
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+    scale = [[UIScreen mainScreen] scale];
+#else
+    scale=1.0;
+#endif
     glPoint.x*=scale;
     glPoint.y*=scale;
     glPoint.y=globalInfo.height-glPoint.y;
@@ -283,8 +289,10 @@ vector4f CC3RayIntersectionWithPlane(CC3Ray ray, CC3Plane plane) {
 	// Express the glPoint X & Y as proportion of the layer dimensions, based
 	// on an origin in the center of the layer (the center of the camera's view).
     CC3Ray ray;
-    make_pick_ray(glPoint.x,glPoint.y,[self modelViewMatrix],[self projectionMatrix],viewportMatrix,ray.startLocation,ray.direction,true);
+
+    make_pick_ray((float)glPoint.x,(float)glPoint.y,[self modelViewMatrix],[self projectionMatrix],viewportMatrix,ray.startLocation,ray.direction,true);
    // printf("%f %f %f -- %f %f %f\n",ray.startLocation[0],ray.startLocation[1],ray.startLocation[2],ray.direction[0],ray.direction[1],ray.//direction[2]);
+
 	return ray;
 }
 
@@ -294,15 +302,21 @@ vector4f CC3RayIntersectionWithPlane(CC3Ray ray, CC3Plane plane) {
 	CGPoint glPoint = cc2Point;//ccpMult(cc2Point, CC_CONTENT_SCALE_FACTOR());
 	// Express the glPoint X & Y as proportion of the layer dimensions, based
 	// on an origin in the center of the layer (the center of the camera's view).
-    CGFloat scale = [[UIScreen mainScreen] scale];
-    
+    CGFloat scale;
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+    scale = [[UIScreen mainScreen] scale];
+#else
+    scale=1.0;
+#endif
     glPoint.x*=scale;
     glPoint.y*=scale;
 	glPoint.y=globalInfo.height-glPoint.y;
 
     CC3Ray ray;
-    make_pick_ray(glPoint.x,glPoint.y,thismodelview,[self projectionMatrix],viewportMatrix,ray.startLocation,ray.direction,true);
+
+    make_pick_ray((float)glPoint.x,(float)glPoint.y,thismodelview,[self projectionMatrix],viewportMatrix,ray.startLocation,ray.direction,true);
     // printf("%f %f %f -- %f %f %f\n",ray.startLocation[0],ray.startLocation[1],ray.startLocation[2],ray.direction[0],ray.direction[1],ray.direction[2]);
+
 	return ray;
 }
 
@@ -431,6 +445,19 @@ gluLookAt(GLfloat eyex, GLfloat eyey, GLfloat eyez, GLfloat centerx,
     
     for (i=0; i<4; i++) {
         out[i] = 
+        in[0] * matrix[0*4+i] +
+        in[1] * matrix[1*4+i] +
+        in[2] * matrix[2*4+i] +
+        in[3] * matrix[3*4+i];
+    }
+}
+void __gluMultMatrixVecf(const double matrix[16], const GLfloat in[4],
+                         GLfloat out[4])
+{
+    int i;
+    
+    for (i=0; i<4; i++) {
+        out[i] =
         in[0] * matrix[0*4+i] +
         in[1] * matrix[1*4+i] +
         in[2] * matrix[2*4+i] +

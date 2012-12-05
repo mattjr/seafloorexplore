@@ -30,6 +30,38 @@
 		7B8586CF157B486A0002AA58 /* FolderParseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B8586CA157B486A0002AA58 /* FolderParseOperation.m */; };
 		7B8586D2157B4A790002AA58 /* ModelParseOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B8586D0157B4A790002AA58 /* ModelParseOperation.m */; };
 		7B909178152669BB007DC3AC /* models.sql in Resources */ = {isa = PBXBuildFile; fileRef = 7B909177152669BB007DC3AC /* models.sql */; };
+		7B941EC9166EAB7D00F2D80F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B941EC8166EAB7D00F2D80F /* Cocoa.framework */; };
+		7B941ED3166EAB7D00F2D80F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7B941ED1166EAB7D00F2D80F /* InfoPlist.strings */; };
+		7B941ED9166EAB7D00F2D80F /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 7B941ED7166EAB7D00F2D80F /* Credits.rtf */; };
+		7B941EE6166EAEBA00F2D80F /* CocoaOpenGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7B941EE5166EAEBA00F2D80F /* CocoaOpenGLView.mm */; };
+		7B941EE8166EAFDA00F2D80F /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B941EE7166EAFDA00F2D80F /* OpenGL.framework */; };
+		7B941EE9166EB02200F2D80F /* Scene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D5B139770AD002FEB23 /* Scene.mm */; };
+		7B941EEA166EB02400F2D80F /* Camera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D57139770AD002FEB23 /* Camera.mm */; };
+		7B941EEB166EB1CD00F2D80F /* SceneNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D5D139770AD002FEB23 /* SceneNode.mm */; };
+		7B941EEC166EB20D00F2D80F /* BMFont.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF6544C13977C74002FEB23 /* BMFont.mm */; };
+		7B941EED166EB22F00F2D80F /* Utilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64DB913977227002FEB23 /* Utilities.mm */; };
+		7B941EEE166EB2B000F2D80F /* StateUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64DB713977227002FEB23 /* StateUtilities.mm */; };
+		7B941EEF166EB2C500F2D80F /* CollideableMesh.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF654A013977F8A002FEB23 /* CollideableMesh.mm */; };
+		7B941EF0166EB2D100F2D80F /* Mesh.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D59139770AD002FEB23 /* Mesh.mm */; };
+		7B941EF2166EB35400F2D80F /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B941EF1166EB35400F2D80F /* libbz2.dylib */; };
+		7B97030D166ECF7600A36060 /* Simulation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF6543713977C04002FEB23 /* Simulation.mm */; };
+		7B97030E166ED1C900A36060 /* VirtualTexturingNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF6543C13977C10002FEB23 /* VirtualTexturingNode.mm */; };
+		7B970310166ED29F00A36060 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B97030F166ED29E00A36060 /* QuartzCore.framework */; };
+		7B970311166ED2BA00A36060 /* LibVT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D69139770C8002FEB23 /* LibVT.cpp */; };
+		7B970312166ED2BA00A36060 /* LibVT_Cache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D6B139770C8002FEB23 /* LibVT_Cache.cpp */; };
+		7B970313166ED2BA00A36060 /* LibVT_PageTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D72139770C8002FEB23 /* LibVT_PageTable.cpp */; };
+		7B970314166ED2BA00A36060 /* LibVT_Readback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D73139770C8002FEB23 /* LibVT_Readback.cpp */; };
+		7B970315166ED2BA00A36060 /* LibVT_Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D75139770C8002FEB23 /* LibVT_Utilities.cpp */; };
+		7B970317166ED43A00A36060 /* LibVT_ImageDecompression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B970316166ED43A00A36060 /* LibVT_ImageDecompression.cpp */; };
+		7B970318166ED4BA00A36060 /* LibVT_PageLoadingThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D71139770C8002FEB23 /* LibVT_PageLoadingThread.cpp */; };
+		7B97031B166ED64200A36060 /* fontVT_00.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B970319166ED64200A36060 /* fontVT_00.png */; };
+		7B97031C166ED64200A36060 /* fontVT.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 7B97031A166ED64200A36060 /* fontVT.fnt */; };
+		7B97031D166ED67300A36060 /* renderVT.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7B61FB0213991399006E50B3 /* renderVT.frag */; };
+		7B97031E166ED67600A36060 /* renderVT.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7BF64D7B139770C8002FEB23 /* renderVT.vert */; };
+		7B97031F166ED6CD00A36060 /* pass.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7BE606281398DEA80072A1C5 /* pass.frag */; };
+		7B970320166ED6CF00A36060 /* pass.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7BE606291398DEA80072A1C5 /* pass.vert */; };
+		7B970321166ED6D200A36060 /* readback.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7BF64D76139770C8002FEB23 /* readback.frag */; };
+		7B970322166ED6D400A36060 /* readback.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7BF64D77139770C8002FEB23 /* readback.vert */; };
 		7B9A0FC2157F8D6500905353 /* geebanks_16_15m_out.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7B9A0FC1157F8D6500905353 /* geebanks_16_15m_out.tar */; };
 		7B9DC541163B4FAF00A53B6E /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B9DC540163B4FAF00A53B6E /* libFlurry.a */; };
 		7B9DC543163B507E00A53B6E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B9DC542163B507E00A53B6E /* SystemConfiguration.framework */; };
@@ -52,6 +84,7 @@
 		7BDA0B05156B0461002C0F31 /* drag-flick.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BDA0B01156B0461002C0F31 /* drag-flick.png */; };
 		7BDA0B06156B0461002C0F31 /* finger-drag-down.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BDA0B02156B0461002C0F31 /* finger-drag-down.png */; };
 		7BDA0B07156B0461002C0F31 /* spread.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BDA0B03156B0461002C0F31 /* spread.png */; };
+		7BDCBE6C166F2EEF0008F4BB /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BDCBE6A166F2EEF0008F4BB /* MainMenu.xib */; };
 		7BE0EEAC157DF4A200C23BA8 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = BC2795BC11625065006DE4C8 /* Default.png */; };
 		7BE0EEAD157DF4A800C23BA8 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = BC67B8BE137C4B7A0075A361 /* Default@2x.png */; };
 		7BE606491398E0480072A1C5 /* pass.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7BE606281398DEA80072A1C5 /* pass.frag */; };
@@ -155,6 +188,24 @@
 		7B8586D0157B4A790002AA58 /* ModelParseOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelParseOperation.m; sourceTree = "<group>"; };
 		7B8586D1157B4A790002AA58 /* ModelParseOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelParseOperation.h; sourceTree = "<group>"; };
 		7B909177152669BB007DC3AC /* models.sql */ = {isa = PBXFileReference; lastKnownFileType = file; path = models.sql; sourceTree = "<group>"; };
+		7B941EC6166EAB7D00F2D80F /* SeafloorOSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeafloorOSX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B941EC8166EAB7D00F2D80F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		7B941ECB166EAB7D00F2D80F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		7B941ECC166EAB7D00F2D80F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		7B941ECD166EAB7D00F2D80F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		7B941ED0166EAB7D00F2D80F /* SeafloorOSX-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SeafloorOSX-Info.plist"; sourceTree = "<group>"; };
+		7B941ED2166EAB7D00F2D80F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7B941ED4166EAB7D00F2D80F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		7B941ED6166EAB7D00F2D80F /* SeafloorOSX-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SeafloorOSX-Prefix.pch"; sourceTree = "<group>"; };
+		7B941ED8166EAB7D00F2D80F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		7B941EE4166EAEBA00F2D80F /* CocoaOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaOpenGLView.h; sourceTree = SOURCE_ROOT; };
+		7B941EE5166EAEBA00F2D80F /* CocoaOpenGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaOpenGLView.mm; sourceTree = SOURCE_ROOT; };
+		7B941EE7166EAFDA00F2D80F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = DEVELOPER_DIR; };
+		7B941EF1166EB35400F2D80F /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
+		7B97030F166ED29E00A36060 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
+		7B970316166ED43A00A36060 /* LibVT_ImageDecompression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LibVT_ImageDecompression.cpp; sourceTree = "<group>"; };
+		7B970319166ED64200A36060 /* fontVT_00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fontVT_00.png; sourceTree = "<group>"; };
+		7B97031A166ED64200A36060 /* fontVT.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = fontVT.fnt; sourceTree = "<group>"; };
 		7B9A0FC1157F8D6500905353 /* geebanks_16_15m_out.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = geebanks_16_15m_out.tar; sourceTree = "<group>"; };
 		7B9DC53F163B4FAF00A53B6E /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
 		7B9DC540163B4FAF00A53B6E /* libFlurry.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry.a; sourceTree = "<group>"; };
@@ -183,6 +234,7 @@
 		7BDA0B01156B0461002C0F31 /* drag-flick.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drag-flick.png"; sourceTree = "<group>"; };
 		7BDA0B02156B0461002C0F31 /* finger-drag-down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "finger-drag-down.png"; sourceTree = "<group>"; };
 		7BDA0B03156B0461002C0F31 /* spread.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spread.png; sourceTree = "<group>"; };
+		7BDCBE6B166F2EEF0008F4BB /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		7BE606281398DEA80072A1C5 /* pass.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = pass.frag; path = LibVT/pass.frag; sourceTree = "<group>"; };
 		7BE606291398DEA80072A1C5 /* pass.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = pass.vert; path = LibVT/pass.vert; sourceTree = "<group>"; };
 		7BE7F379157EA86E004A6613 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
@@ -306,6 +358,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7B941EC3166EAB7D00F2D80F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B970310166ED29F00A36060 /* QuartzCore.framework in Frameworks */,
+				7B941EF2166EB35400F2D80F /* libbz2.dylib in Frameworks */,
+				7B941EE8166EAFDA00F2D80F /* OpenGL.framework in Frameworks */,
+				7B941EC9166EAB7D00F2D80F /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -313,6 +376,7 @@
 			isa = PBXGroup;
 			children = (
 				1D6058910D05DD3D006BFB54 /* SeafloorExplore.app */,
+				7B941EC6166EAB7D00F2D80F /* SeafloorOSX.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -320,6 +384,9 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				7B97030F166ED29E00A36060 /* QuartzCore.framework */,
+				7B941EF1166EB35400F2D80F /* libbz2.dylib */,
+				7B941EE7166EAFDA00F2D80F /* OpenGL.framework */,
 				7B6F3296162F733F00AB12CA /* Default-568h@2x.png */,
 				BC67B8BE137C4B7A0075A361 /* Default@2x.png */,
 				BC2795BC11625065006DE4C8 /* Default.png */,
@@ -337,6 +404,7 @@
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				7B9DC53E163B4FAF00A53B6E /* Flurry */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
+				7B941ECE166EAB7D00F2D80F /* SeafloorOSX */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				7BF64D62139770C8002FEB23 /* LibVT */,
@@ -357,6 +425,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7B970319166ED64200A36060 /* fontVT_00.png */,
+				7B97031A166ED64200A36060 /* fontVT.fnt */,
 				7B83A5D0159865F600A5DE5C /* arc.png */,
 				7B9A0FC1157F8D6500905353 /* geebanks_16_15m_out.tar */,
 				7BE7F379157EA86E004A6613 /* iTunesArtwork */,
@@ -415,8 +485,43 @@
 				1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
+				7B941EC8166EAB7D00F2D80F /* Cocoa.framework */,
+				7B941ECA166EAB7D00F2D80F /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7B941ECA166EAB7D00F2D80F /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7B941ECB166EAB7D00F2D80F /* AppKit.framework */,
+				7B941ECC166EAB7D00F2D80F /* CoreData.framework */,
+				7B941ECD166EAB7D00F2D80F /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		7B941ECE166EAB7D00F2D80F /* SeafloorOSX */ = {
+			isa = PBXGroup;
+			children = (
+				7B941EE4166EAEBA00F2D80F /* CocoaOpenGLView.h */,
+				7BDCBE6A166F2EEF0008F4BB /* MainMenu.xib */,
+				7B941EE5166EAEBA00F2D80F /* CocoaOpenGLView.mm */,
+				7B941ECF166EAB7D00F2D80F /* Supporting Files */,
+			);
+			path = SeafloorOSX;
+			sourceTree = "<group>";
+		};
+		7B941ECF166EAB7D00F2D80F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7B941ED0166EAB7D00F2D80F /* SeafloorOSX-Info.plist */,
+				7B941ED1166EAB7D00F2D80F /* InfoPlist.strings */,
+				7B941ED4166EAB7D00F2D80F /* main.m */,
+				7B941ED6166EAB7D00F2D80F /* SeafloorOSX-Prefix.pch */,
+				7B941ED7166EAB7D00F2D80F /* Credits.rtf */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		7B9DC53E163B4FAF00A53B6E /* Flurry */ = {
@@ -446,6 +551,7 @@
 		7BF64D62139770C8002FEB23 /* LibVT */ = {
 			isa = PBXGroup;
 			children = (
+				7B970316166ED43A00A36060 /* LibVT_ImageDecompression.cpp */,
 				7BF64D69139770C8002FEB23 /* LibVT.cpp */,
 				7BF64D6A139770C8002FEB23 /* LibVT.h */,
 				7BF64D6B139770C8002FEB23 /* LibVT_Cache.cpp */,
@@ -615,6 +721,23 @@
 			productReference = 1D6058910D05DD3D006BFB54 /* SeafloorExplore.app */;
 			productType = "com.apple.product-type.application";
 		};
+		7B941EC5166EAB7D00F2D80F /* SeafloorOSX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7B941EE0166EAB7D00F2D80F /* Build configuration list for PBXNativeTarget "SeafloorOSX" */;
+			buildPhases = (
+				7B941EC2166EAB7D00F2D80F /* Sources */,
+				7B941EC3166EAB7D00F2D80F /* Frameworks */,
+				7B941EC4166EAB7D00F2D80F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SeafloorOSX;
+			productName = SeafloorOSX;
+			productReference = 7B941EC6166EAB7D00F2D80F /* SeafloorOSX.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -633,12 +756,14 @@
 				Japanese,
 				French,
 				German,
+				en,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				1D6058900D05DD3D006BFB54 /* SeafloorExplore */,
+				7B941EC5166EAB7D00F2D80F /* SeafloorOSX */,
 			);
 		};
 /* End PBXProject section */
@@ -693,6 +818,24 @@
 				7B83A5CF1598646C00A5DE5C /* acfr.png in Resources */,
 				7B83A5D1159865F600A5DE5C /* arc.png in Resources */,
 				7B6F3297162F733F00AB12CA /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B941EC4166EAB7D00F2D80F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B941ED3166EAB7D00F2D80F /* InfoPlist.strings in Resources */,
+				7B97031F166ED6CD00A36060 /* pass.frag in Resources */,
+				7B970320166ED6CF00A36060 /* pass.vert in Resources */,
+				7B970322166ED6D400A36060 /* readback.vert in Resources */,
+				7B970321166ED6D200A36060 /* readback.frag in Resources */,
+				7B941ED9166EAB7D00F2D80F /* Credits.rtf in Resources */,
+				7B97031D166ED67300A36060 /* renderVT.frag in Resources */,
+				7B97031E166ED67600A36060 /* renderVT.vert in Resources */,
+				7B97031B166ED64200A36060 /* fontVT_00.png in Resources */,
+				7B97031C166ED64200A36060 /* fontVT.fnt in Resources */,
+				7BDCBE6C166F2EEF0008F4BB /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -760,9 +903,58 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7B941EC2166EAB7D00F2D80F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B941EE9166EB02200F2D80F /* Scene.mm in Sources */,
+				7B941EEB166EB1CD00F2D80F /* SceneNode.mm in Sources */,
+				7B941EEA166EB02400F2D80F /* Camera.mm in Sources */,
+				7B941EE6166EAEBA00F2D80F /* CocoaOpenGLView.mm in Sources */,
+				7B97030D166ECF7600A36060 /* Simulation.mm in Sources */,
+				7B970311166ED2BA00A36060 /* LibVT.cpp in Sources */,
+				7B970312166ED2BA00A36060 /* LibVT_Cache.cpp in Sources */,
+				7B970313166ED2BA00A36060 /* LibVT_PageTable.cpp in Sources */,
+				7B970318166ED4BA00A36060 /* LibVT_PageLoadingThread.cpp in Sources */,
+				7B970314166ED2BA00A36060 /* LibVT_Readback.cpp in Sources */,
+				7B970315166ED2BA00A36060 /* LibVT_Utilities.cpp in Sources */,
+				7B97030E166ED1C900A36060 /* VirtualTexturingNode.mm in Sources */,
+				7B941EEC166EB20D00F2D80F /* BMFont.mm in Sources */,
+				7B941EED166EB22F00F2D80F /* Utilities.mm in Sources */,
+				7B941EEE166EB2B000F2D80F /* StateUtilities.mm in Sources */,
+				7B941EEF166EB2C500F2D80F /* CollideableMesh.mm in Sources */,
+				7B941EF0166EB2D100F2D80F /* Mesh.mm in Sources */,
+				7B970317166ED43A00A36060 /* LibVT_ImageDecompression.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		7B941ED1166EAB7D00F2D80F /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7B941ED2166EAB7D00F2D80F /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		7B941ED7166EAB7D00F2D80F /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7B941ED8166EAB7D00F2D80F /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		7BDCBE6A166F2EEF0008F4BB /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7BDCBE6B166F2EEF0008F4BB /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
 		BCDC9F860EB375FB00ADCFA5 /* Info.plist */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -848,6 +1040,108 @@
 				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR} /Users/mattjr/svn/ipadviewer";
 			};
 			name = Release;
+		};
+		7B941EE1166EAB7D00F2D80F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SeafloorOSX/SeafloorOSX-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "SeafloorOSX/SeafloorOSX-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		7B941EE2166EAB7D00F2D80F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SeafloorOSX/SeafloorOSX-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "SeafloorOSX/SeafloorOSX-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		7B941EE3166EAB7D00F2D80F /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SeafloorOSX/SeafloorOSX-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "SeafloorOSX/SeafloorOSX-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Distribution;
 		};
 		BC78D1AC0E1FDC0600BD9B0B /* Distribution */ = {
 			isa = XCBuildConfiguration;
@@ -987,6 +1281,16 @@
 				1D6058940D05DD3E006BFB54 /* Debug */,
 				1D6058950D05DD3E006BFB54 /* Release */,
 				BC78D1AD0E1FDC0600BD9B0B /* Distribution */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7B941EE0166EAB7D00F2D80F /* Build configuration list for PBXNativeTarget "SeafloorOSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7B941EE1166EAB7D00F2D80F /* Debug */,
+				7B941EE2166EAB7D00F2D80F /* Release */,
+				7B941EE3166EAB7D00F2D80F /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

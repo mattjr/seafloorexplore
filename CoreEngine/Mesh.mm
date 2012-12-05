@@ -123,7 +123,7 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 		}
 
 		if((bzerror != BZ_STREAM_END) || ((read + numRead) != size)){
-            printf("		if((bzerror != BZ_STREAM_END) || ((read + numRead) != size)){\n"
+            printf("		if((bzerror != BZ_STREAM_END) || ((read + numRead) != size)){\n");
                    return NULL;
 
         }
@@ -278,7 +278,7 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
 
 - (id)copyWithZone:(NSZone *)zone
 {
-	Mesh *octreeCopy = NSCopyObject(self, 0, zone);
+	Mesh *octreeCopy = [[[self class] allocWithZone:zone] init];//NSCopyObject(self, 0, zone);
 
 	octreeCopy->name = [[NSString alloc] initWithString:name];
 	octreeCopy->visibleNodeStack = (uint16_t *) calloc(1, octree->nodeCount * sizeof(uint16_t));

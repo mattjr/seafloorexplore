@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'SeafloorOSX' target in the 'SeafloorOSX' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

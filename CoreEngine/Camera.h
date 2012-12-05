@@ -70,8 +70,16 @@ CC3Plane CC3PlaneFromPoints(vector3f p1, vector3f p2, vector3f p3);
 -(CC3Ray) unprojectPoint: (CGPoint) cc2Point withModelView: (matrix44f_c) thismodelview ;
 GLfloat CC3DistanceFromNormalizedPlane(CC3Plane p, vector3f v) ;
 CC3Plane CC3PlaneNormalize(CC3Plane p) ;
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 #include <OpenGLES/ES1/gl.h>
 #include <OpenGLES/ES1/glext.h>
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
+#else
+#include <OpenGL/OpenGL.h>
+#include <Carbon/Carbon.h>
+#endif
+
 
 void
 gluPerspective(GLfloat fovy, GLfloat aspect, GLfloat zNear, GLfloat zFar);
@@ -108,6 +116,9 @@ gluUnProject4(GLfloat winx, GLfloat winy, GLfloat winz, GLfloat clipw,
 void
 gluPickMatrix(GLfloat x, GLfloat y, GLfloat deltax, GLfloat deltay,
               GLint viewport[4]);
+void __gluMultMatrixVecf(const double matrix[16], const GLfloat in[4],
+                         GLfloat out[4]);
+
 void __gluMultMatrixVecf(const GLfloat matrix[16], const GLfloat in[4],
                          GLfloat out[4]);
 @end

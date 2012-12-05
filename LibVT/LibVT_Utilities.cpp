@@ -157,7 +157,7 @@ void * vtuLoadFile(const char *filePath, const uint32_t offset, uint32_t *file_s
 	else
 	{
 		fseek(f , 0 , SEEK_END);
-		*fsp = ftell(f) - offset;
+		*fsp = (uint32_t)ftell(f) - offset;
 	}
 
 
