@@ -342,7 +342,7 @@ float positions[60 * 60][6];
         _targetDistance=[data dist];
         _targetTilt=[data tilt];
         _targetHeading=[data heading];
-        NSLog(@"Replaying %05ld/%05ld %f %f %f %f %f %f\n", replayPos,[replayData count],_targetCenter[0], _targetCenter[1], _targetCenter[2],
+        NSLog(@"Replaying %05ld/%05d %f %f %f %f %f %f\n", replayPos,(int)[replayData count],_targetCenter[0], _targetCenter[1], _targetCenter[2],
               _targetDistance,
               _targetTilt,
               _targetHeading);
