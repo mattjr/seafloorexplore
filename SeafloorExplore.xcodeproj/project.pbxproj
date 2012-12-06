@@ -24,6 +24,10 @@
 		7B6A2C5D166FF5DC00B72619 /* BasicOpenGLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A2C5A166FF5DC00B72619 /* BasicOpenGLAppDelegate.m */; };
 		7B6A2C5E166FF5DC00B72619 /* BasicOpenGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A2C5C166FF5DC00B72619 /* BasicOpenGLView.mm */; };
 		7B6A2C60166FF60500B72619 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A2C5F166FF60500B72619 /* main.m */; };
+		7B6A2C7416702BFA00B72619 /* NSString+CHCSVAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A2C6E16702BFA00B72619 /* NSString+CHCSVAdditions.m */; };
+		7B6A2C7516702BFA00B72619 /* NSArray+CHCSVAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A2C7016702BFA00B72619 /* NSArray+CHCSVAdditions.m */; };
+		7B6A2C7616702BFA00B72619 /* CHCSVParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A2C7316702BFA00B72619 /* CHCSVParser.m */; };
+		7B6A2C7816702CD000B72619 /* CHCSVWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A2C7716702CD000B72619 /* CHCSVWriter.m */; };
 		7B6F3297162F733F00AB12CA /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B6F3296162F733F00AB12CA /* Default-568h@2x.png */; };
 		7B83A5CD159857BD00A5DE5C /* LRLinkableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B83A5CC159857BD00A5DE5C /* LRLinkableLabel.m */; };
 		7B83A5CF1598646C00A5DE5C /* acfr.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B83A5CE1598646C00A5DE5C /* acfr.png */; };
@@ -181,6 +185,13 @@
 		7B6A2C5B166FF5DC00B72619 /* BasicOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicOpenGLView.h; sourceTree = "<group>"; };
 		7B6A2C5C166FF5DC00B72619 /* BasicOpenGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BasicOpenGLView.mm; sourceTree = "<group>"; };
 		7B6A2C5F166FF60500B72619 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		7B6A2C6E16702BFA00B72619 /* NSString+CHCSVAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+CHCSVAdditions.m"; sourceTree = "<group>"; };
+		7B6A2C6F16702BFA00B72619 /* NSString+CHCSVAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+CHCSVAdditions.h"; sourceTree = "<group>"; };
+		7B6A2C7016702BFA00B72619 /* NSArray+CHCSVAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+CHCSVAdditions.m"; sourceTree = "<group>"; };
+		7B6A2C7116702BFA00B72619 /* NSArray+CHCSVAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+CHCSVAdditions.h"; sourceTree = "<group>"; };
+		7B6A2C7216702BFA00B72619 /* CHCSVParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHCSVParser.h; sourceTree = "<group>"; };
+		7B6A2C7316702BFA00B72619 /* CHCSVParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHCSVParser.m; sourceTree = "<group>"; };
+		7B6A2C7716702CD000B72619 /* CHCSVWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHCSVWriter.m; sourceTree = "<group>"; };
 		7B6F3296162F733F00AB12CA /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		7B83A5CB159857BD00A5DE5C /* LRLinkableLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LRLinkableLabel.h; sourceTree = SOURCE_ROOT; };
 		7B83A5CC159857BD00A5DE5C /* LRLinkableLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LRLinkableLabel.m; sourceTree = SOURCE_ROOT; };
@@ -515,6 +526,13 @@
 				7B6A2C5B166FF5DC00B72619 /* BasicOpenGLView.h */,
 				7B6A2C5C166FF5DC00B72619 /* BasicOpenGLView.mm */,
 				7BDCBE6A166F2EEF0008F4BB /* MainMenu.xib */,
+				7B6A2C6E16702BFA00B72619 /* NSString+CHCSVAdditions.m */,
+				7B6A2C6F16702BFA00B72619 /* NSString+CHCSVAdditions.h */,
+				7B6A2C7716702CD000B72619 /* CHCSVWriter.m */,
+				7B6A2C7016702BFA00B72619 /* NSArray+CHCSVAdditions.m */,
+				7B6A2C7116702BFA00B72619 /* NSArray+CHCSVAdditions.h */,
+				7B6A2C7216702BFA00B72619 /* CHCSVParser.h */,
+				7B6A2C7316702BFA00B72619 /* CHCSVParser.m */,
 				7B941ECF166EAB7D00F2D80F /* Supporting Files */,
 			);
 			path = SeafloorOSX;
@@ -935,6 +953,10 @@
 				7B6A2C5D166FF5DC00B72619 /* BasicOpenGLAppDelegate.m in Sources */,
 				7B6A2C5E166FF5DC00B72619 /* BasicOpenGLView.mm in Sources */,
 				7B6A2C60166FF60500B72619 /* main.m in Sources */,
+				7B6A2C7416702BFA00B72619 /* NSString+CHCSVAdditions.m in Sources */,
+				7B6A2C7516702BFA00B72619 /* NSArray+CHCSVAdditions.m in Sources */,
+				7B6A2C7616702BFA00B72619 /* CHCSVParser.m in Sources */,
+				7B6A2C7816702CD000B72619 /* CHCSVWriter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

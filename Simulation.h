@@ -23,6 +23,25 @@ typedef enum {
     kTilt,
     kDoubleClick,
 } MovementType;
+@interface ReplayData : NSObject
+{
+@public
+    float x,y,z,tilt,dist,heading,time;
+}
+
+-init;
+-initWith: (float) _x :(float) _y :(float) _z :(float) _tilt :(float) _dist :(float) _heading :(float) _time;
+
+-(float) x;
+-(float) y;
+-(float) z;
+-(float) tilt;
+-(float) dist;
+-(float) heading;
+-(float) time;
+@end
+
+
 @interface Simulation :  NSObject
 {
 	int frames;
@@ -81,6 +100,8 @@ typedef enum {
     MovementType logOnNextUpdate;
     NSArray *movementStrings;
     NSString *basename;
+    NSArray *replayData;
+    long int replayPos;
     
 }
 @property (atomic)     MovementType logOnNextUpdate;
@@ -114,6 +135,7 @@ typedef enum {
 
 -(void)logCameraPosition:(MovementType)type ;
 
+-(void) loadReplay:(NSArray *)arr;
 -(void)setValidPos;
 -(void) checkInFrame;
 -(vector3f) center;

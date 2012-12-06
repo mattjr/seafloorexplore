@@ -2,13 +2,12 @@
 #import "BasicOpenGLView.h"
 #include "Simulation.h"
 #include "Scene.h"
-
+#import "NSArray+CHCSVAdditions.h"
 // For functions like gluErrorString()
 #import <OpenGL/glu.h>
 #ifdef __APPLE__
 #define _MACOSX
 #endif
-
 
 void reportError (char * strError)
 {
@@ -100,9 +99,72 @@ GLenum glReportError (void)
     //damage = true;
     return false;
   }
+-(BOOL) loadCSVReplay: (NSString *)file_name{
+/*
+    NSString *csvString = [NSString stringWithContentsOfFile:file_name encoding:NSUTF8StringEncoding error:&error];
+    
+	if (!csvString)
+	{
+		printf("Couldn't read file at path %s\n. Error: %s",
+               [file_name UTF8String],
+               [[error localizedDescription] ? [error localizedDescription] : [error description] UTF8String]);
+		exit(1);
+	}*/
+    NSStringEncoding encoding = 0;
+	NSError * error = nil;
+	NSArray * fields = [NSArray arrayWithContentsOfCSVFile:file_name usedEncoding:&encoding error:&error];
+    double centerX,centerY,centerZ,tilt,dist,heading,time;
+    NSMutableArray *arr=[[[NSMutableArray alloc] init] autorelease];
+    char movement[8192],mesh_name[8192];
+    for (id object in fields) {
+        NSString * str=[object objectAtIndex:8];
+        sscanf([str UTF8String], "{ centerZ : %lf;  time : %lf;  distance : %lf;  centerY : %lf;  centerX : %lf;  tilt : %lf;  movement : %s heading : %lf;  mesh : %s}", &centerZ,&time, &dist,&centerY,&centerX,&tilt,movement,&heading,mesh_name);
+        [arr addObject:[[[ReplayData alloc] initWith: centerX :centerY :centerZ :tilt :dist :heading :time] autorelease]];
+       
+        //printf(" centerZ : %lf;  time : %lf;  distance : %lf;  centerY : %lf;  centerX : %lf;  tilt : %lf;  movement : %s;  heading : %lf;  mesh : %s\n}",centerZ,time, dist,centerY,centerX,tilt,movement,heading,mesh_name);
+    }
+    	[[scene simulator] loadReplay:arr];
+
+    
+	//NSLog(@"read: %@", [[fields objectAtIndex:0] objectAtIndex:8]);
+    
+    /*NSArray *keys=[NSArray arrayWithObjects:
+                   @"Date",
+                   @"Code",
+                   @"event",
+                   @"blank",
+                   @"type",
+                   @"version",
+                   @"model",
+                   @"modellong",
+                   @"data",
+                   nil];*/
+
+    
+return YES;
+}
 
   -(IBAction) saveDocumentAs: (id) sender
   {
+   
+      NSWindow* window = [self window];
+      
+      // Create and configure the panel.
+      NSOpenPanel* panel = [NSOpenPanel openPanel];
+      [panel setCanChooseDirectories:NO];      
+      [panel setAllowsMultipleSelection:NO];
+      [panel setMessage:@"Open csv replay."];
+      
+      // Display the panel attached to the document's window.
+      [panel beginSheetModalForWindow:window completionHandler:^(NSInteger result){
+          if (result == NSFileHandlingPanelOKButton) {
+              [self loadCSVReplay: [[panel URL] path] ];
+              
+              // Use the URLs to build a list of items to import.
+          }
+          
+      }];
+
    /* NSSavePanel *savePanel = [NSSavePanel savePanel];
     [savePanel setTitle:@"Save as (.obj by default)"];
     // TODO: Add a item to this list corresponding to each file type extension

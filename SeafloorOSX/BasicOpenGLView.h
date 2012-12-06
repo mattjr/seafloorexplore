@@ -45,7 +45,7 @@ GLenum glReportError (void);
 // Default save function, called when using File > Save as ... dialog
 - (IBAction) saveDocumentAs: (id) sender;
 
-
+-(BOOL) loadCSVReplay: (NSString *)file_name;
 ///////////////////////////////////////////////////////////////////////////////
 // Mouse and Keyboard Input
 ///////////////////////////////////////////////////////////////////////////////

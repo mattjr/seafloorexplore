@@ -20,7 +20,7 @@ float positions[60 * 60][6];
 #include <math.h>
 #import "Core3D.h"
 
-#define PLAY_DEMO		0
+//#define PLAY_DEMO		0
 //#define FIXED_TILES_PATH   // either load from a specific directory or from where the binary is
 
 #ifdef FIXED_TILES_PATH
@@ -36,6 +36,19 @@ float positions[60 * 60][6];
 #define TILES_BASEPATH  [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@""]
 #endif
 #endif
+@implementation  ReplayData : NSObject
+-init { x = y = z = tilt= dist= heading=time=0.0; return self;}
+
+-initWith: (float) _x :(float) _y :(float) _z :(float) _tilt :(float) _dist :(float) _heading :(float) _time    ;
+{ x = _x; y =_y;  z = _z; tilt=_tilt; dist= _dist; heading=_heading; time= _time; return self;}
+-(float) x {return x;}
+-(float) y {return y;}
+-(float) z{return z;}
+-(float) tilt {return tilt;}
+-(float) dist {return dist;}
+-(float) heading {return heading;}
+-(float) time {return time;}
+@end
 
 
 @implementation Simulation
@@ -183,14 +196,14 @@ float positions[60 * 60][6];
 		if (0)
 			[NSTimer scheduledTimerWithTimeInterval:1.0/60.0 target:self selector:@selector(recordPositionTimer) userInfo:NULL repeats:YES];
 
-		if (PLAY_DEMO)
+		/*if (PLAY_DEMO)
 		{
 			void *pos = vtuLoadFile([[[NSBundle mainBundle] pathForResource:@"positions" ofType:@"bin"] UTF8String], 0, NULL);
 
 			memcpy(&positions, pos, sizeof(positions));
 
 			[NSTimer scheduledTimerWithTimeInterval:1.0/60.0 target:self selector:@selector(updateTimer) userInfo:NULL repeats:YES];
-		}
+		}*/
 		
 		orientation.m11=0;
 		orientation.m12=1;
@@ -212,7 +225,7 @@ float positions[60 * 60][6];
 		orientation.m42=0;
 		orientation.m43=0;
 		orientation.m44=1;
-		
+		replayPos=-1;
 
 		speedModifier = 1.0;
         // Set to either Inertia or Standard slerp value
@@ -225,7 +238,7 @@ float positions[60 * 60][6];
         cameraRotationSpeed = 0.01;
         _maxDist = 3.5*[self radius];
 
-		
+		replayData=NULL;
 		[self resetCamera];
         _firstPan=false;
         _radius = [self radius];
@@ -299,7 +312,7 @@ float positions[60 * 60][6];
 
 - (void)updateTimer
 {
-	if (PLAY_DEMO)
+/*	if (PLAY_DEMO)
 	{
 		static int times = 0;
 
@@ -316,7 +329,33 @@ float positions[60 * 60][6];
 
 		times++;
 
-	}
+	}*/
+    if(replayData != nil && [replayData count] > 0 ){
+        replayPos++;
+        if(replayPos >= [replayData count])
+            replayPos=0;
+        ReplayData *data=[replayData objectAtIndex:replayPos];
+        _targetCenter[0]=[data x];
+        _targetCenter[1]=[data y];
+        _targetCenter[2]=[data z];
+        
+        _targetDistance=[data dist];
+        _targetTilt=[data tilt];
+        _targetHeading=[data heading];
+        NSLog(@"Replaying %05ld/%05ld %f %f %f %f %f %f\n", replayPos,[replayData count],_targetCenter[0], _targetCenter[1], _targetCenter[2],
+              _targetDistance,
+              _targetTilt,
+              _targetHeading);
+        _center[0]=_targetCenter[0];
+        _center[1]=_targetCenter[1];
+        _center[2]=_targetCenter[2];
+        _distance=_targetDistance;
+        _heading=_targetHeading;
+        _tilt=_targetTilt;
+        
+
+
+    }
 }
 
 - (void)update
@@ -804,6 +843,14 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
         _unprojected_orig=[[scene camera] unprojectPoint:pt ontoPlane: normPlane];
 
 }
+-(void) loadReplay:(NSArray *)arr {
+  //  NSLog(@"%@\n",arr);
+    replayData = arr;
+    [arr retain];
+    [NSTimer scheduledTimerWithTimeInterval:1.0/20.0 target:self selector:@selector(updateTimer) userInfo:NULL repeats:YES];
+    
+}
+
 -(void) pancont: (CGPoint) pt
 {
    // printf("%f %f\n",pt.x,pt.y);
