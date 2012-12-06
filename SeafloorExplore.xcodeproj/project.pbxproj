@@ -21,6 +21,9 @@
 		7B48CBA5152271FA008FA151 /* BenthosMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBA4152271FA008FA151 /* BenthosMapViewController.m */; };
 		7B48CBA8152279A1008FA151 /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBA7152279A1008FA151 /* MapAnnotation.m */; };
 		7B48CBB51522C188008FA151 /* Model.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBB21522C188008FA151 /* Model.m */; };
+		7B6A2C5D166FF5DC00B72619 /* BasicOpenGLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A2C5A166FF5DC00B72619 /* BasicOpenGLAppDelegate.m */; };
+		7B6A2C5E166FF5DC00B72619 /* BasicOpenGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A2C5C166FF5DC00B72619 /* BasicOpenGLView.mm */; };
+		7B6A2C60166FF60500B72619 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A2C5F166FF60500B72619 /* main.m */; };
 		7B6F3297162F733F00AB12CA /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B6F3296162F733F00AB12CA /* Default-568h@2x.png */; };
 		7B83A5CD159857BD00A5DE5C /* LRLinkableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B83A5CC159857BD00A5DE5C /* LRLinkableLabel.m */; };
 		7B83A5CF1598646C00A5DE5C /* acfr.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B83A5CE1598646C00A5DE5C /* acfr.png */; };
@@ -33,7 +36,6 @@
 		7B941EC9166EAB7D00F2D80F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B941EC8166EAB7D00F2D80F /* Cocoa.framework */; };
 		7B941ED3166EAB7D00F2D80F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7B941ED1166EAB7D00F2D80F /* InfoPlist.strings */; };
 		7B941ED9166EAB7D00F2D80F /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 7B941ED7166EAB7D00F2D80F /* Credits.rtf */; };
-		7B941EE6166EAEBA00F2D80F /* CocoaOpenGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7B941EE5166EAEBA00F2D80F /* CocoaOpenGLView.mm */; };
 		7B941EE8166EAFDA00F2D80F /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B941EE7166EAFDA00F2D80F /* OpenGL.framework */; };
 		7B941EE9166EB02200F2D80F /* Scene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D5B139770AD002FEB23 /* Scene.mm */; };
 		7B941EEA166EB02400F2D80F /* Camera.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BF64D57139770AD002FEB23 /* Camera.mm */; };
@@ -174,6 +176,11 @@
 		7B48CBB11522C187008FA151 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
 		7B48CBB21522C188008FA151 /* Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Model.m; sourceTree = "<group>"; };
 		7B61FB0213991399006E50B3 /* renderVT.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = renderVT.frag; path = LibVT/renderVT.frag; sourceTree = "<group>"; };
+		7B6A2C59166FF5DC00B72619 /* BasicOpenGLAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicOpenGLAppDelegate.h; sourceTree = "<group>"; };
+		7B6A2C5A166FF5DC00B72619 /* BasicOpenGLAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicOpenGLAppDelegate.m; sourceTree = "<group>"; };
+		7B6A2C5B166FF5DC00B72619 /* BasicOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicOpenGLView.h; sourceTree = "<group>"; };
+		7B6A2C5C166FF5DC00B72619 /* BasicOpenGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BasicOpenGLView.mm; sourceTree = "<group>"; };
+		7B6A2C5F166FF60500B72619 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7B6F3296162F733F00AB12CA /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		7B83A5CB159857BD00A5DE5C /* LRLinkableLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LRLinkableLabel.h; sourceTree = SOURCE_ROOT; };
 		7B83A5CC159857BD00A5DE5C /* LRLinkableLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LRLinkableLabel.m; sourceTree = SOURCE_ROOT; };
@@ -198,8 +205,6 @@
 		7B941ED4166EAB7D00F2D80F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7B941ED6166EAB7D00F2D80F /* SeafloorOSX-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SeafloorOSX-Prefix.pch"; sourceTree = "<group>"; };
 		7B941ED8166EAB7D00F2D80F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		7B941EE4166EAEBA00F2D80F /* CocoaOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaOpenGLView.h; sourceTree = SOURCE_ROOT; };
-		7B941EE5166EAEBA00F2D80F /* CocoaOpenGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaOpenGLView.mm; sourceTree = SOURCE_ROOT; };
 		7B941EE7166EAFDA00F2D80F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = DEVELOPER_DIR; };
 		7B941EF1166EB35400F2D80F /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
 		7B97030F166ED29E00A36060 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -504,9 +509,12 @@
 		7B941ECE166EAB7D00F2D80F /* SeafloorOSX */ = {
 			isa = PBXGroup;
 			children = (
-				7B941EE4166EAEBA00F2D80F /* CocoaOpenGLView.h */,
+				7B6A2C5F166FF60500B72619 /* main.m */,
+				7B6A2C59166FF5DC00B72619 /* BasicOpenGLAppDelegate.h */,
+				7B6A2C5A166FF5DC00B72619 /* BasicOpenGLAppDelegate.m */,
+				7B6A2C5B166FF5DC00B72619 /* BasicOpenGLView.h */,
+				7B6A2C5C166FF5DC00B72619 /* BasicOpenGLView.mm */,
 				7BDCBE6A166F2EEF0008F4BB /* MainMenu.xib */,
-				7B941EE5166EAEBA00F2D80F /* CocoaOpenGLView.mm */,
 				7B941ECF166EAB7D00F2D80F /* Supporting Files */,
 			);
 			path = SeafloorOSX;
@@ -910,7 +918,6 @@
 				7B941EE9166EB02200F2D80F /* Scene.mm in Sources */,
 				7B941EEB166EB1CD00F2D80F /* SceneNode.mm in Sources */,
 				7B941EEA166EB02400F2D80F /* Camera.mm in Sources */,
-				7B941EE6166EAEBA00F2D80F /* CocoaOpenGLView.mm in Sources */,
 				7B97030D166ECF7600A36060 /* Simulation.mm in Sources */,
 				7B970311166ED2BA00A36060 /* LibVT.cpp in Sources */,
 				7B970312166ED2BA00A36060 /* LibVT_Cache.cpp in Sources */,
@@ -925,6 +932,9 @@
 				7B941EEF166EB2C500F2D80F /* CollideableMesh.mm in Sources */,
 				7B941EF0166EB2D100F2D80F /* Mesh.mm in Sources */,
 				7B970317166ED43A00A36060 /* LibVT_ImageDecompression.cpp in Sources */,
+				7B6A2C5D166FF5DC00B72619 /* BasicOpenGLAppDelegate.m in Sources */,
+				7B6A2C5E166FF5DC00B72619 /* BasicOpenGLView.mm in Sources */,
+				7B6A2C60166FF60500B72619 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
