@@ -1,6 +1,6 @@
 #import <OpenGL/gl.h>
 #import <Cocoa/Cocoa.h>
-
+#import "GCDAsyncUdpSocket.h"
 @class Scene;
 ///////////////////////////////////////////////////////////////////////////////
 // OpenGL error handling
@@ -25,8 +25,10 @@ GLenum glReportError (void);
   // only once per OpenGL session, I'm not sure how necessary this is
   bool openGL_initialized;
   Scene *scene;
+    GCDAsyncUdpSocket *udpSocket;
 
 }
+- (void)logError:(NSString *)msg;
 
 ///////////////////////////////////////////////////////////////////////////////
 // File IO
@@ -45,7 +47,7 @@ GLenum glReportError (void);
 // Default save function, called when using File > Save as ... dialog
 - (IBAction) saveDocumentAs: (id) sender;
 
--(BOOL) loadCSVReplay: (NSString *)file_name;
+-(BOOL) loadCSVReplay: (NSString *)file_name shouldDump:(BOOL)dump;
 ///////////////////////////////////////////////////////////////////////////////
 // Mouse and Keyboard Input
 ///////////////////////////////////////////////////////////////////////////////

@@ -21,6 +21,8 @@
 		7B48CBA5152271FA008FA151 /* BenthosMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBA4152271FA008FA151 /* BenthosMapViewController.m */; };
 		7B48CBA8152279A1008FA151 /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBA7152279A1008FA151 /* MapAnnotation.m */; };
 		7B48CBB51522C188008FA151 /* Model.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CBB21522C188008FA151 /* Model.m */; };
+		7B66DFBF16BDDC5F000298C5 /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B66DFBE16BDDC5F000298C5 /* GCDAsyncUdpSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		7B66DFC016BDDC5F000298C5 /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B66DFBE16BDDC5F000298C5 /* GCDAsyncUdpSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		7B6A2C5D166FF5DC00B72619 /* BasicOpenGLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A2C5A166FF5DC00B72619 /* BasicOpenGLAppDelegate.m */; };
 		7B6A2C5E166FF5DC00B72619 /* BasicOpenGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A2C5C166FF5DC00B72619 /* BasicOpenGLView.mm */; };
 		7B6A2C60166FF60500B72619 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6A2C5F166FF60500B72619 /* main.m */; };
@@ -180,6 +182,8 @@
 		7B48CBB11522C187008FA151 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
 		7B48CBB21522C188008FA151 /* Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Model.m; sourceTree = "<group>"; };
 		7B61FB0213991399006E50B3 /* renderVT.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = renderVT.frag; path = LibVT/renderVT.frag; sourceTree = "<group>"; };
+		7B66DFBD16BDDC5F000298C5 /* GCDAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncUdpSocket.h; sourceTree = SOURCE_ROOT; };
+		7B66DFBE16BDDC5F000298C5 /* GCDAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncUdpSocket.m; sourceTree = SOURCE_ROOT; };
 		7B6A2C59166FF5DC00B72619 /* BasicOpenGLAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicOpenGLAppDelegate.h; sourceTree = "<group>"; };
 		7B6A2C5A166FF5DC00B72619 /* BasicOpenGLAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicOpenGLAppDelegate.m; sourceTree = "<group>"; };
 		7B6A2C5B166FF5DC00B72619 /* BasicOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicOpenGLView.h; sourceTree = "<group>"; };
@@ -611,6 +615,8 @@
 				7BF64DB613977227002FEB23 /* StateUtilities.h */,
 				7BF64DB713977227002FEB23 /* StateUtilities.mm */,
 				7BF64DB813977227002FEB23 /* Utilities.h */,
+				7B66DFBD16BDDC5F000298C5 /* GCDAsyncUdpSocket.h */,
+				7B66DFBE16BDDC5F000298C5 /* GCDAsyncUdpSocket.m */,
 				7BF64DB913977227002FEB23 /* Utilities.mm */,
 				7B056F02150AC5DF00621766 /* NSFileManager+Tar.h */,
 				7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */,
@@ -926,6 +932,7 @@
 				7BB1DE08157C2D4B008699B1 /* JSGCDDispatcher.m in Sources */,
 				7BB1DE0D157C7795008699B1 /* BackgroundProcessingFile.m in Sources */,
 				7B83A5CD159857BD00A5DE5C /* LRLinkableLabel.m in Sources */,
+				7B66DFBF16BDDC5F000298C5 /* GCDAsyncUdpSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -957,6 +964,7 @@
 				7B6A2C7516702BFA00B72619 /* NSArray+CHCSVAdditions.m in Sources */,
 				7B6A2C7616702BFA00B72619 /* CHCSVParser.m in Sources */,
 				7B6A2C7816702CD000B72619 /* CHCSVWriter.m in Sources */,
+				7B66DFC016BDDC5F000298C5 /* GCDAsyncUdpSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

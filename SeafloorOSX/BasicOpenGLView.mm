@@ -8,6 +8,7 @@
 #ifdef __APPLE__
 #define _MACOSX
 #endif
+#define FORMAT(format, ...) [NSString stringWithFormat:(format), ##__VA_ARGS__]
 
 void reportError (char * strError)
 {
@@ -99,7 +100,64 @@ GLenum glReportError (void)
     //damage = true;
     return false;
   }
--(BOOL) loadCSVReplay: (NSString *)file_name{
+-(IBAction) revertDocumentToSaved: (id) sender{
+    [self runUDPServerToLog];
+}
+
+-(void) runUDPServerToLog {
+    udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+    
+    NSError *error = nil;
+
+    if (![udpSocket bindToPort:IPAD_PORT error:&error])
+    {
+        [self logError:FORMAT(@"Error starting server (bind): %@", error)];
+        return;
+    }
+    if (![udpSocket beginReceiving:&error])
+    {
+        [udpSocket close];
+        
+        [self logError:FORMAT(@"Error starting server (recv): %@", error)];
+        return;
+    }
+    
+    [self logError:FORMAT(@"Udp Echo server started on port %hu", [udpSocket localPort])];
+
+}
+- (void)logError:(NSString *)msg
+{
+    NSLog(@"%@\n",msg);
+}
+
+- (void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data
+      fromAddress:(NSData *)address
+withFilterContext:(id)filterContext
+{
+    
+    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+    NSDictionary *myDictionary = [[unarchiver decodeObjectForKey:@"STATE_PACKET"] retain];
+    [unarchiver finishDecoding];
+    [unarchiver release];
+
+    [self logError:@"GotMsg"];
+
+	/*NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	if (msg)
+	{
+		[self logMessage:msg];
+	}
+	else
+	{
+		[self logError:@"Error converting received data into UTF-8 String"];
+	}
+	
+	[udpSocket sendData:data toAddress:address withTimeout:-1 tag:0];*/
+    [myDictionary release];
+
+}
+
+-(BOOL) loadCSVReplay: (NSString *)file_name shouldDump:(BOOL)dump{
 /*
     NSString *csvString = [NSString stringWithContentsOfFile:file_name encoding:NSUTF8StringEncoding error:&error];
     
@@ -123,6 +181,12 @@ GLenum glReportError (void)
        
         //printf(" centerZ : %lf;  time : %lf;  distance : %lf;  centerY : %lf;  centerX : %lf;  tilt : %lf;  movement : %s;  heading : %lf;  mesh : %s\n}",centerZ,time, dist,centerY,centerX,tilt,movement,heading,mesh_name);
     }
+    if(dump){
+        NSLog(@"Dumping to file\n");
+        NSString *dumpName=[file_name stringByAppendingString:@".dat"];
+        [[scene simulator] dumpVisInfo:arr intoFile:dumpName];
+    }
+    else
     	[[scene simulator] loadReplay:arr];
 
     
@@ -144,6 +208,7 @@ GLenum glReportError (void)
 return YES;
 }
 
+
   -(IBAction) saveDocumentAs: (id) sender
   {
    
@@ -154,16 +219,25 @@ return YES;
       [panel setCanChooseDirectories:NO];      
       [panel setAllowsMultipleSelection:NO];
       [panel setMessage:@"Open csv replay."];
+      NSButton *button = [[NSButton alloc] init];
+      [button setButtonType:NSSwitchButton];
+      button.title = NSLocalizedString(@"Dump to file", @"");
+      [button sizeToFit];
+      [panel setAccessoryView:button];
+     // panel.delegate = self;
       
       // Display the panel attached to the document's window.
       [panel beginSheetModalForWindow:window completionHandler:^(NSInteger result){
           if (result == NSFileHandlingPanelOKButton) {
-              [self loadCSVReplay: [[panel URL] path] ];
+              BOOL checkboxOn = (((NSButton*)panel.accessoryView).state);
+
+              [self loadCSVReplay: [[panel URL] path] shouldDump:checkboxOn ];
               
               // Use the URLs to build a list of items to import.
           }
           
       }];
+      [button release];
 
    /* NSSavePanel *savePanel = [NSSavePanel savePanel];
     [savePanel setTitle:@"Save as (.obj by default)"];
@@ -512,6 +586,8 @@ return YES;
 	pressedKeys = [[NSMutableArray alloc] initWithCapacity:5];
     
 	[[self window] zoom:self];
+    udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+    
 }
 
 - (void)animationTimer:(NSTimer *)timer

@@ -91,7 +91,11 @@ struct octree_struct // TODO: optimization: add optimized prefetch indices for g
 -(vector3f)maxbb;
 -(vector3f)minbb;
 -(vector3f)extents;
-
+struct frustrum {
+    GLfloat planes[6][4];
+};
+-(BOOL)getVertesInFrame:(NSMutableSet *)ptsInFrame forFrustrum:(struct frustrum)test_frustum;
+-(BOOL)getBoundsOfVertsInFrame:(vector3f *)bounds forFrustrum:(struct frustrum)test_frustum;
 -(BOOL)anyTrianlgesInFrustum:(const GLfloat [6][4])frustum;
 extern int numVisCenters;
 extern GLfloat frustum[6][4];

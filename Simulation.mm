@@ -17,6 +17,8 @@
 #include "LibVT.h"
 #include "LibVT_Internal.h"
 float positions[60 * 60][6];
+bool gRunExpCode=YES;
+#define LOG_SERVER_IP @"129.78.210.200"
 #include <math.h>
 #import "Core3D.h"
 
@@ -245,6 +247,7 @@ float positions[60 * 60][6];
         donePanning=true;
         bbox[0]=[self minbb];
         bbox[1]=[self maxbb];
+      //  printf("%f -- %f\n%f -- %f\n",bbox[0][0],bbox[1][0],bbox[0][1],bbox[1][1]);
         extentsMesh=bbox[1]-bbox[0];
         _meshcent =[self center];
         logOnNextUpdate=kNoLog;
@@ -253,6 +256,10 @@ float positions[60 * 60][6];
                            @"zoom",
                            @"tilt",
                             @"dblc",nil] retain];
+        if(gRunExpCode){
+            udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];  
+        }else
+            udpSocket=nil;
 
     }
     return self;
@@ -309,6 +316,83 @@ float positions[60 * 60][6];
 	globalInfo.fps = frames;
 	frames = 0;
 }
+-(void)dumpVisInfo:(NSArray *)arr intoFile:(NSString *)fname
+{
+    replayData = arr;
+    [arr retain];
+    
+    FILE *fp=fopen([fname UTF8String],"wb");
+    unsigned int count=(unsigned int)[replayData count];
+    fwrite((char *)&count,sizeof(unsigned int),1,fp);
+    
+    for(unsigned int i=0; i < count; i++){
+        [self updateTimer];
+        [self writeVisibleVertsTo:fp];
+        if( i % 100 == 0 ){
+            printf("%04d/%04d\n",i,count);
+        }
+    }
+    fclose(fp);
+    NSLog(@"Finished dumping\n");
+}
+- (void)writeVisibleVertsTo:(FILE *) fp
+{
+    struct frustrum test_frustum=[self getFrustrumPlanes];
+    unsigned int count=(unsigned int)[meshes count];
+    fwrite((char *)&count,sizeof(unsigned int),1,fp);
+    for (CollideableMesh *mesh in meshes) {
+        NSMutableSet *ptsInFrame = [[NSMutableSet alloc] init];
+        if(![mesh getVertesInFrame:ptsInFrame forFrustrum:test_frustum]){
+            fprintf(stderr,"Failed to run getVertsinframe\n");
+            exit(-1);
+        }
+        count=(unsigned int)mesh.octree->vertexCount;
+        fwrite((char *)&count,sizeof(unsigned int),1,fp);
+        count=(unsigned int)[ptsInFrame count];
+        fwrite((char *)&count,sizeof(unsigned int),1,fp);
+        for (NSNumber* num in ptsInFrame) {
+            unsigned int vert=(unsigned int)[num intValue];
+            fwrite((char *)&vert,sizeof(unsigned int),1,fp);
+        }
+        [ptsInFrame release];
+    }
+
+}
+
+- (void)writeVisibleBoundsTo:(FILE *) fp
+{
+    struct frustrum test_frustum=[self getFrustrumPlanes];
+    vector3f minA,maxA;
+    vector3f totalBounds[2];
+    for( int i=0; i< 3; i++){
+        totalBounds[0][i]=FLT_MAX;
+        totalBounds[1][i]=-FLT_MAX;
+    }
+    
+
+    for (CollideableMesh *mesh in meshes) {
+        vector3f bounds[2];
+
+        if(![mesh getBoundsOfVertsInFrame:bounds forFrustrum:test_frustum]){
+            fprintf(stderr,"Failed to run getVertsinframe\n");
+            exit(-1);
+        }
+        totalBounds[0]=MIN(totalBounds[0], bounds[0]);
+        totalBounds[1]=MAX(totalBounds[1], bounds[1]);
+
+        
+    }
+    float data[6];
+    for(int i=0; i<3; i++){
+        data[i]=totalBounds[0][i];
+        data[i+3]=totalBounds[1][i];
+    }
+    fwrite((char *)&data[0],sizeof(float),6,fp);
+
+
+    
+}
+
 
 - (void)updateTimer
 {
@@ -332,8 +416,10 @@ float positions[60 * 60][6];
 	}*/
     if(replayData != nil && [replayData count] > 0 ){
         replayPos++;
-        if(replayPos >= [replayData count])
+        if(replayPos >= [replayData count]){
             replayPos=0;
+            NSLog(@"Finished replay restarting\n");
+        }
         ReplayData *data=[replayData objectAtIndex:replayPos];
         _targetCenter[0]=[data x];
         _targetCenter[1]=[data y];
@@ -342,10 +428,10 @@ float positions[60 * 60][6];
         _targetDistance=[data dist];
         _targetTilt=[data tilt];
         _targetHeading=[data heading];
-        NSLog(@"Replaying %05ld/%05ld %f %f %f %f %f %f\n", replayPos,(long int)[replayData count],_targetCenter[0], _targetCenter[1], _targetCenter[2],
+       /* NSLog(@"Replaying %05ld/%05ld %f %f %f %f %f %f\n", replayPos,(long int)[replayData count],_targetCenter[0], _targetCenter[1], _targetCenter[2],
               _targetDistance,
               _targetTilt,
-              _targetHeading);
+              _targetHeading);*/
         _center[0]=_targetCenter[0];
         _center[1]=_targetCenter[1];
         _center[2]=_targetCenter[2];
@@ -501,17 +587,18 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     _lastValidHeading=_heading;
     goneOutOfFrame=NO;
 }
--(void) checkInFrame{
+
+-(struct frustrum)getFrustrumPlanes{
     CATransform3D mTmp;
     CATransform3D tiltMat;
     CATransform3D headingMat;
 	CATransform3D viewtest;
 	
     headingMat= CATransform3DMakeRotation(_targetHeading * M_PI / 180.0,0,0,1);
-   // if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
-     //   tiltMat=CATransform3DMakeRotation(-_targetTilt * M_PI / 180.0,1,0,0);
-   // else if(interfaceOrientation == UIInterfaceOrientationPortrait)
-        tiltMat=CATransform3DMakeRotation(-_targetTilt * M_PI / 180.0,0,1,0); 
+    // if(interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+    //   tiltMat=CATransform3DMakeRotation(-_targetTilt * M_PI / 180.0,1,0,0);
+    // else if(interfaceOrientation == UIInterfaceOrientationPortrait)
+    tiltMat=CATransform3DMakeRotation(-_targetTilt * M_PI / 180.0,0,1,0);
     viewtest=CATransform3DMakeTranslation(_targetCenter[0],_targetCenter[1],_targetCenter[2]);
     
     viewtest= CATransform3DConcat(viewtest,orientation);
@@ -521,16 +608,18 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     
     mTmp= CATransform3DMakeTranslation(0,0,-_targetDistance);
     viewtest= CATransform3DConcat(viewtest,mTmp);
-    
-    GLfloat test_frustum[6][4];
+    struct frustrum test_frustum;
     
     matrix44f_c data=CATransform3DSetField(viewtest);
     //memcpy(data.data(),&(viewtest.m11),sizeof(float)*16);
-
-    extract_frustum_planes(data,[[scene camera] projectionMatrix], test_frustum, cml::z_clip_neg_one, false);
     
+    extract_frustum_planes(data,[[scene camera] projectionMatrix], test_frustum.planes, cml::z_clip_neg_one, false);
+    return test_frustum;
 
-    if(![self anyTrianlgesInFrustum:test_frustum]){
+}
+-(void) checkInFrame{
+    struct frustrum test_frustum=[self getFrustrumPlanes];
+    if(![self anyTrianlgesInFrustum:test_frustum.planes]){
         goneOutOfFrame=YES;
      //   printf("Not in frame\n");
 
@@ -538,6 +627,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
        // printf("Still in\n");
     }
 }
+
 - (void)mouseDragged:(CGPoint)pos withFlags:(uint32_t)flags
 {
 	/*vector3f rot = [[scene camera] rotation];
@@ -906,7 +996,17 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
      @"heading",
      nil];
     [Flurry logEvent:@"MOVEMENT_EVENT" withParameters:dictionary timed:YES];
+    if(gRunExpCode){
+        NSMutableData *data = [[NSMutableData alloc] init];
+        NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+        [archiver encodeObject:dictionary forKey:@"STATE_PACKET"];
+        [archiver finishEncoding];
+        [archiver release];
+        [udpSocket sendData:data toHost:LOG_SERVER_IP port:IPAD_PORT withTimeout:-1 tag:1];
+        [data release];
+     }
 #endif
+    
 }
 
 - (void)resetCamera

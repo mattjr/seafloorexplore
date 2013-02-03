@@ -609,6 +609,124 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
     return FALSE;
 }
 
+-(BOOL)getVertesInFrame:(NSMutableSet *)ptsInFrame forFrustrum:(struct frustrum)test_frustum{
+    if(!ptsInFrame){
+        fprintf(stderr,"Set null!\n");
+        return FALSE;
+    }
+    [ptsInFrame removeAllObjects];
+    
+    uint16_t i;
+    
+    for (i = 0; i < visibleNodeStackTop;)
+    {
+        struct octree_node *n = (struct octree_node *) NODE_NUM(visibleNodeStack[i]);
+        uint32_t fc = n->faceCount;
+        uint32_t ff = n->firstFace;
+        uint16_t v = i+1;
+        while (v < visibleNodeStackTop)
+        {
+            struct octree_node *nn = (struct octree_node *) NODE_NUM(visibleNodeStack[v]);
+            
+            if (nn->firstFace != n->firstFace + n->faceCount)	// TODO: allow for some draw call reduction at the expense of drawing invisible stuff
+                break;
+            
+            //printf("%f %f %f %f %f %f\n",n->aabbOriginX,n->aabbOriginY,n->aabbOriginZ,n->aabbExtentX, n->aabbExtentY, n->aabbExtentZ);
+            fc += nn->faceCount;
+            n = nn;
+            v++;
+        }
+        
+        i = v;
+        for(int k=ff; k<ff+fc; k++){
+            uint16_t *f = (uint16_t *) FACE_NUM(k);
+            float *v1 = (float *) VERTEX_NUM( *f);
+            float *v2 = (float *) VERTEX_NUM( *(f+1));		// nana this could be prettified
+            float *v3 = (float *) VERTEX_NUM( *(f+2));
+            if(PointInFrustum(test_frustum.planes,*(v1+0),*(v1+1),*(v1+2)) &&
+               PointInFrustum(test_frustum.planes,*(v2+0),*(v2+1),*(v2+2)) &&
+               PointInFrustum(test_frustum.planes,*(v3+0),*(v3+1),*(v3+2))){
+                [ptsInFrame addObject:[NSNumber numberWithInt:*f]];
+
+                [ptsInFrame addObject:[NSNumber numberWithInt:*(f+1)]];
+                [ptsInFrame addObject:[NSNumber numberWithInt:*(f+2)]];
+
+
+                         }
+        }
+        
+    }
+    return TRUE;
+}
+
+-(BOOL)getBoundsOfVertsInFrame:(vector3f *)bounds forFrustrum:(struct frustrum)test_frustum{
+    if(!bounds){
+        fprintf(stderr,"Set null!\n");
+        return FALSE;
+    }
+    uint16_t i;
+
+    for( i=0; i< 3; i++){
+        bounds[0][i]=FLT_MAX;
+        bounds[1][i]=-FLT_MAX;
+    }
+    
+    for (i = 0; i < visibleNodeStackTop;)
+    {
+        struct octree_node *n = (struct octree_node *) NODE_NUM(visibleNodeStack[i]);
+        uint32_t fc = n->faceCount;
+        uint32_t ff = n->firstFace;
+        uint16_t v = i+1;
+        while (v < visibleNodeStackTop)
+        {
+            struct octree_node *nn = (struct octree_node *) NODE_NUM(visibleNodeStack[v]);
+            
+            if (nn->firstFace != n->firstFace + n->faceCount)	// TODO: allow for some draw call reduction at the expense of drawing invisible stuff
+                break;
+            
+            //printf("%f %f %f %f %f %f\n",n->aabbOriginX,n->aabbOriginY,n->aabbOriginZ,n->aabbExtentX, n->aabbExtentY, n->aabbExtentZ);
+            fc += nn->faceCount;
+            n = nn;
+            v++;
+        }
+        
+        i = v;
+        for(int k=ff; k<ff+fc; k++){
+            uint16_t *f = (uint16_t *) FACE_NUM(k);
+            float *v1 = (float *) VERTEX_NUM( *f);
+            float *v2 = (float *) VERTEX_NUM( *(f+1));		// nana this could be prettified
+            float *v3 = (float *) VERTEX_NUM( *(f+2));
+            if(PointInFrustum(test_frustum.planes,*(v1+0),*(v1+1),*(v1+2)) &&
+               PointInFrustum(test_frustum.planes,*(v2+0),*(v2+1),*(v2+2)) &&
+               PointInFrustum(test_frustum.planes,*(v3+0),*(v3+1),*(v3+2))){
+                
+                for(int l=0; l<3; l++){
+                        if( *(v1+l) < bounds[0][l] )
+                            bounds[0][l] = *(v1+l);
+                        if( *(v1+l) > bounds[1][l] )
+                            bounds[1][l] = *(v1+l);
+                    
+                    if( *(v2+l) < bounds[0][l] )
+                        bounds[0][l] = *(v2+l);
+                    if( *(v2+l) > bounds[1][l] )
+                        bounds[1][l] = *(v2+l);
+                    
+                    if( *(v3+l) < bounds[0][l] )
+                        bounds[0][l] = *(v3+l);
+                    if( *(v3+l) > bounds[1][l] )
+                        bounds[1][l] = *(v3+l);
+                    
+                }
+            }
+        }
+        
+        
+    }
+    return TRUE;
+}
+
+
+
 - (void)dealloc
 {
     //printf("Free M\n");

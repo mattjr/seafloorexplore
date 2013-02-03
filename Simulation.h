@@ -14,6 +14,8 @@
 #import "LODNode.h"
 #import "Skybox.h"
 #import "CollideableMesh.h"
+#import "GCDAsyncUdpSocket.h"
+#define IPAD_PORT 2048
 typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 @class Scene;
 typedef enum {
@@ -102,6 +104,7 @@ typedef enum {
     NSString *basename;
     NSArray *replayData;
     long int replayPos;
+    GCDAsyncUdpSocket *udpSocket ; 
     
 }
 @property (atomic)     MovementType logOnNextUpdate;
@@ -121,6 +124,11 @@ typedef enum {
 - (void)apply3DTransformD:(CATransform3D *)transform3D toPoint:(double *)sourcePoint result:(double *)resultingPoint;
 - (void)apply3DTransform:(CATransform3D *)transform3D toPoint:(vector3f)sourcePoint result:(vector3f)resultingPoint;
 - (id)initWithString:(NSString *)name withScene:(Scene *)newscene;
+-(void)dumpVisInfo:(NSArray *)arr intoFile:(NSString *)fname;
+
+- (void)writeVisibleVertsTo:(FILE *) fp;
+
+-(frustrum)getFrustrumPlanes;
 
 - (void)SlerpToTargetOrientation:(float) percent;
 -(void) pan: (CGPoint)pt;

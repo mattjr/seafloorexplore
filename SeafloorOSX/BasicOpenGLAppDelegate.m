@@ -18,7 +18,8 @@
 { 
   [basic_opengl_view openDocumentFromFileName:filename];
   return YES;
-}  
+}
+
 - (void)applicationWillTerminate:(NSNotification *)aNotification
 {
   [basic_opengl_view terminate:aNotification];
