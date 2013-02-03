@@ -112,9 +112,9 @@ extern vtData vt;
 - (void)updateProjection
 {
 	matrix_perspective_yfov_RH(projectionMatrix, cml::rad(fov), globalInfo.width / globalInfo.height, nearPlane, farPlane, cml::z_clip_neg_one);
-#ifdef TARGET_OS_IPHONE
+//#ifdef TARGET_OS_IPHONE !!!ALAWAYS!!!
 	matrix_rotate_about_local_z(projectionMatrix, (float) -(M_PI / 2.0));
-#endif
+//#endif
 
 #ifndef GL_ES_VERSION_2_0
 	glMatrixMode(GL_PROJECTION);
