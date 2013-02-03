@@ -101,6 +101,14 @@ GLenum glReportError (void)
     return false;
   }
 -(IBAction) revertDocumentToSaved: (id) sender{
+    NSRect rect=[[self window] frame];
+
+    CGFloat titleBarHeight = self.window.frame.size.height - ((NSView*)self.window.contentView).frame.size.height;
+    CGSize windowSize = CGSizeMake(1024, 704 + titleBarHeight);
+    rect.size=windowSize;
+
+    [[self window ] setFrame:rect display:YES animate:YES];
+
     [self runUDPServerToLog];
 }
 
