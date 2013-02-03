@@ -136,24 +136,13 @@ withFilterContext:(id)filterContext
 {
     
     NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-    NSDictionary *myDictionary = [[unarchiver decodeObjectForKey:@"STATE_PACKET"] retain];
+    NSDictionary *stateDict = [[unarchiver decodeObjectForKey:@"STATE_PACKET"] retain];
     [unarchiver finishDecoding];
     [unarchiver release];
+    
+    [[scene simulator] unpackDict:stateDict];
 
-    [self logError:@"GotMsg"];
-
-	/*NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	if (msg)
-	{
-		[self logMessage:msg];
-	}
-	else
-	{
-		[self logError:@"Error converting received data into UTF-8 String"];
-	}
-	
-	[udpSocket sendData:data toAddress:address withTimeout:-1 tag:0];*/
-    [myDictionary release];
+    [stateDict release];
 
 }
 

@@ -116,6 +116,8 @@ typedef enum {
 - (void)dealloc;
 - (void)clearObjs;
 
+-(NSDictionary *) packDictWithState:(MovementType)type ;
+-(void) unpackDict:(NSDictionary *)dictionary;
 
 - (void)update;
 - (void)render;

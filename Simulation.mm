@@ -959,6 +959,41 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 	NSLog(@"|%f,%f,%f,%f|", matrix[12], matrix[13], matrix[14], matrix[15]);
 	NSLog(@"___________________________");			
 }
+-(NSDictionary *) packDictWithState:(MovementType)type 
+{
+    NSDictionary *dictionary =
+    [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithString:basename],
+     @"mesh",
+     [movementStrings objectAtIndex:type],
+     @"movement",
+     [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]],
+     @"time",
+     [NSNumber numberWithDouble:_targetCenter[0]],
+     @"centerX",
+     [NSNumber numberWithDouble:_targetCenter[1]],
+     @"centerY",
+     [NSNumber numberWithDouble:_targetCenter[2]],
+     @"centerZ",
+     [NSNumber numberWithDouble:_targetDistance],
+     @"distance",
+     [NSNumber numberWithDouble:_targetTilt],
+     @"tilt",
+     [NSNumber numberWithDouble:_targetHeading],
+     @"heading",
+     nil];
+    
+    return dictionary;
+}
+
+-(void) unpackDict:(NSDictionary *)dictionary
+{
+    _targetCenter[0]= [[dictionary objectForKey:@"centerX" ] doubleValue];
+    _targetCenter[1]= [[dictionary objectForKey:@"centerY" ] doubleValue];
+    _targetCenter[2]= [[dictionary objectForKey:@"centerZ" ] doubleValue];
+    _targetDistance= [[dictionary objectForKey:@"distance" ] doubleValue];
+    _targetTilt= [[dictionary objectForKey:@"tilt" ] doubleValue];
+    _targetHeading= [[dictionary objectForKey:@"heading" ] doubleValue];
+}
 -(void)logCameraPosition:(MovementType)type 
 {
    /* if(type == kPanning)
@@ -974,27 +1009,8 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 
     [Flurry endTimedEvent:@"MOVEMENT_EVENT" withParameters:nil];
-
-    NSDictionary *dictionary = 
-    [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithString:basename],
-     @"mesh",
-     [movementStrings objectAtIndex:type],
-     @"movement",
-     [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]], 
-     @"time", 
-     [NSNumber numberWithDouble:_targetCenter[0]], 
-     @"centerX", 
-     [NSNumber numberWithDouble:_targetCenter[1]], 
-     @"centerY",
-     [NSNumber numberWithDouble:_targetCenter[2]], 
-     @"centerZ",
-     [NSNumber numberWithDouble:_targetDistance], 
-     @"distance",
-     [NSNumber numberWithDouble:_targetTilt], 
-     @"tilt",
-     [NSNumber numberWithDouble:_targetHeading], 
-     @"heading",
-     nil];
+    NSDictionary *dictionary =[self packDictWithState:type];
+ 
     [Flurry logEvent:@"MOVEMENT_EVENT" withParameters:dictionary timed:YES];
     if(gRunExpCode){
         NSMutableData *data = [[NSMutableData alloc] init];
