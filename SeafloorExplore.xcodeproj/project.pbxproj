@@ -73,6 +73,8 @@
 		7B9A0FC2157F8D6500905353 /* geebanks_16_15m_out.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7B9A0FC1157F8D6500905353 /* geebanks_16_15m_out.tar */; };
 		7B9DC541163B4FAF00A53B6E /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B9DC540163B4FAF00A53B6E /* libFlurry.a */; };
 		7B9DC543163B507E00A53B6E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B9DC542163B507E00A53B6E /* SystemConfiguration.framework */; };
+		7BADF1BC16BF62F300875D86 /* TrackerOverlay.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BADF1BB16BF62F300875D86 /* TrackerOverlay.mm */; };
+		7BADF1BD16BF62F300875D86 /* TrackerOverlay.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BADF1BB16BF62F300875D86 /* TrackerOverlay.mm */; };
 		7BB1DE03157C1A8E008699B1 /* IconDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB1DE02157C1A8E008699B1 /* IconDownloader.m */; };
 		7BB1DE05157C2005008699B1 /* Placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BB1DE04157C2005008699B1 /* Placeholder.png */; };
 		7BB1DE08157C2D4B008699B1 /* JSGCDDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB1DE07157C2D4B008699B1 /* JSGCDDispatcher.m */; };
@@ -230,6 +232,8 @@
 		7B9DC53F163B4FAF00A53B6E /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
 		7B9DC540163B4FAF00A53B6E /* libFlurry.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry.a; sourceTree = "<group>"; };
 		7B9DC542163B507E00A53B6E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		7BADF1BA16BF62F300875D86 /* TrackerOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackerOverlay.h; sourceTree = "<group>"; };
+		7BADF1BB16BF62F300875D86 /* TrackerOverlay.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TrackerOverlay.mm; sourceTree = "<group>"; };
 		7BB1DE01157C1A8E008699B1 /* IconDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconDownloader.h; sourceTree = "<group>"; };
 		7BB1DE02157C1A8E008699B1 /* IconDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconDownloader.m; sourceTree = "<group>"; };
 		7BB1DE04157C2005008699B1 /* Placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Placeholder.png; sourceTree = "<group>"; };
@@ -610,6 +614,8 @@
 				7BF6544213977C4C002FEB23 /* LODNode.h */,
 				7BF6544313977C4C002FEB23 /* LODNode.mm */,
 				7BF6544413977C4C002FEB23 /* Skybox.h */,
+				7BADF1BA16BF62F300875D86 /* TrackerOverlay.h */,
+				7BADF1BB16BF62F300875D86 /* TrackerOverlay.mm */,
 				7BF6544513977C4C002FEB23 /* Skybox.mm */,
 				7BF64E101397767A002FEB23 /* Core3D_Prefix.pch */,
 				7BF64DB613977227002FEB23 /* StateUtilities.h */,
@@ -933,6 +939,7 @@
 				7BB1DE0D157C7795008699B1 /* BackgroundProcessingFile.m in Sources */,
 				7B83A5CD159857BD00A5DE5C /* LRLinkableLabel.m in Sources */,
 				7B66DFBF16BDDC5F000298C5 /* GCDAsyncUdpSocket.m in Sources */,
+				7BADF1BC16BF62F300875D86 /* TrackerOverlay.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -965,6 +972,7 @@
 				7B6A2C7616702BFA00B72619 /* CHCSVParser.m in Sources */,
 				7B6A2C7816702CD000B72619 /* CHCSVWriter.m in Sources */,
 				7B66DFC016BDDC5F000298C5 /* GCDAsyncUdpSocket.m in Sources */,
+				7BADF1BD16BF62F300875D86 /* TrackerOverlay.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

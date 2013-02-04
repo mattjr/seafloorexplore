@@ -2,6 +2,7 @@
 #import "BasicOpenGLView.h"
 #include "Simulation.h"
 #include "Scene.h"
+#import "TrackerOverlay.h"
 #import "NSArray+CHCSVAdditions.h"
 // For functions like gluErrorString()
 #import <OpenGL/glu.h>
@@ -9,7 +10,7 @@
 #define _MACOSX
 #endif
 #define FORMAT(format, ...) [NSString stringWithFormat:(format), ##__VA_ARGS__]
-
+#define GAZE_PORT 6666
 void reportError (char * strError)
 {
   // Set up a fancy font/display for error messages
@@ -88,6 +89,7 @@ GLenum glReportError (void)
       //scene = [Scene sharedScene];
       scene = [[Scene alloc] init];
       
+      
       //id sim = [[[NSClassFromString([[NSBundle mainBundle] objectForInfoDictionaryKey:@"SimulationClass"]) alloc] init] autorelease];
       id sim = [[[Simulation alloc] initWithString:file_name withScene:scene] autorelease];
       if (sim)
@@ -113,24 +115,48 @@ GLenum glReportError (void)
 }
 
 -(void) runUDPServerToLog {
-    udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+    toverlay = [[TrackerOverlay alloc] init];
+    [toverlay setScale:20.0];
     
+    [[scene objects] addObject:toverlay];
+    udpSocketIpad = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+    udpSocketGaze = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+
     NSError *error = nil;
 
-    if (![udpSocket bindToPort:IPAD_PORT error:&error])
+    if (![udpSocketIpad bindToPort:IPAD_PORT error:&error])
     {
-        [self logError:FORMAT(@"Error starting server (bind): %@", error)];
+        [self logError:FORMAT(@"Error starting ipad server (bind): %@", error)];
         return;
     }
-    if (![udpSocket beginReceiving:&error])
+    if (![udpSocketIpad beginReceiving:&error])
     {
-        [udpSocket close];
+        [udpSocketIpad close];
+        
+        [self logError:FORMAT(@"Error starting ipad server (recv): %@", error)];
+        return;
+    }
+    
+    [self logError:FORMAT(@"Udp Ipad server started on port %hu", [udpSocketIpad localPort])];
+    
+    
+    error = nil;
+    
+    if (![udpSocketGaze bindToPort:GAZE_PORT error:&error])
+    {
+        [self logError:FORMAT(@"Error starting server gaze (bind): %@", error)];
+        return;
+    }
+    if (![udpSocketGaze beginReceiving:&error])
+    {
+        [udpSocketGaze close];
         
         [self logError:FORMAT(@"Error starting server (recv): %@", error)];
         return;
     }
     
-    [self logError:FORMAT(@"Udp Echo server started on port %hu", [udpSocket localPort])];
+    [self logError:FORMAT(@"Udp Echo server started on port %hu", [udpSocketGaze localPort])];
+
 
 }
 - (void)logError:(NSString *)msg
@@ -142,17 +168,55 @@ GLenum glReportError (void)
       fromAddress:(NSData *)address
 withFilterContext:(id)filterContext
 {
+    if([sock localPort] == IPAD_PORT){
+        
+        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+        NSDictionary *stateDict = [[unarchiver decodeObjectForKey:@"STATE_PACKET"] retain];
+        [unarchiver finishDecoding];
+        [unarchiver release];
     
-    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-    NSDictionary *stateDict = [[unarchiver decodeObjectForKey:@"STATE_PACKET"] retain];
-    [unarchiver finishDecoding];
-    [unarchiver release];
-    
-    [[scene simulator] unpackDict:stateDict];
+        [[scene simulator] unpackDict:stateDict];
 
-    [stateDict release];
+        [stateDict release];
+    }else if([sock localPort] == GAZE_PORT){
+        NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (msg)
+        {
+            //NSLog(@"RCV: %@", msg);
+             NSString* strType = @"STREAM_DATA";
+             NSScanner *scanner = [NSScanner scannerWithString:msg];
+            double x,y;
+            long long timeStamp;
+             if ( [ scanner scanString: strType intoString: NULL] )
+             {
+                 [scanner scanLongLong: &timeStamp];
+                 [scanner scanDouble: &x];
+                 [scanner scanDouble: &y];
+                // printf("%f %f %lld\n",x,y,timeStamp);
+                 vector2f pos;
+                 pos[0]=x;
+                 pos[1]=y;
+                 [toverlay setPos:pos];
+             }else{
+                 NSLog(@"Failed to parse\n");
+             }
+
+        }
+        else
+        {
+            NSString *host = nil;
+            uint16_t port = 0;
+            [GCDAsyncUdpSocket getHost:&host port:&port fromAddress:address];
+            NSLog(@"Unknown message from : %@:%hu", host, port);
+        }
+        [msg release];
+
+    }
 
 }
+
+
+
 
 -(BOOL) loadCSVReplay: (NSString *)file_name shouldDump:(BOOL)dump{
 /*
@@ -583,7 +647,7 @@ return YES;
 	pressedKeys = [[NSMutableArray alloc] initWithCapacity:5];
     
 	[[self window] zoom:self];
-    udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+    udpSocketIpad = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
     
 }
 

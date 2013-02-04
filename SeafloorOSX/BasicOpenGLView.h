@@ -2,6 +2,7 @@
 #import <Cocoa/Cocoa.h>
 #import "GCDAsyncUdpSocket.h"
 @class Scene;
+@class TrackerOverlay;
 ///////////////////////////////////////////////////////////////////////////////
 // OpenGL error handling
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,7 +26,10 @@ GLenum glReportError (void);
   // only once per OpenGL session, I'm not sure how necessary this is
   bool openGL_initialized;
   Scene *scene;
-    GCDAsyncUdpSocket *udpSocket;
+    TrackerOverlay *toverlay;
+    GCDAsyncUdpSocket *udpSocketIpad;
+    GCDAsyncUdpSocket *udpSocketGaze;
+
 
 }
 - (void)logError:(NSString *)msg;
