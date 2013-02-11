@@ -29,9 +29,15 @@ GLenum glReportError (void);
     TrackerOverlay *toverlay;
     GCDAsyncUdpSocket *udpSocketIpad;
     GCDAsyncUdpSocket *udpSocketGaze;
+    dispatch_queue_t networkQueue;
+    FILE *logFile;
+    NSString *lastEntry;
+
 
 
 }
+- (NSString *)input: (NSString *)prompt defaultValue: (NSString *)defaultValue ;
+
 - (void)logError:(NSString *)msg;
 
 ///////////////////////////////////////////////////////////////////////////////

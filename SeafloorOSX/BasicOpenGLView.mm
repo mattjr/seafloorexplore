@@ -99,6 +99,8 @@ GLenum glReportError (void)
       
       [scene setSimulator:sim];
       [self reshape];
+      if(logFile != NULL)
+          fprintf(logFile,"OPEN %f %s\n",[[NSDate date] timeIntervalSince1970],[[file_name lastPathComponent] UTF8String]);
     //damage = true;
     return false;
   }
@@ -114,13 +116,91 @@ GLenum glReportError (void)
     [self runUDPServerToLog];
 }
 
+- (NSString *)input: (NSString *)prompt defaultValue: (NSString *)defaultValue {
+    NSAlert *alert = [NSAlert alertWithMessageText: prompt
+                                     defaultButton:@"OK"
+                                   alternateButton:@"Cancel"
+                                       otherButton:nil
+                         informativeTextWithFormat:@""];
+    
+    NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 24)];
+    [input setStringValue:defaultValue];
+    [input autorelease];
+    [alert setAccessoryView:input];
+    NSInteger button = [alert runModal];
+    if (button == NSAlertDefaultReturn) {
+        [input validateEditing];
+        return [input stringValue];
+    } else if (button == NSAlertAlternateReturn) {
+        return nil;
+    } else {
+        NSAssert1(NO, @"Invalid input dialog button %ld",(long) button);
+        return nil;
+    }
+}
+
 -(void) runUDPServerToLog {
     toverlay = [[TrackerOverlay alloc] init];
+    networkQueue = dispatch_queue_create("com.acfr.netqueue", 0);
+    if(udpSocketIpad != nil){
+        NSLog(@"Closing udpSocketIpad\n");
+       [udpSocketIpad close];
+    }
+    
+    if(udpSocketGaze != nil){
+        NSLog(@"Closing udpSocketGaze\n");
+
+        [udpSocketGaze close];
+    }
+    
+    if(logFile != nil){
+        NSLog(@"Closing file\n");
+        fclose(logFile);
+    }
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
+    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:@"SeafloorExplore"];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]){
+        
+        NSError* error;
+        if(  [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:&error])
+            ;// success
+        else
+        {
+            NSLog(@"[%@] ERROR: attempting to write create SeafloorExplore directory", [self class]);
+            NSAssert( FALSE, @"Failed to create directory maybe out of disk space?");
+        }
+    }
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"ddMMyyyy-HH-mm"];
+    NSString *textDate = [NSString stringWithFormat:@"%@",[dateFormatter stringFromDate:[NSDate date]]];
+    [dateFormatter release];
+    NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:dataPath error:nil];
+    
+
+    NSString *value=[self input: @"Enter User Name" defaultValue:@""];
+    static int sequenceNumber = 0;
+
+    NSString *name;
+    NSArray *matchedFiles = NULL;
+    do {
+        NSString *match = [NSString stringWithFormat:@"%@-%02d-*",value,sequenceNumber ];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF like %@", match];
+        matchedFiles = [files filteredArrayUsingPredicate:predicate];
+        
+
+        name = [dataPath stringByAppendingPathComponent: [NSString stringWithFormat:@"%@-%02d-%@.txt",value,sequenceNumber,textDate]];
+        sequenceNumber++;
+    
+    }while (matchedFiles && [matchedFiles count] > 0 );
+    NSLog(@"Open %@\n",name);
+    logFile = fopen([name UTF8String], "w");
     [toverlay setScale:20.0];
     
     [[scene objects] addObject:toverlay];
-    udpSocketIpad = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
-    udpSocketGaze = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+    udpSocketIpad = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:networkQueue];
+    udpSocketGaze = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:networkQueue];
 
     NSError *error = nil;
 
@@ -168,6 +248,7 @@ GLenum glReportError (void)
       fromAddress:(NSData *)address
 withFilterContext:(id)filterContext
 {
+    double currentTime=[[NSDate date] timeIntervalSince1970];
     if([sock localPort] == IPAD_PORT){
         
         NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
@@ -176,7 +257,8 @@ withFilterContext:(id)filterContext
         [unarchiver release];
     
         [[scene simulator] unpackDict:stateDict];
-
+       
+        fprintf(logFile,"MOVE %f %s\n",currentTime,[[[stateDict description] stringByReplacingOccurrencesOfString:@"\n" withString:@" "]  UTF8String]);
         [stateDict release];
     }else if([sock localPort] == GAZE_PORT){
         NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -193,6 +275,7 @@ withFilterContext:(id)filterContext
                  [scanner scanDouble: &x];
                  [scanner scanDouble: &y];
                 // printf("%f %f %lld\n",x,y,timeStamp);
+                 fprintf(logFile,"GAZE %f %f %f %lld\n",currentTime,x,y,timeStamp);
                  vector2f pos;
                  pos[0]=x;
                  pos[1]=y;
@@ -661,6 +744,22 @@ return YES;
   - (void) terminate:(NSNotification *)aNotification
   {
     // TODO: delete your app's object
+      [networkQueue release];
+      if(udpSocketIpad != nil){
+          NSLog(@"Closing udpSocketIpad\n");
+          [udpSocketIpad close];
+      }
+      
+      if(udpSocketGaze != nil){
+          NSLog(@"Closing udpSocketGaze\n");
+          
+          [udpSocketGaze close];
+      }
+      
+      if(logFile != nil){
+          NSLog(@"Closing file\n");
+          fclose(logFile);
+      }
     NSLog(@"Terminating");
   }
 @end
