@@ -101,6 +101,14 @@
 	globalInfo.drawCalls++;
 }
 
+-(void)updatePos:(vector2f)setposition{
+    self.pos= setposition;
+    double currentTime=[[NSDate date] timeIntervalSince1970];
+   // printf("Update Pos %f\n",_lastTime-currentTime);
+
+    _lastTime=currentTime;
+
+}
 
 - (void)dealloc
 {

@@ -101,6 +101,10 @@ GLenum glReportError (void)
       [self reshape];
       if(logFile != NULL)
           fprintf(logFile,"OPEN %f %s\n",[[NSDate date] timeIntervalSince1970],[[file_name lastPathComponent] UTF8String]);
+      if(toverlay != nil)
+          [[scene objects] addObject:toverlay];
+
+      
     //damage = true;
     return false;
   }
@@ -198,7 +202,6 @@ GLenum glReportError (void)
     logFile = fopen([name UTF8String], "w");
     [toverlay setScale:20.0];
     
-    [[scene objects] addObject:toverlay];
     udpSocketIpad = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:networkQueue];
     udpSocketGaze = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:networkQueue];
 
@@ -264,7 +267,7 @@ withFilterContext:(id)filterContext
         NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         if (msg)
         {
-            //NSLog(@"RCV: %@", msg);
+         //   NSLog(@"RCV: %@", msg);
              NSString* strType = @"STREAM_DATA";
              NSScanner *scanner = [NSScanner scannerWithString:msg];
             double x,y;
@@ -274,12 +277,15 @@ withFilterContext:(id)filterContext
                  [scanner scanLongLong: &timeStamp];
                  [scanner scanDouble: &x];
                  [scanner scanDouble: &y];
-                // printf("%f %f %lld\n",x,y,timeStamp);
+            //     printf("%f %f %lld\n",x,y,timeStamp);
                  fprintf(logFile,"GAZE %f %f %f %lld\n",currentTime,x,y,timeStamp);
+              //  printf("Delta %f %lld\n",_lastGaze-currentTime,_lastGazeTimeStamp-timeStamp);
+                 _lastGazeTimeStamp=timeStamp;
+                 _lastGaze=currentTime;
                  vector2f pos;
                  pos[0]=x;
-                 pos[1]=y;
-                 [toverlay setPos:pos];
+                 pos[1]=768-y;
+                 [toverlay updatePos:pos];
              }else{
                  NSLog(@"Failed to parse\n");
              }

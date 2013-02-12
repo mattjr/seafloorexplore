@@ -32,6 +32,8 @@ GLenum glReportError (void);
     dispatch_queue_t networkQueue;
     FILE *logFile;
     NSString *lastEntry;
+    double _lastGaze;
+    long long _lastGazeTimeStamp;
 
 
 

@@ -21,6 +21,7 @@
     vector2f                pos;
     
 	uint8_t					current;
+    double _lastTime;
 
 }
 @property (assign, nonatomic) vector2f pos;
@@ -30,6 +31,7 @@
 @property (readonly, nonatomic) uint32_t infoCommonLineHeight;
 -(void)switchToOrtho;
 -(void)switchBackToFrustum;
+-(void)updatePos:(vector2f)setposition;
 
 
 - (id)init;
