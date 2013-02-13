@@ -26,7 +26,6 @@ GLenum glReportError (void);
   // only once per OpenGL session, I'm not sure how necessary this is
   bool openGL_initialized;
   Scene *scene;
-    TrackerOverlay *toverlay;
     GCDAsyncUdpSocket *udpSocketIpad;
     GCDAsyncUdpSocket *udpSocketGaze;
     dispatch_queue_t networkQueue;
@@ -58,8 +57,9 @@ GLenum glReportError (void);
 - (BOOL) openDocumentFromFileName: (NSString *)file_name;
 // Default save function, called when using File > Save as ... dialog
 - (IBAction) saveDocumentAs: (id) sender;
-
+-(IBAction) saveDocumentTo:(id) sender;
 -(BOOL) loadCSVReplay: (NSString *)file_name shouldDump:(BOOL)dump;
+-(BOOL) loadGazeReplay: (NSString *)file_name;
 ///////////////////////////////////////////////////////////////////////////////
 // Mouse and Keyboard Input
 ///////////////////////////////////////////////////////////////////////////////

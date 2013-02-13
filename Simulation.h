@@ -18,6 +18,7 @@
 #define IPAD_PORT 2048
 typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 @class Scene;
+@class TrackerOverlay;
 typedef enum {
     kNoLog,
     kPanning,
@@ -29,10 +30,11 @@ typedef enum {
 {
 @public
     float x,y,z,tilt,dist,heading,time;
+    MovementType movement;
 }
 
 -init;
--initWith: (float) _x :(float) _y :(float) _z :(float) _tilt :(float) _dist :(float) _heading :(float) _time;
+-initWith: (float) _x :(float) _y :(float) _z :(float) _tilt :(float) _dist :(float) _heading :(float) _time :(MovementType) _movement;
 
 -(float) x;
 -(float) y;
@@ -41,6 +43,7 @@ typedef enum {
 -(float) dist;
 -(float) heading;
 -(float) time;
+-(MovementType)movement;
 @end
 
 
@@ -104,10 +107,14 @@ typedef enum {
     NSString *basename;
     NSArray *replayData;
     long int replayPos;
-    GCDAsyncUdpSocket *udpSocket ; 
+    GCDAsyncUdpSocket *udpSocket ;
+    TrackerOverlay *toverlay;
+
     
 }
 @property (atomic)     MovementType logOnNextUpdate;
+@property (nonatomic,retain)     TrackerOverlay *toverlay;
+
 
 
 -(void) centeratPt: (CGPoint) pt;
@@ -144,7 +151,7 @@ typedef enum {
 - (void)printMatrix:(GLfloat *)matrix;
 
 -(void)logCameraPosition:(MovementType)type ;
-
+-(void) setupOverlay;
 -(void) loadReplay:(NSArray *)arr;
 -(void)setValidPos;
 -(void) checkInFrame;

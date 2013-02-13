@@ -101,8 +101,7 @@ GLenum glReportError (void)
       [self reshape];
       if(logFile != NULL)
           fprintf(logFile,"OPEN %f %s\n",[[NSDate date] timeIntervalSince1970],[[file_name lastPathComponent] UTF8String]);
-      if(toverlay != nil)
-          [[scene objects] addObject:toverlay];
+      [sim setupOverlay];
 
       
     //damage = true;
@@ -144,7 +143,7 @@ GLenum glReportError (void)
 }
 
 -(void) runUDPServerToLog {
-    toverlay = [[TrackerOverlay alloc] init];
+   
     networkQueue = dispatch_queue_create("com.acfr.netqueue", 0);
     if(udpSocketIpad != nil){
         NSLog(@"Closing udpSocketIpad\n");
@@ -200,7 +199,6 @@ GLenum glReportError (void)
     }while (matchedFiles && [matchedFiles count] > 0 );
     NSLog(@"Open %@\n",name);
     logFile = fopen([name UTF8String], "w");
-    [toverlay setScale:20.0];
     
     udpSocketIpad = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:networkQueue];
     udpSocketGaze = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:networkQueue];
@@ -285,7 +283,7 @@ withFilterContext:(id)filterContext
                  vector2f pos;
                  pos[0]=x;
                  pos[1]=768-y;
-                 [toverlay updatePos:pos];
+                 [[[scene simulator] toverlay] updatePos:pos];
              }else{
                  NSLog(@"Failed to parse\n");
              }
@@ -305,6 +303,121 @@ withFilterContext:(id)filterContext
 }
 
 
+-(BOOL) loadGazeReplay: (NSString *)file_name{
+    NSRect rect=[[self window] frame];
+
+    CGFloat titleBarHeight = self.window.frame.size.height - ((NSView*)self.window.contentView).frame.size.height;
+    CGSize windowSize = CGSizeMake(1024, 704 + titleBarHeight);
+    rect.size=windowSize;
+    
+    [[self window ] setFrame:rect display:YES animate:YES];
+
+   	char tmp[8192];
+    char line[8192];
+
+    FILE *fp = fopen([file_name UTF8String], "r");
+    NSMutableArray *meshes=[[[NSMutableArray alloc] init] autorelease];
+    while(!feof(fp)){
+        fgets(line,8192,fp);
+        sscanf(line,"%s",tmp);
+        if(strncmp(tmp,"OPEN",8192) == 0 ){
+            double timestamp;
+            char fname[1024];
+
+            sscanf(line+5,"%lf %s",&timestamp,fname);
+            [meshes addObject:[NSString stringWithUTF8String:fname]];
+        }
+    }
+
+    fclose(fp);
+  
+    NSString *targetModel = nil;
+    // Create and configure the panel.
+     NSAlert *alert = [[NSAlert alloc] init];
+   // NSOpenPanel* panel = [NSOpenPanel openPanel];
+   // [panel setCanChooseDirectories:NO];
+    //[panel setAllowsMultipleSelection:NO];
+    //[panel setMessage:@"Open csv replay."];
+    NSPopUpButton *button = [[NSPopUpButton alloc] init];
+    /*[button setButtonType:NSSwitchButton];
+    button.title = NSLocalizedString(@"Dump to file", @"");*/
+    [button addItemsWithTitles:meshes];
+    [button sizeToFit];
+    
+    [alert setAccessoryView:button];
+    // panel.delegate = self;
+    
+  
+   [alert runModal];
+    targetModel= [button titleOfSelectedItem];
+    [button release];
+    [alert release];
+
+    NSLog(@"%@",targetModel);
+    fp = fopen([file_name UTF8String], "r");
+    NSMutableArray *arr=nil;
+
+    while(!feof(fp)){
+        fscanf(fp,"%s",tmp);
+        if(strncmp(tmp,"OPEN",8192) == 0 ){
+            double timestamp;
+            char fname[1024];
+            fscanf(fp,"%lf %s",&timestamp,fname);
+            if(arr){
+                [[scene simulator] loadReplay:arr];
+                fclose(fp);
+
+                return YES;
+            }
+            [self openDocumentFromFileName: [NSString stringWithFormat:@"/Users/mattjr/Desktop/IJCV/%s",fname ]];
+            if(strncmp([targetModel UTF8String], fname,1024) == 0){
+                NSLog(@"Running %@\n",targetModel);
+                arr=[[[NSMutableArray alloc] init] autorelease];
+            }
+            
+        }else if(strncmp(tmp,"GAZE",8192) == 0 ){
+            double timestamp,x,y;
+            long long time;
+            fscanf(fp,"%lf %lf %lf %lld\n",&timestamp,&x,&y,&time);
+            MovementType movement=kNoLog;
+            if(arr)
+                [arr addObject:[[[ReplayData alloc] initWith: x :y :0 :0 :0 :0 :time :movement] autorelease]];
+        }else if(strncmp(tmp,"MOVE",8192) == 0 ){
+            double timestamp;
+            fscanf(fp,"%lf ",&timestamp);
+            char tmp2[8192];
+            char mesh[1024];
+            char movement[1024];
+            fgets(tmp2,8192,fp);
+            NSString *str = [[NSMutableString stringWithUTF8String:tmp2] stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+
+            double centerX,centerY,centerZ,tilt,dist,heading,time;
+
+            sscanf([str UTF8String],"{     centerX = %lf;     centerY = %lf;     centerZ = %lf;     distance = %lf;     heading = %lf;     mesh = %s     movement = %s     tilt = %lf;     time = %lf; }",&centerX,&centerY,&centerZ,&dist,&heading,mesh,movement,&tilt ,&time);
+            if(arr)
+                [arr addObject:[[[ReplayData alloc] initWith: centerX :centerY :centerZ :tilt :dist :heading :time :kPanning] autorelease]];
+           // printf("ME %f %s\n",centerX,mesh);
+
+        }
+
+
+     /*   double centerX,centerY,centerZ,tilt,dist,heading,time;
+        NSMutableArray *arr=[[[NSMutableArray alloc] init] autorelease];
+        char movement[8192],mesh_name[8192];
+        for (id object in fields) {
+            NSString * str=[object objectAtIndex:8];
+            sscanf([str UTF8String], "{ centerZ : %lf;  time : %lf;  distance : %lf;  centerY : %lf;  centerX : %lf;  tilt : %lf;  movement : %s heading : %lf;  mesh : %s}", &centerZ,&time, &dist,&centerY,&centerX,&tilt,movement,&heading,mesh_name);*/
+            
+        
+        //printf(" centerZ : %lf;  time : %lf;  distance : %lf;  centerY : %lf;  centerX : %lf;  tilt : %lf;  movement : %s;  heading : %lf;  mesh : %s\n}",centerZ,time, dist,centerY,centerX,tilt,movement,heading,mesh_name);
+        
+    }
+    
+        
+    fclose(fp);
+
+    return YES;
+}
 
 
 -(BOOL) loadCSVReplay: (NSString *)file_name shouldDump:(BOOL)dump{
@@ -327,7 +440,7 @@ withFilterContext:(id)filterContext
     for (id object in fields) {
         NSString * str=[object objectAtIndex:8];
         sscanf([str UTF8String], "{ centerZ : %lf;  time : %lf;  distance : %lf;  centerY : %lf;  centerX : %lf;  tilt : %lf;  movement : %s heading : %lf;  mesh : %s}", &centerZ,&time, &dist,&centerY,&centerX,&tilt,movement,&heading,mesh_name);
-        [arr addObject:[[[ReplayData alloc] initWith: centerX :centerY :centerZ :tilt :dist :heading :time] autorelease]];
+        [arr addObject:[[[ReplayData alloc] initWith: centerX :centerY :centerZ :tilt :dist :heading :time :kPanning] autorelease]];
        
         //printf(" centerZ : %lf;  time : %lf;  distance : %lf;  centerY : %lf;  centerX : %lf;  tilt : %lf;  movement : %s;  heading : %lf;  mesh : %s\n}",centerZ,time, dist,centerY,centerX,tilt,movement,heading,mesh_name);
     }
@@ -356,6 +469,38 @@ withFilterContext:(id)filterContext
 
     
 return YES;
+}
+-(IBAction) saveDocumentTo:(id) sender{
+    
+    NSWindow* window = [self window];
+    
+    // Create and configure the panel.
+    NSOpenPanel* panel = [NSOpenPanel openPanel];
+    [panel setCanChooseDirectories:NO];
+    [panel setAllowsMultipleSelection:NO];
+    [panel setMessage:@"Open gaze replay."];
+  /*  NSButton *button = [[NSButton alloc] init];
+    [button setButtonType:NSSwitchButton];
+    button.title = NSLocalizedString(@"Dump to file", @"");
+    [button sizeToFit];
+    [panel setAccessoryView:button];*/
+    // panel.delegate = self;
+    
+    // Display the panel attached to the document's window.
+    [panel beginSheetModalForWindow:window completionHandler:^(NSInteger result){
+        if (result == NSFileHandlingPanelOKButton) {
+           // BOOL checkboxOn = (((NSButton*)panel.accessoryView).state);
+            
+            [self loadGazeReplay: [[panel URL] path]];
+            
+            // Use the URLs to build a list of items to import.
+        }
+        
+    }];
+   // [button release];
+
+    
+    
 }
 
 

@@ -21,7 +21,7 @@ bool gRunExpCode=YES;
 #define LOG_SERVER_IP @"129.78.210.200"
 #include <math.h>
 #import "Core3D.h"
-
+#import "TrackerOverlay.h"
 //#define PLAY_DEMO		0
 //#define FIXED_TILES_PATH   // either load from a specific directory or from where the binary is
 
@@ -39,10 +39,10 @@ bool gRunExpCode=YES;
 #endif
 #endif
 @implementation  ReplayData : NSObject
--init { x = y = z = tilt= dist= heading=time=0.0; return self;}
+-init { x = y = z = tilt= dist= heading=time=0.0; movement= kNoLog; return self;}
 
--initWith: (float) _x :(float) _y :(float) _z :(float) _tilt :(float) _dist :(float) _heading :(float) _time    ;
-{ x = _x; y =_y;  z = _z; tilt=_tilt; dist= _dist; heading=_heading; time= _time; return self;}
+-initWith: (float) _x :(float) _y :(float) _z :(float) _tilt :(float) _dist :(float) _heading :(float) _time  :(MovementType) _movement  ;
+{ x = _x; y =_y;  z = _z; tilt=_tilt; dist= _dist; heading=_heading; time= _time; movement=_movement; return self;}
 -(float) x {return x;}
 -(float) y {return y;}
 -(float) z{return z;}
@@ -50,18 +50,20 @@ bool gRunExpCode=YES;
 -(float) dist {return dist;}
 -(float) heading {return heading;}
 -(float) time {return time;}
+-(MovementType) movement {return movement;}
+
 @end
 
 
 @implementation Simulation
-@synthesize logOnNextUpdate;
+@synthesize logOnNextUpdate,toverlay;
 
 - (id)initWithString:(NSString *)name withScene:(Scene *)newscene;
 {
     self = [super init];
     if (self)
     {
-
+        toverlay=nil;
         scene=newscene;
 		//GLuint bla = LoadTexture(@"/Users/julian/Documents/Development/VirtualTexturing/_texdata_sources/texture_8k.png", GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_TRUE, 2.0);
 
@@ -310,6 +312,14 @@ bool gRunExpCode=YES;
 	}
 	times++;
 }
+-(void) setupOverlay{
+    toverlay = [[TrackerOverlay alloc] init];
+    [toverlay setScale:20.0];
+
+    
+    [[scene objects] addObject:toverlay];
+
+}
 
 - (void)fpstimer
 {
@@ -421,26 +431,37 @@ bool gRunExpCode=YES;
             NSLog(@"Finished replay restarting\n");
         }
         ReplayData *data=[replayData objectAtIndex:replayPos];
-        _targetCenter[0]=[data x];
-        _targetCenter[1]=[data y];
-        _targetCenter[2]=[data z];
-        
-        _targetDistance=[data dist];
-        _targetTilt=[data tilt];
-        _targetHeading=[data heading];
-       /* NSLog(@"Replaying %05ld/%05ld %f %f %f %f %f %f\n", replayPos,(long int)[replayData count],_targetCenter[0], _targetCenter[1], _targetCenter[2],
-              _targetDistance,
-              _targetTilt,
-              _targetHeading);*/
-        _center[0]=_targetCenter[0];
-        _center[1]=_targetCenter[1];
-        _center[2]=_targetCenter[2];
-        _distance=_targetDistance;
-        _heading=_targetHeading;
-        _tilt=_targetTilt;
-        
+        if([data movement] == kNoLog ){
+            //Update gaze
+            if(toverlay != nil){
+                vector2f p;
+                p[0]=[data x];
+                p[1]=[data y];
 
-
+                [toverlay updatePos:p];
+            }
+            
+        }else{
+            _targetCenter[0]=[data x];
+            _targetCenter[1]=[data y];
+            _targetCenter[2]=[data z];
+            
+            _targetDistance=[data dist];
+            _targetTilt=[data tilt];
+            _targetHeading=[data heading];
+            /* NSLog(@"Replaying %05ld/%05ld %f %f %f %f %f %f\n", replayPos,(long int)[replayData count],_targetCenter[0], _targetCenter[1], _targetCenter[2],
+             _targetDistance,
+             _targetTilt,
+             _targetHeading);*/
+            _center[0]=_targetCenter[0];
+            _center[1]=_targetCenter[1];
+            _center[2]=_targetCenter[2];
+            _distance=_targetDistance;
+            _heading=_targetHeading;
+            _tilt=_targetTilt;
+            
+            
+        }
     }
 }
 
