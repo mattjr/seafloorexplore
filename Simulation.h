@@ -160,6 +160,8 @@ typedef enum {
 -(vector3f) minbb;
 -(vector3f) maxbb;
 - (CC3Plane)centeredPlane;
+-(void) getScreenRectWorldRect:(CGRect)rect;
+
 -(BOOL) intersectOctreeNodeWithRay:(int)nodeNumber withRay:(CC3Ray)ray inter:(float *)pt;
 matrix44f_c CATransform3DSetField(CATransform3D transform );
 

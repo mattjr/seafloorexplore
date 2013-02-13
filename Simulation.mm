@@ -437,7 +437,9 @@ bool gRunExpCode=YES;
                 vector2f p;
                 p[0]=[data x];
                 p[1]=[data y];
-
+                int sizeR=20;
+                CGRect rect= CGRectMake(p[0]-(sizeR/2),p[1]-(sizeR/2),sizeR,sizeR);
+                [self getScreenRectWorldRect:rect];
                 [toverlay updatePos:p];
             }
             
@@ -712,7 +714,41 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     resultingPoint[1] = sourcePoint[0] * transform3D->m21 + sourcePoint[1] * transform3D->m22 + sourcePoint[2] * transform3D->m23 + transform3D->m24;
     resultingPoint[2] = sourcePoint[0] * transform3D->m31 + sourcePoint[1] * transform3D->m32 + sourcePoint[2] * transform3D->m33 + transform3D->m34;
 }
+-(void) getScreenRectWorldRect:(CGRect)rect {
+    vector3f origin(-_center[0],-_center[1],-_center[2]);
+    printf("%f %f %f\n",_center[0],_center[1],_center[2]);
+    vector3f v1=vector3f(origin[0],origin[1],origin[2]);
+    vector3f v2=vector3f(origin[0]+1,origin[1],origin[2]);
+    vector3f v3=vector3f(origin[0],origin[1]+1,origin[2]);
+    CC3Plane plane= CC3PlaneFromPoints(v1,v2,v3);
+    CC3Plane normPlane=CC3PlaneNormalize(plane);
 
+    matrix44f_c data=CATransform3DSetField(_invMat);
+
+    CGPoint pts[4];
+    pts[0] = CGPointMake(CGRectGetMinX(rect), CGRectGetMaxY(rect));
+    pts[1] = CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect));
+    pts[2] = CGPointMake(CGRectGetMaxX(rect), CGRectGetMinY(rect));
+    pts[3] = CGPointMake(CGRectGetMinX(rect), CGRectGetMinY(rect));
+    
+    for(int i=0; i < 4; i++ ){
+        CC3Ray ray=[[scene camera] unprojectPoint: pts[i] withModelView:data];
+        float intersectionPoint[4];
+        intersectionPoint[3]=1;
+        if([self intersectOctreeNodeWithRay:0 withRay:ray inter:intersectionPoint])
+        //if(intersectOctreeNodeWithRay([mesh octree], 0,ray, intersectionPoint))
+        printf("Hit %f %f %f\n",intersectionPoint[0],intersectionPoint[1],intersectionPoint[2]);
+        else{
+            vector4f ret=CC3RayIntersectionWithPlane(ray, normPlane);// printf("No hit\n");
+            intersectionPoint[0]=ret[0];
+            intersectionPoint[1]=ret[1];
+            intersectionPoint[2]=ret[2];
+            printf("Plane Hit %f %f %f\n",intersectionPoint[0],intersectionPoint[1],intersectionPoint[2]);
+
+        }
+
+    }
+}
 -(void) pan: (CGPoint) pt
 {
        // pt.x=(globalInfo.width/2)+0;
