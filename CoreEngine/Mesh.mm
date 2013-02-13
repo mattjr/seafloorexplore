@@ -617,7 +617,14 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
     [ptsInFrame removeAllObjects];
     
     uint16_t i;
+
+    _visibleNodeStackTop = 0;
     
+    memcpy(&frustum,&test_frustum,sizeof(frustum));    
+    vfcTestOctreeNode(octree, visibleNodeStack, 0);
+    
+    visibleNodeStackTop = _visibleNodeStackTop;
+
     for (i = 0; i < visibleNodeStackTop;)
     {
         struct octree_node *n = (struct octree_node *) NODE_NUM(visibleNodeStack[i]);

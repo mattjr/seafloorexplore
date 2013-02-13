@@ -333,7 +333,12 @@ withFilterContext:(id)filterContext
   
     NSString *targetModel = nil;
     // Create and configure the panel.
-     NSAlert *alert = [[NSAlert alloc] init];
+    NSAlert *alert = [NSAlert alertWithMessageText: @"Select Model"
+                                     defaultButton:@"Replay"
+                                   alternateButton:@"Cancel"
+                                       otherButton:@"Dump"
+                         informativeTextWithFormat:@""];
+
    // NSOpenPanel* panel = [NSOpenPanel openPanel];
    // [panel setCanChooseDirectories:NO];
     //[panel setAllowsMultipleSelection:NO];
@@ -348,11 +353,11 @@ withFilterContext:(id)filterContext
     // panel.delegate = self;
     
   
-   [alert runModal];
+    NSInteger result = [alert runModal];
     targetModel= [button titleOfSelectedItem];
     [button release];
-    [alert release];
-
+    if(result == NSAlertAlternateReturn )
+        return NO;
     NSLog(@"%@",targetModel);
     fp = fopen([file_name UTF8String], "r");
     NSMutableArray *arr=nil;
@@ -364,7 +369,15 @@ withFilterContext:(id)filterContext
             char fname[1024];
             fscanf(fp,"%lf %s",&timestamp,fname);
             if(arr){
-                [[scene simulator] loadReplay:arr];
+                if(result == NSAlertOtherReturn){
+                    NSString *dumpName=[NSString stringWithFormat:@"/Users/mattjr/Desktop/IJCV/%@-%@.dat",[[file_name lastPathComponent] stringByDeletingPathExtension], targetModel ];
+
+                    [[scene simulator] dumpVisInfo:arr intoFile:dumpName];
+                    
+                }else if(result == NSAlertDefaultReturn){
+                    [[scene simulator] loadReplay:arr];
+                }
+
                 fclose(fp);
 
                 return YES;
