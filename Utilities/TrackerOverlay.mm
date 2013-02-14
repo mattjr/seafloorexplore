@@ -63,7 +63,7 @@
     
 	// we have some implicit preconditions here:	glEnable(GL_BLEND); glEnable(GL_TEXTURE_2D); glDisable(GL_LIGHTING); glDisable(GL_DEPTH_TEST);
 //	glPushMatrix();
-    [self switchToOrtho ];
+       
 	//if (rotation)	glRotatef(rotation, 0, 0, 1);
 
 	//myBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -71,6 +71,37 @@
 	myClientStateVTN(kNeedEnabled, kNeedEnabled, kNeedDisabled);
 
 	myColor(color[0], color[1], color[2], color[3]);
+
+    GLfloat bbox_pts[] = {
+        pos3d[1][0],pos3d[1][1],pos3d[0][2], //0
+        pos3d[0][0],pos3d[1][1],pos3d[0][2], //1
+        pos3d[0][0],pos3d[0][1],pos3d[0][2], //2
+        pos3d[1][0],pos3d[0][1],pos3d[0][2], //3
+        
+        pos3d[1][0],pos3d[0][1],pos3d[1][2], //4
+        pos3d[1][0],pos3d[1][1],pos3d[1][2], //5
+        pos3d[0][0],pos3d[1][1],pos3d[1][2], //6
+        pos3d[0][0],pos3d[0][1],pos3d[1][2], //7
+        
+        pos3d[1][0],pos3d[1][1],pos3d[0][2], //0
+        pos3d[1][0],pos3d[1][1],pos3d[1][2], //5
+        pos3d[0][0],pos3d[1][1],pos3d[1][2], //6
+        pos3d[0][0],pos3d[1][1],pos3d[0][2], //1
+        
+        pos3d[1][0],pos3d[0][1],pos3d[1][2], //4
+        pos3d[0][0],pos3d[0][1],pos3d[1][2], //7
+        pos3d[0][0],pos3d[0][1],pos3d[0][2], //2
+        pos3d[1][0],pos3d[0][1],pos3d[0][2] //3
+    };
+    glDisable(GL_LIGHTING);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glTranslatef(0,0,0);
+    glVertexPointer(3, GL_FLOAT, 0, bbox_pts);
+    glDrawArrays(GL_LINE_LOOP, 0, 16);
+    
+
+    [self switchToOrtho ];
 
    /*GLfloat rect[] = {
         -0.5, -0.5,
@@ -96,7 +127,7 @@
 
     [self switchBackToFrustum ];
 
-	current = 0;
+    current = 0;
 
 	globalInfo.drawCalls++;
 }
@@ -108,6 +139,13 @@
 
     _lastTime=currentTime;
 
+}
+
+-(void)updatePos3d:(vector3f*)setposition{
+    self->pos3d[0]= setposition[0];
+    self->pos3d[1]= setposition[1];
+
+    
 }
 
 - (void)dealloc

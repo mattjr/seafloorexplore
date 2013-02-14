@@ -19,7 +19,8 @@
 	float					scale;
 	vector4f				color;
     vector2f                pos;
-    
+    vector3f                pos3d[2];
+
 	uint8_t					current;
     double _lastTime;
 
@@ -32,6 +33,7 @@
 -(void)switchToOrtho;
 -(void)switchBackToFrustum;
 -(void)updatePos:(vector2f)setposition;
+-(void)updatePos3d:(vector3f*)setposition;
 
 
 - (id)init;

@@ -109,11 +109,16 @@ typedef enum {
     long int replayPos;
     GCDAsyncUdpSocket *udpSocket ;
     TrackerOverlay *toverlay;
+    vector3f gaze_bbox_max;
+    vector3f gaze_bbox_min;
 
     
 }
 @property (atomic)     MovementType logOnNextUpdate;
 @property (nonatomic,retain)     TrackerOverlay *toverlay;
+@property (nonatomic,assign)    vector3f gaze_bbox_max;
+@property (nonatomic,assign)    vector3f gaze_bbox_min;
+
 
 
 
@@ -135,7 +140,7 @@ typedef enum {
 - (id)initWithString:(NSString *)name withScene:(Scene *)newscene;
 -(void)dumpVisInfo:(NSArray *)arr intoFile:(NSString *)fname;
 
-- (void)writeVisibleVertsTo:(FILE *) fp;
+- (void)writeVisibleVertsTo:(FILE *) fp :(vector3f *) bbox_gaze;
 
 -(frustrum)getFrustrumPlanes;
 
@@ -160,7 +165,8 @@ typedef enum {
 -(vector3f) minbb;
 -(vector3f) maxbb;
 - (CC3Plane)centeredPlane;
--(void) getScreenRectWorldRect:(CGRect)rect;
+-(BOOL) getScreenRectWorldBBox:(CGRect)rect :(vector3f *)world_bbox;
+-(matrix44f_c) getCurrViewMat;
 
 -(BOOL) intersectOctreeNodeWithRay:(int)nodeNumber withRay:(CC3Ray)ray inter:(float *)pt;
 matrix44f_c CATransform3DSetField(CATransform3D transform );

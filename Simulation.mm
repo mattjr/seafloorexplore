@@ -56,7 +56,7 @@ bool gRunExpCode=YES;
 
 
 @implementation Simulation
-@synthesize logOnNextUpdate,toverlay;
+@synthesize logOnNextUpdate,toverlay,gaze_bbox_max,gaze_bbox_min;
 
 - (id)initWithString:(NSString *)name withScene:(Scene *)newscene;
 {
@@ -337,7 +337,11 @@ bool gRunExpCode=YES;
     
     for(unsigned int i=0; i < count; i++){
         [self updateTimer];
-        [self writeVisibleVertsTo:fp];
+        vector3f cur_bbox[2];
+        cur_bbox[0]=gaze_bbox_min;
+        cur_bbox[1]=gaze_bbox_max;
+
+        [self writeVisibleVertsTo:fp :cur_bbox];
         if( i % 100 == 0 ){
             printf("%04d/%04d\n",i,count);
         }
@@ -345,7 +349,7 @@ bool gRunExpCode=YES;
     fclose(fp);
     NSLog(@"Finished dumping\n");
 }
-- (void)writeVisibleVertsTo:(FILE *) fp
+- (void)writeVisibleVertsTo:(FILE *) fp :(vector3f *) bbox_gaze
 {
     struct frustrum test_frustum=[self getFrustrumPlanes];
     unsigned int count=(unsigned int)[meshes count];
@@ -364,6 +368,9 @@ bool gRunExpCode=YES;
             unsigned int vert=(unsigned int)[num intValue];
             fwrite((char *)&vert,sizeof(unsigned int),1,fp);
         }
+        fwrite((char *)&bbox_gaze[0][0],sizeof(float),3,fp);
+        fwrite((char *)&bbox_gaze[1][0],sizeof(float),3,fp);
+
         [ptsInFrame release];
     }
 
@@ -430,6 +437,14 @@ bool gRunExpCode=YES;
             replayPos=0;
             NSLog(@"Finished replay restarting\n");
         }
+        
+        gaze_bbox_min[0]=NAN;
+        gaze_bbox_min[1]=NAN;
+        gaze_bbox_min[2]=NAN;
+        gaze_bbox_max[0]=NAN;
+        gaze_bbox_max[1]=NAN;
+        gaze_bbox_max[2]=NAN;
+        
         ReplayData *data=[replayData objectAtIndex:replayPos];
         if([data movement] == kNoLog ){
             //Update gaze
@@ -437,10 +452,27 @@ bool gRunExpCode=YES;
                 vector2f p;
                 p[0]=[data x];
                 p[1]=[data y];
-                int sizeR=20;
-                CGRect rect= CGRectMake(p[0]-(sizeR/2),p[1]-(sizeR/2),sizeR,sizeR);
-                [self getScreenRectWorldRect:rect];
                 [toverlay updatePos:p];
+                vector2f p_fliped;
+                p_fliped[0]=[data x];
+                p_fliped[1]=768-[data y];
+                int sizeR=70;
+                //CGRect rect= CGRectMake(p_fliped[0]-(sizeR/2),p_fliped[1]-(sizeR/2),sizeR,sizeR);
+                CGRect rect= CGRectMake(p_fliped[0]-(sizeR/2),p_fliped[1]-(1.5*sizeR),sizeR,sizeR);
+
+                vector3f world_bbox[2];
+                if([self getScreenRectWorldBBox:rect :world_bbox]){
+                  /*  printf("%f - %f , %f - %f , %f - %f\n",world_bbox[0][0],world_bbox[1][0],
+                       world_bbox[0][1],world_bbox[1][1],
+                       world_bbox[0][2],world_bbox[1][2]);*/
+                    gaze_bbox_min=world_bbox[0];
+                    gaze_bbox_max=world_bbox[1];
+                }
+                else{
+                //   printf("Failed\n");
+                }
+                [toverlay updatePos3d:world_bbox];
+
             }
             
         }else{
@@ -611,7 +643,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     goneOutOfFrame=NO;
 }
 
--(struct frustrum)getFrustrumPlanes{
+-(matrix44f_c) getCurrViewMat{
     CATransform3D mTmp;
     CATransform3D tiltMat;
     CATransform3D headingMat;
@@ -631,9 +663,15 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     
     mTmp= CATransform3DMakeTranslation(0,0,-_targetDistance);
     viewtest= CATransform3DConcat(viewtest,mTmp);
-    struct frustrum test_frustum;
     
     matrix44f_c data=CATransform3DSetField(viewtest);
+    return data;
+}
+-(struct frustrum)getFrustrumPlanes{
+
+    matrix44f_c data=[self getCurrViewMat];
+    struct frustrum test_frustum;
+
     //memcpy(data.data(),&(viewtest.m11),sizeof(float)*16);
     
     extract_frustum_planes(data,[[scene camera] projectionMatrix], test_frustum.planes, cml::z_clip_neg_one, false);
@@ -714,40 +752,64 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
     resultingPoint[1] = sourcePoint[0] * transform3D->m21 + sourcePoint[1] * transform3D->m22 + sourcePoint[2] * transform3D->m23 + transform3D->m24;
     resultingPoint[2] = sourcePoint[0] * transform3D->m31 + sourcePoint[1] * transform3D->m32 + sourcePoint[2] * transform3D->m33 + transform3D->m34;
 }
--(void) getScreenRectWorldRect:(CGRect)rect {
+-(BOOL) getScreenRectWorldBBox:(CGRect)rect :(vector3f *)world_bbox{
     vector3f origin(-_center[0],-_center[1],-_center[2]);
-    printf("%f %f %f\n",_center[0],_center[1],_center[2]);
+    //printf("%f %f %f\n",_center[0],_center[1],_center[2]);
     vector3f v1=vector3f(origin[0],origin[1],origin[2]);
     vector3f v2=vector3f(origin[0]+1,origin[1],origin[2]);
     vector3f v3=vector3f(origin[0],origin[1]+1,origin[2]);
     CC3Plane plane= CC3PlaneFromPoints(v1,v2,v3);
     CC3Plane normPlane=CC3PlaneNormalize(plane);
 
-    matrix44f_c data=CATransform3DSetField(_invMat);
+    matrix44f_c data=[self getCurrViewMat];
 
+    world_bbox[0][0]=FLT_MAX;
+    world_bbox[0][1]=FLT_MAX;
+    world_bbox[0][2]=FLT_MAX;
+    
+    world_bbox[1][0]=-FLT_MAX;
+    world_bbox[1][1]=-FLT_MAX;
+    world_bbox[1][2]=-FLT_MAX;
+    
     CGPoint pts[4];
     pts[0] = CGPointMake(CGRectGetMinX(rect), CGRectGetMaxY(rect));
     pts[1] = CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect));
     pts[2] = CGPointMake(CGRectGetMaxX(rect), CGRectGetMinY(rect));
     pts[3] = CGPointMake(CGRectGetMinX(rect), CGRectGetMinY(rect));
-    
     for(int i=0; i < 4; i++ ){
         CC3Ray ray=[[scene camera] unprojectPoint: pts[i] withModelView:data];
         float intersectionPoint[4];
         intersectionPoint[3]=1;
         if([self intersectOctreeNodeWithRay:0 withRay:ray inter:intersectionPoint])
         //if(intersectOctreeNodeWithRay([mesh octree], 0,ray, intersectionPoint))
-        printf("Hit %f %f %f\n",intersectionPoint[0],intersectionPoint[1],intersectionPoint[2]);
+            ;// printf("Hit %f %f %f\n",intersectionPoint[0],intersectionPoint[1],intersectionPoint[2]);
         else{
-            vector4f ret=CC3RayIntersectionWithPlane(ray, normPlane);// printf("No hit\n");
+            continue;
+            vector4f ret=CC3RayIntersectionWithPlane(ray, normPlane );// printf("No hit\n");
             intersectionPoint[0]=ret[0];
             intersectionPoint[1]=ret[1];
             intersectionPoint[2]=ret[2];
-            printf("Plane Hit %f %f %f\n",intersectionPoint[0],intersectionPoint[1],intersectionPoint[2]);
+           // printf("Plane Hit %f %f %f\n",intersectionPoint[0],intersectionPoint[1],intersectionPoint[2]);
 
         }
-
+        world_bbox[0][0]=MIN(intersectionPoint[0],world_bbox[0][0]);
+        world_bbox[0][1]=MIN(intersectionPoint[1],world_bbox[0][1]);
+        world_bbox[0][2]=MIN(intersectionPoint[2],world_bbox[0][2]);
+        world_bbox[1][0]=MAX(intersectionPoint[0],world_bbox[1][0]);
+        world_bbox[1][1]=MAX(intersectionPoint[1],world_bbox[1][1]);
+        world_bbox[1][2]=MAX(intersectionPoint[2],world_bbox[1][2]);
+        
+        
     }
+    for(int i=0; i < 2; i++){
+        for(int j=0; j<3; j++){
+            if(world_bbox[i][j] == FLT_MAX || world_bbox[i][j] == -FLT_MAX || !isfinite(world_bbox[i][j] )){
+                return NO;
+            }
+        }
+    }
+    
+    return YES;
 }
 -(void) pan: (CGPoint) pt
 {
