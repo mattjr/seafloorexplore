@@ -369,18 +369,7 @@ withFilterContext:(id)filterContext
             char fname[1024];
             fscanf(fp,"%lf %s",&timestamp,fname);
             if(arr){
-                if(result == NSAlertOtherReturn){
-                    NSString *dumpName=[NSString stringWithFormat:@"/Users/mattjr/Desktop/IJCV/%@-%@.dat",[[file_name lastPathComponent] stringByDeletingPathExtension], targetModel ];
-
-                    [[scene simulator] dumpVisInfo:arr intoFile:dumpName];
-                    
-                }else if(result == NSAlertDefaultReturn){
-                    [[scene simulator] loadReplay:arr];
-                }
-
-                fclose(fp);
-
-                return YES;
+                break;
             }
             [self openDocumentFromFileName: [NSString stringWithFormat:@"/Users/mattjr/Desktop/IJCV/%s",fname ]];
             if(strncmp([targetModel UTF8String], fname,1024) == 0){
@@ -425,8 +414,19 @@ withFilterContext:(id)filterContext
         //printf(" centerZ : %lf;  time : %lf;  distance : %lf;  centerY : %lf;  centerX : %lf;  tilt : %lf;  movement : %s;  heading : %lf;  mesh : %s\n}",centerZ,time, dist,centerY,centerX,tilt,movement,heading,mesh_name);
         
     }
-    
+    if(arr){
+        if(result == NSAlertOtherReturn){
+            NSString *dumpName=[NSString stringWithFormat:@"/Users/mattjr/Desktop/IJCV/%@-%@.dat",[[file_name lastPathComponent] stringByDeletingPathExtension], targetModel ];
         
+            [[scene simulator] dumpVisInfo:arr intoFile:dumpName];
+        
+        }else if(result == NSAlertDefaultReturn){
+            [[scene simulator] loadReplay:arr];
+        }
+    }
+    
+    
+    
     fclose(fp);
 
     return YES;
