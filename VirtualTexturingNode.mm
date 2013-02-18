@@ -33,6 +33,8 @@ extern vtConfig c;
 {
 	renderMode=0;
 	[self doesNotRecognizeSelector:_cmd];
+    vt.memValid=false;
+
 	return nil;
 }
 
@@ -425,6 +427,7 @@ extern vtConfig c;
 	NSLog(@"minMS: %f maxMS: %f avgMS: %f", minMS, maxMS, allMS / (globalInfo.frame - 120));
 
 	vtShutdown();
+    vt.memValid=false;
 }
 
 
