@@ -164,6 +164,8 @@ typedef enum {
 -(float) radius;
 -(vector3f) minbb;
 -(vector3f) maxbb;
+-(vector2f) zbound;
+
 - (CC3Plane)centeredPlane;
 -(BOOL) getScreenRectWorldBBox:(CGRect)rect :(vector3f *)world_bbox;
 -(matrix44f_c) getCurrViewMat;

@@ -169,9 +169,9 @@ bool gRunExpCode=YES;
         for (id mesh in meshes) {
        
             [[vtnode children] addObject:[mesh autorelease]];
-            [vtnode setZRange: [mesh zbound]];
+            
         }
-        
+        [vtnode setZRange: [self zbound]];
         [[scene objects] addObject:[vtnode autorelease]];
 
        // NSLog(@"blah %x %d\n",(int)[scene objects],[[scene objects] count]);
@@ -1258,6 +1258,17 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
             cp[i]=MIN([mesh minbb][i], cp[i]);
     }
    
+    return cp;
+}
+
+- (vector2f)zbound{
+    vector2f cp;
+    cp[0]=FLT_MAX;
+    cp[1]=-FLT_MAX;
+    for (CollideableMesh *mesh in meshes) {
+        cp[0]=MIN([mesh zbound][0], cp[0]);
+        cp[1]=MAX([mesh zbound][1], cp[1]);
+    }
     return cp;
 }
 
