@@ -171,7 +171,7 @@ NSString *kModelsMsgErrorKey = @"ModelsMsgErrorKey";
 // Limit the number of parsed Models to 50
 // (a given day may have more than 50 Models around the world, so we only take the first 50)
 //
-static const const NSUInteger kMaximumNumberOfModelsToParse = 50;
+static const NSUInteger kMaximumNumberOfModelsToParse = 50;
 
 // When an Model object has been fully constructed, it must be passed to the main thread and
 // the table view in RootViewController must be reloaded to display it. It is not efficient to do
