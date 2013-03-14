@@ -17,7 +17,7 @@
 #include "LibVT.h"
 #include "LibVT_Internal.h"
 float positions[60 * 60][6];
-bool gRunExpCode=YES;
+bool gRunExpCode=NO;
 #define LOG_SERVER_IP @"129.78.210.200"
 #include <math.h>
 #import "Core3D.h"
@@ -1165,7 +1165,7 @@ _invMat= CATransform3DConcat(_invMat,mTmp);
 
     _tilt=0.0;
     _targetTilt= _tilt;
-	_heading=0.0;
+	_heading=90.0;
 	_targetHeading=_heading;
     startTime = [NSDate timeIntervalSinceReferenceDate];
     for(int i=0;i<3; i++)
