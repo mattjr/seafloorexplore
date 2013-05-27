@@ -11,6 +11,9 @@
 #endif
 #define FORMAT(format, ...) [NSString stringWithFormat:(format), ##__VA_ARGS__]
 #define GAZE_PORT 6666
+#include "LibVT_Internal.h"
+extern vtData vt;
+
 void reportError (char * strError)
 {
   // Set up a fancy font/display for error messages
@@ -782,9 +785,14 @@ return YES;
                  0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    glClearColor(0.5,0.5,0.5,1.0);
 	[scene update];
 	[scene render];
+
+    glBindTexture(GL_TEXTURE_2D, vt.physicalTexture);
+    
+    RenderTexture(256);
+
     glFlush();
 
 	[[self openGLContext] flushBuffer];
@@ -892,7 +900,12 @@ return YES;
 	[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSEventTrackingRunLoopMode]; // ensure timer fires during resize
     
 	pressedKeys = [[NSMutableArray alloc] initWithCapacity:5];
-    
+    NSRect rect = [self window].frame;
+    NSSize size;
+    size.width = 1024;
+    size.height = 768;
+    rect.size = size;
+    [[self window] setFrame:rect display:YES];
 	[[self window] zoom:self];
     udpSocketIpad = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
     

@@ -45,7 +45,7 @@
     glLoadIdentity();
     int width =1024;
     int height =768;
-    glOrthof(0, width, 0, height, -5, 1);
+    glOrtho(0, width, 0, height, -5, 1);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
