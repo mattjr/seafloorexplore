@@ -1,8 +1,16 @@
 //
 //  BenthosLibraryTableCell.h
-//  Models
+//  SeafloorExplore
 //
-//  The source code for Models is available under a BSD license.  See License.txt for details.
+//  Modified from Brad Larson's Molecules Project in 2011-2012 for use in The SeafloorExplore Project
+//
+//  Copyright (C) 2012 Matthew Johnson-Roberson
+//
+//  See COPYING for license details
+//  
+//  Molecules
+//
+//  The source code for Molecules is available under a BSD license.  See COPYING for details.
 //
 //  Created by Brad Larson on 4/30/2011.
 //

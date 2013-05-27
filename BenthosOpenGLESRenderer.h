@@ -2,10 +2,14 @@
 #define GLSLRENDER_H
 //
 //  BenthosOpenGLESRenderer.h
-//  Models
+//  SeafloorExplore
 //
-//  Created by Brad Larson on 4/12/2011.
-//  Copyright 2011 SeafloorExplore Development. All rights reserved.
+//  Modified from Brad Larson's Molecules Project in 2011-2012 for use in The SeafloorExplore Project
+//
+//  Copyright (C) 2012 Matthew Johnson-Roberson
+//
+//  See COPYING for license details
+//
 //
 
 #import <Foundation/Foundation.h>

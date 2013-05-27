@@ -16,8 +16,12 @@
 #import "TrackerOverlay.h"
 //#include <OpenGLES/ES1/gl.h>
 
+#if defined(__APPLE__)
 
-
+    #if !(TARGET_OS_IPHONE) || !(TARGET_IPHONE_SIMULATOR)
+            #define glOrthof glOrtho
+    #endif
+#endif
 @implementation TrackerOverlay
 
 @synthesize scale, infoCommonLineHeight, color,pos;
@@ -45,7 +49,7 @@
     glLoadIdentity();
     int width =1024;
     int height =768;
-    glOrtho(0, width, 0, height, -5, 1);
+    glOrthof(0, width, 0, height, -5, 1);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
