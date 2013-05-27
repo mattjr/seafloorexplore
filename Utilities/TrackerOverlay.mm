@@ -1,5 +1,11 @@
 //
 //  TrackerOverlay.h
+//  SeafloorExplore
+//
+//  Modified for use in The SeafloorExplore Project
+//
+//  Copyright (C) 2012 Matthew Johnson-Roberson
+//
 //  originally written for the polyvision game GunocideIIExTurbo
 //
 //  Created by Alexander Bierbrauer on 23.10.08.

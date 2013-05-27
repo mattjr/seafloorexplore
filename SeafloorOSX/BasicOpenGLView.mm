@@ -1,3 +1,10 @@
+//  SeafloorExplore
+//
+//
+//  Copyright (C) 2012 Matthew Johnson-Roberson
+//
+//  See COPYING for license details
+
 #import "Core3D.h"
 #import "BasicOpenGLView.h"
 #include "Simulation.h"

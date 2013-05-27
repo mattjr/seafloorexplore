@@ -1,5 +1,12 @@
 //
 //  VirtualTexturingNode.m
+//  SeafloorExplore
+//
+//  Modified from Julian Mayer LibVT Project in 2011-2012 for use in The SeafloorExplore Project
+//
+//  Copyright (C) 2012 Matthew Johnson-Roberson
+//
+//  See COPYING for license details
 //  VTDemo
 //
 //  Created by Julian Mayer on 12.08.09.

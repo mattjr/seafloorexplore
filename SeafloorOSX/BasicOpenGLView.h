@@ -1,3 +1,10 @@
+//  SeafloorExplore
+//
+//
+//  Copyright (C) 2012 Matthew Johnson-Roberson
+//
+//  See COPYING for license details
+
 #import <OpenGL/gl.h>
 #import <Cocoa/Cocoa.h>
 #import "GCDAsyncUdpSocket.h"

@@ -1,11 +1,17 @@
 //
 //  TrackerOverlay.h
+//  SeafloorExplore
+//
+//  Modified for use in The SeafloorExplore Project
+//
+//  Copyright (C) 2012 Matthew Johnson-Roberson
+//
 //  originally written for the polyvision game GunocideIIExTurbo
 //
 //  Created by Alexander Bierbrauer on 23.10.08.
 //  Copyright 2008 polyvision.org. All rights reserved.
 //
-// This software is released under a BSD license. See LICENSE.TXT
+// This software is released under a BSD license. See COPYING
 // You must accept the license before using this software.
 //
 // parts of this code is based on the works of legolas558 who wrote a TrackerOverlay loader called oglTrackerOverlay
