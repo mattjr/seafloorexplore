@@ -17,7 +17,8 @@
 #define _MACOSX
 #endif
 #define FORMAT(format, ...) [NSString stringWithFormat:(format), ##__VA_ARGS__]
-#define GAZE_PORT 6666
+#define GAZE_PORT 4242
+#define GAZE_IP @"192.168.0.217"
 #include "LibVT_Internal.h"
 extern vtData vt;
 
@@ -160,10 +161,10 @@ GLenum glReportError (void)
        [udpSocketIpad close];
     }
     
-    if(udpSocketGaze != nil){
+    if(tcpSocketGaze != nil){
         NSLog(@"Closing udpSocketGaze\n");
 
-        [udpSocketGaze close];
+       // [tcpSocketGaze close];
     }
     
     if(logFile != nil){
@@ -211,7 +212,7 @@ GLenum glReportError (void)
     logFile = fopen([name UTF8String], "w");
     
     udpSocketIpad = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:networkQueue];
-    udpSocketGaze = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:networkQueue];
+    tcpSocketGaze = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:networkQueue];
 
     NSError *error = nil;
 
@@ -233,20 +234,23 @@ GLenum glReportError (void)
     
     error = nil;
     
-    if (![udpSocketGaze bindToPort:GAZE_PORT error:&error])
+    if (![tcpSocketGaze connectToHost:GAZE_IP onPort:GAZE_PORT error:&error])
     {
-        [self logError:FORMAT(@"Error starting server gaze (bind): %@", error)];
+        [self logError:FORMAT(@"Error connecting to gaze server: %@", error)];
         return;
     }
-    if (![udpSocketGaze beginReceiving:&error])
+  
+    
+   /* if (![tcpSocketGaze beginReceiving:&error])
     {
-        [udpSocketGaze close];
+        [tcpSocketGaze close];
         
         [self logError:FORMAT(@"Error starting server (recv): %@", error)];
         return;
-    }
+    }*/
     
-    [self logError:FORMAT(@"Udp Echo server started on port %hu", [udpSocketGaze localPort])];
+   // [self logError:FORMAT(@"Udp Echo server started on port %hu", [tcpSocketGaze localPort])];
+    [tcpSocketGaze readDataToData:[GCDAsyncSocket CRLFData] withTimeout:30.0 tag:0];
 
 
 }
@@ -934,10 +938,10 @@ return YES;
           [udpSocketIpad close];
       }
       
-      if(udpSocketGaze != nil){
+      if(tcpSocketGaze != nil){
           NSLog(@"Closing udpSocketGaze\n");
           
-          [udpSocketGaze close];
+         // [tcpSocketGaze close];
       }
       
       if(logFile != nil){
@@ -946,4 +950,42 @@ return YES;
       }
     NSLog(@"Terminating");
   }
+- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
+{
+    NSLog(@"Socket:DidConnectToHost: %@ Port: %hu", host, port);
+    NSString *requestStr=@"<SET ID=\"ENABLE_SEND_POG_BEST\" STATE=\"1\" />";
+    NSMutableData *requestData = [NSMutableData dataWithData:[requestStr dataUsingEncoding:NSUTF8StringEncoding]];
+    [requestData appendData:[GCDAsyncSocket CRLFData]];
+    NSLog(@"Sending %@\n",requestStr);
+    [sock writeData:requestData withTimeout:-1.0 tag:0];
+    
+
+    NSString *requestStr2=@"<SET ID=\"ENABLE_SEND_DATA\" STATE=\"1\" />";
+    NSMutableData *requestData2 = [NSMutableData dataWithData:[requestStr2 dataUsingEncoding:NSUTF8StringEncoding]];
+    [requestData2 appendData:[GCDAsyncSocket CRLFData]];
+    NSLog(@"Sending %@\n",requestStr2);
+    [sock writeData:requestData2 withTimeout:-1.0 tag:0];
+
+    
+}
+- (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
+{
+    NSLog(@"socket:didReadData:withTag:");
+    
+    NSString *httpResponse = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    NSLog(@"Full httpResponse:\n%@", httpResponse);
+    [sock readDataWithTimeout:-1 tag:0];
+    [httpResponse release];
+
+}
+
+- (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err
+{
+    // Since we requested HTTP/1.0, we expect the server to close the connection as soon as it has sent the response.
+    
+    NSLog(@"socketDidDisconnect:withError:%@", err);
+}
+
+
 @end

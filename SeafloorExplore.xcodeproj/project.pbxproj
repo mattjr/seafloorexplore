@@ -15,6 +15,10 @@
 		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
 		7B056F04150AC5DF00621766 /* NSFileManager+Tar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */; };
 		7B056F06150AC85A00621766 /* chamber3.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7B056F05150AC85A00621766 /* chamber3.tar */; };
+		7B0579301825A2B10099B50F /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B05792F1825A2B10099B50F /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		7B0579311825A2B10099B50F /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B05792F1825A2B10099B50F /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		7B0579331825A6040099B50F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B0579321825A6040099B50F /* Security.framework */; };
+		7B0579351825A60E0099B50F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B0579341825A60E0099B50F /* Security.framework */; };
 		7B4772D9151D8E5200727C6C /* redx.png in Resources */ = {isa = PBXBuildFile; fileRef = 7B4772D8151D8E5200727C6C /* redx.png */; };
 		7B48CB8E15219999008FA151 /* SegmentsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CB8D15219999008FA151 /* SegmentsController.m */; };
 		7B48CB9615226A14008FA151 /* NSArray+PerformSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B48CB9515226A14008FA151 /* NSArray+PerformSelector.m */; };
@@ -171,6 +175,10 @@
 		7B056F02150AC5DF00621766 /* NSFileManager+Tar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+Tar.h"; sourceTree = SOURCE_ROOT; };
 		7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+Tar.m"; sourceTree = SOURCE_ROOT; };
 		7B056F05150AC85A00621766 /* chamber3.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = chamber3.tar; sourceTree = "<group>"; };
+		7B05792E1825A2B10099B50F /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = SOURCE_ROOT; };
+		7B05792F1825A2B10099B50F /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = SOURCE_ROOT; };
+		7B0579321825A6040099B50F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
+		7B0579341825A60E0099B50F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		7B4772D8151D8E5200727C6C /* redx.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redx.png; sourceTree = "<group>"; };
 		7B48CB8C15219999008FA151 /* SegmentsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SegmentsController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		7B48CB8D15219999008FA151 /* SegmentsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentsController.m; sourceTree = "<group>"; };
@@ -367,6 +375,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B0579351825A60E0099B50F /* Security.framework in Frameworks */,
 				7B9DC543163B507E00A53B6E /* SystemConfiguration.framework in Frameworks */,
 				7BCBD12E1520B550009DC170 /* CoreLocation.framework in Frameworks */,
 				7BCBD12C1520B537009DC170 /* MapKit.framework in Frameworks */,
@@ -384,6 +393,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B0579331825A6040099B50F /* Security.framework in Frameworks */,
 				7B970310166ED29F00A36060 /* QuartzCore.framework in Frameworks */,
 				7B941EF2166EB35400F2D80F /* libbz2.dylib in Frameworks */,
 				7B941EE8166EAFDA00F2D80F /* OpenGL.framework in Frameworks */,
@@ -498,6 +508,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7B0579341825A60E0099B50F /* Security.framework */,
+				7B0579321825A6040099B50F /* Security.framework */,
 				BC4E97C10E69F736006CD291 /* libsqlite3.dylib */,
 				7B9DC542163B507E00A53B6E /* SystemConfiguration.framework */,
 				7BCBD12D1520B550009DC170 /* CoreLocation.framework */,
@@ -601,6 +613,8 @@
 		7BF64DB313977227002FEB23 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				7B05792E1825A2B10099B50F /* GCDAsyncSocket.h */,
+				7B05792F1825A2B10099B50F /* GCDAsyncSocket.m */,
 				7B83A5CB159857BD00A5DE5C /* LRLinkableLabel.h */,
 				7B83A5CC159857BD00A5DE5C /* LRLinkableLabel.m */,
 				7BF654A013977F8A002FEB23 /* CollideableMesh.mm */,
@@ -916,6 +930,7 @@
 				7BF6543D13977C10002FEB23 /* VirtualTexturingNode.mm in Sources */,
 				7BF6544713977C4C002FEB23 /* LODNode.mm in Sources */,
 				7BF6544813977C4C002FEB23 /* Skybox.mm in Sources */,
+				7B0579301825A2B10099B50F /* GCDAsyncSocket.m in Sources */,
 				7BF6544D13977C74002FEB23 /* BMFont.mm in Sources */,
 				7BF654A113977F8A002FEB23 /* CollideableMesh.mm in Sources */,
 				7BF65BC41397952F002FEB23 /* MyOpenGLES20Renderer.mm in Sources */,
@@ -949,6 +964,7 @@
 				7B97030D166ECF7600A36060 /* Simulation.mm in Sources */,
 				7B970311166ED2BA00A36060 /* LibVT.cpp in Sources */,
 				7B970312166ED2BA00A36060 /* LibVT_Cache.cpp in Sources */,
+				7B0579311825A2B10099B50F /* GCDAsyncSocket.m in Sources */,
 				7B970313166ED2BA00A36060 /* LibVT_PageTable.cpp in Sources */,
 				7B970318166ED4BA00A36060 /* LibVT_PageLoadingThread.cpp in Sources */,
 				7B970314166ED2BA00A36060 /* LibVT_Readback.cpp in Sources */,

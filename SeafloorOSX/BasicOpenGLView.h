@@ -8,6 +8,7 @@
 #import <OpenGL/gl.h>
 #import <Cocoa/Cocoa.h>
 #import "GCDAsyncUdpSocket.h"
+#import "GCDAsyncSocket.h"
 @class Scene;
 @class TrackerOverlay;
 ///////////////////////////////////////////////////////////////////////////////
@@ -34,7 +35,7 @@ GLenum glReportError (void);
   bool openGL_initialized;
   Scene *scene;
     GCDAsyncUdpSocket *udpSocketIpad;
-    GCDAsyncUdpSocket *udpSocketGaze;
+    GCDAsyncSocket *tcpSocketGaze;
     dispatch_queue_t networkQueue;
     FILE *logFile;
     NSString *lastEntry;
