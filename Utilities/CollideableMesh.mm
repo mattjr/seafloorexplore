@@ -164,6 +164,8 @@ BOOL intersectOctreeNodeWithOctreeNode(struct octree_struct *octree, int nodeNum
 {
 	TriangleIntersectionInfo tif;
 	tif.intersects = NO;
+    tif.normal=vector3f(NAN,NAN,NAN);
+    tif.depth=NAN;
 	return tif;
 }
 - (vector3f)intersectWithLineStart:(vector3f)startPoint end:(vector3f)endPoint

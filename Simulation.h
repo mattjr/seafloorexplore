@@ -22,7 +22,7 @@
 #import "Skybox.h"
 #import "CollideableMesh.h"
 #import "GCDAsyncUdpSocket.h"
-#define IPAD_PORT 2048
+#define IPAD_PORT 5000
 typedef enum { TEXTURED,SHADED, } GLVisualizationType;
 @class Scene;
 @class TrackerOverlay;

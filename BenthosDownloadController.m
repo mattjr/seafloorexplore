@@ -260,7 +260,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
         NSDictionary *fileDictionary = [fm attributesOfItemAtPath:pathtmp
                                                             error:&error];
         if (!error && fileDictionary)
-            downloadedBytes = [fileDictionary fileSize];
+            downloadedBytes = (NSUInteger)[fileDictionary fileSize];
     } else {
         [fm createFileAtPath:pathtmp contents:nil attributes:nil];
         NSURL *installedURL = [NSURL fileURLWithPath:pathtmp];

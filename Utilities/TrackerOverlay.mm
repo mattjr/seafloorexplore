@@ -48,6 +48,9 @@
 }
 -(void)switchToOrtho
 {
+#if !(TARGET_OS_IPHONE)
+
+
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHTING); 
     glMatrixMode(GL_PROJECTION);
@@ -58,6 +61,8 @@
     glOrthof(0, width, 0, height, -5, 1);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    
+#endif
 }
 
 -(void)switchBackToFrustum

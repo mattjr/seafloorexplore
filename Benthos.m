@@ -139,7 +139,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
                 // SQLite provides a method which retrieves the value of the most recently auto-generated primary key sequence
                 // in the database. To access this functionality, the table should have a column declared of type
                 // "INTEGER PRIMARY KEY"
-                databaseKey = sqlite3_last_insert_rowid(database);
+                databaseKey = (NSInteger)sqlite3_last_insert_rowid(database);
             }
             
             // Wrap all SQLite write operations in a BEGIN, COMMIT block to make writing one operation
@@ -454,7 +454,7 @@ static sqlite3_stmt *deleteBondSQLStatement = nil;
 	if (stillCountingAtomsInFirstStructure)
 		numberOfAtoms++;
 
-	return sqlite3_last_insert_rowid(database);
+	return (NSInteger)sqlite3_last_insert_rowid(database);
 }
 
 // Evaluate using atom IDs here for greater rendering flexibility

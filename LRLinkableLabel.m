@@ -150,8 +150,8 @@
 
 - (void)drawRect:(CGRect)rect 
 {
-  UILineBreakMode lineBreakMode = UILineBreakModeWordWrap;
-  UITextAlignment textAlignment = UITextAlignmentLeft;
+  NSLineBreakMode lineBreakMode = NSLineBreakByWordWrapping;
+  NSTextAlignment textAlignment = NSTextAlignmentLeft;
   
   CGSize constraint = CGSizeMake(rect.size.width, CGFLOAT_MAX);
   CGFloat textHeight = [self.text sizeWithFont:self.font constrainedToSize:constraint lineBreakMode:lineBreakMode].height;
@@ -221,7 +221,7 @@
 
 - (void)drawComponent:(NSString *)stringComponent currentPoint:(CGPoint *)currentPoint availableWidth:(CGFloat *)availableWidth constraint:(CGSize)constraint separatorWidth:(CGFloat)separatorWidth;
 {    
-  CGSize componentSize = [stringComponent sizeWithFont:self.font forWidth:constraint.width lineBreakMode:UILineBreakModeClip];
+  CGSize componentSize = [stringComponent sizeWithFont:self.font forWidth:constraint.width lineBreakMode:NSLineBreakByClipping];
   
   if (componentSize.width > *availableWidth) { // move to next line
     *currentPoint = CGPointMake(0, currentPoint->y + componentSize.height);
@@ -238,7 +238,7 @@
 
 - (void)createButtonForLinkComponent:(LRURLString *)URLStringComponent currentPoint:(CGPoint)currentPoint availableWidth:(CGFloat)availableWidth constraint:(CGSize)constraint
 {
-  CGSize componentSize = [URLStringComponent.string sizeWithFont:self.font forWidth:constraint.width lineBreakMode:UILineBreakModeClip];
+  CGSize componentSize = [URLStringComponent.string sizeWithFont:self.font forWidth:constraint.width lineBreakMode:NSLineBreakByClipping];
   
   if (componentSize.width > availableWidth) { // move to next line
     currentPoint = CGPointMake(0, currentPoint.y + componentSize.height);

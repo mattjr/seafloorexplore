@@ -388,7 +388,7 @@
     if (section == DESCRIPTION_SECTION)
     { 
         CGSize bodySize = [[self textForIndexPath:section] sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0] 
-                           constrainedToSize:CGSizeMake(self.view.frame.size.width,CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+                           constrainedToSize:CGSizeMake(self.view.frame.size.width,CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping];
         return bodySize.height+50.0f;
     
     }

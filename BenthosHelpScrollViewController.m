@@ -145,7 +145,7 @@
     
     for(NSString *txtVal in aboutTxt){
         CGSize bodySize = [txtVal sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12.0] 
-                             constrainedToSize:CGSizeMake(bounds.size.width-2*labelPadding,CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+                             constrainedToSize:CGSizeMake(bounds.size.width-2*labelPadding,CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping];
         LRLinkableLabel *label = [[LRLinkableLabel alloc] initWithFrame:CGRectMake(labelPadding,y+labelPadding,bodySize.width,bodySize.height)];
         
         label.text =txtVal;
