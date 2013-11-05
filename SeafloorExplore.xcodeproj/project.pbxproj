@@ -15,7 +15,6 @@
 		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
 		7B056F04150AC5DF00621766 /* NSFileManager+Tar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */; };
 		7B056F06150AC85A00621766 /* chamber3.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7B056F05150AC85A00621766 /* chamber3.tar */; };
-		7B0579301825A2B10099B50F /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B05792F1825A2B10099B50F /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		7B0579311825A2B10099B50F /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B05792F1825A2B10099B50F /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		7B0579331825A6040099B50F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B0579321825A6040099B50F /* Security.framework */; };
 		7B0579351825A60E0099B50F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B0579341825A60E0099B50F /* Security.framework */; };
@@ -375,11 +374,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7B0579351825A60E0099B50F /* Security.framework in Frameworks */,
 				7B9DC543163B507E00A53B6E /* SystemConfiguration.framework in Frameworks */,
 				7BCBD12E1520B550009DC170 /* CoreLocation.framework in Frameworks */,
 				7BCBD12C1520B537009DC170 /* MapKit.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
+				7B0579351825A60E0099B50F /* Security.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				1D3623EC0D0F72F000981E51 /* CoreGraphics.framework in Frameworks */,
 				28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */,
@@ -930,7 +929,6 @@
 				7BF6543D13977C10002FEB23 /* VirtualTexturingNode.mm in Sources */,
 				7BF6544713977C4C002FEB23 /* LODNode.mm in Sources */,
 				7BF6544813977C4C002FEB23 /* Skybox.mm in Sources */,
-				7B0579301825A2B10099B50F /* GCDAsyncSocket.m in Sources */,
 				7BF6544D13977C74002FEB23 /* BMFont.mm in Sources */,
 				7BF654A113977F8A002FEB23 /* CollideableMesh.mm in Sources */,
 				7BF65BC41397952F002FEB23 /* MyOpenGLES20Renderer.mm in Sources */,

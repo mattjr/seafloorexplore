@@ -275,7 +275,7 @@ withFilterContext:(id)filterContext
        
         fprintf(logFile,"MOVE %f %s\n",currentTime,[[[stateDict description] stringByReplacingOccurrencesOfString:@"\n" withString:@" "]  UTF8String]);
         [stateDict release];
-    }else if([sock localPort] == GAZE_PORT){
+    }/*else if([sock localPort] == GAZE_PORT){
         NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         if (msg)
         {
@@ -312,7 +312,7 @@ withFilterContext:(id)filterContext
         }
         [msg release];
 
-    }
+    }*/
 
 }
 
@@ -968,15 +968,47 @@ return YES;
 
     
 }
+
+
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
     NSLog(@"socket:didReadData:withTag:");
+    double currentTime=[[NSDate date] timeIntervalSince1970];
+
+    NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
-    NSString *httpResponse = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    
-    NSLog(@"Full httpResponse:\n%@", httpResponse);
+    NSLog(@"Full httpResponse:\n%@", msg);
+    if (msg)
+    {
+        //   NSLog(@"RCV: %@", msg);
+        NSString* strType = @"<REC BPOGX=\"";
+        NSString* bogy = @"\" BPOGY=\"";
+
+        NSScanner *scanner = [NSScanner scannerWithString:msg];
+        double x,y;
+       // long long timeStamp;
+        if ( [ scanner scanString: strType intoString: NULL] )
+        {
+            [scanner scanDouble: &x];
+            [ scanner scanString: bogy intoString: NULL];
+            [scanner scanDouble: &y];
+            x*=1024.0;
+            y*=768.0    ;
+            printf("%f %f %f\n",x,y,currentTime);
+            fprintf(logFile,"GAZE %f %f %f %f\n",currentTime,x,y,currentTime);
+            //  printf("Delta %f %lld\n",_lastGaze-currentTime,_lastGazeTimeStamp-timeStamp);
+            //_lastGazeTimeStamp=timeStamp;
+            _lastGaze=currentTime;
+            vector2f pos;
+            pos[0]=x;
+            pos[1]=768-y;
+            [[[scene simulator] toverlay] updatePos:pos];
+        }else{
+            NSLog(@"Failed to parse\n");
+        }
+    }
     [sock readDataWithTimeout:-1 tag:0];
-    [httpResponse release];
+    [msg release];
 
 }
 

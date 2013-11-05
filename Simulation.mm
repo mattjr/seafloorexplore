@@ -25,7 +25,9 @@
 #include "LibVT_Internal.h"
 float positions[60 * 60][6];
 bool gRunExpCode=NO;
-#define LOG_SERVER_IP @"129.78.210.200"
+#define LOG_SERVER_IP @"67.194.20.219"
+//#define LOG_SERVER_IP @"10.0.0.1"
+
 #include <math.h>
 #import "Core3D.h"
 #import "TrackerOverlay.h"
