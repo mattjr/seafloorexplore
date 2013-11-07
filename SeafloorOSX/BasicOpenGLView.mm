@@ -18,7 +18,7 @@
 #endif
 #define FORMAT(format, ...) [NSString stringWithFormat:(format), ##__VA_ARGS__]
 #define GAZE_PORT 4242
-#define GAZE_IP @"192.168.0.217"
+#define GAZE_IP @"192.168.1.212"
 #include "LibVT_Internal.h"
 extern vtData vt;
 
@@ -950,21 +950,23 @@ return YES;
       }
     NSLog(@"Terminating");
   }
-- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
+
+-(void)sendGazeCmd:(GCDAsyncSocket *)sock withCommand:(NSString *)requestStr
 {
-    NSLog(@"Socket:DidConnectToHost: %@ Port: %hu", host, port);
-    NSString *requestStr=@"<SET ID=\"ENABLE_SEND_POG_BEST\" STATE=\"1\" />";
     NSMutableData *requestData = [NSMutableData dataWithData:[requestStr dataUsingEncoding:NSUTF8StringEncoding]];
     [requestData appendData:[GCDAsyncSocket CRLFData]];
     NSLog(@"Sending %@\n",requestStr);
     [sock writeData:requestData withTimeout:-1.0 tag:0];
-    
+}
+- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
+{
+    NSLog(@"Socket:DidConnectToHost: %@ Port: %hu", host, port);
+    [self sendGazeCmd: sock withCommand:@"<SET ID=\"ENABLE_SEND_POG_FIX\" STATE=\"1\" />"];
+    [self sendGazeCmd: sock withCommand:@"<SET ID=\"ENABLE_SEND_POG_BEST\" STATE=\"1\" />"];
+    [self sendGazeCmd: sock withCommand:@"<SET ID=\"ENABLE_SEND_EYE_LEFT\" STATE=\"1\" />"];
+    [self sendGazeCmd: sock withCommand:@"<SET ID=\"ENABLE_SEND_EYE_RIGHT\" STATE=\"1\" />"];
+    [self sendGazeCmd: sock withCommand:@"<SET ID=\"ENABLE_SEND_DATA\" STATE=\"1\" />"];
 
-    NSString *requestStr2=@"<SET ID=\"ENABLE_SEND_DATA\" STATE=\"1\" />";
-    NSMutableData *requestData2 = [NSMutableData dataWithData:[requestStr2 dataUsingEncoding:NSUTF8StringEncoding]];
-    [requestData2 appendData:[GCDAsyncSocket CRLFData]];
-    NSLog(@"Sending %@\n",requestStr2);
-    [sock writeData:requestData2 withTimeout:-1.0 tag:0];
 
     
 }
@@ -972,39 +974,94 @@ return YES;
 
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
-    NSLog(@"socket:didReadData:withTag:");
+  //  NSLog(@"socket:didReadData:withTag:");
     double currentTime=[[NSDate date] timeIntervalSince1970];
 
     NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    
-    NSLog(@"Full httpResponse:\n%@", msg);
-    if (msg)
-    {
-        //   NSLog(@"RCV: %@", msg);
-        NSString* strType = @"<REC BPOGX=\"";
-        NSString* bogy = @"\" BPOGY=\"";
-
-        NSScanner *scanner = [NSScanner scannerWithString:msg];
-        double x,y;
-       // long long timeStamp;
-        if ( [ scanner scanString: strType intoString: NULL] )
+    NSArray *arr = [msg componentsSeparatedByCharactersInSet: [NSCharacterSet newlineCharacterSet]];
+   // NSLog(@"%@\n",arr);
+    for (int i = 0; i < [arr count]-2; i++){
+        
+       // NSLog(@"Full httpResponse:\n%@", [arr objectAtIndex: i]);
+        /* NSString* strType = @"<ACK";
+         
+         NSScanner *scanner = [NSScanner scannerWithString:msg];
+         if ( [ scanner scanString: strType intoString: NULL] ){
+         [msg release];
+         return;
+         }
+         */
+        if ([arr objectAtIndex: i])
         {
-            [scanner scanDouble: &x];
-            [ scanner scanString: bogy intoString: NULL];
-            [scanner scanDouble: &y];
-            x*=1024.0;
-            y*=768.0    ;
-            printf("%f %f %f\n",x,y,currentTime);
-            fprintf(logFile,"GAZE %f %f %f %f\n",currentTime,x,y,currentTime);
-            //  printf("Delta %f %lld\n",_lastGaze-currentTime,_lastGazeTimeStamp-timeStamp);
-            //_lastGazeTimeStamp=timeStamp;
-            _lastGaze=currentTime;
-            vector2f pos;
-            pos[0]=x;
-            pos[1]=768-y;
-            [[[scene simulator] toverlay] updatePos:pos];
-        }else{
-            NSLog(@"Failed to parse\n");
+           // NSLog(@"RCV: %@", msg);
+            [self parseXMLString:[arr objectAtIndex: i]];
+            //NSLog(@"%@\n",gazeDict);
+            
+            // long long timeStamp;
+            if (!errorParsing )
+            {
+                int fixValid=[[gazeDict objectForKey:@"FPOGV"] intValue];
+                if(fixValid){
+                    float gTime=[[gazeDict objectForKey:@"FPOGS"] floatValue];
+                    float duration=[[gazeDict objectForKey:@"FPOGD"] floatValue];
+                    float x=[[gazeDict objectForKey:@"FPOGX"] floatValue];
+                    float y=[[gazeDict objectForKey:@"FPOGY"] floatValue];
+                    int fixID=[[gazeDict objectForKey:@"FPOGID"] intValue];
+                    
+                    
+                    x*=1024.0;
+                    y*=768.0;
+                    printf("%f %f %f\n",x,y,currentTime);
+                    fprintf(logFile,"FIX %f %f %f %f %f %d\n",currentTime,x,y,gTime,duration,fixID);
+                    //  printf("Delta %f %lld\n",_lastGaze-currentTime,_lastGazeTimeStamp-timeStamp);
+                    //_lastGazeTimeStamp=timeStamp;
+                    _lastGaze=currentTime;
+                    vector2f pos;
+                    pos[0]=x;
+                    pos[1]=768-y;
+                    [[[scene simulator] toverlay] updatePos:pos];
+                }
+                int pogValid=[[gazeDict objectForKey:@"BPOGV"] intValue];
+                if(pogValid){
+                    float x=[[gazeDict objectForKey:@"BPOGX"] floatValue];
+                    float y=[[gazeDict objectForKey:@"BPOGY"] floatValue];
+                    
+                    
+                    x*=1024.0;
+                    y*=768.0;
+                    //printf("%f %f %f\n",x,y,currentTime);
+                    fprintf(logFile,"POG %f %f %f\n",currentTime,x,y);
+                    //  printf("Delta %f %lld\n",_lastGaze-currentTime,_lastGazeTimeStamp-timeStamp);
+                    //_lastGazeTimeStamp=timeStamp;
+                    /*vector2f pos;
+                     pos[0]=x;
+                     pos[1]=768-y;
+                     [[[scene simulator] toverlay] updatePos:pos];*/
+                }
+                int lePosV=[[gazeDict objectForKey:@"LPUPILV"] intValue];
+                if(lePosV){
+                    float x=[[gazeDict objectForKey:@"LEYEX"] floatValue];
+                    float y=[[gazeDict objectForKey:@"LEYEY"] floatValue];
+                    float z=[[gazeDict objectForKey:@"LEYEZ"] floatValue];
+                    //printf("%f %f %f\n",x,y,currentTime);
+                    fprintf(logFile,"LEYE %f %f %f %f\n",currentTime,x,y,z);
+                }
+                
+                int riPosV=[[gazeDict objectForKey:@"RPUPILV"] intValue];
+                if(riPosV){
+                    float x=[[gazeDict objectForKey:@"REYEX"] floatValue];
+                    float y=[[gazeDict objectForKey:@"REYEY"] floatValue];
+                    float z=[[gazeDict objectForKey:@"REYEZ"] floatValue];
+                    //printf("%f %f %f\n",x,y,currentTime);
+                    fprintf(logFile,"REYE %f %f %f %f\n",currentTime,x,y,z);
+                }
+                
+                
+                
+                
+            }else{
+                NSLog(@"Failed to parse\n");
+            }
         }
     }
     [sock readDataWithTimeout:-1 tag:0];
@@ -1017,6 +1074,71 @@ return YES;
     // Since we requested HTTP/1.0, we expect the server to close the connection as soon as it has sent the response.
     
     NSLog(@"socketDidDisconnect:withError:%@", err);
+}
+
+- (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
+    
+    NSString *errorString = [NSString stringWithFormat:@"Error code %li", (long)[parseError code]];
+    NSLog(@"Error parsing XML: %@", errorString);
+    
+    errorParsing=YES;
+
+}
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict{
+//    NSLog(@"Started %@", elementName);
+    if ([elementName isEqualToString:@"REC"]) {
+       // NSLog(@"attrib %@", attributeDict);
+        gazeDict = [attributeDict copy];
+    }
+}
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string{
+    //[ElementValue appendString:string];
+   // NSLog(@"append %@", string);
+
+}
+
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName{
+
+    
+}
+
+- (void)parserDidEndDocument:(NSXMLParser *)parser {
+    
+    if (errorParsing == NO)
+    {
+       // NSLog(@"XML processing done!");
+    } else {
+        NSLog(@"Error occurred during XML processing");
+    }
+    
+}
+
+- (void)parseXMLString:(NSString *)str
+{
+    NSCharacterSet *set = [NSCharacterSet whitespaceCharacterSet];
+    if ([[str stringByTrimmingCharactersInSet: set] length] == 0)
+    {
+        return;
+    }
+    
+   // articles = [[NSMutableArray alloc] init];
+    
+    gazeDict = nil;
+    errorParsing=NO;
+    NSMutableData *requestData = [NSMutableData dataWithData:[str dataUsingEncoding:NSUTF8StringEncoding]];
+
+    xmlParser = [[NSXMLParser alloc] initWithData:requestData];
+    [xmlParser setDelegate:self];
+    
+    // You may need to turn some of these on depending on the type of XML file you are parsing
+    [xmlParser setShouldProcessNamespaces:NO];
+    [xmlParser setShouldReportNamespacePrefixes:NO];
+    [xmlParser setShouldResolveExternalEntities:NO];
+    
+    [xmlParser parse];
+    if(errorParsing)
+        NSLog(@"Invalid XML: %@\n",str);
+    
 }
 
 

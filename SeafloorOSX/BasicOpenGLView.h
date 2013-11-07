@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "GCDAsyncUdpSocket.h"
 #import "GCDAsyncSocket.h"
+#import <Foundation/NSXMLParser.h>
 @class Scene;
 @class TrackerOverlay;
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,7 +20,7 @@ void reportError (char * strError);
 // if error dump gl errors to debugger string, return error
 GLenum glReportError (void);
 
-@interface BasicOpenGLView : NSOpenGLView
+@interface BasicOpenGLView : NSOpenGLView <NSXMLParserDelegate>
 {
   // TODO: add object (pointer) for your OpenGL-based app
   
@@ -42,9 +43,17 @@ GLenum glReportError (void);
     double _lastGaze;
     long long _lastGazeTimeStamp;
 
-
+    NSXMLParser *xmlParser;
+   /* NSMutableArray *articles;
+    NSMutableDictionary *item;
+    NSString *currentElement;
+    NSMutableString *ElementValue;*/
+    NSDictionary *gazeDict;
+    BOOL errorParsing;
 
 }
+- (void)parseXMLString:(NSString *)str;
+
 - (NSString *)input: (NSString *)prompt defaultValue: (NSString *)defaultValue ;
 
 - (void)logError:(NSString *)msg;
@@ -133,5 +142,6 @@ GLenum glReportError (void);
 - (BOOL) resignFirstResponder;
 - (void) awakeFromNib;
 - (void) terminate:(NSNotification *)aNotification;
+-(void)sendGazeCmd:(GCDAsyncSocket *)sock withCommand:(NSString *)requestStr;
 
 @end
