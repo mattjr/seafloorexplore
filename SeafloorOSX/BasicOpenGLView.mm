@@ -18,7 +18,7 @@
 #endif
 #define FORMAT(format, ...) [NSString stringWithFormat:(format), ##__VA_ARGS__]
 #define GAZE_PORT 4242
-#define GAZE_IP @"192.168.1.212"
+#define GAZE_IP @"192.168.0.206"
 #include "LibVT_Internal.h"
 extern vtData vt;
 
@@ -800,10 +800,10 @@ return YES;
 	[scene update];
 	[scene render];
 
-    glBindTexture(GL_TEXTURE_2D, vt.physicalTexture);
+    /*glBindTexture(GL_TEXTURE_2D, vt.physicalTexture);
     
     RenderTexture(256);
-
+*/
     glFlush();
 
 	[[self openGLContext] flushBuffer];
