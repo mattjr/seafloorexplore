@@ -29,6 +29,7 @@ extern vtConfig c;
 //#define AOLOOKUPTEXTUREWIDTH 64
 //#define SPHEREDEPTHTEXTUREWIDTH 256
 #define SPHEREDEPTHTEXTUREWIDTH 32
+CVPixelBufferRef renderTarget;
 
 @implementation MyOpenGLES20Renderer
 @synthesize sim,scene,     removeOnceRender;
@@ -102,7 +103,13 @@ extern vtConfig c;
              
             // NSLog(@"Bounds after: %@", NSStringFromCGRect(glLayer.bounds));
                        
-            [self createFramebuffer:&viewFramebuffer size:CGSizeZero renderBuffer:&viewRenderbuffer depthBuffer:&viewDepthBuffer texture:NULL layer:glLayer];    
+            [self createFramebuffer:&viewFramebuffer size:CGSizeZero renderBuffer:&viewRenderbuffer depthBuffer:&viewDepthBuffer texture:NULL layer:glLayer];
+        
+            CGSize bufferSize = CGSizeMake(backingWidth >> PREPASS_RESOLUTION_REDUCTION_SHIFT, backingHeight >> PREPASS_RESOLUTION_REDUCTION_SHIFT);
+            
+            [self createFramebufferOffscreen:&offscreenFramebuffer size:bufferSize renderBuffer:NULL depthBuffer:&offscreenDepthBuffer layer:glLayer];
+            
+            
             [self switchToDisplayFramebuffer];
             glViewport(0, 0, backingWidth, backingHeight);
 
@@ -120,12 +127,101 @@ extern vtConfig c;
 
 }
 
-
-- (BOOL)createFramebuffer:(GLuint *)framebufferPointer size:(CGSize)bufferSize renderBuffer:(GLuint *)renderbufferPointer depthBuffer:(GLuint *)depthbufferPointer texture:(GLuint *)backingTexturePointer layer:(CAEAGLLayer *)layer;
+- (BOOL)createFramebufferOffscreen:(GLuint *)framebufferPointer size:(CGSize)bufferSize renderBuffer:(GLuint *)renderbufferPointer depthBuffer:(GLuint *)depthbufferPointer layer:(CAEAGLLayer *)layer;
 {
     glGenFramebuffers(1, framebufferPointer);
     glBindFramebuffer(GL_FRAMEBUFFER, *framebufferPointer);
 	
+    EAGLContext *oglContext = [EAGLContext currentContext];
+    
+    CVReturn err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, oglContext, NULL, &texCache);
+    if (err)
+    {
+        NSAssert1(NO, @"Error at CVOpenGLESTextureCacheCreate %d",err);
+    }
+    
+    // Code originally sourced from http://allmybrain.com/2011/12/08/rendering-to-a-texture-with-ios-5-texture-cache-api/
+    
+    CFDictionaryRef empty; // empty value for attr value.
+    CFMutableDictionaryRef attrs;
+    empty = CFDictionaryCreate(kCFAllocatorDefault, // our empty IOSurface properties dictionary
+                               NULL,
+                               NULL,
+                               0,
+                               &kCFTypeDictionaryKeyCallBacks,
+                               &kCFTypeDictionaryValueCallBacks);
+    attrs = CFDictionaryCreateMutable(kCFAllocatorDefault,
+                                      1,
+                                      &kCFTypeDictionaryKeyCallBacks,
+                                      &kCFTypeDictionaryValueCallBacks);
+    
+    CFDictionarySetValue(attrs,
+                         kCVPixelBufferIOSurfacePropertiesKey,
+                         empty);
+    
+    //CVPixelBufferPoolCreatePixelBuffer (NULL, [assetWriterPixelBufferInput pixelBufferPool], &renderTarget);
+    
+    CVPixelBufferCreate(kCFAllocatorDefault,
+                        (int)bufferSize.width,
+                        (int)bufferSize.height,
+                        kCVPixelFormatType_32BGRA,
+                        attrs,
+                        &renderTarget);
+    
+    CVOpenGLESTextureCacheCreateTextureFromImage (kCFAllocatorDefault,
+                                                  texCache, renderTarget,
+                                                  NULL, // texture attributes
+                                                  GL_TEXTURE_2D,
+                                                  GL_RGBA, // opengl format
+                                                  (int)bufferSize.width,
+                                                  (int)bufferSize.height,
+                                                  GL_BGRA, // native iOS format
+                                                  GL_UNSIGNED_BYTE,
+                                                  0,
+                                                  &renderTexture);
+    CFRelease(attrs);
+    CFRelease(empty);
+    glBindTexture(CVOpenGLESTextureGetTarget(renderTexture), CVOpenGLESTextureGetName(renderTexture));
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
+    
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, CVOpenGLESTextureGetName(renderTexture), 0);
+    
+    if (depthbufferPointer != NULL)
+    {
+        glGenRenderbuffers(1, depthbufferPointer);
+        glBindRenderbuffer(GL_RENDERBUFFER, *depthbufferPointer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, bufferSize.width, bufferSize.height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, *depthbufferPointer);
+    }
+    //  glBindTexture(GL_TEXTURE_2D, 0);
+    
+    
+    //  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //     glBindFramebuffer(GL_FRAMEBUFFER, *framebufferPointer);
+    //  glBindRenderbuffer(GL_RENDERBUFFER, *renderbufferPointer);
+    //  glBindRenderbuffer(GL_RENDERBUFFER, *renderbufferPointer);
+    
+	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE)
+	{
+		NSLog(@"Incomplete FBO: %d", status);
+        assert(false);
+    }
+    
+    return YES;
+    
+    
+    
+    
+    
+}
+- (BOOL)createFramebuffer:(GLuint *)framebufferPointer size:(CGSize)bufferSize renderBuffer:(GLuint *)renderbufferPointer depthBuffer:(GLuint *)depthbufferPointer texture:(GLuint *)backingTexturePointer layer:(CAEAGLLayer *)layer;
+{
+    glGenFramebuffers(1, framebufferPointer);
+    glBindFramebuffer(GL_FRAMEBUFFER, *framebufferPointer);
+
     if (renderbufferPointer != NULL)
     {
         glGenRenderbuffers(1, renderbufferPointer);
@@ -228,6 +324,8 @@ extern vtConfig c;
 
 - (void)switchToDisplayFramebuffer;
 {
+    vt.fboDraw=viewFramebuffer;
+
 	glBindFramebuffer(GL_FRAMEBUFFER, viewFramebuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, viewRenderbuffer);
     
@@ -235,6 +333,20 @@ extern vtConfig c;
 	
     if (!CGSizeEqualToSize(newViewportSize, currentViewportSize))
     {        
+        glViewport(0, 0, backingWidth, backingHeight);
+        currentViewportSize = newViewportSize;
+    }
+}
+- (void)switchToTextureFramebuffer;
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, vt.fbo);
+    // glBindRenderbuffer(GL_RENDERBUFFER, viewRenderbuffer);
+    glBindTexture(GL_TEXTURE_2D,CVOpenGLESTextureGetName(renderTexture));
+    
+    CGSize newViewportSize = CGSizeMake(backingWidth, backingHeight);
+	
+    if (!CGSizeEqualToSize(newViewportSize, currentViewportSize))
+    {
         glViewport(0, 0, backingWidth, backingHeight);
         currentViewportSize = newViewportSize;
     }
@@ -326,6 +438,8 @@ extern vtConfig c;
         sim = [[Simulation alloc] initWithString:fullpath withScene:scene] ;
         if (sim){
         [scene setSimulator:sim];
+        vt.fboDraw=viewFramebuffer;
+            vt.fbo = offscreenFramebuffer;
             
             isSceneReady=YES;
             [mol setHasRendered:NO];

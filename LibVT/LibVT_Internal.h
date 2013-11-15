@@ -231,7 +231,7 @@ struct vtData
     bool memValid;
 	uint16_t				mipTranslation[12];
 	uint32_t				pageTableMipOffsets[12];
-	GLuint					fbo, fboColorTexture, fboDepthTexture, physicalTexture, pageTableTexture, mipcalcTexture, pboReadback, pboPagetable, pboPhystex;
+	GLuint					fbo, fboColorTexture, fboDepthTexture, physicalTexture, pageTableTexture, mipcalcTexture, pboReadback, pboPagetable, pboPhystex,fboDraw;
 
 
 	bool					mipLevelTouched[12];

@@ -24,16 +24,17 @@ extern vtConfig c;
 
 void vtPrepareReadback()
 {
+#if !(TARGET_OS_IPHONE) && !(TARGET_IPHONE_SIMULATOR)
 	if (READBACK_MODE_FBO)
+#endif
 	{
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, vt.fbo);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	if (PREPASS_RESOLUTION_REDUCTION_SHIFT)
 	{
 		glViewport(0, 0, vt.w, vt.h);
-
 		if (vt.fovInDegrees > 0.0)
 		{
 #if !GL_ES_VERSION_2_0
@@ -48,16 +49,21 @@ void vtPrepareReadback()
 
 void vtPerformReadback()
 {
-	uint32_t *buffer = 0;
+#if ((TARGET_OS_IPHONE) && (TARGET_IPHONE_SIMULATOR)) || !(TARGET_OS_IPHONE)
 
+	uint32_t *buffer = 0;
+#endif
 
 #if !GL_ES_VERSION_2_0
 	if (USE_PBO_READBACK)
 		glBindBuffer(GL_PIXEL_PACK_BUFFER, vt.pboReadback);
 	else
 #endif
-		buffer = vt.readbackBuffer;
+//READ IN Virtual Texturing Node
 
+
+#if ((TARGET_OS_IPHONE) && (TARGET_IPHONE_SIMULATOR)) || !(TARGET_OS_IPHONE)
+		buffer = vt.readbackBuffer;
 
 #if !GL_ES_VERSION_2_0
 	if (READBACK_MODE_GET_TEX_IMAGE)
@@ -80,11 +86,14 @@ void vtPerformReadback()
      glReadPixels(0, 0, vt.w, vt.h, GL_BGRA, GL_UNSIGNED_BYTE, (GLubyte *)buffer);
 #endif
 
-
-
+#endif
+    
+#if !(TARGET_OS_IPHONE) && !(TARGET_IPHONE_SIMULATOR)
 	if (READBACK_MODE_FBO)
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
+#endif
+	{
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, vt.fboDraw);
+    }
 
 #if !GL_ES_VERSION_2_0
 	if (READBACK_MODE_GET_TEX_IMAGE)

@@ -452,10 +452,11 @@ void vtShutdown()
 	free(vt.pageTables[0]);
 	free(vt.pageTables);
 
+#if ((TARGET_OS_IPHONE) && (TARGET_IPHONE_SIMULATOR)) || !(TARGET_OS_IPHONE)
 
 	if (!USE_PBO_READBACK)
 		free(vt.readbackBuffer);
-
+#endif
 	glDeleteTextures(1, &vt.physicalTexture);
 	glDeleteTextures(1, &vt.pageTableTexture);
 	if (USE_MIPCALC_TEXTURE)
@@ -532,6 +533,7 @@ void vtReshape(const uint16_t _w, const uint16_t _h, const float fovInDegrees, c
 		glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 	}
 #endif
+#if ((TARGET_OS_IPHONE) && (TARGET_IPHONE_SIMULATOR)) || !(TARGET_OS_IPHONE)
 
 	if (!USE_PBO_READBACK && !READBACK_MODE_NONE && !OPENCL_BUFFERREDUCTION)
 	{
@@ -540,7 +542,7 @@ void vtReshape(const uint16_t _w, const uint16_t _h, const float fovInDegrees, c
 		vt.readbackBuffer = (uint32_t *) malloc(vt.w * vt.h * 4);
 		assert(vt.readbackBuffer);
 	}
-
+#endif
 	if (PREPASS_RESOLUTION_REDUCTION_SHIFT && fovInDegrees > 0.0)
 		vtuPerspective(vt.projectionMatrix, fovInDegrees, (float)vt.w / (float)vt.h, nearPlane, farPlane);
 

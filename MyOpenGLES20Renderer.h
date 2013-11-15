@@ -30,6 +30,10 @@
     CGSize currentViewportSize;
     Scene *scene;
     Simulation *sim ;
+    GLuint ambientOcclusionTexture,offscreenFramebuffer,offscreenDepthBuffer;
+    CVOpenGLESTextureCacheRef texCache;
+    CVOpenGLESTextureRef renderTexture;
+
 	NSString *defaultModelName;
     int drawn;
     BOOL removeOnceRender;

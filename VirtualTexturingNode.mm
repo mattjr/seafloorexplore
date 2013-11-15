@@ -22,6 +22,7 @@
 #import "LibVT_Config.h"
 #import "Utilities.h"
 //#import "Mesh.h"
+extern CVPixelBufferRef renderTarget;
 
 extern vtData vt;
 char buf[256];
@@ -285,7 +286,16 @@ extern vtConfig c;
 		MICROSTOP(prep);
 
 		MICROSTART(readback);
+        
         vtPerformReadback();
+#if ((TARGET_OS_IPHONE) && !(TARGET_IPHONE_SIMULATOR))
+        
+        
+        CVPixelBufferLockBaseAddress(renderTarget, 0);
+         vt.readbackBuffer = (unsigned int *)CVPixelBufferGetBaseAddress(renderTarget);
+        // Do something with the bytes
+        CVPixelBufferUnlockBaseAddress(renderTarget, 0);
+#endif
 		//vtPerformOpenCLBufferReduction();
 
 		MICROSTOP(readback);
