@@ -35,6 +35,10 @@ void * _vtuDecompressMac(CGImageSourceRef imageSourceRef, uint32_t *pic_size, co
     CGColorSpaceRef colorSpa = CGColorSpaceCreateDeviceRGB();
 
 	CGContextRef bitmapContext = CGBitmapContextCreate(image_data, width, height, 8, width * 4, colorSpa, kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Host );
+    if(bitmapContext == NULL){
+        fprintf(stderr,"Failed to create bitmap context %d %d\n",width,height);
+        return NULL;
+    }
 	CGContextTranslateCTM (bitmapContext, 0, height);
 	CGContextScaleCTM (bitmapContext, 1.0, -1.0);
 

@@ -233,8 +233,8 @@ void LibVTBackgroundThread2::run()//void vtDecompressNeededPagesDecoupled()
 #endif
 
 					void *image_data = vtuDecompressImageBuffer(file_data, size, &c.pageDimension);
-
-					free(file_data);
+                    if(image_data)
+                        free(file_data);
 
 					if (REALTIME_DXT_COMPRESSION)
 					{
