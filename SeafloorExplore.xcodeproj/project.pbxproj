@@ -13,6 +13,17 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD14FF0DC6FC520079059D /* OpenGLES.framework */; };
 		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
+		6E3BF4B018365FD200A22792 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E3BF4AF18365FD200A22792 /* CoreVideo.framework */; };
+		6E96940A1836BF430018671D /* CMakeLists.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6E9694011836BF430018671D /* CMakeLists.txt */; };
+		6E96940B1836BF430018671D /* CMakeLists.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6E9694011836BF430018671D /* CMakeLists.txt */; };
+		6E96940C1836BF430018671D /* PThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E9694021836BF430018671D /* PThread.cpp */; };
+		6E96940D1836BF430018671D /* PThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E9694021836BF430018671D /* PThread.cpp */; };
+		6E96940E1836BF430018671D /* PThreadBarrier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E9694031836BF430018671D /* PThreadBarrier.cpp */; };
+		6E96940F1836BF430018671D /* PThreadBarrier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E9694031836BF430018671D /* PThreadBarrier.cpp */; };
+		6E9694101836BF430018671D /* PThreadCondition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E9694051836BF430018671D /* PThreadCondition.cpp */; };
+		6E9694111836BF430018671D /* PThreadCondition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E9694051836BF430018671D /* PThreadCondition.cpp */; };
+		6E9694121836BF430018671D /* PThreadMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E9694071836BF430018671D /* PThreadMutex.cpp */; };
+		6E9694131836BF430018671D /* PThreadMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E9694071836BF430018671D /* PThreadMutex.cpp */; };
 		7B056F04150AC5DF00621766 /* NSFileManager+Tar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */; };
 		7B056F06150AC85A00621766 /* chamber3.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7B056F05150AC85A00621766 /* chamber3.tar */; };
 		7B0579311825A2B10099B50F /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B05792F1825A2B10099B50F /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -171,6 +182,16 @@
 		28FD14FF0DC6FC520079059D /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		28FD15070DC6FC5B0079059D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = main.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		6E3BF4AF18365FD200A22792 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		6E9694011836BF430018671D /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		6E9694021836BF430018671D /* PThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PThread.cpp; sourceTree = "<group>"; };
+		6E9694031836BF430018671D /* PThreadBarrier.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PThreadBarrier.cpp; sourceTree = "<group>"; };
+		6E9694041836BF430018671D /* PThreadBarrierPrivateData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PThreadBarrierPrivateData.h; sourceTree = "<group>"; };
+		6E9694051836BF430018671D /* PThreadCondition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PThreadCondition.cpp; sourceTree = "<group>"; };
+		6E9694061836BF430018671D /* PThreadConditionPrivateData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PThreadConditionPrivateData.h; sourceTree = "<group>"; };
+		6E9694071836BF430018671D /* PThreadMutex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PThreadMutex.cpp; sourceTree = "<group>"; };
+		6E9694081836BF430018671D /* PThreadMutexPrivateData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PThreadMutexPrivateData.h; sourceTree = "<group>"; };
+		6E9694091836BF430018671D /* PThreadPrivateData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PThreadPrivateData.h; sourceTree = "<group>"; };
 		7B056F02150AC5DF00621766 /* NSFileManager+Tar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+Tar.h"; sourceTree = SOURCE_ROOT; };
 		7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+Tar.m"; sourceTree = SOURCE_ROOT; };
 		7B056F05150AC85A00621766 /* chamber3.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = chamber3.tar; sourceTree = "<group>"; };
@@ -374,6 +395,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6E3BF4B018365FD200A22792 /* CoreVideo.framework in Frameworks */,
 				7B9DC543163B507E00A53B6E /* SystemConfiguration.framework in Frameworks */,
 				7BCBD12E1520B550009DC170 /* CoreLocation.framework in Frameworks */,
 				7BCBD12C1520B537009DC170 /* MapKit.framework in Frameworks */,
@@ -415,6 +437,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				6E9694001836BF430018671D /* pthreads */,
 				7B97030F166ED29E00A36060 /* QuartzCore.framework */,
 				7B941EF1166EB35400F2D80F /* libbz2.dylib */,
 				7B941EE7166EAFDA00F2D80F /* OpenGL.framework */,
@@ -507,6 +530,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6E3BF4AF18365FD200A22792 /* CoreVideo.framework */,
 				7B0579341825A60E0099B50F /* Security.framework */,
 				7B0579321825A6040099B50F /* Security.framework */,
 				BC4E97C10E69F736006CD291 /* libsqlite3.dylib */,
@@ -522,6 +546,23 @@
 				7B941ECA166EAB7D00F2D80F /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6E9694001836BF430018671D /* pthreads */ = {
+			isa = PBXGroup;
+			children = (
+				6E9694011836BF430018671D /* CMakeLists.txt */,
+				6E9694021836BF430018671D /* PThread.cpp */,
+				6E9694031836BF430018671D /* PThreadBarrier.cpp */,
+				6E9694041836BF430018671D /* PThreadBarrierPrivateData.h */,
+				6E9694051836BF430018671D /* PThreadCondition.cpp */,
+				6E9694061836BF430018671D /* PThreadConditionPrivateData.h */,
+				6E9694071836BF430018671D /* PThreadMutex.cpp */,
+				6E9694081836BF430018671D /* PThreadMutexPrivateData.h */,
+				6E9694091836BF430018671D /* PThreadPrivateData.h */,
+			);
+			name = pthreads;
+			path = OpenThreads/pthreads;
 			sourceTree = "<group>";
 		};
 		7B941ECA166EAB7D00F2D80F /* Other Frameworks */ = {
@@ -838,6 +879,7 @@
 				BCDFF5AE1154819A005C984C /* 57-download.png in Resources */,
 				BC2795BA1162500A006DE4C8 /* Default-Landscape.png in Resources */,
 				BC2795BB1162500A006DE4C8 /* Default-Portrait.png in Resources */,
+				6E96940A1836BF430018671D /* CMakeLists.txt in Resources */,
 				BC835184117545C600B478D5 /* 69-display.png in Resources */,
 				7B056F06150AC85A00621766 /* chamber3.tar in Resources */,
 				7B4772D9151D8E5200727C6C /* redx.png in Resources */,
@@ -883,6 +925,7 @@
 				7B970320166ED6CF00A36060 /* pass.vert in Resources */,
 				7B970322166ED6D400A36060 /* readback.vert in Resources */,
 				7B970321166ED6D200A36060 /* readback.frag in Resources */,
+				6E96940B1836BF430018671D /* CMakeLists.txt in Resources */,
 				7B97031D166ED67300A36060 /* renderVT.frag in Resources */,
 				7B97031E166ED67600A36060 /* renderVT.vert in Resources */,
 				7B97031B166ED64200A36060 /* fontVT_00.png in Resources */,
@@ -899,11 +942,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
+				6E96940C1836BF430018671D /* PThread.cpp in Sources */,
 				BC37E7CA0E14779E00E11F4F /* Benthos.m in Sources */,
 				BCC2812A0E1B1FCD00978ECA /* NSData+Gzip.m in Sources */,
 				BCC286C10E1D8F9300978ECA /* BenthosAppDelegate.m in Sources */,
 				BCC286C20E1D8F9300978ECA /* BenthosRootViewController.mm in Sources */,
 				BCC286C80E1D8FB100978ECA /* BenthosGLView.m in Sources */,
+				6E9694101836BF430018671D /* PThreadCondition.cpp in Sources */,
 				BCC286CA0E1D8FB100978ECA /* BenthosGLViewController.mm in Sources */,
 				BCC286D20E1D905400978ECA /* BenthosDownloadController.m in Sources */,
 				BCC286D40E1D905400978ECA /* BenthosTableViewController.m in Sources */,
@@ -921,6 +966,7 @@
 				7BF64D60139770AD002FEB23 /* Scene.mm in Sources */,
 				7BF64D61139770AD002FEB23 /* SceneNode.mm in Sources */,
 				7BF64D84139770C8002FEB23 /* LibVT.cpp in Sources */,
+				6E96940E1836BF430018671D /* PThreadBarrier.cpp in Sources */,
 				7BF64D85139770C8002FEB23 /* LibVT_Cache.cpp in Sources */,
 				7BF64D87139770C8002FEB23 /* LibVT_ImageDecompression_iPhone.mm in Sources */,
 				7BF64D88139770C8002FEB23 /* LibVT_OpenCL.cpp in Sources */,
@@ -943,6 +989,7 @@
 				7B48CBA5152271FA008FA151 /* BenthosMapViewController.m in Sources */,
 				7B48CBA8152279A1008FA151 /* MapAnnotation.m in Sources */,
 				7B48CBB51522C188008FA151 /* Model.m in Sources */,
+				6E9694121836BF430018671D /* PThreadMutex.cpp in Sources */,
 				7BDA0AFF156AF939002C0F31 /* BenthosHelpScrollViewController.m in Sources */,
 				7B8586CD157B486A0002AA58 /* BenthosFolderViewController.m in Sources */,
 				7B8586CE157B486A0002AA58 /* Folder.m in Sources */,
@@ -965,14 +1012,17 @@
 				7B941EEB166EB1CD00F2D80F /* SceneNode.mm in Sources */,
 				7B941EEA166EB02400F2D80F /* Camera.mm in Sources */,
 				7B97030D166ECF7600A36060 /* Simulation.mm in Sources */,
+				6E9694111836BF430018671D /* PThreadCondition.cpp in Sources */,
 				7B970311166ED2BA00A36060 /* LibVT.cpp in Sources */,
 				7B970312166ED2BA00A36060 /* LibVT_Cache.cpp in Sources */,
 				7B0579311825A2B10099B50F /* GCDAsyncSocket.m in Sources */,
 				7B970313166ED2BA00A36060 /* LibVT_PageTable.cpp in Sources */,
+				6E9694131836BF430018671D /* PThreadMutex.cpp in Sources */,
 				7B970318166ED4BA00A36060 /* LibVT_PageLoadingThread.cpp in Sources */,
 				7B970314166ED2BA00A36060 /* LibVT_Readback.cpp in Sources */,
 				7B970315166ED2BA00A36060 /* LibVT_Utilities.cpp in Sources */,
 				7B97030E166ED1C900A36060 /* VirtualTexturingNode.mm in Sources */,
+				6E96940D1836BF430018671D /* PThread.cpp in Sources */,
 				7B941EEC166EB20D00F2D80F /* BMFont.mm in Sources */,
 				7B941EED166EB22F00F2D80F /* Utilities.mm in Sources */,
 				7B941EEE166EB2B000F2D80F /* StateUtilities.mm in Sources */,
@@ -984,6 +1034,7 @@
 				7B6A2C60166FF60500B72619 /* main.m in Sources */,
 				7B6A2C7416702BFA00B72619 /* NSString+CHCSVAdditions.m in Sources */,
 				7B6A2C7516702BFA00B72619 /* NSArray+CHCSVAdditions.m in Sources */,
+				6E96940F1836BF430018671D /* PThreadBarrier.cpp in Sources */,
 				7B6A2C7616702BFA00B72619 /* CHCSVParser.m in Sources */,
 				7B6A2C7816702CD000B72619 /* CHCSVWriter.m in Sources */,
 				7B66DFC016BDDC5F000298C5 /* GCDAsyncUdpSocket.m in Sources */,
@@ -1037,6 +1088,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/droplab/git/seafloorexplore,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = SeafloorExplore_Prefix.pch;
 				GCC_THUMB_SUPPORT = NO;
@@ -1048,12 +1103,17 @@
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/Flurry\"",
 				);
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lstdc++",
+					"-lc++",
+				);
 				PRODUCT_NAME = SeafloorExplore;
 				PROVISIONING_PROFILE = "";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR} /Users/mattjr/svn/ipadviewer";
+				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR} /Users/mattjr/svn/ipadviewer OpenThreads/";
 			};
 			name = Debug;
 		};
@@ -1065,6 +1125,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/droplab/git/seafloorexplore,
+				);
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = SeafloorExplore_Prefix.pch;
@@ -1079,13 +1143,18 @@
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/Flurry\"",
 				);
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lstdc++",
+					"-lc++",
+				);
 				PRODUCT_NAME = SeafloorExplore;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR} /Users/mattjr/svn/ipadviewer";
+				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR} /Users/mattjr/svn/ipadviewer OpenThreads/";
 			};
 			name = Release;
 		};
@@ -1236,6 +1305,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/droplab/git/seafloorexplore,
+				);
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = SeafloorExplore_Prefix.pch;
@@ -1250,13 +1323,18 @@
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/Flurry\"",
 				);
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lstdc++",
+					"-lc++",
+				);
 				PRODUCT_NAME = SeafloorExplore;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR} /Users/mattjr/svn/ipadviewer";
+				USER_HEADER_SEARCH_PATHS = "${BUILT_PRODUCTS_DIR} /Users/mattjr/svn/ipadviewer OpenThreads/";
 			};
 			name = Distribution;
 		};

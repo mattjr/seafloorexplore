@@ -208,7 +208,7 @@
 	#define ENABLE_MT				2
 #endif
 */
-#define ENABLE_MT				0
+#define ENABLE_MT				2
 
 /*!
  * @def		FALLBACK_ENTRIES

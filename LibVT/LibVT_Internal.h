@@ -16,7 +16,9 @@ You should have received a copy of the GNU Lesser General Public License along w
 */
 
 #include "LibVT_Config.h"
-
+#include <OpenThreads/Thread>
+#include <OpenThreads/Condition>
+#include <OpenThreads/ScopedLock>
 
 #include <time.h>
 #include <assert.h>
@@ -121,8 +123,15 @@ void vtShutdown();
 static inline void vt_fatal(const char *err, ...) {va_list ap; va_start (ap, err); vtShutdown(); vfprintf (stderr, err, ap); va_end (ap); exit(1); }
 
 using namespace std;
-using namespace boost;
+//using namespace boost;
+class LibVTBackgroundThread : public OpenThreads::Thread {
+    virtual void run();
 
+};
+class LibVTBackgroundThread2 : public OpenThreads::Thread {
+    virtual void run();
+
+};
 
 enum {
 	kCustomReadback = 1,
@@ -187,8 +196,14 @@ enum {
 	#define MIP_INFO(mip)			(vt.mipTranslation[mip])
 #endif
 
-#if ENABLE_MT
+/*#if ENABLE_MT
     #define LOCK(x)					boost::mutex::scoped_lock scoped_lock(x);
+#else
+    #define LOCK(x)
+#endif
+*/
+#if ENABLE_MT
+    #define LOCK(x)					OpenThreads::ScopedLock<OpenThreads::Mutex> scoped_lock(x);
 #else
     #define LOCK(x)
 #endif
@@ -251,7 +266,7 @@ struct vtData
 	map<uint32_t, void *>	cachedPages;
 	map<uint32_t, clock_t>	cachedPagesAccessTimes;
 
-#if ENABLE_MT
+/*#if ENABLE_MT
 	boost::condition		neededPagesAvailableCondition;
 	boost::mutex			neededPagesMutex;
 	boost::mutex			newPagesMutex;
@@ -267,7 +282,24 @@ struct vtData
 	map<uint32_t, uint32_t>	compressedPagesSizes;
 	boost::condition		compressedPagesAvailableCondition;
 #endif
+*/
 
+#if ENABLE_MT
+        OpenThreads::Condition		neededPagesAvailableCondition;
+        OpenThreads::Mutex			neededPagesMutex;
+        OpenThreads::Mutex			newPagesMutex;
+        OpenThreads::Mutex			cachedPagesMutex;
+        LibVTBackgroundThread			backgroundThread;
+#endif
+
+#if ENABLE_MT > 1
+         LibVTBackgroundThread2			backgroundThread2;
+        OpenThreads::Mutex			compressedMutex;
+	queue<uint32_t>			newCompressedPages;
+	map<uint32_t, void *>	compressedPages;
+	map<uint32_t, uint32_t>	compressedPagesSizes;
+         OpenThreads::Condition		compressedPagesAvailableCondition;
+#endif
 #if OPENCL_BUFFERREDUCTION
 	cl_context				cl_shared_context;
 	cl_device_id			cl_device;
