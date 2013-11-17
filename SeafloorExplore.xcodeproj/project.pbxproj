@@ -25,6 +25,7 @@
 		6E9694121836BF430018671D /* PThreadMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E9694071836BF430018671D /* PThreadMutex.cpp */; };
 		6E9694131836BF430018671D /* PThreadMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E9694071836BF430018671D /* PThreadMutex.cpp */; };
 		6E96941E183937D30018671D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6E96941D183937D30018671D /* Images.xcassets */; };
+		6E969420183944430018671D /* libFlurry_4.3.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E96941F183944430018671D /* libFlurry_4.3.0.a */; };
 		7B056F04150AC5DF00621766 /* NSFileManager+Tar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */; };
 		7B056F06150AC85A00621766 /* chamber3.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7B056F05150AC85A00621766 /* chamber3.tar */; };
 		7B0579311825A2B10099B50F /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B05792F1825A2B10099B50F /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -85,7 +86,6 @@
 		7B970321166ED6D200A36060 /* readback.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7BF64D76139770C8002FEB23 /* readback.frag */; };
 		7B970322166ED6D400A36060 /* readback.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7BF64D77139770C8002FEB23 /* readback.vert */; };
 		7B9A0FC2157F8D6500905353 /* geebanks_16_15m_out.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7B9A0FC1157F8D6500905353 /* geebanks_16_15m_out.tar */; };
-		7B9DC541163B4FAF00A53B6E /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B9DC540163B4FAF00A53B6E /* libFlurry.a */; };
 		7B9DC543163B507E00A53B6E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B9DC542163B507E00A53B6E /* SystemConfiguration.framework */; };
 		7BADF1BC16BF62F300875D86 /* TrackerOverlay.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BADF1BB16BF62F300875D86 /* TrackerOverlay.mm */; };
 		7BADF1BD16BF62F300875D86 /* TrackerOverlay.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7BADF1BB16BF62F300875D86 /* TrackerOverlay.mm */; };
@@ -194,6 +194,7 @@
 		6E9694081836BF430018671D /* PThreadMutexPrivateData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PThreadMutexPrivateData.h; sourceTree = "<group>"; };
 		6E9694091836BF430018671D /* PThreadPrivateData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PThreadPrivateData.h; sourceTree = "<group>"; };
 		6E96941D183937D30018671D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = SeafloorExplore/Images.xcassets; sourceTree = "<group>"; };
+		6E96941F183944430018671D /* libFlurry_4.3.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFlurry_4.3.0.a; path = Flurry/libFlurry_4.3.0.a; sourceTree = "<group>"; };
 		7B056F02150AC5DF00621766 /* NSFileManager+Tar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+Tar.h"; sourceTree = SOURCE_ROOT; };
 		7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+Tar.m"; sourceTree = SOURCE_ROOT; };
 		7B056F05150AC85A00621766 /* chamber3.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = chamber3.tar; sourceTree = "<group>"; };
@@ -397,6 +398,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6E969420183944430018671D /* libFlurry_4.3.0.a in Frameworks */,
 				6E3BF4B018365FD200A22792 /* CoreVideo.framework in Frameworks */,
 				7B9DC543163B507E00A53B6E /* SystemConfiguration.framework in Frameworks */,
 				7BCBD12E1520B550009DC170 /* CoreLocation.framework in Frameworks */,
@@ -408,7 +410,6 @@
 				28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */,
 				28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */,
 				BC4E97C20E69F736006CD291 /* libsqlite3.dylib in Frameworks */,
-				7B9DC541163B4FAF00A53B6E /* libFlurry.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -533,6 +534,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6E96941F183944430018671D /* libFlurry_4.3.0.a */,
 				6E3BF4AF18365FD200A22792 /* CoreVideo.framework */,
 				7B0579341825A60E0099B50F /* Security.framework */,
 				7B0579321825A6040099B50F /* Security.framework */,
@@ -1106,8 +1108,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/Flurry\"",
+					"$(SRCROOT)",
+					"\\\"$(SRCROOT)/Flurry\\\"",
+					/Users/droplab/git/seafloorexplore/Flurry,
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
@@ -1148,8 +1151,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/Flurry\"",
+					"$(SRCROOT)",
+					"\\\"$(SRCROOT)/Flurry\\\"",
+					/Users/droplab/git/seafloorexplore/Flurry,
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
@@ -1360,8 +1364,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/Flurry\"",
+					"$(SRCROOT)",
+					"\\\"$(SRCROOT)/Flurry\\\"",
+					/Users/droplab/git/seafloorexplore/Flurry,
 				);
 				OTHER_LDFLAGS = (
 					"-lz",

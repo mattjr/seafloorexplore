@@ -431,7 +431,7 @@ withFilterContext:(id)filterContext
     }
     if(arr){
         if(result == NSAlertOtherReturn){
-            NSString *dumpName=[NSString stringWithFormat:@"/Users/mattjr/Desktop/IJCV/%@-%@.dat",[[file_name lastPathComponent] stringByDeletingPathExtension], targetModel ];
+            NSString *dumpName=[NSString stringWithFormat:@"/Users/droplab/Desktop/IJCV/%@-%@.dat",[[file_name lastPathComponent] stringByDeletingPathExtension], targetModel ];
         
             [[scene simulator] dumpVisInfo:arr intoFile:dumpName];
         
