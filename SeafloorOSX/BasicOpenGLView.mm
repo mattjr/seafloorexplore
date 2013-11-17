@@ -385,19 +385,20 @@ withFilterContext:(id)filterContext
             if(arr){
                 break;
             }
-            [self openDocumentFromFileName: [NSString stringWithFormat:@"/Users/mattjr/Desktop/IJCV/%s",fname ]];
+            [self openDocumentFromFileName: [NSString stringWithFormat:@"/Users/droplab/Desktop/IJCV/%s",fname ]];
             if(strncmp([targetModel UTF8String], fname,1024) == 0){
                 NSLog(@"Running %@\n",targetModel);
                 arr=[[[NSMutableArray alloc] init] autorelease];
             }
             
-        }else if(strncmp(tmp,"GAZE",8192) == 0 ){
-            double timestamp,x,y;
-            long long time;
-            fscanf(fp,"%lf %lf %lf %lld\n",&timestamp,&x,&y,&time);
+        }else if(strncmp(tmp,"FIX",8192) == 0 ){
+            double timestamp,x,y,gTime,duration;
+            //long long time;
+            int fixID;
+            fscanf(fp,"%lf %lf %lf %lf %lf %d\n",&timestamp,&x,&y,&gTime,&duration,&fixID);
             MovementType movement=kNoLog;
             if(arr)
-                [arr addObject:[[[ReplayData alloc] initWith: x :y :0 :0 :0 :0 :time :movement] autorelease]];
+                [arr addObject:[[[ReplayData alloc] initWith: x :y :duration :0 :0 :0 :timestamp :movement] autorelease]];
         }else if(strncmp(tmp,"MOVE",8192) == 0 ){
             double timestamp;
             fscanf(fp,"%lf ",&timestamp);
