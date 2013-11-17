@@ -208,7 +208,11 @@
 	#define ENABLE_MT				2
 #endif
 */
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
 #define ENABLE_MT				2
+#else
+#define ENABLE_MT				0
+#endif
 
 /*!
  * @def		FALLBACK_ENTRIES
