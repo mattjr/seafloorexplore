@@ -160,7 +160,7 @@ int Condition::wait(Mutex *mutex, unsigned long int ms) {
 
 
     // wait time is now in ms milliseconds, so need to convert to seconds and nanoseconds for timespec strucuture.
-    unsigned int sec = ms / 1000;
+    unsigned int sec = (unsigned int)ms / 1000;
     unsigned int nsec = (ms % 1000) * 1000000;
 
     // add to the current time    

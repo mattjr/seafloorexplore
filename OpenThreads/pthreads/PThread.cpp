@@ -647,7 +647,7 @@ int Thread::start() {
     {
         return status;
     }
-    pd->stackSize = size;
+    pd->stackSize = (unsigned int)size;
 
     //-------------------------------------------------------------------------
     // Prohibit the stack size from being changed.
@@ -912,7 +912,7 @@ int Thread::setStackSize(size_t stackSize) {
 
     if(pd->stackSizeLocked == true) return 13;  // EACESS
 
-    pd->stackSize = stackSize;
+    pd->stackSize = (unsigned int)stackSize;
 
     return 0;
 
