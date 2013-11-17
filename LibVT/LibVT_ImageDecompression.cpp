@@ -83,11 +83,19 @@ void * _vtuDecompressMac(CGImageSourceRef imageSourceRef, uint32_t *pic_size, co
 
 void * vtuDecompressImageBuffer(const void *file_data, uint32_t file_size, uint32_t *pic_size)
 {
-	CGDataProviderRef dataprov = CGDataProviderCreateWithData(NULL, file_data, file_size, NULL);
+	/*CGDataProviderRef dataprov = CGDataProviderCreateWithData(NULL, file_data, file_size, NULL);
 	CGImageSourceRef imageSourceRef = CGImageSourceCreateWithDataProvider(dataprov, NULL);
-    
+    */
+  //  NSData *img_data=[[NSData alloc] initWithBytesNoCopy:(void *)file_data length:file_size];
+    CFDataRef cfdata = CFDataCreate(NULL,(const unsigned char *)file_data , file_size);
+   CGImageSourceRef imageSourceRef = CGImageSourceCreateWithData(cfdata, NULL);
+    if(imageSourceRef == NULL){
+        assert(false);
+    }
     void *ptr=_vtuDecompressMac(imageSourceRef, pic_size, NULL);
-    CGDataProviderRelease(dataprov);
+    //CGDataProviderRelease(dataprov);
+    CFRelease(cfdata);
+    CFRelease(imageSourceRef);
     return ptr;
 }
 
