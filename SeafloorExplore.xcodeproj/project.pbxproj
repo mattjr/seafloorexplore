@@ -1193,6 +1193,10 @@
 					OpenThreads,
 				);
 				INFOPLIST_FILE = "SeafloorOSX/SeafloorOSX-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/droplab/git/seafloorexplore,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1230,6 +1234,10 @@
 					OpenThreads,
 				);
 				INFOPLIST_FILE = "SeafloorOSX/SeafloorOSX-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/droplab/git/seafloorexplore,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1267,6 +1275,10 @@
 					OpenThreads,
 				);
 				INFOPLIST_FILE = "SeafloorOSX/SeafloorOSX-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/droplab/git/seafloorexplore,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
