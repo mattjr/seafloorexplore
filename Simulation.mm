@@ -17,15 +17,16 @@
  */
 
 #import "Simulation.h"
-#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+#import "NSData+Gzip.h"
 
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 #import "Flurry.h"
 #endif
 #include "LibVT.h"
 #include "LibVT_Internal.h"
 float positions[60 * 60][6];
 bool gRunExpCode=NO;
-#define LOG_SERVER_IP @"67.194.20.219"
+#define LOG_SERVER_IP @"192.168.0.224"
 //#define LOG_SERVER_IP @"10.0.0.1"
 
 #include <math.h>
@@ -349,8 +350,11 @@ bool gRunExpCode=NO;
         vector3f cur_bbox[2];
         cur_bbox[0]=gaze_bbox_min;
         cur_bbox[1]=gaze_bbox_max;
+          [self writeVisibleBoundsTo:fp :cur_bbox];
 
-        [self writeVisibleVertsTo:fp :cur_bbox];
+      //  [self writeVisibleVertsTo:fp :cur_bbox];
+        //[self writeBBoxTo:fp :cur_bbox];
+
         if( i % 100 == 0 ){
             printf("%04d/%04d\n",i,count);
         }
@@ -358,6 +362,7 @@ bool gRunExpCode=NO;
     fclose(fp);
     NSLog(@"Finished dumping\n");
 }
+
 - (void)writeVisibleVertsTo:(FILE *) fp :(vector3f *) bbox_gaze
 {
     struct frustrum test_frustum=[self getFrustrumPlanes];
@@ -379,13 +384,60 @@ bool gRunExpCode=NO;
         }
         fwrite((char *)&bbox_gaze[0][0],sizeof(float),3,fp);
         fwrite((char *)&bbox_gaze[1][0],sizeof(float),3,fp);
-
+        
         [ptsInFrame release];
     }
-
+    
 }
 
-- (void)writeVisibleBoundsTo:(FILE *) fp
+- (void)writeVisibleVertsToCompressed:(FILE *) fp :(vector3f *) bbox_gaze
+{
+    struct frustrum test_frustum=[self getFrustrumPlanes];
+    unsigned int count=(unsigned int)[meshes count];
+    fwrite((char *)&count,sizeof(unsigned int),1,fp);
+    for (CollideableMesh *mesh in meshes) {
+        NSMutableSet *ptsInFrame = [[NSMutableSet alloc] init];
+        if(![mesh getVertesInFrame:ptsInFrame forFrustrum:test_frustum]){
+            fprintf(stderr,"Failed to run getVertsinframe\n");
+            exit(-1);
+        }
+        count=(unsigned int)mesh.octree->vertexCount;
+        fwrite((char *)&count,sizeof(unsigned int),1,fp);
+        count=(unsigned int)[ptsInFrame count];
+        //        fwrite((char *)&count,sizeof(unsigned int),1,fp);
+        unsigned int arr[count+1];
+        int cnt=0;
+        arr[cnt++]=count;
+        for (NSNumber* num in ptsInFrame) {
+            unsigned int vert=(unsigned int)[num intValue];
+            //  fwrite((char *)&vert,sizeof(unsigned int),1,fp);
+            arr[cnt++]=vert;
+        }
+        NSMutableData* data = [NSMutableData dataWithBytes:(const void *)arr length:sizeof(unsigned int)*count];
+        [data gzipDeflate];
+        NSData *compressedArr=[data gzipDeflate] ;
+        count=(int)[compressedArr length];
+        fwrite((char *)&count,sizeof(unsigned int),1,fp);
+        fwrite((char *)[compressedArr bytes],sizeof(char),count,fp);
+        
+        fwrite((char *)&bbox_gaze[0][0],sizeof(float),3,fp);
+        fwrite((char *)&bbox_gaze[1][0],sizeof(float),3,fp);
+        
+        [ptsInFrame release];
+    }
+    
+}
+
+
+- (void)writeBBoxTo:(FILE *) fp :(vector3f *) bbox_gaze
+{
+    fwrite((char *)&bbox_gaze[0][0],sizeof(float),3,fp);
+    fwrite((char *)&bbox_gaze[1][0],sizeof(float),3,fp);
+    
+}
+
+
+- (void)writeVisibleBoundsTo:(FILE *) fp :(vector3f *) bbox_gaze
 {
     struct frustrum test_frustum=[self getFrustrumPlanes];
     vector3f minA,maxA;
@@ -408,13 +460,17 @@ bool gRunExpCode=NO;
 
         
     }
+   // printf("Total bounds %f %f %f -- %f %f%f\n",totalBounds[0][0],totalBounds[0][1],totalBounds[0][2],
+      //     totalBounds[1][0],totalBounds[1][1],totalBounds[1][2]);
     float data[6];
     for(int i=0; i<3; i++){
         data[i]=totalBounds[0][i];
         data[i+3]=totalBounds[1][i];
     }
     fwrite((char *)&data[0],sizeof(float),6,fp);
-
+   // printf("%f %f %f\n",bbox_gaze[0][0],bbox_gaze[0][1],bbox_gaze[0][2]);
+    fwrite((char *)&bbox_gaze[0][0],sizeof(float),3,fp);
+    fwrite((char *)&bbox_gaze[1][0],sizeof(float),3,fp);
 
     
 }
