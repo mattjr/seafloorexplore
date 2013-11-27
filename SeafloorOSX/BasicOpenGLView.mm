@@ -361,6 +361,8 @@ withFilterContext:(id)filterContext
     /*[button setButtonType:NSSwitchButton];
     button.title = NSLocalizedString(@"Dump to file", @"");*/
     [button addItemsWithTitles:meshes];
+    [button addItemWithTitle: @"All"];
+
     [button sizeToFit];
     
     [alert setAccessoryView:button];
@@ -373,77 +375,86 @@ withFilterContext:(id)filterContext
     if(result == NSAlertAlternateReturn )
         return NO;
     NSLog(@"%@",targetModel);
-    fp = fopen([file_name UTF8String], "r");
-    NSMutableArray *arr=nil;
+    NSMutableArray *toRun=[[[NSMutableArray alloc] init] autorelease];
 
-    while(!feof(fp)){
-        fscanf(fp,"%s",tmp);
-        if(strncmp(tmp,"OPEN",8192) == 0 ){
-            double timestamp;
-            char fname[1024];
-            fscanf(fp,"%lf %s",&timestamp,fname);
-            if(arr){
-                break;
-            }
-            [self openDocumentFromFileName: [NSString stringWithFormat:@"/Users/droplab/Desktop/IJCV/%s",fname ]];
-            if(strncmp([targetModel UTF8String], fname,1024) == 0){
-                NSLog(@"Running %@\n",targetModel);
-                arr=[[[NSMutableArray alloc] init] autorelease];
-            }
-            
-        }else if(strncmp(tmp,"FIX",8192) == 0 ){
-            double timestamp,x,y,gTime,duration;
-            //long long time;
-            int fixID;
-            fscanf(fp,"%lf %lf %lf %lf %lf %d\n",&timestamp,&x,&y,&gTime,&duration,&fixID);
-            MovementType movement=kNoLog;
-            if(arr)
-                [arr addObject:[[[ReplayData alloc] initWith: x :y :duration :0 :0 :0 :timestamp :movement] autorelease]];
-        }else if(strncmp(tmp,"MOVE",8192) == 0 ){
-            double timestamp;
-            fscanf(fp,"%lf ",&timestamp);
-            char tmp2[8192];
-            char mesh[1024];
-            char movement[1024];
-            fgets(tmp2,8192,fp);
-            NSString *str = [[NSMutableString stringWithUTF8String:tmp2] stringByReplacingOccurrencesOfString:@"\"" withString:@""];
-
-            double centerX,centerY,centerZ,tilt,dist,heading,time;
-
-            sscanf([str UTF8String],"{     centerX = %lf;     centerY = %lf;     centerZ = %lf;     distance = %lf;     heading = %lf;     mesh = %s     movement = %s     tilt = %lf;     time = %lf; }",&centerX,&centerY,&centerZ,&dist,&heading,mesh,movement,&tilt ,&time);
-            if(arr)
-                [arr addObject:[[[ReplayData alloc] initWith: centerX :centerY :centerZ :tilt :dist :heading :time :kPanning] autorelease]];
-           // printf("ME %f %s\n",centerX,mesh);
-
-        }
-
-
-     /*   double centerX,centerY,centerZ,tilt,dist,heading,time;
-        NSMutableArray *arr=[[[NSMutableArray alloc] init] autorelease];
-        char movement[8192],mesh_name[8192];
-        for (id object in fields) {
-            NSString * str=[object objectAtIndex:8];
-            sscanf([str UTF8String], "{ centerZ : %lf;  time : %lf;  distance : %lf;  centerY : %lf;  centerX : %lf;  tilt : %lf;  movement : %s heading : %lf;  mesh : %s}", &centerZ,&time, &dist,&centerY,&centerX,&tilt,movement,&heading,mesh_name);*/
-            
-        
-        //printf(" centerZ : %lf;  time : %lf;  distance : %lf;  centerY : %lf;  centerX : %lf;  tilt : %lf;  movement : %s;  heading : %lf;  mesh : %s\n}",centerZ,time, dist,centerY,centerX,tilt,movement,heading,mesh_name);
-        
-    }
-    if(arr){
-        if(result == NSAlertOtherReturn){
-            NSString *dumpName=[NSString stringWithFormat:@"/Users/droplab/Desktop/IJCV/%@-%@.dat",[[file_name lastPathComponent] stringByDeletingPathExtension], targetModel ];
-        
-            [[scene simulator] dumpVisInfo:arr intoFile:dumpName];
-        
-        }else if(result == NSAlertDefaultReturn){
-            [[scene simulator] loadReplay:arr];
-        }
+    if(strncmp([targetModel UTF8String], "All",1024) == 0){
+        [toRun addObjectsFromArray:meshes];
+    }else{
+        [toRun addObject:targetModel];
     }
     
-    
-    
-    fclose(fp);
-
+    for(NSString *curmodel in  toRun){
+        fp = fopen([file_name UTF8String], "r");
+        NSMutableArray *arr=nil;
+        
+        while(!feof(fp)){
+            fscanf(fp,"%s",tmp);
+            if(strncmp(tmp,"OPEN",8192) == 0 ){
+                double timestamp;
+                char fname[1024];
+                fscanf(fp,"%lf %s",&timestamp,fname);
+                if(arr){
+                    break;
+                }
+                [self openDocumentFromFileName: [NSString stringWithFormat:@"/Users/droplab/Desktop/IJCV/%s",fname ]];
+                if(strncmp([curmodel UTF8String], fname,1024) == 0){
+                    NSLog(@"Running %@\n",curmodel);
+                    arr=[[[NSMutableArray alloc] init] autorelease];
+                }
+                
+            }else if(strncmp(tmp,"FIX",8192) == 0 ){
+                double timestamp,x,y,gTime,duration;
+                //long long time;
+                int fixID;
+                fscanf(fp,"%lf %lf %lf %lf %lf %d\n",&timestamp,&x,&y,&gTime,&duration,&fixID);
+                MovementType movement=kNoLog;
+                if(arr)
+                    [arr addObject:[[[ReplayData alloc] initWith: x :y :duration :0 :0 :0 :timestamp :movement] autorelease]];
+            }else if(strncmp(tmp,"MOVE",8192) == 0 ){
+                double timestamp;
+                fscanf(fp,"%lf ",&timestamp);
+                char tmp2[8192];
+                char mesh[1024];
+                char movement[1024];
+                fgets(tmp2,8192,fp);
+                NSString *str = [[NSMutableString stringWithUTF8String:tmp2] stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+                
+                double centerX,centerY,centerZ,tilt,dist,heading,time;
+                
+                sscanf([str UTF8String],"{     centerX = %lf;     centerY = %lf;     centerZ = %lf;     distance = %lf;     heading = %lf;     mesh = %s     movement = %s     tilt = %lf;     time = %lf; }",&centerX,&centerY,&centerZ,&dist,&heading,mesh,movement,&tilt ,&time);
+                if(arr)
+                    [arr addObject:[[[ReplayData alloc] initWith: centerX :centerY :centerZ :tilt :dist :heading :time :kPanning] autorelease]];
+                // printf("ME %f %s\n",centerX,mesh);
+                
+            }
+            
+            
+            /*   double centerX,centerY,centerZ,tilt,dist,heading,time;
+             NSMutableArray *arr=[[[NSMutableArray alloc] init] autorelease];
+             char movement[8192],mesh_name[8192];
+             for (id object in fields) {
+             NSString * str=[object objectAtIndex:8];
+             sscanf([str UTF8String], "{ centerZ : %lf;  time : %lf;  distance : %lf;  centerY : %lf;  centerX : %lf;  tilt : %lf;  movement : %s heading : %lf;  mesh : %s}", &centerZ,&time, &dist,&centerY,&centerX,&tilt,movement,&heading,mesh_name);*/
+            
+            
+            //printf(" centerZ : %lf;  time : %lf;  distance : %lf;  centerY : %lf;  centerX : %lf;  tilt : %lf;  movement : %s;  heading : %lf;  mesh : %s\n}",centerZ,time, dist,centerY,centerX,tilt,movement,heading,mesh_name);
+            
+        }
+        if(arr){
+            if(result == NSAlertOtherReturn){
+                NSString *dumpName=[NSString stringWithFormat:@"/Users/droplab/Desktop/IJCV/%@-%@.dat",[[file_name lastPathComponent] stringByDeletingPathExtension], curmodel ];
+                
+                [[scene simulator] dumpVisInfo:arr intoFile:dumpName];
+                
+            }else if(result == NSAlertDefaultReturn){
+                [[scene simulator] loadReplay:arr];
+            }
+        }
+        
+        
+        
+        fclose(fp);
+    }
     return YES;
 }
 
@@ -466,6 +477,8 @@ withFilterContext:(id)filterContext
     NSMutableArray *arr=[[[NSMutableArray alloc] init] autorelease];
     char movement[8192],mesh_name[8192];
     for (id object in fields) {
+        if([object count] < 9)
+            continue;
         NSString * str=[object objectAtIndex:8];
         sscanf([str UTF8String], "{ centerZ : %lf;  time : %lf;  distance : %lf;  centerY : %lf;  centerX : %lf;  tilt : %lf;  movement : %s heading : %lf;  mesh : %s}", &centerZ,&time, &dist,&centerY,&centerX,&tilt,movement,&heading,mesh_name);
         [arr addObject:[[[ReplayData alloc] initWith: centerX :centerY :centerZ :tilt :dist :heading :time :kPanning] autorelease]];
@@ -536,6 +549,15 @@ return YES;
   {
    
       NSWindow* window = [self window];
+      
+      NSRect rect=[window frame];
+      
+      CGFloat titleBarHeight = self.window.frame.size.height - ((NSView*)self.window.contentView).frame.size.height;
+      CGSize windowSize = CGSizeMake(1024, 704 + titleBarHeight);
+      rect.size=windowSize;
+      
+      [window setFrame:rect display:YES animate:YES];
+      
       
       // Create and configure the panel.
       NSOpenPanel* panel = [NSOpenPanel openPanel];
