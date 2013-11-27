@@ -26,6 +26,7 @@
 		6E9694131836BF430018671D /* PThreadMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E9694071836BF430018671D /* PThreadMutex.cpp */; };
 		6E96941E183937D30018671D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6E96941D183937D30018671D /* Images.xcassets */; };
 		6E969420183944430018671D /* libFlurry_4.3.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E96941F183944430018671D /* libFlurry_4.3.0.a */; };
+		6E969423183A40DD0018671D /* NSData+Gzip.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC281290E1B1FCD00978ECA /* NSData+Gzip.m */; };
 		7B056F04150AC5DF00621766 /* NSFileManager+Tar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B056F03150AC5DF00621766 /* NSFileManager+Tar.m */; };
 		7B056F06150AC85A00621766 /* chamber3.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7B056F05150AC85A00621766 /* chamber3.tar */; };
 		7B0579311825A2B10099B50F /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B05792F1825A2B10099B50F /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -1014,6 +1015,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6E969423183A40DD0018671D /* NSData+Gzip.m in Sources */,
 				7B941EE9166EB02200F2D80F /* Scene.mm in Sources */,
 				7B941EEB166EB1CD00F2D80F /* SceneNode.mm in Sources */,
 				7B941EEA166EB02400F2D80F /* Camera.mm in Sources */,
@@ -1108,9 +1110,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					Flurry,
 					"$(SRCROOT)",
-					"\\\"$(SRCROOT)/Flurry\\\"",
-					/Users/droplab/git/seafloorexplore/Flurry,
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
@@ -1151,9 +1152,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					Flurry,
 					"$(SRCROOT)",
-					"\\\"$(SRCROOT)/Flurry\\\"",
-					/Users/droplab/git/seafloorexplore/Flurry,
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
@@ -1364,9 +1364,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					Flurry,
 					"$(SRCROOT)",
-					"\\\"$(SRCROOT)/Flurry\\\"",
-					/Users/droplab/git/seafloorexplore/Flurry,
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
