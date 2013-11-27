@@ -623,7 +623,7 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
         return FALSE;
     }
     [ptsInFrame removeAllObjects];
-    
+        
     uint16_t i;
 
     _visibleNodeStackTop = 0;
@@ -686,6 +686,13 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
         bounds[1][i]=-FLT_MAX;
     }
     
+    _visibleNodeStackTop = 0;
+    
+    memcpy(&frustum,&test_frustum,sizeof(frustum));
+    vfcTestOctreeNode(octree, visibleNodeStack, 0);
+    
+    visibleNodeStackTop = _visibleNodeStackTop;
+    
     for (i = 0; i < visibleNodeStackTop;)
     {
         struct octree_node *n = (struct octree_node *) NODE_NUM(visibleNodeStack[i]);
@@ -714,7 +721,7 @@ static void vfcTestOctreeNode(struct octree_struct *octree, uint16_t *visibleNod
             if(PointInFrustum(test_frustum.planes,*(v1+0),*(v1+1),*(v1+2)) &&
                PointInFrustum(test_frustum.planes,*(v2+0),*(v2+1),*(v2+2)) &&
                PointInFrustum(test_frustum.planes,*(v3+0),*(v3+1),*(v3+2))){
-                
+        
                 for(int l=0; l<3; l++){
                         if( *(v1+l) < bounds[0][l] )
                             bounds[0][l] = *(v1+l);
