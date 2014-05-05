@@ -199,7 +199,7 @@ extern vtData vt;
 
 
 /** Returns a string description of the specified CC3Plane struct in the form "(a, b, c, d)" */
-static inline NSString* NSStringFromCC3Plane(CC3Plane p) {
+inline NSString* NSStringFromCC3Plane(CC3Plane p) {
 	return [NSString stringWithFormat: @"(%.3f, %.3f, %.3f, %.3f)", p.a, p.b, p.c, p.d];
 }
 

@@ -1100,7 +1100,7 @@
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/droplab/git/seafloorexplore,
+					"$(SRCROOT)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = SeafloorExplore_Prefix.pch;
@@ -1139,7 +1139,7 @@
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/droplab/git/seafloorexplore,
+					"$(SRCROOT)",
 				);
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1207,7 +1207,7 @@
 				INFOPLIST_FILE = "SeafloorOSX/SeafloorOSX-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/droplab/git/seafloorexplore,
+					"$(SRCROOT)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1248,7 +1248,7 @@
 				INFOPLIST_FILE = "SeafloorOSX/SeafloorOSX-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/droplab/git/seafloorexplore,
+					"$(SRCROOT)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1289,7 +1289,7 @@
 				INFOPLIST_FILE = "SeafloorOSX/SeafloorOSX-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/droplab/git/seafloorexplore,
+					"$(SRCROOT)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1351,7 +1351,7 @@
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/droplab/git/seafloorexplore,
+					"$(SRCROOT)",
 				);
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

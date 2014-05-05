@@ -180,7 +180,7 @@ static const NSUInteger kMaximumNumberOfFoldersToParse = 50;
 // constant below. In your application, the optimal batch size will vary 
 // depending on the amount of data in the object and other factors, as appropriate.
 //
-static NSUInteger const kSizeOfFolderBatch = 10;
+//static const NSUInteger const kSizeOfFolderBatch = 10;
 
 // Reduce potential parsing errors by using string constants declared in a single place.
 static NSString * const kItemElementName = @"item";

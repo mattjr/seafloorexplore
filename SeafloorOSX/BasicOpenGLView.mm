@@ -396,7 +396,7 @@ withFilterContext:(id)filterContext
                 if(arr){
                     break;
                 }
-                [self openDocumentFromFileName: [NSString stringWithFormat:@"/Users/droplab/Desktop/IJCV/%s",fname ]];
+                [self openDocumentFromFileName: [NSString stringWithFormat:@"/Users/mattjr/Desktop/IJCV/%s",fname ]];
                 if(strncmp([curmodel UTF8String], fname,1024) == 0){
                     NSLog(@"Running %@\n",curmodel);
                     arr=[[[NSMutableArray alloc] init] autorelease];
@@ -442,7 +442,7 @@ withFilterContext:(id)filterContext
         }
         if(arr){
             if(result == NSAlertOtherReturn){
-                NSString *dumpName=[NSString stringWithFormat:@"/Users/droplab/Desktop/IJCV/%@-%@.dat",[[file_name lastPathComponent] stringByDeletingPathExtension], curmodel ];
+                NSString *dumpName=[NSString stringWithFormat:@"/Users/mattjr/Desktop/IJCV/%@-%@.dat",[[file_name lastPathComponent] stringByDeletingPathExtension], curmodel ];
                 
                 [[scene simulator] dumpVisInfo:arr intoFile:dumpName];
                 
