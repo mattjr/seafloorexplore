@@ -155,7 +155,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
         [formatter setNumberStyle: NSNumberFormatterDecimalStyle];
     }
     NSString *str=[formatter stringFromNumber: [NSNumber numberWithDouble: bytes]];
-    *width=[str length];
+    *width=(int)[str length];
     // Beware of reusing this format string. -[NSString stringWithFormat] ignores \0, *printf does not.
     return [NSString stringWithFormat:@"%@ %cB", str, units[*exponent]];
 }
