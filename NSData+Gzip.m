@@ -26,8 +26,8 @@
 	[gzippedData retain];
 	if ([gzippedData length] == 0) return nil;
 	
-	unsigned full_length = [gzippedData length];
-	unsigned half_length = [gzippedData length] / 2;
+	unsigned long full_length = [gzippedData length];
+	unsigned long half_length = [gzippedData length] / 2;
 	
 	NSMutableData *decompressed = [[NSMutableData alloc] initWithLength:(full_length + half_length)];
 	BOOL done = NO;
@@ -35,7 +35,7 @@
 	
 	z_stream strm;
 	strm.next_in = (Bytef *)[gzippedData bytes];
-	strm.avail_in = [gzippedData length];
+	strm.avail_in = (uint)[gzippedData length];
 	strm.total_out = 0;
 	strm.zalloc = Z_NULL;
 	strm.zfree = Z_NULL;

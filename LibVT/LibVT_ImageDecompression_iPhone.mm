@@ -42,7 +42,7 @@ void * vtuDecompressImageFile(const char *imagePath, uint32_t *pic_size)
     CFRelease(colorSpa);
 
 	if (*pic_size == 0)
-		*pic_size = width;
+		*pic_size = (uint)width;
 	else {
         if(!((width == *pic_size) && (height == *pic_size))){
             fprintf(stderr,"Something bad happend in vtuDecompressImageFile %d %d %d %d\n",(int)width , *pic_size, (int)height ,*pic_size);
@@ -73,7 +73,7 @@ void * vtuDecompressImageBuffer(const void *file_data, uint32_t file_size, uint3
     CFRelease(colorSpa);
     
 	if (*pic_size == 0)
-		*pic_size = width;
+		*pic_size = (uint)width;
 	else {
         if(!((width == *pic_size) && (height == *pic_size))){
             fprintf(stderr,"Something bad happend in vtuDecompressImageFile %d %d %d %d\n",(int)width , *pic_size, (int)height ,*pic_size);

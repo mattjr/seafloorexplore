@@ -104,6 +104,7 @@
 	}	
 }
 -(void) viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
 	[self.tableView reloadData];
 
 }
@@ -526,7 +527,7 @@
         if (index <= [models count])
         {
             if(models == nil || index-1 >= [models count] || [models objectAtIndex:(index-1)] == nil){
-                NSLog(@"Error trying to acess null model %d\n",[models count]);
+                NSLog(@"Error trying to acess null model %lu\n",(unsigned long)[models count]);
                 return cell;
             }
             //      int l=[[models objectAtIndex:(index-1)] numberOfAtoms];
@@ -558,15 +559,15 @@
                 cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:NSLocalizedStringFromTable(@"InProgress", @"Localized", nil)] autorelease];
             }
             */
-            int idx= index-[models count] -1;
+            long int idx= index-[models count] -1;
             if(idx >= [decompressingfiles count]){
-                NSLog(@"Freak out %d %d %d\n",idx,[models count],[decompressingfiles count]);
+                NSLog(@"Freak out %ld %lu %lu\n",idx,(unsigned long)[models count],(unsigned long)[decompressingfiles count]);
                 return cell;
             }
             BackgroundProcessingFile * file=[decompressingfiles objectAtIndex:idx];
             if(file == nil)
             {
-                NSLog(@"Freakout %d\n",idx);
+                NSLog(@"Freakout %ld\n",idx);
             }
             
             //        cell.textLabel.text=file.downloadStatusText.text;
@@ -728,9 +729,9 @@
     }
 }
 
-- (void)didReceiveMemoryWarning
+/*- (void)didReceiveMemoryWarning
 {
-}
+}*/
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
 {

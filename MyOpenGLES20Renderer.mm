@@ -373,7 +373,7 @@ CVPixelBufferRef renderTarget;
         // derived values:
         c.pageMemsize=c.maxCachedPages=c.physTexDimensionPages=c.virtTexDimensionPages=c.residentPages=0;
         c.pageDataFormat=c.pageDataType=c.pageDXTCompression=0;
-        int sizeofzero= int((int)&(vt.fovInDegrees)-(int)&(vt.mipTranslation));
+        long int sizeofzero= ((long int)&(vt.fovInDegrees)-(long int)&(vt.mipTranslation));
         bzero(&vt,sizeofzero);
         vt.neededPages.clear();
         std::queue<uint32_t> empty;

@@ -383,7 +383,7 @@ NSString *const kBenthosShadowCalculationEndedNotification = @"ModelShadowCalcul
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, atomIndexBufferHandle[currentAtomIndexBufferIndex]);   
                 glBufferData(GL_ELEMENT_ARRAY_BUFFER, [atomIndexBuffers[currentAtomIndexBufferIndex] length], (GLushort *)[atomIndexBuffers[currentAtomIndexBufferIndex] bytes], GL_STATIC_DRAW);    
                 
-                numberOfIndicesInBuffer[currentAtomIndexBufferIndex] = ([atomIndexBuffers[currentAtomIndexBufferIndex] length] / sizeof(GLushort));
+                numberOfIndicesInBuffer[currentAtomIndexBufferIndex] = ((uint)[atomIndexBuffers[currentAtomIndexBufferIndex] length] / sizeof(GLushort));
                 
                 // Now that the data are in the OpenGL buffer, can release the NSData
                 [atomIndexBuffers[currentAtomIndexBufferIndex] release];
@@ -420,7 +420,7 @@ NSString *const kBenthosShadowCalculationEndedNotification = @"ModelShadowCalcul
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bondIndexBufferHandle[currentBondVBOIndex]);   
                 glBufferData(GL_ELEMENT_ARRAY_BUFFER, [bondIndexBuffers[currentBondVBOIndex] length], (GLushort *)[bondIndexBuffers[currentBondVBOIndex] bytes], GL_STATIC_DRAW);    
                 
-                numberOfBondIndicesInBuffer[currentBondVBOIndex] = ([bondIndexBuffers[currentBondVBOIndex] length] / sizeof(GLushort));
+                numberOfBondIndicesInBuffer[currentBondVBOIndex] = ((uint)[bondIndexBuffers[currentBondVBOIndex] length] / sizeof(GLushort));
                 
                 [bondIndexBuffers[currentBondVBOIndex] release];
                 bondIndexBuffers[currentBondVBOIndex] = nil;

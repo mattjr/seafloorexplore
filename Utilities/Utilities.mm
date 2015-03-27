@@ -223,7 +223,7 @@ GLuint LoadTexture(NSString *imagePath, GLint minFilter, GLint magFilter, GLint 
 	CGImageRelease(imageRef);
 	CFRelease(imageSourceRef);
 #else
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (int)width, (int)height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 #endif
 
 	free(data);

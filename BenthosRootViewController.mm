@@ -258,10 +258,10 @@
 	}
 }
 
-- (void)didReceiveMemoryWarning 
+/*- (void)didReceiveMemoryWarning
 {
 }
-
+*/
 - (void)cancelModelLoading;
 {
 	if (!glViewController.modelToDisplay.isDoneRendering)

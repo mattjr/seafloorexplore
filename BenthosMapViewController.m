@@ -46,15 +46,17 @@
 		
 		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 		{
-			self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
+			self.preferredContentSize = CGSizeMake(320.0, 600.0);
             
-		}
+        }else{
+            self.preferredContentSize = CGSizeMake(320.0, 600.0);
+        }
 		
 		if ([BenthosAppDelegate isRunningOniPad])
 		{
 //			self.MapView.backgroundColor = [UIColor blackColor];
 //			tableTextColor = [[UIColor whiteColor] retain];
-			self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
+			self.preferredContentSize = CGSizeMake(320.0, 600.0);
 
 			UIBarButtonItem *downloadButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(displayModelDownloadView)];
 			self.navigationItem.leftBarButtonItem = downloadButtonItem;
@@ -77,7 +79,7 @@
     mapView = [[MKMapView alloc]
                initWithFrame:CGRectMake(0, 
                                         0,
-                                        self.contentSizeForViewInPopover.width, 
+                                        self.preferredContentSize.width,
                                         self.view.bounds.size.height)
                ];
     //mapView.showsUserLocation = YES;
@@ -164,8 +166,7 @@
 }
 
 -(void) viewDidAppear:(BOOL)animated {
-    
-
+    [super viewDidAppear:animated];
     [self performSelector:@selector(selectInitialAnnotation)
                withObject:nil afterDelay:0.5];    
 
@@ -372,10 +373,10 @@
    
 }
 
-- (void)didReceiveMemoryWarning
+/*- (void)didReceiveMemoryWarning
 {
 }
-
+*/
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
 {
     // Overriden to allow any orientation.

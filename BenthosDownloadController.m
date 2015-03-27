@@ -268,7 +268,7 @@ NSString* unitStringFromBytes(double bytes, uint8_t flags,int *exponent,int *wid
     }
     if (downloadedBytes > 0) {
      //   NSLog(@"Resuming %d\n",downloadedBytes);
-        NSString *requestRange = [NSString stringWithFormat:@"bytes=%d-", downloadedBytes];
+        NSString *requestRange = [NSString stringWithFormat:@"bytes=%lu-", (unsigned long)downloadedBytes];
         [req setValue:requestRange forHTTPHeaderField:@"Range"];
     }
     

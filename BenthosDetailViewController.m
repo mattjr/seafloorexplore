@@ -104,7 +104,7 @@
 	[super viewDidAppear:animated];
 }
 
-- (void)viewWillDisappear:(BOOL)animated 
+/*- (void)viewWillDisappear:(BOOL)animated
 {
 }
 
@@ -114,7 +114,7 @@
 
 - (void)didReceiveMemoryWarning {
 }
-
+*/
 #pragma mark -
 #pragma mark UITableView Delegate/Datasource
 
@@ -198,7 +198,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    int section =indexPath.section;
+    long int section =indexPath.section;
     if(self.detailImage == nil){
         section++;
     }
@@ -224,7 +224,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
     }
-    cell.textLabel.text = [self textForIndexPath:section];
+    cell.textLabel.text = [self textForIndexPath:(int)section];
     cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     cell.textLabel.textAlignment = UITextAlignmentLeft;
     cell.textLabel.numberOfLines=0;

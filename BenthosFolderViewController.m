@@ -23,7 +23,7 @@
 #import "VCTitleCase.h"
 #import "BenthosAppDelegate.h"
 #import "FolderParseOperation.h"
-#define kFolderListURL @"http://marine.acfr.usyd.edu.au/campaigns.xml"
+#define kFolderListURL @"http://www-personal.umich.edu/~mattjr/benthos/campaigns.xml"
 
 @implementation BenthosFolderViewController
 @synthesize decompressingfiles,folderData,parseQueue,models;
@@ -368,10 +368,10 @@
 	
 }
 */
-- (void)didReceiveMemoryWarning 
+/*- (void)didReceiveMemoryWarning
 {
     NSLog(@"My Memory warning\n");
-}
+}*/
 
 #pragma mark -
 #pragma mark UIViewController methods

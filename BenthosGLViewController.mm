@@ -802,10 +802,10 @@ GLVisualizationType currentVisualizationType = [sim getRenderMode];
 	return YES;
 }
 
-- (void)didReceiveMemoryWarning 
+/*- (void)didReceiveMemoryWarning
 {
 }
-
+*/
 #pragma mark -
 #pragma mark Accessors
 
