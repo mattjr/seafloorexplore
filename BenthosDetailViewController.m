@@ -296,7 +296,7 @@
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-    int section =indexPath.section;
+    int section =(int)indexPath.section;
     if(self.detailImage == nil){
         section++;
     }
@@ -376,7 +376,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    int section =indexPath.section;
+    int section =(int)indexPath.section;
     if(self.detailImage == nil){
         section++;
     }
